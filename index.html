@@ -12,11 +12,11 @@
 
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  
+  <script src="https://kit.fontawesome.com/9b570f29d2.js" crossorigin="anonymous"></script>
 
 </head>
 <body>
-  <header class="typewriter">
+  <header class="typewriter" style="width: 30%;">
     <h1>{David Kozdra}</h1>
     <h3> Software Engineering Student</h2>
   </header>
@@ -33,90 +33,74 @@
       <li>
         <div>
           <time>1934</time> At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
+          <img src="" alt=""> </img>
+          <br>
+          <hr>
+
+
+        <table style="width:100%">
+          <tr>
+            <td>
+              <a href=""><i class="fa fa-play" > </i></a> 
+              <a href=""><i class="fa fa-code" > </i></a> 
+            </td>
+
+            <td><a href="" >More Info  <i class="fa fa-plus" > </i></a> </td>
+          </tr>
+        </table>
         </div>
       </li>
-      <li>
-        <div>
-          <time>1937</time> Proin quam velit, efficitur vel neque vitae, rhoncus commodo mi. Suspendisse finibus mauris et bibendum molestie. Aenean ex augue, varius et pulvinar in, pretium non nisi.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1940</time> Proin iaculis, nibh eget efficitur varius, libero tellus porta dolor, at pulvinar tortor ex eget ligula. Integer eu dapibus arcu, sit amet sollicitudin eros.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1943</time> In mattis elit vitae odio posuere, nec maximus massa varius. Suspendisse varius volutpat mattis. Vestibulum id magna est.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1946</time> In mattis elit vitae odio posuere, nec maximus massa varius. Suspendisse varius volutpat mattis. Vestibulum id magna est.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1956</time> In mattis elit vitae odio posuere, nec maximus massa varius. Suspendisse varius volutpat mattis. Vestibulum id magna est.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1957</time> In mattis elit vitae odio posuere, nec maximus massa varius. Suspendisse varius volutpat mattis. Vestibulum id magna est.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1967</time> Aenean condimentum odio a bibendum rhoncus. Ut mauris felis, volutpat eget porta faucibus, euismod quis ante.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1977</time> Vestibulum porttitor lorem sed pharetra dignissim. Nulla maximus, dui a tristique iaculis, quam dolor convallis enim, non dignissim ligula ipsum a turpis.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>1985</time> In mattis elit vitae odio posuere, nec maximus massa varius. Suspendisse varius volutpat mattis. Vestibulum id magna est.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2000</time> In mattis elit vitae odio posuere, nec maximus massa varius. Suspendisse varius volutpat mattis. Vestibulum id magna est.
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2005</time> In mattis elit vitae odio posuere, nec maximus massa varius. Suspendisse varius volutpat mattis. Vestibulum id magna est.
-        </div>
-      </li>
+
     </ul>
   </section>
 
   <section id="Resume" class="tabcontent center">
-    <iframe src="resume.pdf" style="width:718px; height:700px;" frameborder="0"></iframe>
+    <iframe src="resume.pdf" style="width:700px; height: 700px;" frameborder="0"></iframe>
     
   </section>
 
   <section id="AboutMe" class="tabcontent center">
-    <h3>About David Kozdra</h3>
+    <h3 style="margin-left: 35%;">About David Kozdra</h3>
+
+      <img id="face" src="images/ME.jpg" alt="David Kozdra"> </img>
 
 
-    <div> 
-      <img src="" alt="David Kozdra">
+      <p>
+        <strong>David Kozdra</strong> is a computer science student at Florida Polytechnic university.
 
+      </p>
+      <hr>
+      <br>
 
-    </div>
+      <p>
+        <strong>David Kozdra</strong> is a computer science student at Florida Polytechnic university.
 
+      </p>
+      <hr>
+      <br>
+
+      <p>
+        <strong>David Kozdra</strong> is a computer science student at Florida Polytechnic university.
+
+      </p>
+      <hr>
+      <br>
 
 
 
   </section>
 
-  <footer >
-    <div  class="center">
-      <a href="https://github.com/DavidKozdra"> <i class="fa fa-github fa-4x"> </i></a>
-    </div>
+  <footer>
+
+      <div class="center">
+        <a href="https://github.com/DavidKozdra"> <i class="fa fa-github fa-4x"> </i></a>
+        
+        <a href="https://github.com/DavidKozdra"> <i class="fa fa-linkedin fa-4x"> </i></a>
+
+        
+        <a href="https://github.com/DavidKozdra"> <i class="fa-brands fa-itch-io fa-4x"></i></a>
+
+      </div>
   </footer>
 
   <script src="index.js"> </script>
@@ -146,6 +130,10 @@
     
       function callbackFunc() {
         for (var i = 0; i < items.length; i++) {
+          if(i==0){
+            items[i].classList.add("in-view");
+          }
+
           if (isElementInViewport(items[i])) {
             items[i].classList.add("in-view");
           }

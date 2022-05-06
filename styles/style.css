@@ -6,9 +6,22 @@
 .center {
     margin: auto;
     width: 50%;
-    border: 3px solid green;
     padding: 10px;
   }
+
+#face {
+    border-radius: 50%;
+    box-shadow: inset;
+    width: 80%;
+    height: 80%;
+    margin: 5%;
+    display: inline-block;
+    border: 3px solid white;
+}
+
+td{
+    width:70%;
+}
 
 /*
 TIME LINE CODE 
@@ -252,22 +265,25 @@ time {
 /* FOOTER STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 footer {
+    width: 100%;
+    height: 28px;
     position: relative;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    bottom: 0px; 
+    left: 0px; 
+    text-align: center;
+    display: inline; 
+    
+    justify-content: center;
 
  }
-footer ul {
-
-    list-style: none;
-    text-decoration: none;
-}
 
 footer a {
-  display: flex;
-  margin-left: 4px;
-}
+    color: black;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 10%;
+    margin-right: 4%;
+  }
 /*
 TYPE WRITER CODE 
 */
@@ -286,7 +302,7 @@ TYPE WRITER CODE
   /* The typing effect */
   @keyframes typing {
     from { width: 0% }
-    to { width: 100% }
+    to { width: 30% }
   }
   
   /* The typewriter cursor effect */
@@ -317,7 +333,8 @@ TYPE WRITER CODE
     width: 100%;
     height: 100%;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 1%;
+    
   }
   
   /* Style the buttons inside the tab */
@@ -327,9 +344,11 @@ TYPE WRITER CODE
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 14px 16px;
+    padding: 10% 20%;
     transition: 0.3s;
-    font-size: 17px;
+    font-size: large;
+    border-radius: 100px;
+    margin-right: 1%;
   }
   
   /* Change background color of buttons on hover */
@@ -346,9 +365,8 @@ TYPE WRITER CODE
   .tabcontent {
     display: none;
     padding: 6px 12px;
-    border: 1px solid #ccc;
     border-top: none;
-    animation: TranslateX 0.5s;
+    animation: TranslateX 0.6s;
   }
 
   .btn-group button {
@@ -357,7 +375,7 @@ TYPE WRITER CODE
     padding: 10px 50px; /* Some padding */
     cursor: pointer; /* Pointer/hand icon */
     float: left; /* Float the buttons side by side */
-    width: 33%; /* Set a width */
+    width: 32%; /* Set a width */
   }
 
   
@@ -365,11 +383,11 @@ TYPE WRITER CODE
     border-right: none; /* Prevent double borders */
   }
   
-
-
-  footer a {
-    color: black;
-    text-decoration: none;
-    font-size: 16px;
+  #Resume {
+      
+    border: 1px solid #ccc;
   }
+
+
+
 
