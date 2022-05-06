@@ -70,7 +70,7 @@ h1 {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
 .timeline ul {
-  background: #456990;
+  background: var(--bg);
   padding: 50px 0;
 }
 
@@ -80,7 +80,7 @@ h1 {
   width: 6px;
   margin: 0 auto;
   padding-top: 50px;
-  background: var(--secoundary);
+  background: var(--main);
 }
 
 .timeline ul li::after {
@@ -360,7 +360,10 @@ TYPE WRITER CODE
   
   /* Change background color of buttons on hover */
   .tab button:hover {
+    color: black;
+    text-decoration: underline;   
     background-color: var(--secoundary);
+    opacity: .5;
   }
   
   /* Create an active/current tablink class */
@@ -368,6 +371,9 @@ TYPE WRITER CODE
     background-color: var(--main);
     color: var(--secoundary);
     font-style: italic;
+    font-weight: bold;
+    font-size: larger;
+
   }
   
   /* Style the tab content */
