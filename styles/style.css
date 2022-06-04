@@ -176,7 +176,7 @@ time {
 /* GENERAL MEDIA QUERIES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 70px) {
   .timeline ul li div {
     width: 250px;
   }
@@ -185,7 +185,7 @@ time {
     /*250+45-6*/
   }
   .typewriter{
-    width: 30%;
+    width: 50%;
   }
 }
 
@@ -270,6 +270,42 @@ time {
 }
 
 
+
+    /* pagination styling */
+
+    .pagination {
+      justify-content: center;
+      margin-right: 50%;
+    }
+
+
+    .pagination_section a {
+      color: black;
+      padding: 10px 18px;
+      text-decoration: none;
+
+  }
+   
+  /* pagination hover effect on non-active */
+  .pagination_section a:hover:not(.active) {
+      background-color: #031F3B;
+      color: white;
+  }
+   
+  /* pagination hover effect on active*/
+  a:nth-child(5) {
+      background-color: green;
+      color: white;
+  }
+        
+  a:nth-child(1) {
+      font-weight: bold;
+  }
+
+  a:nth-child(7) {
+    font-weight: bold;
+}
+
 /* FOOTER STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 footer {
@@ -304,6 +340,10 @@ TYPE WRITER CODE
       fadeIn 1s steps(10, end),
       typing 1.5s steps(40, end),
       blink-caret .75s step-end infinite;
+  }
+
+  .typewriter a:visited {
+    color: var(--text);
   }
   
   /* The typing effect */
@@ -340,7 +380,6 @@ TYPE WRITER CODE
     height: 100%;
     border-radius: 5px;
     margin-top: 1%;
-    
   }
   
   /* Style the buttons inside the tab */
@@ -392,11 +431,7 @@ TYPE WRITER CODE
     width: 32%; /* Set a width */
   }
 
-  
-  .btn-group button:not(:last-child) {
-    border-right: none; /* Prevent double borders */
-  }
-  
+
   #Resume {
       
     border: 1px solid var(--secoundary);
