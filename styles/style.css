@@ -356,8 +356,9 @@ TYPE WRITER CODE
   @keyframes blink-caret {
     from, to { border-color: transparent }
     50% { border-color: black; }
-    
+    100% { border-color: transparent; }
   }
+
 
   @keyframes fadeIn {
     from {opacity:0;}
