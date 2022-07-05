@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content=" David Kozdra is a computer science student at Florida Polytechnic university">
+  <meta name="keywords" content="Computer Science and Game Deveoloper ">
+  <meta name="author" content="David Kozdra">
+
+  <title>David Kozdra</title>
+
+  <link rel="stylesheet" href="../styles/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://kit.fontawesome.com/9b570f29d2.js" crossorigin="anonymous"></script>
+
+  
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+
+</head>
+<body>
+  <header class="typewriter">
+    <a href="../index.html">
+        <h1>{David Kozdra}</h1>
+        <h3> Software Engineering Student</h2>
+    </a>
+  </header>
+
+  <section class="center pagination_section ">
+    <a href="#"><< Previous</a>
+    <a href="#" title="Algorithm">1</a>
+    <a href="#" title="DataStructure">2</a>
+    <a href="#" title="Languages">3</a>
+    <a href="#" title="Interview" class="active">4</a>
+    <a href="#" title="practice">5</a>
+    <a href="#">Next >></a>
+  </section>
+
+  <footer>
+
+      <div class="center">
+        <a href="https://github.com/DavidKozdra"> <i class="fa fa-github fa-4x"> </i></a>
+        
+        <a href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i class="fa fa-linkedin fa-4x"> </i></a>
+
+        
+        <a href="https://magentaautumn.itch.io"> <i class="fa-brands fa-itch-io fa-4x"></i></a>
+
+      </div>
+  </footer>
+
+  <script src="index.js"> </script>
+
+  
+  <script> 
+    document.getElementById("defaultOpen").click();
+
+    (function () {
+      "use strict";
+    
+      // define variables
+      var items = document.querySelectorAll(".timeline li");
+    
+      // check if an element is in viewport
+      // http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+      function isElementInViewport(el) {
+        var rect = el.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+      }
+    
+      function callbackFunc() {
+        for (var i = 0; i < items.length; i++) {
+          if(i==0){
+            items[i].classList.add("in-view");
+          }
+
+          if (isElementInViewport(items[i])) {
+            items[i].classList.add("in-view");
+          }
+        }
+      }
+    
+      // listen for events
+      window.addEventListener("load", callbackFunc);
+      window.addEventListener("resize", callbackFunc);
+      window.addEventListener("scroll", callbackFunc);
+    })();
+    </script>
+</body>
+</html>
