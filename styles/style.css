@@ -17,11 +17,11 @@
   }
 
 #face {
-    border-radius: 50%;
+    border-radius: 40%;
     box-shadow: inset;
     width: 80%;
     height: 80%;
-    margin: 5%;
+    margin: 10%;
     display: inline-block;
     border: 3px solid white;
 }
@@ -438,6 +438,10 @@ TYPE WRITER CODE
     border: 1px solid var(--secoundary);
   }
 
+  #AboutMe{
+    font-size: larger;
+  }
+
   .embed-responsive {
     position: relative;
     display: block;
@@ -447,5 +451,11 @@ TYPE WRITER CODE
   }
 
 
-
+.techtag{
+  background-color: var(--main);
+  color: var(--secoundary);
+  border-radius: 10%;
+  font-size: small;
+  margin: 1%;
+}
 
