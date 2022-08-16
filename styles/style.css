@@ -1,6 +1,7 @@
 :root {
-    --main: #00458B;
-    --secoundary: #99DDFF;
+  
+    --main: #99DDFF;
+    --secoundary: #00458B;
     --text:black;
     --bg: aliceblue;
   }
@@ -405,7 +406,7 @@ TYPE WRITER CODE
     opacity: .5;
   }
   
-  /* Create an active/current tablink class */
+  /* Create an active/current tab link class */
   .tab button.active {
     background-color: var(--main);
     color: var(--secoundary);
@@ -459,3 +460,15 @@ TYPE WRITER CODE
   margin: 1%;
 }
 
+.techtag:hover{
+  background-color: var(--secoundary);
+  color: var(--main);
+  border-radius: 15%;
+  font-size: small;
+  outline: 5px;
+  margin: 1%;
+}
+
+a:visited {
+  color: var(--secoundary);
+}
