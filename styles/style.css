@@ -1,7 +1,7 @@
 :root {
   
-    --main: #99DDFF;
-    --secoundary: #00458B;
+    --main: #64008b;
+    --secoundary: #ff99ee;
     --text:black;
     --bg: aliceblue;
   }
@@ -18,7 +18,7 @@
   }
 
 #face {
-    border-radius: 40%;
+    border-radius: 10%;
     box-shadow: inset;
     width: 80%;
     height: 80%;
@@ -188,7 +188,31 @@ time {
   .typewriter{
     width: 50%;
   }
+
 }
+
+
+@media screen and (min-width: 70px) {
+  .embed-responsive{
+    display: none;
+  }
+
+  .resume-viewer-mobile{
+    display: block;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .embed-responsive{
+    display: block;
+  }
+
+  .resume-viewer-mobile{
+    display: none;
+  }
+}
+
+
 
 @media screen and (max-width: 600px) {
   .timeline ul li {
@@ -208,6 +232,8 @@ time {
   .typewriter{
     width: 100%;
   }
+  
+
 }
 
 
@@ -445,7 +471,6 @@ TYPE WRITER CODE
 
   .embed-responsive {
     position: relative;
-    display: block;
     width: 100%;
     padding: 0;
     overflow: hidden;
