@@ -227,7 +227,7 @@ time {
   .timeline ul li:nth-child(even) div::before {
     left: -15px;
     border-width: 8px 16px 8px 0;
-    border-color: transparent #f45b69 transparent transparent;
+    border-color: transparent var(--secoundary) transparent transparent;
   }
   .typewriter{
     width: 100%;
@@ -235,7 +235,27 @@ time {
   
 
 }
-
+.hero {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.hero img {
+  width: 50%;
+  height: 50%;
+}
+@media only screen and (max-width: 600px) {
+  /* Stack the images vertically on small screens */
+  .slide {
+    width: 100%;
+  }
+}
+.slide{
+  display: none;
+  animation: slide 2s;
+  width: 75%;
+}
 
 /* EXTRA/CLIP PATH STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -293,6 +313,18 @@ time {
   }
   100% {
     transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes slide {
+  0% {
+    transform: scale(.1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -408,6 +440,12 @@ TYPE WRITER CODE
     height: 100%;
     border-radius: 5px;
     margin-top: 1%;
+    font-size: x-small;
+  }
+
+  .tablinks{
+    font-size: x-small;
+    text-align: center;
   }
   
   /* Style the buttons inside the tab */
@@ -419,7 +457,7 @@ TYPE WRITER CODE
     cursor: pointer;
     padding: 10% 20%;
     transition: 0.3s;
-    font-size: large;
+    font-size: small;
     border-radius: 100px;
     margin-right: 1%;
   }
@@ -450,13 +488,33 @@ TYPE WRITER CODE
     animation: TranslateX 0.6s;
   }
 
+  .btn-group {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  
+  @media only screen and (max-width: 600px) {
+    .btn-group button {
+      width: auto;
+    }
+    .btn-group {
+      width: auto;
+      flex-wrap: wrap;
+    }
+  }
+  
+
   .btn-group button {
+    width: 100%;
+    margin-bottom: 10px;
     border: 1px solid var(--main); /* Green border */
     color: var(--main); /* White text */
     padding: 10px 50px; /* Some padding */
     cursor: pointer; /* Pointer/hand icon */
     float: left; /* Float the buttons side by side */
-    width: 32%; /* Set a width */
+    flex-direction: row;
+    justify-content: center;
   }
 
 
