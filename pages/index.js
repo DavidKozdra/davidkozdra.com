@@ -19,12 +19,10 @@
   for (var i = 0; i < slides.length; i++) {
     slides[i].addEventListener("mouseover", () => {
       flag = true;
-      //console.log("mouseover");
     });
     
     slides[i].addEventListener("mouseout", () => {
       flag = false;
-      //console.log("mouseover");
     });
   }
 
@@ -33,7 +31,6 @@
     if(slides.length < 1 || flag) {
       return;
     }
-    //console.log(currentSlide + " " + flag);
     slides[currentSlide].style.display = "none";
     currentSlide+=1;
     if(currentSlide == slides.length) {
@@ -43,19 +40,34 @@
   
   }, 5000);
 
-  setTimeout(function() {
-    //console.log(document.getElementsByClassName("typewriter")[0].style.border);
+  var func = setTimeout(function() {
     document.getElementsByClassName("typewriter")[0].style.border = "none";
-    //console.log(document.getElementsByClassName("typewriter")[0].style.border);
   }, 1000);
-
-  addEventListener("scroll", (event) => {});
-
-onscroll = (event) => {
-
   
-  var item = document.getElementById("arrow")
-  item.style.display = (window.scrollY > 0) ? "block" : "none";
-  //console.log(window.scrollY)
-};
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    } */

@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content=" David Kozdra is a computer science student at Florida Polytechnic university">
-  <meta name="keywords" content="Computer Science and Game Deveoloper ">
+  <meta name="keywords" content="Computer Science ">
   <meta name="author" content="David Kozdra">
 
   <title>David Kozdra</title>
@@ -13,8 +13,6 @@
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://kit.fontawesome.com/9b570f29d2.js" crossorigin="anonymous"></script>
-
-  
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
 </head>
@@ -23,30 +21,69 @@
   <div class="top">
   <header class="typewriter" >
     <h1>{David Kozdra}</h1>
-    <h3> Software Engineering Student</h2>
+    <h2> Software Engineer</h2>
   </header>
 
   <div class="tab btn-group">
-    <button class="tablinks" id="defaultOpen" onclick="openPage(event, 'Story')">My Story </button>
-    <button class="tablinks" onclick="openPage(event, 'Resume')">My Resume</button>
-    <button class="tablinks" onclick="openPage(event, 'AboutMe')">About Me</button>
+    <button class="tablinks" id="defaultOpen" onclick="openPage(event, 'Story')" aria-label="My Story Tab">My Story </button>
+    <button class="tablinks" onclick="openPage(event, 'Resume')" aria-label="My Resume Tab">My Resume</button>
+    <button class="tablinks" onclick="openPage(event, 'AboutMe')" aria-label="About Me Tab">About Me</button>
   </div>
 </div>
 
 
   <section id="Story" class="timeline tabcontent">
+
     <div class="hero">
-      <img src="images/favicon.ico" alt="Left Image">
-      <img class="slide" src="images/favicon.ico" alt="Right Image" style="display:block">
-      <img class="slide" src="images/favicon.ico" alt="Right Image" style="display:none">
-      <img class="slide" src="images/favicon.ico" alt="Right Image" style="display:none">
-      <img class="slide" src="images/favicon.ico" alt="Right Image" style="display:none">
-      
-      <img class="slide" src="images/favicon.ico" alt="Right Image" style="display:none">
-      <img class="slide" src="images/favicon.ico" alt="Right Image" style="display:none">
-      <img class="slide" src="images/favicon.ico" alt="Right Image" style="display:none">
+    
+      <canvas class="slide" id="a" style="display:block"> </canvas>
+      <canvas class="slide" id="b" style="display:none"> </canvas>
     </div>
+
+
+    <div id="arrow"><button   aria-label="back to top arrow" onclick="window.scrollTo(0, 0);"><i class="fa-solid fa-arrow-up fa-3x"></i></button> </div>
+
     <ul>
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td>
+                <h3> Graduation From Florida Poly</h3>
+              </td>
+
+              <td>
+                
+                <time>2023</time> 
+              </td>
+
+  
+            </tr>
+          </table>
+          <img  class="center" style="margin-left: 25%;" src="images/graduation.jpg" alt="Florida Poly Graduation"  width="auto" height="auto"  width="auto" height="auto"> </img>
+
+                    
+          <p>
+            I have Graduated from Florida Polytechnic University! I now have a Bachelors of Science in Computer Science with a concentration in Software Engineering.
+            There is so much more to learn and I am excited to see what the future holds.
+          </p>
+
+          <br>
+          <hr>
+          <span class="techtag"> JavaScript</span>
+          <span class="techtag"> Unity</span>
+          <span class="techtag"> C#</span>
+          <span class="techtag"> SQL</span>
+        <table style="width:100%">
+          <tr>
+            <td>
+              <a href="https://floridapoly.edu/" aria-label="home button"><i class="fa fa-home" > </i></a> 
+            </td>
+          </tr>
+        </table>
+        </div>
+      </li>
+
       <li>
         <div>
           <table style="width:100%">
@@ -67,7 +104,7 @@
           <p>
             Z-axis info and software development is a part of the promo app project.
             An event based social media that helped me learn to create a chat system, 
-            notifications work with tickets and lots of data. 
+            notifications work with tickets and lots of data. Web scrapping and creating middle ware and so much more. Over 30 hours a week of work.
           </p>
           <br>
           <hr>
@@ -81,7 +118,7 @@
         <table style="width:100%">
           <tr>
             <td>
-              <a href="https://www.zaxissolutions.com/"><i class="fa fa-home" > </i></a> 
+              <a href="https://www.zaxissolutions.com/" aria-label="Z-axis home page"><i class="fa fa-home" > </i></a> 
             </td>
           </tr>
         </table>
@@ -108,7 +145,7 @@
                     
           <p>
             Cloudy Meadows is a project a friend and I have worked on for the majority of the summer. 
-            Using Local stoarge and HTML CSS and JavaScript including p5.js. I did alot of code and most of the art as well. This is the first complete game I have made in awhile
+            Using Local storage and HTML CSS and JavaScript including p5.js. I did a lot of code and most of the art as well. This is the first complete game I have made in awhile
           </p>
           <br>
           <hr>
@@ -120,8 +157,8 @@
         <table style="width:100%">
           <tr>
             <td>
-              <a href="https://virtualnerd1.itch.io/cloudy-meadows"><i class="fa fa-play" > </i></a> 
-              <a href="https://github.com/Zoda390/Cloudy-Medows"><i class="fa fa-code" > </i></a> 
+              <a aria-label="link to play cloudy" href="https://virtualnerd1.itch.io/cloudy-meadows"><i class="fa fa-play" > </i></a> 
+              <a aria-label="link to cloudy's source" href="https://github.com/Zoda390/Cloudy-Medows"><i class="fa fa-code" > </i></a> 
             </td>
           </tr>
         </table>
@@ -146,7 +183,7 @@
           </table>
           <img  class="center" style="margin-left: 25%;" src="images/Bridxe.jpg" alt="Bridxe" width="auto" height="auto"> </img>
           <p>
-            I have had the privilege of working with Bridxe as a front end intern. Using react and chartjs I have been fetching from a server to create data visualization components. 
+            I have had the privilege of working with Bridxe as a front end intern. Using react and chart.js I have been fetching from a server to create data visualization components. 
             This is a remote job with very flexible hours I have been able to learn while I work as well.
             So far this is my favorite job: making projects, having quick yet productive meetings and getting to do tutorials to learn more all on my time.
           </p>
@@ -161,7 +198,7 @@
         <table style="width:100%">
           <tr>
             <td>
-              <a href="https://www.bridxe.com"><i class="fa fa-home" > </i></a> 
+              <a aria-label="bridxe home page" href="https://www.bridxe.com"><i class="fa fa-home" > </i></a> 
             </td>
           </tr>
         </table>
@@ -184,7 +221,7 @@
   
             </tr>
           </table>
-          <img  class="center" style="margin-left: 25%;" src="images/favicon.ico" alt=" davidkozdra website"  width="auto" height="auto"  width="auto" height="auto"> </img>
+          <img  class="center" style="margin-left: 25%;" src="images/favicon.ico" alt=" david kozdra website"  width="auto" height="auto"  width="auto" height="auto"> </img>
 
                     
           <p>
@@ -203,8 +240,8 @@
         <table style="width:100%">
           <tr>
             <td>
-              <a href="index.html"><i class="fa fa-play" > </i></a> 
-              <a href="https://github.com/DavidKozdra/davidkozdra.com"><i class="fa fa-code" > </i></a> 
+              <a aria-label="link to this site" href="index.html"><i class="fa fa-play" > </i></a> 
+              <a aria-label="the source code to this site FOSS forever" href="https://github.com/DavidKozdra/davidkozdra.com"><i class="fa fa-code" > </i></a> 
             </td>
           </tr>
         </table>
@@ -246,8 +283,8 @@
         <table style="width:100%">
           <tr>
             <td>
-              <a href="https://zoda39089.itch.io/nebula-hive-mind-reborn"><i class="fa fa-play" > </i></a> 
-              <a href="https://github.com/gerzytet/Nebula-hive-mind-reborn"><i class="fa fa-code" > </i></a> 
+              <a aria-label="Play link for Hive mind " href="http://142.93.243.224:3001/"><i class="fa fa-play" > </i></a> 
+              <a aria-label="Source code for hive mind nebula" href="https://github.com/gerzytet/Nebula-hive-mind-reborn"><i class="fa fa-code" > </i></a> 
             </td>
           </tr>
         </table>
@@ -275,7 +312,7 @@
                     
           <p>  I had the opportunity to shadow this company learning more about ORM database technology and C# web development.
             Precision makes admin boards for diverse companies. This means they work closely with database technologies and web development. 
-            They focus on UX as their customers can be anything from lunch ladys to farm owners. 
+            They focus on UX as their customers can be anything from lunch ladies to farm owners. 
             I got the opportunity to see some real world development and talk one on one.
 
           </p>
@@ -288,7 +325,7 @@
         <table style="width:100%">
           <tr>
             <td>
-              <a href="https://www.precisioninfinity.com/"><i class="fa fa-home" > </i></a> 
+              <a aria-label="Home Page" href="https://www.precisioninfinity.com/"><i class="fa fa-home" > </i></a> 
             </td>
           </tr>
         </table>
@@ -329,7 +366,7 @@
           <table style="width:100%">
           <tr>
             <td>
-              <a href="https://fighttm.com"><i class="fa fa-home" > </i></a> 
+              <a aria-label="link to fight tm home page" href="https://fighttm.com"><i class="fa fa-home" > </i></a> 
             </td>
 
           </tr>
@@ -342,7 +379,7 @@
           <table style="width:100%">
             <tr>
               <td>
-                <h3>Daintree Ecommerce</h3>
+                <h3>Daintree E-commerce site</h3>
               </td>
 
               <td>
@@ -353,7 +390,7 @@
   
             </tr>
           </table>
-          <img  class="center" style="margin-left: 25%;" src="images/DainTree.png" alt="daintree database project"  width="auto" height="auto"> </img>
+          <img  class="center" style="margin-left: 25%;" src="images/DainTree.png" alt="Daintree database project"  width="auto" height="auto"> </img>
 
                     
           <p>      Website I made with PHP and Mysql to practice database fundamentals and web development. 
@@ -371,8 +408,8 @@
           <tr>
             <td>
               
-              <a href="https://github.com/DavidKozdra/Daintree"><i class="fa fa-code" > </i></a> 
-              <a href="https://php.davidkozdra.com/Login/login.php"><i class="fa fa-play" > </i></a> 
+              <a aria-label="Link to Source code for Daintree" href="https://github.com/DavidKozdra/Daintree"><i class="fa fa-code" > </i></a> 
+              <a aria-label="Link to Daintree project" href="https://php.davidkozdra.com/Login/login.php"><i class="fa fa-play" > </i></a> 
             </td>
 
           </tr>
@@ -417,8 +454,8 @@
           <tr>
             <td>
               
-              <a href="https://github.com/DavidKozdra/UniversalTruth"><i class="fa fa-code" > </i></a> 
-              <a href="http://142.93.243.224:3001/"><i class="fa fa-play" > </i></a> 
+              <a aria-label="" href="https://github.com/DavidKozdra/UniversalTruth"><i class="fa fa-code" > </i></a> 
+              <a aria-label=" " href="http://142.93.243.224:3001/"><i class="fa fa-play" > </i></a> 
             </td>
           </tr>
         </table>
@@ -458,7 +495,7 @@
           <tr>
             <td>
               
-              <a href="https://virtualdeveloper.com"><i class="fa fa-home" > </i></a>
+              <a aria-label="" href="https://virtualdeveloper.com"><i class="fa fa-home" > </i></a>
             </td>
           </tr>
         </table>
@@ -500,7 +537,7 @@
           <tr>
             <td>
               
-              <a href="https://floridanationalnews.com"><i class="fa fa-home" > </i></a>
+              <a aria-label="" href="https://floridanationalnews.com"><i class="fa fa-home" > </i></a>
             </td>
 
           </tr>
@@ -542,7 +579,7 @@
           <table style="width:100%">
           <tr>
             <td>
-              <a href="https://floridapoly.edu"><i class="fa fa-home" > </i></a> 
+              <a aria-label="" href="https://floridapoly.edu"><i class="fa fa-home" > </i></a> 
             </td>
           </tr>
         </table>
@@ -582,7 +619,7 @@
         <table style="width:100%">
           <tr>
             <td>
-              <a href="https://magentaautumn.itch.io/blocksblocksblocks"><i class="fa fa-play" > </i></a> 
+              <a aria-label="" href="https://magentaautumn.itch.io/blocksblocksblocks"><i class="fa fa-play" > </i></a> 
             </td>
 
           </tr>
@@ -641,34 +678,31 @@
   </section>
 
   <section id="AboutMe" class="tabcontent center">
-    <h3 style="margin-left: 35%;">David Kozdra</h3>
-
-      <img id="face" src="images/ME.png" alt="David Kozdra"> </img>
-
-
-      <p>I am a full stack web developer with a background in computer science as a Senior at Florida Polytechnic University. 
-        I have a passion for creating beautiful and intuitive user interfaces. I also have lots of experience with back end development.
-
-      </p>
-      <hr>
-      <br>
-
-      <p>Interactive development with Unity and webgl help me work on my programming and visual art skills.
-         I love pixel art and work to improve my skills. Computing has fascinated me for a long time and I yearn to learn new things. 
-         I am excited for us to work together. 
-      </p>
+      <div style="text-align: center; font-size: 2em; font-weight: bold;">
+        <p>Hello, I'm David Kozdra `Full Stack Web Developer</p>
+      </div>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="max-width: 70%;">
+          <p>I have a passion for creating beautiful and intuitive user interfaces, and lots of experience with back end development as well.</p>
+          <br>
+          <p> Interactive development with Unity and webgl helps me hone my programming and visual art skills, and I am always eager to learn new things in the field of computing.</p>
+          <br>
+          <p>In my free time, I enjoy creating pixel art and working to improve my skills. I'm excited to work with you and bring my creativity and expertise to your projects.</p>
+        </div>
+        
+        <img src="images/ME.jpg" alt="Profile picture" style="border-radius: 5%; width: 200px; height: 200px;">
+      </div>
+      
 
   </section>
 
   <footer>
 
       <div class="center">
-        <a href="https://github.com/DavidKozdra"> <i class="fa fa-github fa-4x"> </i></a>
-        
-        <a href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i class="fa fa-linkedin fa-4x"> </i></a>
-
-        
-        <a href="https://magentaautumn.itch.io"> <i class="fa-brands fa-itch-io fa-4x"></i></a>
+        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra"> <i class="fa fa-github fa-4x"> </i></a>
+        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i class="fa fa-linkedin fa-4x"> </i></a>        
+        <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io"> <i class="fa-brands fa-itch-io fa-4x"></i></a>
 
       </div>
   </footer>
@@ -676,6 +710,8 @@
   <script src="index.js"> </script>
 
   
+  <script src="Games.js"> </script>
+
   <script> 
     document.getElementById("defaultOpen").click();
 
