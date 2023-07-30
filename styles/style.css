@@ -248,6 +248,7 @@ time {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  color:white;
 }
 
 .profile-picture {
@@ -335,16 +336,11 @@ canvas{
   background-color: aliceblue;
 }
 
-@media only screen and (max-width: 600px) {
-  /* Stack the images vertically on small screens */
-  .slide {
-    width: 100%;
-  }
-}
+
 .slide{
   display: none;
   animation: slide 2s;
-  width: 75%;
+  width: 100%;
 }
 .slide:hover{
   border: #031F3B 3px solid;
@@ -601,6 +597,10 @@ TYPE WRITER CODE
     .btn-group {
       width: auto;
       flex-wrap: wrap;
+    }
+
+    .hero {
+      flex-direction: column;
     }
   }
   
