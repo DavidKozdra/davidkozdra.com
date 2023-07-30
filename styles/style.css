@@ -296,6 +296,25 @@ time {
   border-radius: 3%;
 }
 
+.about-me-container{
+  color : white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.techGrid {
+  display: grid;  
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.profile-picture {
+  display: flex;
+  border-radius: 20px;
+  border: #031F3B 5px solid;
+}
+
 #arrow {
   position: fixed;
   z-index: 3;
