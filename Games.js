@@ -38,15 +38,13 @@ class collectable {
 
 class entity {
   
-  constructor (x,y){
+  constructor (x,y,alive){
     this.x = x;
     this.y = y;
+    this.alive=alive;
+    this.futureStatus;
   }
 
-  render(){
-    ctxA.fillStyle = 'green';
-    ctxA.fillRect(this.x, this.y, 19, 19);
-  }
 
 }
 
@@ -58,19 +56,17 @@ canvasC.addEventListener("keydown", handleKeyDown);
 canvasA.addEventListener("mousedown", getMouse);
 function handleKeyDown(event) {
   // Check the keyCode of the pressed key
-  switch (event.keyCode) {
-    case 37: // Left arrow
-      knight.x -= 10;
-      break;
-    case 38: // Up arrow
-    knight.y -= 10;
-      break;
-    case 39: // Right arrow
-    knight.x+= 10;
-      break;
-    case 40: // Down arrow
-    knight.y += 10;
-      break;
+
+  if(event.keyCode == 65 && knight.x > 0){
+    knight.x -= 20;
+  }
+  else if (event.keyCode ==68 && knight.x < 270) {
+    knight.x+= 20;
+  }
+  else if (event.keyCode == 87 && knight.y > 20){
+    knight.y -= 20;
+  }else if (event.keyCode ==83 && knight.y < 120) {
+    knight.y += 20;
   }
 }
 
@@ -106,15 +102,33 @@ function renderPoints(){
 function drawGame1() {
   if(points == 1000){
     ctxA.fillText("YOU FREAKING WIN I am so impressed and proud of you play my other games gaming legend ", 100 ,100);
-    return;
-  }
 
+  }else {
+    
   ctxA.clearRect(0, 0, canvasA.width, canvasA.height);
   ctxA.fillStyle = 'red';
   ctxA.fillRect(player.x, player.y, player.w, player.h);
   
   player.x -= (player.x - mouseX) * .1;
   player.y -= (player.y - mouseY) * .1;
+
+
+  for(var i =0; i < collectables.length; i++){
+    collectables[i].render();
+
+    if(isColliding(player,collectables[i])){
+       // remove the collectable
+      collectables.splice(i,1);
+      player.h +=.5;
+      player.w +=.5;
+      points+=1;
+    } 
+  }
+
+  if(collectables.length<200){
+    collectables.push(new collectable(getRandomInt(canvasA.width),getRandomInt(canvasA.width),2,2))
+  }  
+  renderPoints();
 
   if(!clicked){
     ctxA.fillStyle = 'black';
@@ -125,65 +139,79 @@ function drawGame1() {
     ctxA.fillText("Click to pick up food", 10, oscillation+50);
   }
   
-  for(var i =0; i < collectables.length; i++){
-    collectables[i].render();
 
-    if(isColliding(player,collectables[i])){
-       // remove the collectable
-      collectables.splice(i,1);
-      player.h +=.5;
-      player.w +=.5;
-      points+=1;
-    }
-    
-  }
-
-  if(collectables.length<200){
-    collectables.push(new collectable(getRandomInt(canvasA.width),getRandomInt(canvasA.width),2,2))
-  }  
-  renderPoints();
-
+}
   requestAnimationFrame(drawGame1);
 }
 
 
-let gridSize =20;
+let gridSize =15;
 let gen = 0;
 let entities = [];
 
+for (var i =0; i < gridSize; i++){
+  for(var j =0; j < gridSize/5; j++){
+    entities.push(new entity(i*20,j*20,i%10==0))
+  }
+}
+
+entities.push(new entity(i*20,j*20,j%2==0))
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
-function drawCircle() {
+async function drawCircle() {
   ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
   for(var i=0; i < gridSize; i++){
-    ctxB.fillStyle = 'grey';
-    for(var j=0; j < gridSize *.32; j++){
-      ctxB.fillRect(i*gridSize, j*gridSize, gridSize-1, gridSize-1);
+    var n = 0;
+    let {x,y} = entities[i];
 
+    for(var j=0; j < gridSize; j++){
+      /*
+        count the current near by ones for current
+        if the next one is alive count the neibors 
+      */
+     
+        ctxB.fillStyle = entities[i].alive ? "green" : "grey";
+        ctxB.fillRect(i*gridSize, j*gridSize, gridSize-1, gridSize-1);
       
-  /*
-  If the cell is alive, then it stays alive if it has either 2 or 3 live neighbors
-If the cell is dead, then it springs to life only in the case that it has 3 live neighbors
+        let ox = entities[j].x;
+        let oy = entities[j].y;
+        if(!entities[j].alive){
+          continue;
+        }
+        if ((x + 20 === ox && y + 20 === oy) || (x - 20 === ox && y - 20 === oy) ||(x === ox && y - 20 === oy) || (x === ox && y + 20 === oy) ||(x === ox && y + 20 === oy)) {
+            n += 1;
+          
+        } 
 
-  for each grid
-    check if there is an entity in the entity list
-    
-  */
-      for(var current=0; current < entities.length; current ++){
-          if(entities[current].x == i*gridSize){
+      ctxB.font = "10px Arial";
+      
+      ctxB.fillStyle = "white"
+      ctxB.fillText(n,i*gridSize, j*gridSize)
+    }
 
-          }
-
-
-      }
+    if(n > 2 && !entities[i].alive){
+      entities[i].futureStatus = true;
+    }
+    if(n < 2 && entities[i].alive){
+      entities[i].futureStatus = false;
     }
   }
+
+
   
-  
-  ctxB.fillStyle = 'black';
-  ctxB.fillText("Gen: " + gen, 0,147);
-  ctxB.fill();
-  requestAnimationFrame(drawCircle);
+gen +=1;
+for(var i=0; i < gridSize; i++){
+  entities[i].alive = entities[i].futureStatus;
+}
+ctxB.fillStyle = 'black';
+ctxB.fillText("Gen: " + gen, 250,147);
+ctxB.fill();
+
+await sleep(2000); // Sleep for 2000 milliseconds (2 seconds)
+requestAnimationFrame(drawCircle);
 }
 
 let knight = {x:100,y:50,health:5}

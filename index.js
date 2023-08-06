@@ -31,7 +31,6 @@
   //every 2 seconds add to the slide
   const intervalId = setInterval(function() {
   if (slides.length < 1 || flag) {
-    clearInterval(intervalId);
     return;
   }
 
