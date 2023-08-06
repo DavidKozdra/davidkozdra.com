@@ -29,20 +29,19 @@
   }
 
   //every 2 seconds add to the slide
-  setInterval(function() {
-    if(slides.length < 1 || flag) {
-      return;
-    }
-    //console.log(currentSlide + " " + flag);
-    slides[currentSlide].style.display = "none";
-    currentSlide+=1;
-    if(currentSlide == slides.length) {
-      currentSlide = 0;
-    }
-    slides[currentSlide].style.display = "block";
-  
-  }, 5000);
+  const intervalId = setInterval(function() {
+  if (slides.length < 1 || flag) {
+    clearInterval(intervalId);
+    return;
+  }
 
+  slides[currentSlide].style.display = "none";
+  currentSlide += 1;
+  if (currentSlide === slides.length) {
+    currentSlide = 0;
+  }
+  slides[currentSlide].style.display = "block";
+}, 10000);
   setTimeout(function() {
     //console.log(document.getElementsByClassName("typewriter")[0].style.border);
     document.getElementsByClassName("typewriter")[0].style.border = "none";

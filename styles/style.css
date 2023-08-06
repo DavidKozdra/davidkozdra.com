@@ -336,6 +336,10 @@ canvas{
   background-color: aliceblue;
 }
 
+canvas:focus-visible{
+  border: aqua 5px solid;
+}
+
 
 .slide{
   display: none;
