@@ -23,6 +23,8 @@ class collectable {
     this.y =y
     this.w = w;
     this.h = h;
+    this.dx = .1 *(getRandomInt(3) == 2) ? -1 : .2;
+    this.dy = .1*(getRandomInt(3) == 2) ? -1 : .2;;
   }
 
   render(){
@@ -112,9 +114,19 @@ function drawGame1() {
   player.x -= (player.x - mouseX) * .1;
   player.y -= (player.y - mouseY) * .1;
 
-
+  
   for(var i =0; i < collectables.length; i++){
     collectables[i].render();
+
+    if(collectables[i].x > 200 || collectables[i].x <= 0){
+      collectables[i].dx*= -1
+    }
+    if(collectables[i].y > 200 || collectables[i].y < 0){
+      collectables[i].dy *= -1
+    }
+
+    collectables[i].x += collectables[i].dx;
+    collectables[i].y += collectables[i].dy;
 
     if(isColliding(player,collectables[i])){
        // remove the collectable
@@ -152,7 +164,7 @@ let entities = [];
 for (var i =0; i < gridSize; i++){
   for(var j =0; j < gridSize; j++){
     //getRandomInt(3)==2
-    entities.push(new entity(i*gridSize,j*gridSize,true))
+    entities.push(new entity(i*gridSize,j*gridSize,getRandomInt(3)==2))
   }
 }
 
