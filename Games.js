@@ -150,69 +150,68 @@ let gen = 0;
 let entities = [];
 
 for (var i =0; i < gridSize; i++){
-  for(var j =0; j < gridSize/5; j++){
-    entities.push(new entity(i*20,j*20,i%10==0))
+  for(var j =0; j < gridSize; j++){
+    //getRandomInt(3)==2
+    entities.push(new entity(i*gridSize,j*gridSize,true))
   }
 }
 
-entities.push(new entity(i*20,j*20,j%2==0))
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
 async function drawCircle() {
   ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
-  for(var i=0; i < gridSize; i++){
-    var n = 0;
-    let {x,y} = entities[i];
 
-    for(var j=0; j < gridSize; j++){
-      /*
-        count the current near by ones for current
-        if the next one is alive count the neibors 
-      */
-     
-        ctxB.fillStyle = entities[i].alive ? "green" : "grey";
-        ctxB.fillRect(i*gridSize, j*gridSize, gridSize-1, gridSize-1);
-      
-        let ox = entities[j].x;
-        let oy = entities[j].y;
-        if(!entities[j].alive){
-          continue;
-        }
-        if ((x + 20 === ox && y + 20 === oy) || (x - 20 === ox && y - 20 === oy) ||(x === ox && y - 20 === oy) || (x === ox && y + 20 === oy) ||(x === ox && y + 20 === oy)) {
-            n += 1;
-          
-        } 
+  for (var i = 0; i < entities.length; i++) {
+    let n = 0;
+    let { x, y } = entities[i];
 
-      ctxB.font = "10px Arial";
-      
-      ctxB.fillStyle = "white"
-      ctxB.fillText(n,i*gridSize, j*gridSize)
-    }
+    for (var j = 0; j < entities.length; j++) {
+      let ox = entities[j].x;
+      let oy = entities[j].y;
 
-    if(n > 2 && !entities[i].alive){
-      entities[i].futureStatus = true;
+      // Skip non-alive entities and the cell itself
+      if (!entities[j].alive || (x==ox && y==oy)) {
+        continue;
+      }
+      if ((x + 15 === ox && y + 15 === oy) || (x - 15 === ox && y - 15 === oy) ||(x === ox && y - 15 === oy) || (x === ox && y + 15 === oy) ||(x === ox && y + 15 === oy)) {
+        n += 1;
+      }
+      if (Math.abs(x - ox) <= 1 && Math.abs(y - oy) <= 1 && !(x === ox && y === oy)) {
+        console.log("???")
+      } 
     }
-    if(n < 2 && entities[i].alive){
-      entities[i].futureStatus = false;
+    if ((entities[i].alive && (n === 2 || n === 3)) || (!entities[i].alive && n === 3)) {
+      entities[i].futureStatus = true; // Cell lives in the next generation
+    } else {
+      entities[i].futureStatus = false; // Cell dies in the next generation
     }
+    
+    // Draw cells
+    ctxB.fillStyle = entities[i].alive ? "green" : "grey";
+    ctxB.fillRect(x, y, gridSize - 1, gridSize - 1);
+    ctxB.font = "10px Arial";
+    ctxB.fillStyle = "white";
+    ctxB.fillText(n, x+1.5, y-7);
   }
 
+  // Update entities based on futureStatus
+  for (var i = 0; i < entities.length; i++) {
+    entities[i].alive = entities[i].futureStatus;
+    entities[i].futureStatus = false; // Reset futureStatus
+  }
 
-  
-gen +=1;
-for(var i=0; i < gridSize; i++){
-  entities[i].alive = entities[i].futureStatus;
-}
-ctxB.fillStyle = 'black';
-ctxB.fillText("Gen: " + gen, 250,147);
-ctxB.fill();
+  gen += 1;
 
-await sleep(2000); // Sleep for 2000 milliseconds (2 seconds)
-requestAnimationFrame(drawCircle);
+  ctxB.fillStyle = 'black';
+  ctxB.fillText("Gen: " + gen, 250, 147);
+  ctxB.fill();
+
+  await sleep(2000); // Sleep for 2000 milliseconds (2 seconds)
+  requestAnimationFrame(drawCircle);
 }
+
 
 let knight = {x:100,y:50,health:5}
 
