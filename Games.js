@@ -249,10 +249,10 @@ if (x - gridSize === ox && y + gridSize === oy) {
     
     // Draw cells
     ctxB.fillStyle = entities[i].alive ? "green" : "grey";
-    ctxB.fillRect(x, y, gridSize - 1, gridSize - 1);
+    ctxB.fillRect(x, y+tro, gridSize - 1, gridSize - 1);
     ctxB.font = "10px Arial";
     ctxB.fillStyle = "white";
-    ctxB.fillText(n, x, y+10);
+    ctxB.fillText(n, x, y+10+tro);
   }
 
   // Update entities based on futureStatus
@@ -266,13 +266,11 @@ if (x - gridSize === ox && y + gridSize === oy) {
   ctxB.fillStyle = 'black';
   ctxB.fillText("Gen: " + gen, 250, 147);
   ctxB.fill();
-
   await sleep(genTime); // Sleep for 2000 milliseconds (2 seconds)
 
+  
   updateCanvasRectangle();
   requestAnimationFrame(drawCircle);
-
-
 }
 
 
