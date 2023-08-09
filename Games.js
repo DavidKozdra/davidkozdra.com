@@ -15,6 +15,34 @@ let clicked = false;
 let points =0;
 let collectables = []
 let grid = []
+let elapsedTime =0;
+
+//timer rect offset
+let tro = 5;
+
+function updateCanvasRectangle() {
+  // Assuming you have defined and updated currentSlide and flag elsewhere in your code
+  let currentCanvas = document.getElementsByTagName("canvas")[currentSlide];
+  let context = currentCanvas.getContext("2d");
+  let width = 0;
+
+  let currentTime = Date.now();
+  elapsedTime = currentTime - startTime;
+
+  if (flag) {
+    elapsedTime = 0; // Reset elapsed time if flag is true
+  }
+
+  if (elapsedTime < 10000) {
+    width = (elapsedTime / 10000) * currentCanvas.width;
+  } else {
+    width = currentCanvas.width;
+  }
+  context.fillStyle = "blue";
+  context.fillRect(0, 0, width, tro);
+}
+
+
 
 class collectable {
   
@@ -97,7 +125,7 @@ function isColliding(player,other) {
 
 function renderPoints(){
   ctxA.fillStyle = "black"
-  ctxA.fillText( "Points "+ points, 200,15);
+  ctxA.fillText( "Points "+ points, 210,15+tro);
 
 }
 
@@ -151,13 +179,13 @@ function drawGame1() {
     ctxA.fillText("Click to pick up food", 10, oscillation+50);
   }
   
-
+  updateCanvasRectangle();
 }
   requestAnimationFrame(drawGame1);
 }
 
 
-let gridSize =15;
+let gridSize =12;
 let gen = 0;
 let entities = [];
 
@@ -172,7 +200,9 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+let genTime = 5000;
 async function drawCircle() {
+  
   ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
 
   for (var i = 0; i < entities.length; i++) {
@@ -187,12 +217,29 @@ async function drawCircle() {
       if (!entities[j].alive || (x==ox && y==oy)) {
         continue;
       }
-      if ((x + 15 === ox && y + 15 === oy) || (x - 15 === ox && y - 15 === oy) ||(x === ox && y - 15 === oy) || (x === ox && y + 15 === oy) ||(x === ox && y + 15 === oy)) {
+      if ((x + gridSize === ox && y + gridSize === oy) || (x - gridSize === ox && y - gridSize === oy) ||(x === ox && y - gridSize === oy) || (x === ox && y + gridSize === oy) ||(x === ox && y + gridSize === oy)) {
         n += 1;
       }
-      if (Math.abs(x - ox) <= 1 && Math.abs(y - oy) <= 1 && !(x === ox && y === oy)) {
-        console.log("???")
-      } 
+      // Rule 6: Left neighbor
+if (x - gridSize === ox && y === oy) {
+  n += 1;
+}
+
+// Rule 7: Right neighbor
+if (x + gridSize === ox && y === oy) {
+  n += 1;
+}
+
+// Rule 8: Upper-right neighbor
+if (x + gridSize === ox && y - gridSize === oy) {
+  n += 1;
+}
+
+// Rule 10: Lower-left neighbor
+if (x - gridSize === ox && y + gridSize === oy) {
+  n += 1;
+}
+
     }
     if ((entities[i].alive && (n === 2 || n === 3)) || (!entities[i].alive && n === 3)) {
       entities[i].futureStatus = true; // Cell lives in the next generation
@@ -205,7 +252,7 @@ async function drawCircle() {
     ctxB.fillRect(x, y, gridSize - 1, gridSize - 1);
     ctxB.font = "10px Arial";
     ctxB.fillStyle = "white";
-    ctxB.fillText(n, x+1.5, y-7);
+    ctxB.fillText(n, x, y+10);
   }
 
   // Update entities based on futureStatus
@@ -220,8 +267,12 @@ async function drawCircle() {
   ctxB.fillText("Gen: " + gen, 250, 147);
   ctxB.fill();
 
-  await sleep(2000); // Sleep for 2000 milliseconds (2 seconds)
+  await sleep(genTime); // Sleep for 2000 milliseconds (2 seconds)
+
+  updateCanvasRectangle();
   requestAnimationFrame(drawCircle);
+
+
 }
 
 
@@ -234,6 +285,7 @@ function rougeLike(){
   ctxC.fillStyle = 'red';
   ctxC.fillRect(knight.x, knight.y, 20,20);
   
+  updateCanvasRectangle();
   requestAnimationFrame(rougeLike);
 }
 

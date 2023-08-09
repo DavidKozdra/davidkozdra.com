@@ -1,4 +1,6 @@
-  function openPage(evt, pageName) {
+var startTime = Date.now();
+
+function openPage(evt, pageName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -33,6 +35,7 @@
   if (slides.length < 1 || flag) {
     return;
   }
+  startTime = Date.now();
 
   slides[currentSlide].style.display = "none";
   currentSlide += 1;
