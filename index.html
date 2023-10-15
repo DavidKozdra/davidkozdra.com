@@ -11,9 +11,10 @@
   <title>David Kozdra</title>
 
   <link rel="stylesheet" href="styles/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://kit.fontawesome.com/9b570f29d2.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 
 </head>
 <body>
@@ -34,10 +35,41 @@
 
   <section id="Story" class="timeline tabcontent">
 
-    <div class="hero">
-    
-      <canvas class="slide" id="a" style="display:block"> </canvas>
-      <canvas class="slide" id="b" style="display:none"> </canvas>
+    <div class="hero" >      
+      <canvas class="slide" id="b" style="display:block" tabindex="0"  aria-label="conway's game of life"> </canvas>
+      <canvas class="slide" id="a" style="display:none" tabindex="0" aria-label="displays a game where moving the mouse moves  the player to collect items on click"> </canvas>
+      <canvas class="slide" id="c" style="display:none" tabindex="0"  aria-label="simple dungeon crawler rouge like"> </canvas>
+
+      <div class="about-me-container">
+          <h1> Full Stack 
+            <abbr title="MongoDB express.js React.js Node.js">MERN </abbr> Developer</h1>
+          <img src="./images/Me.png" class="profile-picture" alt="david kozdra pink shirt behind the florida poly logo"/>
+          <div class="techGrid"> 
+            <span class="techtag"> JavaScript</span>
+          
+            <span class="techtag"> React</span>
+            
+            <span class="techtag"> Mongo DB</span>
+            
+            <span class="techtag"> NodeJs</span>
+            
+            <span class="techtag"> C#</span>
+            
+            <span class="techtag"> Git</span> 
+            
+            <span class="techtag"> HTML5</span> 
+            
+            <span class="techtag"> WordPress</span> 
+            
+            <span class="techtag"> Unity</span> 
+            
+            <span class="techtag"> PostMan</span> 
+            
+            <span class="techtag"> Express</span> 
+            
+            <span class="techtag"> React Native</span> 
+          </div>
+      </div>
     </div>
 
 
@@ -89,7 +121,7 @@
           <table style="width:100%">
             <tr>
               <td>
-                <h3> Z-axis Backend internship</h3>
+                <h3> Z-axis Solutions Fullstack developer</h3>
               </td>
     
               <td>
@@ -102,7 +134,7 @@
           </table>
           <img  class="center" style="margin-left: 25%;" src="images/Zaxis.png" alt="z-axis logo" width="auto" height="auto"> </img>
           <p>
-            Z-axis info and software development is a part of the promo app project.
+            Z-axis solutions.
             An event based social media that helped me learn to create a chat system, 
             notifications work with tickets and lots of data. Web scrapping and creating middle ware and so much more. Over 30 hours a week of work.
           </p>
@@ -112,6 +144,7 @@
           <span class="techtag"> Node JS</span>
           <span class="techtag"> Express</span>
           <span class="techtag"> MongoDB</span>
+          <span class="techtag"> React.js</span>
           <span class="techtag"> React Native</span>
     
     
@@ -141,8 +174,6 @@
             </tr>
           </table>
           <img  class="center" style="margin-left: 25%;" src="https://img.itch.zone/aW1nLzk2NTI0MTYuZ2lm/original/kOdkTD.gif" alt="  Cloudy Meadows Game"  width="auto" height="auto"  width="auto" height="auto"> </img>
-
-                    
           <p>
             Cloudy Meadows is a project a friend and I have worked on for the majority of the summer. 
             Using Local storage and HTML CSS and JavaScript including p5.js. I did a lot of code and most of the art as well. This is the first complete game I have made in awhile
@@ -679,7 +710,7 @@
 
   <section id="AboutMe" class="tabcontent center">
       <div style="text-align: center; font-size: 2em; font-weight: bold;">
-        <p>Hello, I'm David Kozdra `Full Stack Web Developer</p>
+        <p>Hello, I'm David Kozdra Full Stack Web Developer</p>
       </div>
       
       <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -700,16 +731,14 @@
   <footer>
 
       <div class="center">
-        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra"> <i class="fa fa-github fa-4x"> </i></a>
-        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i class="fa fa-linkedin fa-4x"> </i></a>        
+        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra"> <i class="fa-brands fa-github fa-4x"> </i></a>
+        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i class="fa-brands fa-linkedin fa-4x"> </i></a>        
         <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io"> <i class="fa-brands fa-itch-io fa-4x"></i></a>
-
       </div>
   </footer>
 
   <script src="index.js"> </script>
-
-  
+  <script src="ai.js"> </script>  
   <script src="Games.js"> </script>
 
   <script> 

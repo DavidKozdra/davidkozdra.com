@@ -1,5 +1,4 @@
 :root {
-  
     --main: #64008b;
     --secondary: #ff99ee;
     --text:black;
@@ -244,17 +243,11 @@ time {
 
 }
 
-.about-me-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .profile-picture {
   border-radius: 5%;
-  width: 300px;
-  height: 300px;
+  width: 50%;
+  height: 50%;
 }
 
 .text-container {
@@ -292,9 +285,34 @@ time {
   height: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
   background-color: var(--main);
   border: var(--main) 1px solid;
   border-radius: 3%;
+}
+
+
+.about-me-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  color:white;
+  text-align: center;
+  flex-direction: column;
+}
+
+.techGrid {
+  display: grid;  
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.profile-picture {
+  display: flex;
+  border-radius: 20px;
+  border: #031F3B 5px solid;
+  
 }
 
 #arrow {
@@ -311,22 +329,21 @@ time {
 }
 
 canvas{
-  width: 75%;
+  width: 100%;
   height: 100%;
   border-radius: 1%;
   background-color: aliceblue;
 }
 
-@media only screen and (max-width: 600px) {
-  /* Stack the images vertically on small screens */
-  .slide {
-    width: 100%;
-  }
+canvas:focus-visible{
+  border: aqua 5px solid;
 }
+
+
 .slide{
   display: none;
   animation: slide 2s;
-  width: 75%;
+  width: 100%;
 }
 .slide:hover{
   border: #031F3B 3px solid;
@@ -515,12 +532,19 @@ TYPE WRITER CODE
     height: 100%;
     border-radius: 5px;
     margin-top: 1%;
-    font-size: x-small;
+    font-size: medium;
   }
 
   .tablinks{
-    font-size: x-small;
+    font-size: medium;
     text-align: center;
+  }
+
+  .tablinks:focus{
+    outline: none;
+    font-weight: bold;
+    font-style: italic;
+    font-size: xx-large;
   }
   
   /* Style the buttons inside the tab */
@@ -549,9 +573,9 @@ TYPE WRITER CODE
   .tab button.active {
     background-color: var(--main);
     color: var(--secondary);
-    font-style: italic;
     font-weight: bold;
-    font-size: larger;
+    font-size: x-large;
+
 
   }
   
@@ -576,6 +600,10 @@ TYPE WRITER CODE
     .btn-group {
       width: auto;
       flex-wrap: wrap;
+    }
+
+    .hero {
+      flex-direction: column;
     }
   }
   
