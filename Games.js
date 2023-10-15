@@ -225,7 +225,7 @@ function touchedCell(event){
         cur.alive = !cur.alive;
         cur.futureStatus = !cur.futureStatus;
         if(selected.includes(cur)){
-          console.log("remove", selected.indexOf(cur))
+          //console.log("remove", selected.indexOf(cur))
           selected.splice(selected.indexOf(cur),1)
         }else {
           selected.push(cur)
@@ -341,11 +341,11 @@ function renderMap(){
   for(let row =0; row < map.length; row++){
     for(let col =0; col <10;col++){
       if(map[row][col] == 0){
-        console.log("air")
+        //console.log("air")
       }
       
       if(map[row][col] == 1){
-        console.log("door")
+        //console.log("door")
       }
     }
   }
