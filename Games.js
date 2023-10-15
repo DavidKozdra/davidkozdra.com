@@ -84,6 +84,7 @@ function getRandomInt(max) {
 
 canvasC.addEventListener("keydown", handleKeyDown);
 canvasA.addEventListener("mousedown", getMouse);
+
 function handleKeyDown(event) {
   // Check the keyCode of the pressed key
 
@@ -120,12 +121,13 @@ function isColliding(player,other) {
   if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2){
       return false;
   }
+  
   return true;
 }
 
 function renderPoints(){
   ctxA.fillStyle = "black"
-  ctxA.fillText( "Points "+ points, 210,15+tro);
+  ctxA.fillText( "Points "+ points, 200,15+tro);
 
 }
 
@@ -146,21 +148,21 @@ function drawGame1() {
   for(var i =0; i < collectables.length; i++){
     collectables[i].render();
 
-    if(collectables[i].x > 200 || collectables[i].x <= 0){
+    if(collectables[i].x > 300 || collectables[i].x <= 0){
       collectables[i].dx*= -1
     }
-    if(collectables[i].y > 200 || collectables[i].y < 0){
+    if(collectables[i].y > 150 || collectables[i].y < 0){
       collectables[i].dy *= -1
     }
 
     collectables[i].x += collectables[i].dx;
     collectables[i].y += collectables[i].dy;
 
-    if(isColliding(player,collectables[i])){
+    if(isColliding(player,collectables[i]) && clicked){
        // remove the collectable
       collectables.splice(i,1);
-      player.h +=.5;
-      player.w +=.5;
+      player.h +=.4;
+      player.w +=.4;
       points+=1;
     } 
   }
@@ -200,7 +202,53 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let genTime = 5000;
+canvasB.addEventListener("mousedown", touchedCell);
+
+canvasB.addEventListener("mouseup", touchedCell2);
+
+let selected = []
+
+function touchedCell(event){
+    const rect = canvasB.getBoundingClientRect();
+    const scaleX = canvasB.width / rect.width;
+    const scaleY = canvasB.height / rect.height;
+    mouseX = (event.clientX - rect.left) * scaleX;
+    mouseY = (event.clientY - rect.top) * scaleY;
+
+    renderSelected();
+    for(var i =0; i <entities.length; i++){
+      let cur = entities[i];
+      let x = cur.x
+      let y = cur.y
+
+      if(isColliding({x:mouseX,y:mouseY,w:1,h:1}, {x,y,w:gridSize,h:gridSize}) === true){
+        cur.alive = !cur.alive;
+        cur.futureStatus = !cur.futureStatus;
+        if(selected.includes(cur)){
+          console.log("remove", selected.indexOf(cur))
+          selected.splice(selected.indexOf(cur),1)
+        }else {
+          selected.push(cur)
+        }
+      }
+    }
+    renderSelected();
+}
+
+function touchedCell2(event){
+  const rect = canvasB.getBoundingClientRect();
+  const scaleX = canvasB.width / rect.width;
+  const scaleY = canvasB.height / rect.height;
+  let mouse2X = (event.clientX - rect.left) * scaleX;
+  let mouse2Y = (event.clientY - rect.top) * scaleY;
+  // read from global var mouseX and mouseY and 
+  //draw a rectangle with some opasity 
+  //then use the isColliding function to see if the size would overlap 
+  
+
+}
+
+let genTime = 2000;
 async function drawCircle() {
   
   ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
@@ -220,25 +268,25 @@ async function drawCircle() {
       if ((x + gridSize === ox && y + gridSize === oy) || (x - gridSize === ox && y - gridSize === oy) ||(x === ox && y - gridSize === oy) || (x === ox && y + gridSize === oy) ||(x === ox && y + gridSize === oy)) {
         n += 1;
       }
-      // Rule 6: Left neighbor
-if (x - gridSize === ox && y === oy) {
-  n += 1;
-}
+          // Rule 6: Left neighbor
+    if (x - gridSize === ox && y === oy) {
+      n += 1;
+    }
 
-// Rule 7: Right neighbor
-if (x + gridSize === ox && y === oy) {
-  n += 1;
-}
+    // Rule 7: Right neighbor
+    if (x + gridSize === ox && y === oy) {
+      n += 1;
+    }
 
-// Rule 8: Upper-right neighbor
-if (x + gridSize === ox && y - gridSize === oy) {
-  n += 1;
-}
+    // Rule 8: Upper-right neighbor
+    if (x + gridSize === ox && y - gridSize === oy) {
+      n += 1;
+    }
 
-// Rule 10: Lower-left neighbor
-if (x - gridSize === ox && y + gridSize === oy) {
-  n += 1;
-}
+    // Rule 10: Lower-left neighbor
+    if (x - gridSize === ox && y + gridSize === oy) {
+      n += 1;
+    }
 
     }
     if ((entities[i].alive && (n === 2 || n === 3)) || (!entities[i].alive && n === 3)) {
@@ -262,19 +310,46 @@ if (x - gridSize === ox && y + gridSize === oy) {
   }
 
   gen += 1;
-
   ctxB.fillStyle = 'black';
   ctxB.fillText("Gen: " + gen, 250, 147);
   ctxB.fill();
-  await sleep(genTime); // Sleep for 2000 milliseconds (2 seconds)
 
-  
+  selected = []
   updateCanvasRectangle();
-  requestAnimationFrame(drawCircle);
+}
+
+const interval = setInterval(drawCircle, genTime);
+
+
+function renderSelected() {
+  for(let i =0; i < selected.length; i++){
+    ctxB.fillStyle = "orange"
+    ctxB.fillRect(selected[i].x,selected[i].y+tro, gridSize-4,gridSize-4);
+  }
 }
 
 
 let knight = {x:100,y:50,health:5}
+
+let map =[[0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,1,0,0,0,0]
+]
+
+function renderMap(){
+  for(let row =0; row < map.length; row++){
+    for(let col =0; col <10;col++){
+      if(map[row][col] == 0){
+        console.log("air")
+      }
+      
+      if(map[row][col] == 1){
+        console.log("door")
+      }
+    }
+  }
+}
 
 function rougeLike(){
   
@@ -283,6 +358,8 @@ function rougeLike(){
   ctxC.fillStyle = 'red';
   ctxC.fillRect(knight.x, knight.y, 20,20);
   
+  renderMap();
+
   updateCanvasRectangle();
   requestAnimationFrame(rougeLike);
 }
@@ -290,3 +367,4 @@ function rougeLike(){
 drawGame1();
 drawCircle();
 rougeLike();
+renderSelected();

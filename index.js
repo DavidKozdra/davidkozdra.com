@@ -35,7 +35,7 @@ function openPage(evt, pageName) {
   if (slides.length < 1 || flag) {
     return;
   }
-  startTime = Date.now();
+  startTime = Date.now(); //for games 
 
   slides[currentSlide].style.display = "none";
   currentSlide += 1;
