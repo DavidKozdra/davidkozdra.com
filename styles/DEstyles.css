@@ -7,6 +7,28 @@ body {
     overflow: hidden;
 }
 
+.loader-back {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    border: 5px solid black;
+    width: 20dvw;
+    height: 2dvw;
+    z-index: 5;
+}
+.loader-icon-inner {
+    background-color: blue;
+    width: 0dvw;
+    height: 2dvw;
+    -webkit-animation: grow 1s linear ; /* Safari */
+    animation: grow 1s linear;
+}
+
+@keyframes grow {
+    0% { width: 0px; }
+    100% { width: 100%; }
+}
+
 #desktop {
     background-color: aqua;
     height: 90dvh;
@@ -163,15 +185,15 @@ body {
 }
 
 .desktop-grid {
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    display: flex;
     gap: 10px;
     padding: 10px;
-    margin: 10px;
-    height: 100%;
+    margin: 20px;
+    height: 80%;
     width: 100%;
-    border-radius: 5px;
+
+
+    position: absolute;
 }
 
 .desktop-icon {
@@ -182,6 +204,8 @@ body {
     align-items: center;
     max-width: 100px;
     max-height: 100px;
+
+    position: absolute;
 }
 
 .desktop-icon img {
@@ -192,6 +216,7 @@ body {
 .icon-text {
     font-size: 12px;
     text-align: center;
+    cursor: text;
 }
 
 .desktop-icon:hover {
@@ -204,3 +229,41 @@ body {
     color: white;
 }
 
+
+
+.selection-rect {
+    position: absolute;
+    border: 1px dotted rgb(0, 110, 255);
+    background-color: rgba(0, 0, 200, .5);
+    z-index: 3;
+
+}
+
+.app-bar {
+    gap : 3px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    overflow-x: scroll;
+}
+
+.app-bar-button {
+    background-color: transparent;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px dotted black;
+    min-width: 120px;
+
+}
+
+.app-bar-button-active {
+    border-top: 5px solid blue;
+}
+
+.fa-brands {
+    color: black;
+}

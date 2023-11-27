@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
   <meta name="description" content=" David Kozdra is a computer science student at Florida Polytechnic university">
   <meta name="keywords" content="Computer Science ">
@@ -13,93 +15,237 @@
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
 </head>
-<body>
-  
-  <div class="task-bar">
- <!-- Navigation Menu -->
 
- <div class="navigation">
-    <div class="drop-down">
-      <button> DK</button> 
-        <div class="drop-down-content">     
-          <button > test 1</button>
-          <button > test 2</button>
-          <button > Power</button>
+<body>
+  <div class="loader-page">  
+    <header> 
+      
+    Loading DK OS
+    </header>
+
+
+
+    <div class="loader-back">
+        <div class="loader-icon-inner"></div>
+    </div>
+
+  </div> 
+  <div id="de">
+  <div class="task-bar">
+    <!-- Navigation Menu -->
+
+    <div class="navigation">
+      <div class="drop-down">
+        <button> DK</button>
+        <div class="drop-down-content">
+          <button> test 1</button>
+          <button> test 2</button>
+          <button> Power</button>
         </div>
-    </div>
-    <div class="drop-down">
-      <button> About</button> 
-    </div>
-    <div class="drop-down">
-      <button> Programs</button> 
-        <div class="drop-down-content">     
-          <button > test 1</button>
-          <button > test 2</button>
-          <button > Power</button>
+      </div>
+      <div class="drop-down">
+        <button> About Me </button>
+      </div>
+      <div class="drop-down">
+        <button> Projects </button>
+        <div class="drop-down-content">
+          <button> test 1</button>
+          <button> test 2</button>
+          <button> Power</button>
         </div>
+      </div>
+
+      <div class="drop-down">
+        <button onclick="openWindow(event,'resume')"> Resume</button>
+      </div>
     </div>
-    
-    <div class="drop-down">
-      <button onclick="openWindow(event,'resume')"> Resume</button> 
+
+    <div class="status-bar">
+      <div id="clock"> </div>
+
+      <div id="weather"> </div>
+
+      <div id="Contact">
+        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra"> <i class="fa-brands fa-github ">
+          </i></a>
+        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i
+            class="fa-brands fa-linkedin "> </i></a>
+        <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io"> <i
+            class="fa-brands fa-itch-io "></i></a>
+      </div>
+
+      <div> <i class="fas fa-wifi"></i> </div>
     </div>
   </div>
 
-    <div class="status-bar">
-      <div id="clock">  </div>
-      
-      <div id="weather">  </div>
-      
-      <div id="Contact"> github linkedin itch  </div>
-     
-      <div> <i class="fas fa-wifi"></i> </div>
-    </div>
-</div>
-
-  <div id="desktop">
+  <div id="desktop" ondrag="drawSelectionRect()">
     <div id="windows">
-   
+
     </div>
 
     <div class="desktop-grid">
 
-      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')" tabindex="1"> 
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')"
+        onmousemove="moveElement(event,this)" tabindex="1">
         <img src="./images/blocks.jpg"></img>
 
-          <p class="icon-text">Game 1</p>
+        <p class="icon-text">Game 1</p>
 
       </div>
 
-      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')" tabindex="1"> 
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')" tabindex="1">
         <img src="./images/blocks.jpg"></img>
         <div class="icon-text">
-          <p >Game 1</p>
+          <p>Game 1</p>
         </div>
       </div>
 
 
     </div>
 
+  </div>
+  
+  <div class="app-bar"> Tasks <div class="btn-group"> </div>
+  </div>
+</div>
 
-  <script> 
+
+  <script>
 
 
-    function DisplayDate(){
+    let desktopIcons = document.getElementsByClassName("desktop-icon");
+
+
+    let windows = document.getElementsByClassName("window");
+    let winLen = 0;
+    let activeWindowCount = 0;
+    let loading = true;
+
+
+
+    async function update() {
+      if (loading) {
+        document.getElementsByClassName("loader-page")[0].style.display = "block";
+        document.getElementById("de").style.display = "none";
+        await delay( 1200);
+        document.getElementsByClassName("loader-page")[0].style.display = "none";
+        document.getElementById("de").style.display = "block";
+        loading = false;
+      } else {
+        //loop for all desktop icons
+        for (let i = 0; i < desktopIcons.length; i++) {
+          for (let j = 0; j < desktopIcons.length; j++) {
+            if (i != j) {
+              checkCollision(desktopIcons[i], desktopIcons[j]);
+            }
+          }
+          // Ensure that the top position doesn't go above a certain limit
+          const boundaryTop = 50; // Set your desired boundary top position
+          const boundaryLeft = 20; // Set your desired boundary top position
+          const rect = desktopIcons[i].getBoundingClientRect();
+
+
+          if (rect.top < boundaryTop) {
+            desktopIcons[i].style.top = boundaryTop + 'px';
+          }
+
+          if (rect.left < boundaryLeft) {
+            desktopIcons[i].style.left = boundaryLeft + 'px';
+          }
+        }
+
+        let activeWindows = document.getElementsByClassName("window");
+        activeWindows = Array.from(activeWindows).filter(window => window.style.display !== "none");
+        if (activeWindowCount != activeWindows.length) {
+          ReRenderAppTaskbar();
+          activeWindowCount = activeWindows.length;
+        } else if (windows.length != winLen) {
+          ReRenderAppTaskbar();
+          winLen = windows.length;
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    function ReRenderAppTaskbar() {
+
+      let taskbar = document.getElementsByClassName("app-bar");
+      taskbar[0].innerHTML = "Tasks ";
+
+      for (let i = 0; i < windows.length; i++) {
+        let taskbarButton = document.createElement("button");
+        taskbarButton.classList.add("app-bar-button");
+        if (windows[i].style.display !== "none") {
+          taskbarButton.classList.add("app-bar-button-active");
+        } else {
+          taskbarButton.classList.remove("app-bar-button-active");
+        }
+        taskbarButton.innerHTML = windows[i].id;
+        taskbarButton.onclick = function () { windows[i].style.display = "block"; };
+
+        taskbar[0].appendChild(taskbarButton);
+      }
+    }
+
+    function drawSelectionRect() {
+      //take the mouse pos and draw a rect from the start to the current pos
+      let rect = document.createElement("div");
+      rect.classList.add("selection-rect");
+
+      document.getElementById("desktop").appendChild(rect);
+
+
+    }
+
+
+    function CreateDesktopIconGrid() {
+
+      for (let i = 0; i < desktopIcons.length; i++) {
+        // set the position of the icon based on the index
+        desktopIcons[i].style.left = (i * 100) + "px";
+      }
+    }
+
+    function checkCollision(item1, item2) {
+      const rect1 = item1.getBoundingClientRect();
+      const rect2 = item2.getBoundingClientRect();
+
+      if (
+        rect1.left < rect2.right &&
+        rect1.right > rect2.left &&
+        rect1.top < rect2.bottom &&
+        rect1.bottom > rect2.top
+      ) {
+        // Calculate the overlap in both the x and y directions
+        const overlapX = Math.min(rect1.right - rect2.left, rect2.right - rect1.left);
+        const overlapY = Math.min(rect1.bottom - rect2.top, rect2.bottom - rect1.top);
+
+        // Move the items to create a gap equal to the overlap
+        item1.style.left = (parseFloat(item1.style.left) || 0) - overlapX + 'px';
+        item1.style.top = (parseFloat(item1.style.top) || 0) - overlapY + 'px';
+      }
+    }
+
+
+    CreateDesktopIconGrid();
+
+    function DisplayDate() {
       var date = new Date();
       var hours = date.getHours();
       var minutes = date.getMinutes();
       var seconds = date.getSeconds();
       var ampm = "AM";
-      if(hours > 12){
+      if (hours > 12) {
         hours = hours - 12;
         ampm = "PM";
       }
-      if(hours == 0){
+      if (hours == 0) {
         hours = 12;
       }
-      if(minutes < 10){
+      if (minutes < 10) {
         minutes = "0" + minutes;
       }
-      if(seconds < 10){
+      if (seconds < 10) {
         seconds = "0" + seconds;
       }
       var time = hours + ":" + minutes + ":" + seconds + " " + ampm;
@@ -109,203 +255,225 @@
     setInterval(DisplayDate, 500);
 
 
-  function closeWindow(e,name) {
-    // close the parent window from the event target
-    e.target.parentNode.parentNode.parentNode.remove();
+    function closeWindow(e, name) {
+      // close the parent window from the event target
+      e.target.parentNode.parentNode.parentNode.remove();
 
-  }
-
-  function minimizeWindow(e,name) {
-    e.target.parentNode.parentNode.parentNode.style.display = "none";
-  }
-
-  function maximizeWindow(e,name) {
-    console.log("maximize");
-    let window =  e.target.parentNode.parentNode.parentNode;
-
-    // e.target needs to be a window button 
-    //add larger class
-    if (window != null ) {
-      window.classList.toggle("larger");
-      (window.classList.contains("larger")) ? e.target.innerHTML = "~" : e.target.innerHTML = "[]";
-      console.log(e.target.innerHTML);
     }
-  }
+
+    function minimizeWindow(e, name) {
+      e.target.parentNode.parentNode.parentNode.style.display = "none";
+    }
+
+    function maximizeWindow(e, name) {
+      let window = e.target.parentNode.parentNode.parentNode;
+
+      // e.target needs to be a window button 
+      //add larger class
+      if (window != null) {
+        window.classList.toggle("larger");
+        (window.classList.contains("larger")) ? e.target.innerHTML = "~" : e.target.innerHTML = "[]";
+        console.log(e.target.innerHTML);
+      }
+    }
 
 
 
-  function dragElement(title,elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  
-  // If present, the header is where you move the DIV from:
-  title.onmousedown = dragMouseDown;
+    function dragElement(title, elmnt) {
+      var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // Get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // Call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
+      // If present, the header is where you move the DIV from:
+      title.onmousedown = dragMouseDown;
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // Calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    
-    // Check boundaries
-    const newTop = Math.max(0, Math.min(elmnt.offsetTop - pos2, window.innerHeight - elmnt.offsetHeight));
-    const newLeft = Math.max(0, Math.min(elmnt.offsetLeft - pos1, window.innerWidth - elmnt.offsetWidth));
+      function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
 
-    // Set the element's new position:
-    elmnt.style.top = newTop + "px";
-    elmnt.style.left = newLeft + "px";
-  }
+        // Get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // Call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+      }
 
-  function closeDragElement() {
-    // Stop moving when the mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
 
-function setCursor() {
-  //conditionally set the cursor to wait globally
-  document.body.style.cursor = "wait";
-} 
+        // Check boundaries
+        const newTop = Math.max(0, Math.min(elmnt.offsetTop - pos2, window.innerHeight - elmnt.offsetHeight));
+        const newLeft = Math.max(0, Math.min(elmnt.offsetLeft - pos1, window.innerWidth - elmnt.offsetWidth));
 
-function deselectAllIcons() {
-  let desktopIcons = document.getElementsByClassName("desktop-icon");
-  for (let i = 0; i < desktopIcons.length; i++) {
-    desktopIcons[i].classList.remove("active");
-  }
-}
+        // Set the element's new position:
+        elmnt.style.top = newTop + "px";
+        elmnt.style.left = newLeft + "px";
+      }
 
-function selectIcon(e) {
-  console.log(e.target);
-  if (!e.target.classList.contains("icon-text")) {
-    e.target.classList.toggle("active");
-  }
+      function closeDragElement() {
+        // Stop moving when the mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    function setCursor() {
+      //conditionally set the cursor to wait globally
+      document.body.style.cursor = "wait";
+    }
+
+    function deselectAllIcons() {
+      let desktopIcons = document.getElementsByClassName("desktop-icon");
+      for (let i = 0; i < desktopIcons.length; i++) {
+        desktopIcons[i].classList.remove("active");
+      }
+    }
+
+    function selectIcon(e) {
+      console.log(e.target);
+      if (!e.target.classList.contains("icon-text")) {
+        e.target.classList.toggle("active");
+      }
 
 
-  e.target.classList.toggle("active");
-}function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+      e.target.classList.toggle("active");
+    }
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
-async function desktopIconRouter(e, newWindowHeaderTitle) {
-    // Set the cursor to the waiting state
-    setCursor(e);
-  
-    // Wait for the specified delay
-    await delay((Math.random() * 1000) + 200);
+    async function desktopIconRouter(e, newWindowHeaderTitle) {
+      // Set the cursor to the waiting state
+      setCursor(e);
 
-    // Now the delay is complete, proceed to open the window
-    switch (newWindowHeaderTitle) {
+      // Wait for the specified delay
+      await delay((Math.random() * 1000) + 200);
+
+      // Now the delay is complete, proceed to open the window
+      switch (newWindowHeaderTitle) {
         case "test":
-            createTestWindow();
-            break;
+          createTestWindow();
+          break;
         case "resume":
-            createResumeWindow();
-            break;
+          createResumeWindow();
+          break;
         default:
-            console.log("Window not found");
-            break;
+          console.log("Window not found");
+          break;
+      }
+
+      // Reset the cursor to the default state
+      document.body.style.cursor = "default";
+      e.target.style.cursor = "default";
     }
 
-    // Reset the cursor to the default state
-    document.body.style.cursor = "default";
-}
+    function setCursor(e) {
+      // Your cursor-setting logic here
+      document.body.style.cursor = "wait";
+      // set important cursor styles
 
-function setCursor(e) {
-    // Your cursor-setting logic here
-    document.body.style.cursor = "wait";
-    // set important cursor styles
+      e.target.style.cursor = "wait";
 
-    e.target.style.cursor = "wait";
-
-}
+    }
 
 
-function createTestWindow() {
+    function createTestWindow() {
 
-    // create new window
-    let newWindow = document.createElement("div");
-    newWindow.classList.add("window");
-    newWindow.id = "test";
+      // create new window
+      let newWindow = document.createElement("div");
+      newWindow.classList.add("window");
+      newWindow.id = "test";
 
-    let newWindowHeader = document.createElement("div");
-    newWindowHeader.classList.add("window-title");
+      let newWindowHeader = document.createElement("div");
+      newWindowHeader.classList.add("window-title");
 
-    let newWindowHeaderTitle = document.createElement("p");
-    newWindowHeaderTitle.innerHTML = "Blocks";
+      let newWindowHeaderTitle = document.createElement("p");
+      newWindowHeaderTitle.innerHTML = "Blocks";
 
-    let newWindowHeaderButtons = document.createElement("div");
-    newWindowHeaderButtons.classList.add("window-buttons");
+      let newWindowHeaderButtons = document.createElement("div");
+      newWindowHeaderButtons.classList.add("window-buttons");
 
-    let newWindowHeaderButtonMin = document.createElement("button");
-    newWindowHeaderButtonMin.classList.add("window-button");
-    newWindowHeaderButtonMin.innerHTML = "_";
+      let newWindowHeaderButtonMin = document.createElement("button");
+      newWindowHeaderButtonMin.classList.add("window-button");
+      newWindowHeaderButtonMin.innerHTML = "_";
 
-    let newWindowHeaderButtonMax = document.createElement("button");
-    newWindowHeaderButtonMax.classList.add("window-button");
-    newWindowHeaderButtonMax.innerHTML = "[]";
+      let newWindowHeaderButtonMax = document.createElement("button");
+      newWindowHeaderButtonMax.classList.add("window-button");
+      newWindowHeaderButtonMax.innerHTML = "[]";
 
-    let newWindowHeaderButtonClose = document.createElement("button");
-    newWindowHeaderButtonClose.classList.add("window-button");
-    newWindowHeaderButtonClose.innerHTML = "X";
+      let newWindowHeaderButtonClose = document.createElement("button");
+      newWindowHeaderButtonClose.classList.add("window-button");
+      newWindowHeaderButtonClose.innerHTML = "X";
 
-    let newWindowContent = document.createElement("div");
-    newWindowContent.classList.add("window-content");
+      let newWindowContent = document.createElement("div");
+      newWindowContent.classList.add("window-content");
 
-    let newWindowContentText = document.createElement("p");
-    newWindowContentText.innerHTML = "test";
+      let newWindowContentText = document.createElement("p");
+      newWindowContentText.innerHTML = "test";
 
-    newWindowHeaderButtonClose.addEventListener('click', function() {
-        closeWindow(event,newWindow.id);
-    });
+      newWindowHeaderButtonClose.addEventListener('click', function () {
+        closeWindow(event, newWindow.id);
+      });
 
-    newWindowHeaderButtonMin.addEventListener('click', function() {
-        minimizeWindow(event,newWindow.id);
-    });
+      newWindowHeaderButtonMin.addEventListener('click', function () {
+        minimizeWindow(event, newWindow.id);
+      });
 
-    newWindowHeaderButtonMax.addEventListener('click', function() {
-        maximizeWindow(event,newWindow.id);
-    });
+      newWindowHeaderButtonMax.addEventListener('click', function () {
+        maximizeWindow(event, newWindow.id);
+      });
 
-    newWindowHeaderButtons.appendChild(newWindowHeaderButtonMin);
-    newWindowHeaderButtons.appendChild(newWindowHeaderButtonMax);
-    newWindowHeaderButtons.appendChild(newWindowHeaderButtonClose);
+      newWindowHeaderButtons.appendChild(newWindowHeaderButtonMin);
+      newWindowHeaderButtons.appendChild(newWindowHeaderButtonMax);
+      newWindowHeaderButtons.appendChild(newWindowHeaderButtonClose);
 
-    newWindowHeader.appendChild(newWindowHeaderTitle);
-    newWindowHeader.appendChild(newWindowHeaderButtons);
-    newWindow.appendChild(newWindowHeader);
+      newWindowHeader.appendChild(newWindowHeaderTitle);
+      newWindowHeader.appendChild(newWindowHeaderButtons);
+      newWindow.appendChild(newWindowHeader);
 
-    newWindowContent.appendChild(newWindowContentText);
-    newWindow.appendChild(newWindowContent);
-    newWindow.style.display = "block";
+      newWindowContent.appendChild(newWindowContentText);
+      newWindow.appendChild(newWindowContent);
+      newWindow.style.display = "block";
 
-    document.getElementById("windows").appendChild(newWindow);
+      document.getElementById("windows").appendChild(newWindow);
 
-    let window_headers = document.getElementsByClassName("window-title");
-    let windows = document.getElementsByClassName("window");
+      let window_headers = document.getElementsByClassName("window-title");
+      let windows = document.getElementsByClassName("window");
 
-    for (let i = 0; i < windows.length; i++) {
+      for (let i = 0; i < windows.length; i++) {
         dragElement(window_headers[i], windows[i]);
+      }
     }
-}
+    for (let i = 0; i < desktopIcons.length; i++) {
+      dragElement(desktopIcons[i], desktopIcons[i]);
+    }
 
 
-  
-</script>
+    function moveElement(event, element) {
+      const draggedElement = element;
+
+      // Check if the mouse is pressed
+      if (event.buttons !== 1) return;
+
+      // Calculate the new position of the dragged element
+      const newX = event.clientX - draggedElement.offsetWidth / 2;
+      const newY = event.clientY - draggedElement.offsetHeight / 2;
+
+      // Set the new position
+      draggedElement.style.left = newX + 'px';
+      draggedElement.style.top = newY + 'px';
+    }
+
+    requestAnimationFrame(update);
+
+  </script>
 
 
 </body>
+
 </html>
