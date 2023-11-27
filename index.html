@@ -18,12 +18,9 @@
 
 <body>
   <div class="loader-page">  
-    <header> 
-      
+    <header class="typewriter"> 
     Loading DK OS
     </header>
-
-
 
     <div class="loader-back">
         <div class="loader-icon-inner"></div>
@@ -38,9 +35,9 @@
       <div class="drop-down">
         <button> DK</button>
         <div class="drop-down-content">
-          <button> test 1</button>
-          <button> test 2</button>
-          <button> Power</button>
+          <button> <a href="./index copy.html">Old Website </a></button>
+          <button> Settings</button>
+          <button onclick="refresh()"> Power</button>
         </div>
       </div>
       <div class="drop-down">
@@ -56,7 +53,7 @@
       </div>
 
       <div class="drop-down">
-        <button onclick="openWindow(event,'resume')"> Resume</button>
+        <button onclick="desktopIconRouter(event,'resume')"> Resume</button>
       </div>
     </div>
 
@@ -88,9 +85,7 @@
       <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')"
         onmousemove="moveElement(event,this)" tabindex="1">
         <img src="./images/blocks.jpg"></img>
-
-        <p class="icon-text">Game 1</p>
-
+        <p contenteditable="true" class="icon-text">Game 1</p>
       </div>
 
       <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')" tabindex="1">
@@ -99,8 +94,6 @@
           <p>Game 1</p>
         </div>
       </div>
-
-
     </div>
 
   </div>
@@ -174,15 +167,20 @@
 
       for (let i = 0; i < windows.length; i++) {
         let taskbarButton = document.createElement("button");
+        let taskbarButtonIcon = document.createElement("img");
+        taskbarButtonIcon.classList.add("window-icon");
+        taskbarButtonIcon.src = windows[i].childNodes[0].childNodes[0].src;
         taskbarButton.classList.add("app-bar-button");
         if (windows[i].style.display !== "none") {
           taskbarButton.classList.add("app-bar-button-active");
         } else {
           taskbarButton.classList.remove("app-bar-button-active");
         }
-        taskbarButton.innerHTML = windows[i].id;
         taskbarButton.onclick = function () { windows[i].style.display = "block"; };
 
+        taskbarButton.appendChild(taskbarButtonIcon);
+        
+        taskbarButton.innerHTML += windows[i].id;
         taskbar[0].appendChild(taskbarButton);
       }
     }
@@ -191,10 +189,7 @@
       //take the mouse pos and draw a rect from the start to the current pos
       let rect = document.createElement("div");
       rect.classList.add("selection-rect");
-
       document.getElementById("desktop").appendChild(rect);
-
-
     }
 
 
@@ -357,10 +352,17 @@
       // Now the delay is complete, proceed to open the window
       switch (newWindowHeaderTitle) {
         case "test":
-          createTestWindow();
+          createWindow("Test", "This is a test window", "./images/blocks.jpg");
           break;
         case "resume":
-          createResumeWindow();
+            let resume = document.createElement("iframe");
+            resume.classList.add("embed-responsive");
+            resume.src = "./resume.pdf";
+            resume.style.height = "700px";
+            resume.style.width = "100%";
+            resume.frameborder = "0";
+
+          createWindow("Resume", resume, "./images/blocks.jpg");
           break;
         default:
           console.log("Window not found");
@@ -380,82 +382,111 @@
       e.target.style.cursor = "wait";
 
     }
+    function createWindow(title, content, iconSrc) {
 
+    
+        const id = title.toLowerCase().replace(/\s+/g, '-'); // Generate id based on the title
+        const newWindow = document.createElement("div");
+        newWindow.classList.add("window");
+        newWindow.id = id;
 
-    function createTestWindow() {
+        const headerImage = createWindowHeaderImage(iconSrc);
+        const header = createWindowHeader(title, id);
+        const buttons = createWindowButtons(id);
 
-      // create new window
-      let newWindow = document.createElement("div");
-      newWindow.classList.add("window");
-      newWindow.id = "test";
+        header.appendChild(headerImage);
+        header.appendChild(buttons);
+        newWindow.appendChild(header);
 
-      let newWindowHeader = document.createElement("div");
-      newWindowHeader.classList.add("window-title");
-
-      let newWindowHeaderTitle = document.createElement("p");
-      newWindowHeaderTitle.innerHTML = "Blocks";
-
-      let newWindowHeaderButtons = document.createElement("div");
-      newWindowHeaderButtons.classList.add("window-buttons");
-
-      let newWindowHeaderButtonMin = document.createElement("button");
-      newWindowHeaderButtonMin.classList.add("window-button");
-      newWindowHeaderButtonMin.innerHTML = "_";
-
-      let newWindowHeaderButtonMax = document.createElement("button");
-      newWindowHeaderButtonMax.classList.add("window-button");
-      newWindowHeaderButtonMax.innerHTML = "[]";
-
-      let newWindowHeaderButtonClose = document.createElement("button");
-      newWindowHeaderButtonClose.classList.add("window-button");
-      newWindowHeaderButtonClose.innerHTML = "X";
-
-      let newWindowContent = document.createElement("div");
-      newWindowContent.classList.add("window-content");
-
-      let newWindowContentText = document.createElement("p");
-      newWindowContentText.innerHTML = "test";
-
-      newWindowHeaderButtonClose.addEventListener('click', function () {
-        closeWindow(event, newWindow.id);
-      });
-
-      newWindowHeaderButtonMin.addEventListener('click', function () {
-        minimizeWindow(event, newWindow.id);
-      });
-
-      newWindowHeaderButtonMax.addEventListener('click', function () {
-        maximizeWindow(event, newWindow.id);
-      });
-
-      newWindowHeaderButtons.appendChild(newWindowHeaderButtonMin);
-      newWindowHeaderButtons.appendChild(newWindowHeaderButtonMax);
-      newWindowHeaderButtons.appendChild(newWindowHeaderButtonClose);
-
-      newWindowHeader.appendChild(newWindowHeaderTitle);
-      newWindowHeader.appendChild(newWindowHeaderButtons);
-      newWindow.appendChild(newWindowHeader);
-
-      newWindowContent.appendChild(newWindowContentText);
-      newWindow.appendChild(newWindowContent);
-      newWindow.style.display = "block";
-
-      document.getElementById("windows").appendChild(newWindow);
-
-      let window_headers = document.getElementsByClassName("window-title");
-      let windows = document.getElementsByClassName("window");
-
-      for (let i = 0; i < windows.length; i++) {
-        dragElement(window_headers[i], windows[i]);
+      // Check if the content is a node 
+      if (!(content instanceof Node)) {
+          const windowContent = createWindowContent(content);
+          newWindow.appendChild(windowContent);
+      } else {
+          newWindow.appendChild(content);
       }
+
+
+        newWindow.style.display = "block";
+        document.getElementById("windows").appendChild(newWindow);
+
+        // Initialize drag behavior
+        dragElement(header, newWindow);
     }
+
+    function createWindowHeaderImage(src) {
+        const headerImage = document.createElement("img");
+        headerImage.classList.add("window-icon");
+        headerImage.src = src;
+        return headerImage;
+    }
+
+    function createWindowHeader(title, id) {
+        const header = document.createElement("div");
+        header.classList.add("window-title");
+
+        const headerTitle = document.createElement("p");
+        headerTitle.innerHTML = title;
+
+        header.appendChild(headerTitle);
+        return header;
+    }
+
+    function createWindowButtons(id) {
+        const buttons = document.createElement("div");
+        buttons.classList.add("window-buttons");
+
+        const buttonMin = createWindowButton("_", function () {
+            minimizeWindow(event, id);
+        });
+
+        const buttonMax = createWindowButton("[]", function () {
+            maximizeWindow(event, id);
+        });
+
+        const buttonClose = createWindowButton("X", function () {
+            closeWindow(event, id);
+        });
+
+        buttons.appendChild(buttonMin);
+        buttons.appendChild(buttonMax);
+        buttons.appendChild(buttonClose);
+
+        return buttons;
+    }
+
+    function createWindowButton(text, clickHandler) {
+        const button = document.createElement("button");
+        button.classList.add("window-button");
+        button.innerHTML = text;
+        button.addEventListener('click', clickHandler);
+        return button;
+    }
+
+    function createWindowContent(content) {
+        const contentElement = document.createElement("div");
+        contentElement.classList.add("window-content");
+
+        const contentText = document.createElement("p");
+        contentText.innerHTML = content;
+
+        // Modify this part to add your specific content, e.g., iframe
+        contentElement.appendChild(contentText);
+
+    
+    // Initialize drag for desktop icons
     for (let i = 0; i < desktopIcons.length; i++) {
-      dragElement(desktopIcons[i], desktopIcons[i]);
+        dragElement(desktopIcons[i], desktopIcons[i]);
+    }
+
+        return contentElement;
     }
 
 
     function moveElement(event, element) {
       const draggedElement = element;
+
+      element.style.cursor = "grabbing";
 
       // Check if the mouse is pressed
       if (event.buttons !== 1) return;
@@ -470,6 +501,11 @@
     }
 
     requestAnimationFrame(update);
+
+
+    function refresh() {
+      location.reload();
+    }
 
   </script>
 

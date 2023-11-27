@@ -75,6 +75,10 @@ body {
     font-size: 16px;
 }
 
+button {
+    cursor: pointer;
+}
+
 .task-bar {
     display: flex;
     flex-direction: row;
@@ -121,7 +125,14 @@ body {
     position: absolute;
     background-color: #f9f9f9;
     border: 1px dotted black;
+    text-decoration: none;
+    color: black;
+}
 
+.drop-down-content a {
+
+    text-decoration: none;
+    color: black;
 }
 
 .drop-down {
@@ -182,6 +193,13 @@ body {
     width: 100%;
 
     cursor: move;
+}
+
+.window-icon {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    border-radius: 50px;
 }
 
 .desktop-grid {
@@ -257,6 +275,10 @@ body {
     cursor: pointer;
     border: 1px dotted black;
     min-width: 120px;
+    min-height: 20px;
+
+    display: flex;
+    flex-direction: row;
 
 }
 
@@ -267,3 +289,32 @@ body {
 .fa-brands {
     color: black;
 }
+
+.typewriter {
+    overflow: hidden; /* Ensures the content is not revealed until the animation */
+    border-right: .1em solid black; /* The typwriter cursor */
+    white-space: nowrap; /* Keeps the content on a single line */
+    margin: 10 auto; /* Gives that scrolling effect as the typing happens */
+    letter-spacing: .15em; /* Adjust as needed */
+    animation: 
+      fadeIn 1s steps(10, end),
+      typing 1.5s steps(40, end),
+      blink-caret .75s step-end infinite;
+  }
+
+  .typewriter a:visited {
+    color: var(--text);
+  }
+  
+  /* The typing effect */
+  @keyframes typing {
+    from { width: 0% }
+    to { width: 50% }
+  }
+  
+  .embed-responsive {
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+  }
