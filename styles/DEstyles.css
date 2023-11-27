@@ -1,0 +1,206 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    background-color: #f1f1f1;
+    overflow: hidden;
+}
+
+#desktop {
+    background-color: aqua;
+    height: 90dvh;
+    width: 100dvw;
+    overflow: hidden;
+    z-index: 1;
+}
+
+
+.form-container {
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+
+    justify-content: center;
+    align-items: center;
+    margin-left: 20%;
+    margin-right: 20%;
+
+}
+
+.form-container-title{
+    background-color: blue;
+    text-align: center;
+    color : white;
+}
+
+.form-container-title h1{
+    color: white;
+}
+
+.de-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.task-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: antiquewhite;
+    padding: 1%;
+    
+    border-bottom: #4CAF50 2px solid;
+}
+
+.status-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 10px;
+    align-items: center;
+    background-color: antiquewhite;
+    
+}
+
+.task-bar button {
+    background-color: transparent;
+    color: black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    min-width: 120px;
+}
+
+.task-bar button:hover {
+    background-color: blue;
+
+    color: white;
+}
+
+.drop-down-content {
+    display: none ;
+    list-style: none; 
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px dotted black;
+
+}
+
+.drop-down {
+    position: relative;
+    display: inline-block;
+}
+
+.drop-down:hover .drop-down-content {
+    display: flex;
+    flex-direction: column;
+    z-index:2;
+}
+
+
+.btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.window {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 50%;
+    height: 50%;
+    z-index: 4;
+    position: absolute;
+    overflow: auto; 
+    resize: both;
+}
+
+
+.window-content {
+
+    color : black;
+    width: 100%;
+}
+
+.larger {
+    width: 160dvh !important;
+    height: 50dvw !important;
+    overflow: auto; 
+    resize: none;
+}
+
+.window-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: blue;
+    color: white;
+    width: 100%;
+
+    cursor: move;
+}
+
+.desktop-grid {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px;
+    margin: 10px;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.desktop-icon {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.desktop-icon img {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.icon-text {
+    font-size: 12px;
+    text-align: center;
+}
+
+.desktop-icon:hover {
+    background-color: rgb(104, 104, 179);
+    color: white;
+}
+
+.active {
+    background-color: rgb(48, 48, 114) !important;
+    color: white;
+}
+
