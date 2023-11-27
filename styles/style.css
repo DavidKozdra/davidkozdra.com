@@ -332,6 +332,7 @@ canvas{
   height: 100%;
   border-radius: 1%;
   background-color: aliceblue;
+
 }
 
 canvas:focus-visible{
