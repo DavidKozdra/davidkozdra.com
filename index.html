@@ -37,9 +37,8 @@
 
     <div class="navigation">
       <div class="drop-down">
-        <button> DK</button>
+      <button><img src="images/favicon.ico" alt="david kozdra icon" width="25" height="25"></button>
         <div class="drop-down-content">
-          <button> <a href="./index copy.html">Old Website </a></button>
           <button> Settings</button>
           <button onclick="desktopIconRouter(event,'calculator')" > Calculator</button>
           
@@ -48,13 +47,13 @@
         </div>
       </div>
       <div class="drop-down">
-        <button> About Me </button>
+        <button onclick="desktopIconRouter(event,'about')"> About Me </button>
       </div>
       <div class="drop-down">
         <button> Projects </button>
         <div class="drop-down-content">
-          <button> test 1</button>
-          <button> test 2</button>
+          <button onclick="desktopIconRouter(event,'old')" > My Website</button>
+          <button> <a href="https://virtualnerd1.itch.io/cloudy-meadows" target="_blank"> Cloudy Meadows </a></button>
         </div>
       </div>
         <button onclick="desktopIconRouter(event,'resume')"> Resume</button>
@@ -67,11 +66,11 @@
       <div id="weather"> </div>
 
       <div id="Contact">
-        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra"> <i class="fa-brands fa-github ">
+        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra" target="_blank"> <i class="fa-brands fa-github ">
           </i></a>
-        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i
+        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/" target="_blank"> <i
             class="fa-brands fa-linkedin "> </i></a>
-        <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io"> <i
+        <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io" > <i
             class="fa-brands fa-itch-io "></i></a>
       </div>
 
@@ -118,6 +117,47 @@
     let activeWindowCount = 0;
     let loading = true;
 
+    const adjustBoundaries = () => {
+    const headerElement = document.getElementsByClassName('task-bar')[0];
+    const appbarElement = document.getElementsByClassName('app-bar')[0];
+
+    // Set your desired boundary left position
+    const boundaryLeft = 10;
+
+    // Get the height of the header and app bar
+    const boundaryTop = headerElement ? headerElement.offsetHeight : 0;
+    const maxBottom = appbarElement ? window.innerHeight - appbarElement.offsetHeight : window.innerHeight;
+
+    return { boundaryTop, maxBottom, boundaryLeft };
+};
+
+const applyBoundaries = (array) => {
+    const { boundaryTop, maxBottom, boundaryLeft } = adjustBoundaries();
+
+    for (let i = 0; i < array.length; i++) {
+        const rect = array[i].getBoundingClientRect();
+
+        // check for collison with the appbar
+        if (isColliding(array[i], document.getElementsByClassName('app-bar')[0])) {
+            //array[i].style.top = maxBottom - array[i].offsetHeight + 'px';
+            if( array[i].classList.contains("desktop-icon")) {
+              array[i].style.top = maxBottom - window.innerHeight/10 + 'px';
+            } else {
+              array[i].style.top = maxBottom - array[i].offsetHeight + 'px';
+            } 
+        } 
+
+        if (rect.top < boundaryTop) {
+            array[i].style.top = boundaryTop + 'px';
+        }
+
+        if (rect.left < boundaryLeft) {
+            array[i].style.left = boundaryLeft + 'px';
+        }
+    }
+};
+
+
 
 
     async function update() {
@@ -136,23 +176,13 @@
               checkCollision(desktopIcons[i], desktopIcons[j]);
             }
           }
-          // Ensure that the top position doesn't go above a certain limit
-          const boundaryTop = 50; // Set your desired boundary top position
-          const boundaryLeft = 20; // Set your desired boundary top position
-          const rect = desktopIcons[i].getBoundingClientRect();
-
-
-          if (rect.top < boundaryTop) {
-            desktopIcons[i].style.top = boundaryTop + 'px';
-          }
-
-          if (rect.left < boundaryLeft) {
-            desktopIcons[i].style.left = boundaryLeft + 'px';
-          }
+          applyBoundaries(desktopIcons);
         }
 
         let activeWindows = document.getElementsByClassName("window");
         activeWindows = Array.from(activeWindows).filter(window => window.style.display !== "none");
+
+        applyBoundaries(activeWindows);
         if (activeWindowCount != activeWindows.length) {
           ReRenderAppTaskbar();
           activeWindowCount = activeWindows.length;
@@ -231,8 +261,37 @@
       }
     }
 
+    function isColliding(item1, item2) {
+      const rect1 = item1.getBoundingClientRect();
+      const rect2 = item2.getBoundingClientRect();
+
+      if (
+        rect1.left < rect2.right &&
+        rect1.right > rect2.left &&
+        rect1.top < rect2.bottom &&
+        rect1.bottom > rect2.top
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
 
     CreateDesktopIconGrid();
+
+
+    //Create intro window
+    
+    let intro = document.createElement("div");
+    let header = document.createElement("h1");
+    header.innerHTML = "Welcome to DK OS";
+    var para = document.createElement("p");
+    para.innerHTML = "This is my personal website made in the theming of a desktop environment " ;
+    intro.appendChild(header);
+    intro.appendChild(para);
+    createWindow("Intro",intro , "./images/blocks.jpg", 400,200 );
+    
 
     function DisplayDate() {
       var date = new Date();
@@ -367,7 +426,7 @@
             let resume = document.createElement("iframe");
             resume.classList.add("embed-responsive");
             resume.src = "./resume.pdf";
-            resume.style.height = "700px";
+            resume.style.height = "100%";
             resume.style.width = "100%";
             resume.frameborder = "0";
 
@@ -422,6 +481,59 @@
           notes.appendChild(textArea);
           createWindow("Notes", notes, "./images/blocks.jpg", 500);
           break;
+
+          case "settings":
+            createWindow("Settings", "This is a test window", "./images/blocks.jpg", 800);
+            break;
+
+          case "about":
+            let about = document.createElement("div");
+            about.classList.add("about");
+            //about.innerHTML = "I have a passion for creating beautiful and intuitive user interfaces, and lots of experience with back end development as well. Interactive development with Unity and webgl helps me hone my programming and visual art skills, and I am always eager to learn new things in the field of computing. In my free time, I enjoy creating pixel art and working to improve my skills. I'm excited to work with you and bring my creativity and expertise to your projects.";
+            let p1 = document.createElement("p");
+            p1.innerHTML = "I have a passion for creating beautiful and intuitive user interfaces, and lots of experience with back end development as well." ;
+            let p2 = document.createElement("p");
+            p2.innerHTML = "Interactive development with Unity and webgl helps me hone my programming and visual art skills, and I am always eager to learn new things in the field of computing.";
+            let p3 = document.createElement("p");
+            p3.innerHTML = "In my free time, I enjoy creating pixel art and working to improve my skills. I'm excited to work with you and bring my creativity and expertise to your projects.";
+            
+            let img = document.createElement("img");
+            let h1 = document.createElement("h1");
+            h1.innerHTML = "David Kozdra MERN Stack Developer";
+            img.src = "./images/ME.jpg";
+            img.id = "face";
+            about.appendChild(h1);
+            about.appendChild(img);
+            about.appendChild(p1);
+            about.appendChild(p2);
+            about.appendChild(p3);
+            createWindow("About", about, "./images/ME.jpg", 800);
+            break;
+
+          case "old":
+            let iframe = document.createElement("iframe");
+            iframe.src = "./index copy.html";
+            iframe.style.height = "700px";
+            iframe.style.width = "100%";
+            createWindow("Old Website", iframe, "./images/favicon.ico", 800);
+            break;
+
+
+          case "intro":
+            // intro the user to the os 
+            let intro = document.createElement("div");
+            let header = document.createElement("h1");
+            header.innerHTML = "Welcome to DK OS";
+            var para = document.createElement("p");
+            p1.innerHTML = "This is my personal website made in the theming of a desktop environment " ;
+            intro.appendChild(header);
+            intro.appendChild(p1);
+            createWindow("Intro",intro , "./images/blocks.jpg");
+          break;
+
+
+          case "error":
+            createWindow("Error", "This is a test window", "./images/blocks.jpg", 200);
         default:
           console.log("Window not found");
           break;
@@ -438,9 +550,8 @@
       // set important cursor styles
 
       e.target.style.cursor = "wait";
-
     }
-    function createWindow(title, content, iconSrc, width) {
+    function createWindow(title, content, iconSrc, width,x,y) {
         const id = title.toLowerCase().replace(/\s+/g, '-'); // Generate id based on the title
         const newWindow = document.createElement("div");
         newWindow.classList.add("window");
@@ -465,6 +576,10 @@
       }
         newWindow.style.display = "block";
         document.getElementById("windows").appendChild(newWindow);
+
+        // Set the window position
+        newWindow.style.top = y + "px";
+        newWindow.style.left = x + "px";
 
         // Initialize drag behavior
         dragElement(header, newWindow);

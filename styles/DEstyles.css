@@ -129,7 +129,7 @@ button {
     gap: 10px;
     align-items: center;
     background: var(--main-gradient);
-    
+    width: fit-content;
 }
 
 .task-bar button {
@@ -198,7 +198,6 @@ button {
     position: absolute;
     overflow: auto; 
     resize: both;
-
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
 
@@ -240,9 +239,7 @@ button {
     padding: 10px;
     margin: 20px;
     height: 80%;
-    width: 100%;
-
-
+    width: 90%;
     position: absolute;
 }
 
@@ -353,3 +350,34 @@ button {
     padding: 0;
     overflow: hidden;
   }
+
+.about {
+    display: flex;
+    flex-direction: column;
+}
+
+#face {
+    border-radius: 10%;
+    box-shadow: inset;
+    width: 30%;
+    height: 30%;
+    margin: 10%;
+    display: inline-block;
+    border: 3px solid white;
+}
+
+@media only screen and (orientation: portrait ) {
+    #desktop {
+        height: 95dvh;
+        width: 100dvw;
+    }
+
+    .desktop-grid {
+        height: 90%;
+        width: 70%;
+    }
+
+
+
+
+}
