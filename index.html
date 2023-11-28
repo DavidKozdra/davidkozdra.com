@@ -37,6 +37,9 @@
         <div class="drop-down-content">
           <button> <a href="./index copy.html">Old Website </a></button>
           <button> Settings</button>
+          <button onclick="desktopIconRouter(event,'calculator')" > Calculator</button>
+          
+          <button onclick="desktopIconRouter(event,'notes')" > Notes</button>
           <button onclick="refresh()"> Power</button>
         </div>
       </div>
@@ -48,13 +51,10 @@
         <div class="drop-down-content">
           <button> test 1</button>
           <button> test 2</button>
-          <button> Power</button>
         </div>
       </div>
-
-      <div class="drop-down">
         <button onclick="desktopIconRouter(event,'resume')"> Resume</button>
-      </div>
+    
     </div>
 
     <div class="status-bar">
@@ -91,7 +91,7 @@
       <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')" tabindex="1">
         <img src="./images/blocks.jpg"></img>
         <div class="icon-text">
-          <p>Game 1</p>
+          <p contenteditable="true">Game 1</p>
         </div>
       </div>
     </div>
@@ -364,6 +364,58 @@
 
           createWindow("Resume", resume, "./images/blocks.jpg");
           break;
+        
+        case "calculator":
+          let calculator = document.createElement("div");
+          calculator.classList.add("calculator");
+
+          let calculatorScreen = document.createElement("div");
+          calculatorScreen.classList.add("calculator-screen");
+
+          let calculatorKeys = document.createElement("div");
+          calculatorKeys.classList.add("calculator-keys");
+
+          for (let i = 0; i < 10; i++) {
+            let calculatorKeysButton = document.createElement("button");
+            calculatorKeysButton.classList.add("calculator-keys-button");
+            calculatorKeysButton.innerHTML = i;
+            calculatorKeys.appendChild(calculatorKeysButton);
+          }
+
+          let operatorKeys = ["+", "-", "*", "/"];
+          for (let i = 0; i < operatorKeys.length; i++) {
+            let calculatorKeysButton = document.createElement("button");
+            calculatorKeysButton.classList.add("calculator-keys-button");
+            calculatorKeysButton.innerHTML = operatorKeys[i];
+            calculatorKeys.appendChild(calculatorKeysButton);
+          }
+
+          calculator.appendChild(calculatorScreen);
+          calculator.appendChild(calculatorKeys);
+
+          createWindow("Calculator", calculator, "./images/blocks.jpg",400);
+          break;
+
+        case "notes":
+          let notes = document.createElement("div");
+          notes.classList.add("notes");
+
+          let textArea = document.createElement("textarea");
+          textArea.classList.add("notes-textarea");
+          textArea.rows = "20";
+          textArea.cols = "70";
+          textArea.placeholder = "Enter your notes here";
+          // local storage for notes get and set on change of value 
+          textArea.onchange = function () {
+            localStorage.setItem("notes", textArea.value);
+          };
+          textArea.value = localStorage.getItem("notes");
+
+
+          notes.appendChild(textArea);
+
+          createWindow("Notes", notes, "./images/blocks.jpg", 500);
+          break;
         default:
           console.log("Window not found");
           break;
@@ -382,9 +434,7 @@
       e.target.style.cursor = "wait";
 
     }
-    function createWindow(title, content, iconSrc) {
-
-    
+    function createWindow(title, content, iconSrc, width) {
         const id = title.toLowerCase().replace(/\s+/g, '-'); // Generate id based on the title
         const newWindow = document.createElement("div");
         newWindow.classList.add("window");
@@ -395,7 +445,9 @@
         const buttons = createWindowButtons(id);
 
         header.appendChild(headerImage);
+        header.innerHTML += title;
         header.appendChild(buttons);
+        newWindow.style.width = width + "px";
         newWindow.appendChild(header);
 
       // Check if the content is a node 
@@ -405,8 +457,6 @@
       } else {
           newWindow.appendChild(content);
       }
-
-
         newWindow.style.display = "block";
         document.getElementById("windows").appendChild(newWindow);
 
@@ -424,11 +474,6 @@
     function createWindowHeader(title, id) {
         const header = document.createElement("div");
         header.classList.add("window-title");
-
-        const headerTitle = document.createElement("p");
-        headerTitle.innerHTML = title;
-
-        header.appendChild(headerTitle);
         return header;
     }
 
@@ -473,15 +518,15 @@
         // Modify this part to add your specific content, e.g., iframe
         contentElement.appendChild(contentText);
 
+
+
+        return contentElement;
+    }
     
     // Initialize drag for desktop icons
     for (let i = 0; i < desktopIcons.length; i++) {
         dragElement(desktopIcons[i], desktopIcons[i]);
     }
-
-        return contentElement;
-    }
-
 
     function moveElement(event, element) {
       const draggedElement = element;
