@@ -18,12 +18,16 @@
 
 <body>
   <div class="loader-page">  
-    <header class="typewriter"> 
-    Loading DK OS
-    </header>
+    <div class="loader-display"> 
+      <img class="loader-icon" src="./images/favicon.ico"></img>
 
-    <div class="loader-back">
-        <div class="loader-icon-inner"></div>
+      <p class="typewriter"> 
+      Loading DK OS
+      </p>
+
+      <div class="loader-back">
+          <div class="loader-icon-inner"></div>
+      </div>
     </div>
 
   </div> 
@@ -176,7 +180,13 @@
         } else {
           taskbarButton.classList.remove("app-bar-button-active");
         }
-        taskbarButton.onclick = function () { windows[i].style.display = "block"; };
+        taskbarButton.onclick = function () { 
+          if (windows[i].style.display !== "none") {
+            windows[i].style.display = "none";
+          } else {
+            windows[i].style.display = "block";
+          }
+        };
 
         taskbarButton.appendChild(taskbarButtonIcon);
         
@@ -268,7 +278,7 @@
       if (window != null) {
         window.classList.toggle("larger");
         (window.classList.contains("larger")) ? e.target.innerHTML = "~" : e.target.innerHTML = "[]";
-        console.log(e.target.innerHTML);
+        
       }
     }
 
@@ -330,7 +340,6 @@
     }
 
     function selectIcon(e) {
-      console.log(e.target);
       if (!e.target.classList.contains("icon-text")) {
         e.target.classList.toggle("active");
       }
@@ -402,18 +411,15 @@
 
           let textArea = document.createElement("textarea");
           textArea.classList.add("notes-textarea");
-          textArea.rows = "20";
-          textArea.cols = "70";
+          textArea.rows = "25";
+          textArea.cols = "45";
           textArea.placeholder = "Enter your notes here";
           // local storage for notes get and set on change of value 
           textArea.onchange = function () {
             localStorage.setItem("notes", textArea.value);
           };
           textArea.value = localStorage.getItem("notes");
-
-
           notes.appendChild(textArea);
-
           createWindow("Notes", notes, "./images/blocks.jpg", 500);
           break;
         default:
