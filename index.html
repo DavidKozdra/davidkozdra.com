@@ -15,7 +15,7 @@
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
   
-  <script src="Games.js"></script>
+  <script src="Games.js" ></script>
 </head>
 
 <body>
@@ -237,10 +237,10 @@ const applyBoundaries = (array) => {
         taskbarButtonIcon.classList.add("window-icon");
         taskbarButtonIcon.src = windows[i].childNodes[0].childNodes[0].src;
         taskbarButton.classList.add("app-bar-button");
-        if (windows[i].style.display !== "none") {
-          taskbarButton.classList.add("app-bar-button-active");
-        } else {
+        if (windows[i].classList.contains("minimized")) { 
           taskbarButton.classList.remove("app-bar-button-active");
+        } else {
+          taskbarButton.classList.add("app-bar-button-active");
         }
         taskbarButton.onclick = function () { 
           if(windows[i].classList.contains("minimized")) {

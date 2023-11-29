@@ -213,13 +213,14 @@ button {
 @keyframes pop-up {
     0% {
         opacity: 0;
-        transform: scale(0);
+        transform: scale(0) translateY(200vh);
     }
     100% {
         opacity: 1; 
-        transform: scale(1);
+        transform: scale(1) translateY(0px);
     }
 }
+
 
 
 .window-content {
@@ -257,7 +258,7 @@ button {
 }
 
 .minimized {
-    animation: shrink .5s linear forwards;
+    animation: shrink .3s linear forwards;
 
 }
 @keyframes shrink {
