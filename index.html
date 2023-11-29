@@ -226,6 +226,9 @@ const applyBoundaries = (array) => {
   
     }
 
+
+
+
     function ReRenderAppTaskbar() {
 
       let taskbar = document.getElementsByClassName("app-bar");
@@ -643,6 +646,22 @@ const applyBoundaries = (array) => {
         // Set the window position
         newWindow.style.top = y + "px";
         newWindow.style.left = x + "px";
+ // Attach the mousedown event to the newWindow
+        newWindow.onmousedown = function(event) {
+            // Check if the event's target is the resizer
+            if (event.target === newWindow && event.offsetX > newWindow.offsetWidth - 10 && event.offsetY > newWindow.offsetHeight - 10) {
+                resizeWindowTItle(newWindow);
+            }
+        };
+
+        newWindow.onmousemove = function(event) {
+            // Check if the event's target is the resizer
+            if (event.target === newWindow && event.offsetX > newWindow.offsetWidth - 10 && event.offsetY > newWindow.offsetHeight - 10) {
+                resizeWindowTItle(newWindow);
+            }
+        };
+
+
 
         resizeWindowTItle(newWindow);
         // Initialize drag behavior

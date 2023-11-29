@@ -214,10 +214,10 @@ button {
     overflow: hidden; 
     resize: both;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-
+    
     animation: pop-up .3s ease-in-out forwards;
-
 }
+
 
 @keyframes pop-up {
     0% {
