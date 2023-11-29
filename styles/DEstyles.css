@@ -199,9 +199,10 @@ button {
     height: 50%;
     z-index: 4;
     position: absolute;
-    overflow: auto; 
+    overflow: hidden; 
     resize: both;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+
 }
 
 
@@ -213,7 +214,7 @@ button {
 .larger {
     width: 98% !important;
     height: 90% !important;
-    overflow: auto; 
+    overflow: hidden; 
     resize: none;
 }
 
@@ -385,6 +386,7 @@ button {
 
 }
 
-::-webkit-resizer{
-    border: 2px solid black;
+
+.notes {
+    margin: 50px;
 }

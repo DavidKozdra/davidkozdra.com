@@ -12,12 +12,14 @@
             background-image: url("./images/Space.png");
             background-repeat: repeat;
             background-color: #cccccc;
+            
         }
 
         .main-content {
             background-color: whitesmoke;
             border-radius: 10px;
             height: fit-content;
+            width: 100%;
         }
 
         .projects-grid {
@@ -25,10 +27,15 @@
             flex-direction: column;
             column-gap: 10px;
             padding: 5px;
+            width: fit-content;
+            margin: 20%;
+            justify-content: center;
         }
 
-        @media screen and (min-width: 800px) {
+        @media screen and (min-width: 1000px) {
             .projects-grid {
+                
+                margin: 0%;
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -61,7 +68,23 @@
 
             <p>I am passionate about the open-source community and have actively contributed to React projects.
                 Embracing the Linux environment, specifically Fedora 🐧, I thrive in my terminal, and am always getting
-                closer to being the best version of myself.</p>
+                closer to being the best version of myself. Alot of the projects I have worked on needed small UX changes and accessibility fixes or changes that would add to the local storage</p>
+
+
+                <div class="projects-grid">
+                    <div>
+                        <h1> Lofi </h1>
+                        <a href=""></a>
+
+
+                        <h1> weather </h1>
+                        <a href=""></a>
+
+
+                        <h1> Password </h1>
+                        <a href=""></a>
+                    </div>
+                </div>
         </div>
 
         <div style="text-align: center; font-size: 2em; font-weight: bold;">

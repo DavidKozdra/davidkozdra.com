@@ -8,7 +8,8 @@
     <style>
         canvas {
             border: 2px solid black;
-
+            
+            overflow: hidden;
              display: block;
         }
 
@@ -16,13 +17,21 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            overflow: hidden;
+        }
+
+        .colors-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
     <div class="content">
 
-        <canvas id="drawing" onmousedown="startdraw(event)" onmouseup="stopdraw()" width="500px" height="500px">
+        <canvas id="drawing" onmousedown="startdraw(event)" onmouseup="stopdraw()" width="500px" height="400px">
         </canvas>
 
         <div id="button-grid">
@@ -34,6 +43,10 @@
 
             <div>
                 <input type="color" name="" id="" onchange="updateColor()"> <button onclick="saveColor()"> +</button>
+                
+                <div class="colors-container"> 
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -45,14 +58,50 @@
 
         let ctx = canvas.getContext('2d');
         let drawing = false;
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = "rgb(255, 255, 255)"
         let stack = [];
         let reverseStack = [];
         let colors = [];
         let activeColor = {r: 0, g: 0, b: 0};
         let mouseX , mouseY;
 
+        let layers = [];
+
+
         let penSize =2;
+
+        function hex(x) {
+            return ("0" + parseInt(x).toString(16)).slice(-2);
+        }
+
+        function setActiveColor(color) {
+            activeColor = color;
+            let colorInput = document.querySelector('input[type="color"]');
+            colorInput.value = "#"+ hex(color.r) + hex(color.g) + hex(color.b);
+        }
+
+
+        function saveColor() {
+            if(colors.includes(activeColor)) {
+                return;
+            }
+            colors.push(activeColor);
+
+            let color = activeColor;
+            let colorContainer = document.querySelector('.colors-container');
+            let colorDiv = document.createElement('div');
+            colorDiv.style.backgroundColor = colorMap(activeColor);
+            colorDiv.style.width = '20px';
+            colorDiv.style.height = '20px';
+            colorDiv.style.margin = '5px';
+            colorDiv.style.borderRadius = '50%';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.addEventListener('click', () => {
+                console.log(color);
+                setActiveColor(color);
+            });
+            colorContainer.appendChild(colorDiv);
+        }
     
         function updateColor() {
             let color = document.querySelector('input[type="color"]').value;
@@ -103,7 +152,8 @@
                 if (reverseStack.length > 0) {
                     let last = reverseStack.pop();
                     stack.push(last);
-                    ctx.fillStyle = colorMap(last.color);
+                    ctx.fillStyle = last.color;
+                    console.log(last.color == ctx.fillStyle);
                     ctx.fillRect(last.x, last.y, penSize, penSize);
                 }
             }
@@ -116,6 +166,7 @@
         function update() {
             //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+          
             if (drawing) {
                 ctx.fillStyle = colorMap(activeColor);
                 ctx.fillRect(mouseX, mouseY, penSize, penSize);

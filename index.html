@@ -469,7 +469,7 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
             resume.classList.add("embed-responsive");
             resume.src = "./resume.pdf";
             resume.style.height = "90%";
-            resume.style.margin = "50px";
+            resume.style.marginTop = "50px";
             resume.style.width = "100%";
             resume.frameborder = "0";
            
@@ -483,7 +483,7 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/blocks.jpg",400);
+          createWindow("Calculator", calculator, "./images/Calculator.png",400);
           break;
 
         case "notes":
@@ -546,6 +546,7 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
             draw.src = "./drawing.html";
             draw.style.height = "100%";
             draw.style.width = "100%";
+            draw.style.marginTop = "50px";
             createWindow("Drawing", draw, "./images/blocks.jpg", 800);
             break;
         default:
