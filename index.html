@@ -205,6 +205,10 @@ const applyBoundaries = (array) => {
 
         activeWindows = document.getElementsByClassName("window");
         activeWindows = Array.from(activeWindows).filter(window => !window.classList.contains("minimized"));
+      
+        activeWindows.map(window => {
+          window.childNodes[0].style.width = window.offsetWidth + "px";
+        });
 
         applyBoundaries(activeWindows);
         if (activeWindowCount != activeWindows.length) {
@@ -219,10 +223,8 @@ const applyBoundaries = (array) => {
     }
 
     function resizeWindowTItle(window) {
-      
       let title = window.querySelector(".window-title");  
       title.style.width = window.offsetWidth+ "px";
-
   
     }
 
@@ -647,20 +649,6 @@ const applyBoundaries = (array) => {
         newWindow.style.top = y + "px";
         newWindow.style.left = x + "px";
  // Attach the mousedown event to the newWindow
-        newWindow.onmousedown = function(event) {
-            // Check if the event's target is the resizer
-            if (event.target === newWindow && event.offsetX > newWindow.offsetWidth - 10 && event.offsetY > newWindow.offsetHeight - 10) {
-                resizeWindowTItle(newWindow);
-            }
-        };
-
-        newWindow.onmousemove = function(event) {
-            // Check if the event's target is the resizer
-            if (event.target === newWindow && event.offsetX > newWindow.offsetWidth - 10 && event.offsetY > newWindow.offsetHeight - 10) {
-                resizeWindowTItle(newWindow);
-            }
-        };
-
 
 
         resizeWindowTItle(newWindow);
