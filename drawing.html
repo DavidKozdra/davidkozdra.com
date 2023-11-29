@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        canvas {
+            border: 2px solid black;
+
+             display: block;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+
+        <canvas id="drawing" onmousedown="startdraw(event)" onmouseup="stopdraw()" width="500px" height="500px">
+        </canvas>
+
+        <div id="button-grid">
+
+            <button onclick="clearDisplay()"> Clear </button>
+            <div> <label for=""> Pen Size</label> 
+                <input type="text" onchange="updatePen()" placeholder="pen size">  </input>
+            </div>
+
+            <div>
+                <input type="color" name="" id="" onchange="updateColor()"> <button onclick="saveColor()"> +</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        let canvas = document.getElementById('drawing');
+
+        let ctx = canvas.getContext('2d');
+        let drawing = false;
+        ctx.fillStyle = 'white';
+        let stack = [];
+        let reverseStack = [];
+        let colors = [];
+        let activeColor = {r: 0, g: 0, b: 0};
+        let mouseX , mouseY;
+
+        let penSize =2;
+    
+        function updateColor() {
+            let color = document.querySelector('input[type="color"]').value;
+            let r = parseInt(color.substring(1, 3), 16);
+            let g = parseInt(color.substring(3, 5), 16);
+            let b = parseInt(color.substring(5, 7), 16);
+            activeColor = {r: r, g: g, b: b};
+        }    
+
+        function updatePen() {
+            penSize = document.querySelector('input').value;
+        }
+
+        function clearDisplay() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+
+        ctx.fillRect(0, 0, canvas.width, canvas.height);    
+
+        function startdraw(event) {
+            drawing = true;
+        }
+
+        function stopdraw() {
+            drawing = false;
+        }
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX  = event.clientX - canvas.offsetLeft;
+            mouseY  = event.clientY - canvas.offsetTop;
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key == 'c') {
+                clearDisplay();
+            }
+
+            if (event.key == 'z' && event.ctrlKey) {
+                if (stack.length > 0) {
+                    let last = stack.pop();
+                    reverseStack.push(last);
+                    ctx.clearRect(last.x, last.y, last.penSize, last.penSize);
+                }
+            }
+
+            if (event.key == 'y' && event.ctrlKey) {
+                if (reverseStack.length > 0) {
+                    let last = reverseStack.pop();
+                    stack.push(last);
+                    ctx.fillStyle = colorMap(last.color);
+                    ctx.fillRect(last.x, last.y, penSize, penSize);
+                }
+            }
+        });
+
+        function colorMap(color) {
+            return `rgb(${color.r}, ${color.g}, ${color.b})`;
+        }
+
+        function update() {
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (drawing) {
+                ctx.fillStyle = colorMap(activeColor);
+                ctx.fillRect(mouseX, mouseY, penSize, penSize);
+                stack.push({x: mouseX, y: mouseY, color : colorMap(activeColor), penSize: penSize});
+            }
+            requestAnimationFrame(update);
+        }
+
+        requestAnimationFrame(update);
+
+
+    </script>
+</body>
+</html>

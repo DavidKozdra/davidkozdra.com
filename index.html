@@ -85,10 +85,10 @@
 
     <div class="desktop-grid">
 
-      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')"
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')"
         onmousemove="moveElement(event,this)" tabindex="1">
         <img src="./images/blocks.jpg"></img>
-        <p contenteditable="true" class="icon-text">Game 1</p>
+        <p contenteditable="true" class="icon-text"> Draw</p>
       </div>
 
       <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')" tabindex="1">
@@ -195,8 +195,21 @@ const applyBoundaries = (array) => {
     }
 
     function resizeWindowTItle(window) {
-      let title = window.childNodes[0];
+      /*
+       // Find the closest child with class "closestChild" within the parent
+    const closestChild = document.getElementById('parentElement').querySelector('.closestChild');
+
+    if (closestChild) {
+        // Manipulate the closest child (for example, changing its text content)
+        closestChild.textContent = 'Updated content';
+    }
+      */ 
+      
+      let title = window.querySelector(".window-title");  
+      console.log(title);
       title.style.width = window.offsetWidth+ "px";
+
+  
     }
 
     function ReRenderAppTaskbar() {
@@ -349,9 +362,8 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
     }
 
     function minimizeWindow(e, name) {
-      let window = e.target.closest(".window");
+      let window = e.target.closest(".window ");
       window.style.display = "none";
-      resizeWindowTItle(window)
     }
 
     function maximizeWindow(e, name) {  
@@ -456,11 +468,14 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
             let resume = document.createElement("iframe");
             resume.classList.add("embed-responsive");
             resume.src = "./resume.pdf";
-            resume.style.height = "100%";
+            resume.style.height = "90%";
+            resume.style.margin = "50px";
             resume.style.width = "100%";
             resume.frameborder = "0";
+           
+            createWindow("Resume", resume, "./images/blocks.jpg");
 
-          createWindow("Resume", resume, "./images/blocks.jpg");
+            
           break;
         
         case "calculator":
@@ -525,6 +540,14 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
 
           case "error":
             createWindow("Error", "This is a test window", "./images/blocks.jpg", 200);
+
+          case "draw" : 
+            let draw = document.createElement("iframe");
+            draw.src = "./drawing.html";
+            draw.style.height = "100%";
+            draw.style.width = "100%";
+            createWindow("Drawing", draw, "./images/blocks.jpg", 800);
+            break;
         default:
           console.log("Window not found");
           break;
@@ -556,7 +579,6 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
         header.innerHTML += title;
         header.appendChild(buttons);
         newWindow.style.width = width + "px";
-        header.style.width = width + "px";
         newWindow.appendChild(header);
 
       // Check if the content is a node 
@@ -573,7 +595,7 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
         newWindow.style.top = y + "px";
         newWindow.style.left = x + "px";
 
-
+        resizeWindowTItle(newWindow);
         // Initialize drag behavior
         dragElement(header, newWindow);
     }
