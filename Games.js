@@ -1,13 +1,20 @@
-const canvasA = document.getElementById('a');
-const canvasB = document.getElementById('b');
-const canvasC = document.getElementById('c');
+var canvasA = document.getElementById('a');
+var canvasB = document.getElementById('b');
+var canvasC = document.getElementById('c');
 
-const ctxA = canvasA.getContext('2d');
-const ctxB = canvasB.getContext('2d');
-const ctxC = canvasC.getContext('2d');
+if(canvasA){
+  var ctxA = canvasA.getContext('2d');
+}
+if(canvasB){
+  var ctxB = canvasB.getContext('2d');
+}
+if(canvasC){
+  var ctxC = canvasC.getContext('2d');
+}
+
 let camera = {x:150,y:50}
-let player = {x:canvasA.width / 2,y:canvasA.height / 2, w:10,h:10}
-let circleY = canvasB.height / 2;
+let player = canvasA ? {x:canvasA.width / 2,y:canvasA.height / 2, w:10,h:10} : null;
+let circleY = canvasB ? canvasB.height / 2 : null;
 
 let mouseX=100;
 let mouseY=100;
@@ -19,8 +26,36 @@ let elapsedTime =0;
 
 //timer rect offset
 let tro = 5;
+function init() {
 
+  canvasA = document.getElementById('a');
+  canvasB = document.getElementById('b');
+  canvasC = document.getElementById('c');
+
+  if(canvasA){
+    ctxA = canvasA.getContext('2d');
+  }
+  if(canvasB){
+    ctxB = canvasB.getContext('2d');
+  }
+  if(canvasC){
+    ctxC = canvasC.getContext('2d');
+  }
+
+  camera = {x:150,y:50}
+  player = canvasA ? {x:canvasA.width / 2,y:canvasA.height / 2, w:10,h:10} : null;
+  circleY = canvasB ? canvasB.height / 2 : null;
+
+
+  
+}
+
+init();
 function updateCanvasRectangle() {
+  if(currentSlide == -1){
+return;
+  }
+
   // Assuming you have defined and updated currentSlide and flag elsewhere in your code
   let currentCanvas = document.getElementsByTagName("canvas")[currentSlide];
   let context = currentCanvas.getContext("2d");
@@ -82,8 +117,8 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-canvasC.addEventListener("keydown", handleKeyDown);
-canvasA.addEventListener("mousedown", getMouse);
+canvasC?.addEventListener("keydown", handleKeyDown);
+canvasA?.addEventListener("mousedown", getMouse);
 
 function handleKeyDown(event) {
   // Check the keyCode of the pressed key
@@ -126,6 +161,9 @@ function isColliding(player,other) {
 }
 
 function renderPoints(){
+  if(!ctxA){
+    return;
+  }
   ctxA.fillStyle = "black"
   ctxA.fillText( "Points "+ points, 200,15+tro);
 
@@ -137,13 +175,20 @@ function drawGame1() {
 
   }else {
     
-  ctxA.clearRect(0, 0, canvasA.width, canvasA.height);
-  ctxA.fillStyle = 'red';
-  ctxA.fillRect(player.x, player.y, player.w, player.h);
+  ctxA?.clearRect(0, 0, canvasA?.width, canvasA?.height);
+  if (
+  ctxA
+  ) {
+    ctxA.fillStyle = 'red';
+  }
+    
+  ctxA?.fillRect(player?.x, player?.y, player?.w, player?.h);
   
-  player.x -= (player.x - mouseX) * .1;
+  if(player) {
+    player.x -= (player.x - mouseX) * .1;
   player.y -= (player.y - mouseY) * .1;
 
+  }
   
   for(var i =0; i < collectables.length; i++){
     collectables[i].render();
@@ -168,11 +213,15 @@ function drawGame1() {
   }
 
   if(collectables.length<200){
-    collectables.push(new collectable(getRandomInt(canvasA.width),getRandomInt(canvasA.width),2,2))
+    collectables.push(new collectable(getRandomInt(canvasA?.width),getRandomInt(canvasA?.width),2,2))
   }  
   renderPoints();
 
   if(!clicked){
+    if (!ctxA) {
+      return 
+    }
+
     ctxA.fillStyle = 'black';
     const amplitude = 20; // Adjust the amplitude of the oscillation
     const frequency = 0.002; // Adjust the frequency of the oscillation
@@ -202,9 +251,9 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-canvasB.addEventListener("mousedown", touchedCell);
+canvasB?.addEventListener("mousedown", touchedCell);
 
-canvasB.addEventListener("mouseup", touchedCell2);
+canvasB?.addEventListener("mouseup", touchedCell2);
 
 let selected = []
 
@@ -248,9 +297,31 @@ function touchedCell2(event){
 
 }
 
+function restartGOL(){
+  for (var i =0; i < gridSize; i++){
+    for(var j =0; j < gridSize; j++){
+      //getRandomInt(3)==2
+      entities.push(new entity(i*gridSize,j*gridSize,getRandomInt(3)==2))
+    }
+  }
+
+}
+
 let genTime = 2000;
+let paused = false;
+
+function pauseGOL(){
+  paused = !paused;
+}
+
 async function drawCircle() {
-  
+  if(!ctxB){
+    return;
+  }
+  if(paused){
+    return;
+  }
+
   ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
 
   for (var i = 0; i < entities.length; i++) {
@@ -352,7 +423,9 @@ function renderMap(){
 }
 
 function rougeLike(){
-  
+  if(!ctxC){
+    return;
+  }
 
   ctxC.clearRect(0, 0, canvasC.width, canvasC.height);
   ctxC.fillStyle = 'red';

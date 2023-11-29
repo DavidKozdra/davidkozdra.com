@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        canvas {
+            border: 2px solid black;
+            
+            overflow: hidden;
+             display: block;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .colors-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+
+        <canvas id="drawing" onmousedown="startdraw(event)" onmouseup="stopdraw()" width="500px" height="400px">
+        </canvas>
+
+        <div id="button-grid">
+
+            <button onclick="clearDisplay()"> Clear </button>
+            <div> <label for=""> Pen Size</label> 
+                <input type="text" onchange="updatePen()" placeholder="pen size">  </input>
+            </div>
+
+            <div>
+                <input type="color" name="" id="" onchange="updateColor()"> <button onclick="saveColor()"> +</button>
+                
+                <div class="colors-container"> 
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        let canvas = document.getElementById('drawing');
+
+        let ctx = canvas.getContext('2d');
+        let drawing = false;
+        ctx.fillStyle = "rgb(255, 255, 255)"
+        let stack = [];
+        let reverseStack = [];
+        let colors = [];
+        let activeColor = {r: 0, g: 0, b: 0};
+        let mouseX , mouseY;
+
+        let layers = [];
+
+
+        let penSize =2;
+
+        function hex(x) {
+            return ("0" + parseInt(x).toString(16)).slice(-2);
+        }
+
+        function setActiveColor(color) {
+            activeColor = color;
+            let colorInput = document.querySelector('input[type="color"]');
+            colorInput.value = "#"+ hex(color.r) + hex(color.g) + hex(color.b);
+        }
+
+
+        function saveColor() {
+            if(colors.includes(activeColor)) {
+                return;
+            }
+            colors.push(activeColor);
+
+            let color = activeColor;
+            let colorContainer = document.querySelector('.colors-container');
+            let colorDiv = document.createElement('div');
+            colorDiv.style.backgroundColor = colorMap(activeColor);
+            colorDiv.style.width = '20px';
+            colorDiv.style.height = '20px';
+            colorDiv.style.margin = '5px';
+            colorDiv.style.borderRadius = '50%';
+            colorDiv.style.cursor = 'pointer';
+            colorDiv.addEventListener('click', () => {
+                setActiveColor(color);
+            });
+            colorContainer.appendChild(colorDiv);
+        }
+    
+        function updateColor() {
+            let color = document.querySelector('input[type="color"]').value;
+            let r = parseInt(color.substring(1, 3), 16);
+            let g = parseInt(color.substring(3, 5), 16);
+            let b = parseInt(color.substring(5, 7), 16);
+            activeColor = {r: r, g: g, b: b};
+        }    
+
+        function updatePen() {
+            penSize = document.querySelector('input').value;
+        }
+
+        function clearDisplay() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+
+        ctx.fillRect(0, 0, canvas.width, canvas.height);    
+
+        function startdraw(event) {
+            drawing = true;
+        }
+
+        function stopdraw() {
+            drawing = false;
+        }
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX  = event.clientX - canvas.offsetLeft;
+            mouseY  = event.clientY - canvas.offsetTop;
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key == 'c') {
+                clearDisplay();
+            }
+
+            if (event.key == 'z' && event.ctrlKey) {
+                if (stack.length > 0) {
+                    let last = stack.pop();
+                    reverseStack.push(last);
+                    ctx.clearRect(last.x, last.y, last.penSize, last.penSize);
+                }
+            }
+
+            if (event.key == 'y' && event.ctrlKey) {
+                if (reverseStack.length > 0) {
+                    let last = reverseStack.pop();
+                    stack.push(last);
+                    ctx.fillStyle = last.color;
+                    ctx.fillRect(last.x, last.y, penSize, penSize);
+                }
+            }
+        });
+
+        function colorMap(color) {
+            return `rgb(${color.r}, ${color.g}, ${color.b})`;
+        }
+
+        function update() {
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          
+            if (drawing) {
+                ctx.fillStyle = colorMap(activeColor);
+                ctx.fillRect(mouseX, mouseY, penSize, penSize);
+                stack.push({x: mouseX, y: mouseY, color : colorMap(activeColor), penSize: penSize});
+            }
+            requestAnimationFrame(update);
+        }
+
+        requestAnimationFrame(update);
+
+
+    </script>
+</body>
+</html>

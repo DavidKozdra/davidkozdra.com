@@ -1,781 +1,753 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
   <meta name="description" content=" David Kozdra is a computer science student at Florida Polytechnic university">
   <meta name="keywords" content="Computer Science ">
-  <meta name="author" content="David Kozdra">
+  <meta name="author" content="David Kozdra"><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
   <title>David Kozdra</title>
 
-  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/DEstyles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
-</head>
-<body>
   
-  <div class="top">
-  <header class="typewriter" >
-    <h1>{David Kozdra}</h1>
-    <h2> Software Engineer</h2>
-  </header>
+</head>
 
-  <div class="tab btn-group">
-    <button class="tablinks" id="defaultOpen" onclick="openPage(event, 'Story')" aria-label="My Story Tab">My Story </button>
-    <button class="tablinks" onclick="openPage(event, 'Resume')" aria-label="My Resume Tab">My Resume</button>
-    <button class="tablinks" onclick="openPage(event, 'AboutMe')" aria-label="About Me Tab">About Me</button>
+<body>
+  <div class="loader-page">  
+    <div class="loader-display"> 
+      <img class="loader-icon" src="./images/favicon.ico"></img>
+
+      <p class="typewriter"> 
+      Loading DK OS
+      </p>
+
+      <div class="loader-back">
+          <div class="loader-icon-inner"></div>
+      </div>
+    </div>
+
+  </div> 
+  <div id="de">
+  <div class="task-bar">
+    <!-- Navigation Menu -->
+
+    <div class="navigation">
+      <div class="drop-down">
+      <button><img src="images/favicon.ico" alt="david kozdra icon" width="25" height="25" style="border-radius: 50px;"></button>
+        <div class="drop-down-content">
+          <button> Settings</button>
+          <button onclick="desktopIconRouter(event,'calculator')" > Calculator</button>
+          
+          <button onclick="desktopIconRouter(event,'notes')" > Notes</button>
+          <button onclick="refresh()">  <i class="fa fa-power-off"> </i> </button>
+        </div>
+      </div>
+      <div class="drop-down">
+        <button onclick="desktopIconRouter(event,'about')" > About Me </button>
+      </div>
+      <div class="drop-down">
+        <button> Projects </button>
+        <div class="drop-down-content">
+          <button onclick="desktopIconRouter(event,'old')" > My Website</button>
+          <button> <a href="https://virtualnerd1.itch.io/cloudy-meadows" target="_blank"> Cloudy Meadows </a></button>
+        </div>
+      </div>
+        <button onclick="desktopIconRouter(event,'resume')"> Resume</button>
+    
+    </div>
+
+    <div class="status-bar">
+      <div id="clock"> </div>
+
+      <div id="weather"> </div>
+
+      <div id="Contact">
+        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra" target="_blank"> <i class="fa-brands fa-github ">
+          </i></a>
+        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/" target="_blank"> <i
+            class="fa-brands fa-linkedin "> </i></a>
+        <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io" > <i
+            class="fa-brands fa-itch-io "></i></a>
+      </div>
+
+      <div> <i class="fas fa-wifi"></i> </div>
+    </div>
+  </div>
+
+  <div id="desktop" ondrag="drawSelectionRect()">
+    <div id="windows">
+
+    </div>
+
+    <div class="desktop-grid">
+
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')"
+        onmousemove="moveElement(event,this)" tabindex="1">
+        <img src="./images/drawIcon.png"></img>
+        <p contenteditable="true" class="icon-text"> Draw</p>
+      </div>
+
+
+      
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="1">
+        <img src="./images/GOL.png"></img>
+        <div class="icon-text">
+          <p contenteditable="true">Game OF Life</p>
+        </div>
+      </div>
+
+            
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')" tabindex="1">
+        <img src="./images/calculator.png"></img>
+        <div class="icon-text">
+          <p contenteditable="true">Calculator</p>
+        </div>
+      </div>
+
+            
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="1">
+        <img src="./images/notes.png"></img>
+        <div class="icon-text">
+          <p contenteditable="true">Notes</p>
+        </div>
+      </div>
+
+      
+
+    </div>
+  </div>
+  
+  <div class="app-bar"> Tasks <div class="btn-group"> </div>
   </div>
 </div>
 
 
-  <section id="Story" class="timeline tabcontent">
+  <script src="Games.js"></script>
+  <script>
 
-    <div class="hero" >            
-        <canvas class="slide" id="b" style="display:block" tabindex="0"  aria-label="conway's game of life"> </canvas>
-        <canvas class="slide" id="a" style="display:none" tabindex="0" aria-label="displays a game where moving the mouse moves  the player to collect items on click"> </canvas>
-        <canvas class="slide" id="c" style="display:none" tabindex="0"  aria-label="simple dungeon crawler rouge like"> </canvas>
-      <div class="about-me-container">
-          <h1> Full Stack 
-           MERN Developer</h1>
-          <img src="./images/Me.png" class="profile-picture" alt="david kozdra pink shirt behind the florida poly logo"/>
-          <div class="techGrid"> 
-            <span class="techtag"> JavaScript</span>
-          
-            <span class="techtag"> React</span>
-            
-            <span class="techtag"> Mongo DB</span>
-            
-            <span class="techtag"> NodeJs</span>
-            
-            <span class="techtag"> C#</span>
-            
-            <span class="techtag"> Git</span> 
-            
-            <span class="techtag"> HTML5</span> 
-            
-            <span class="techtag"> WordPress</span> 
-            
-            <span class="techtag"> Unity</span> 
-            
-            <span class="techtag"> PostMan</span> 
-            
-            <span class="techtag"> Express</span> 
-            
-            <span class="techtag"> React Native</span> 
-          </div>
-      </div>
-    </div>
 
+    let desktopIcons = document.getElementsByClassName("desktop-icon");
 
-    <div id="arrow"><button   aria-label="back to top arrow" onclick="window.scrollTo(0, 0);"><i class="fa-solid fa-arrow-up fa-3x"></i></button> </div>
 
-    <ul>
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Graduation From Florida Poly</h3>
-              </td>
+    let windows = document.getElementsByClassName("window");
+    let winLen = 0;
+    let activeWindowCount = 0;
+    let loading = true;
 
-              <td>
-                
-                <time>2023</time> 
-              </td>
+    const adjustBoundaries = () => {
+    const headerElement = document.getElementsByClassName('task-bar')[0];
+    const appbarElement = document.getElementsByClassName('app-bar')[0];
 
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/graduation.jpg" alt="Florida Poly Graduation"  width="auto" height="auto"  width="auto" height="auto"> </img>
+    // Set your desired boundary left position
+    const boundaryLeft = 10;
 
-                    
-          <p>
-            I have Graduated from Florida Polytechnic University! I now have a Bachelors of Science in Computer Science with a concentration in Software Engineering.
-            There is so much more to learn and I am excited to see what the future holds.
-          </p>
+    // Get the height of the header and app bar
+    const boundaryTop = headerElement ? headerElement.offsetHeight : 0;
+    const maxBottom = appbarElement ? window.innerHeight - appbarElement.offsetHeight : window.innerHeight;
 
-          <br>
-          <hr>
-          <span class="techtag"> JavaScript</span>
-          <span class="techtag"> Unity</span>
-          <span class="techtag"> C#</span>
-          <span class="techtag"> SQL</span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a href="https://floridapoly.edu/" aria-label="home button"><i class="fa fa-home" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
+    return { boundaryTop, maxBottom, boundaryLeft };
+};
 
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Z-axis Solutions Fullstack developer</h3>
-              </td>
-    
-              <td>
-                
-                <time>2022</time> 
-              </td>
-    
-    
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/Zaxis.png" alt="z-axis logo" width="auto" height="auto"> </img>
-          <p>
-            Z-axis solutions.
-            An event based social media that helped me learn to create a chat system, 
-            notifications work with tickets and lots of data. Web scrapping and creating middle ware and so much more. Over 30 hours a week of work.
-          </p>
-          <br>
-          <hr>
-    
-          <span class="techtag"> Node JS</span>
-          <span class="techtag"> Express</span>
-          <span class="techtag"> MongoDB</span>
-          <span class="techtag"> React.js</span>
-          <span class="techtag"> React Native</span>
-    
-    
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a href="https://www.zaxissolutions.com/" aria-label="Z-axis home page"><i class="fa fa-home" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Cloudy Meadows</h3>
-              </td>
+const applyBoundaries = (array) => {
+    const { boundaryTop, maxBottom, boundaryLeft } = adjustBoundaries();
 
-              <td>
-                
-                <time>2022</time> 
-              </td>
+    for (let i = 0; i < array.length; i++) {
+        const rect = array[i].getBoundingClientRect();
 
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="https://img.itch.zone/aW1nLzk2NTI0MTYuZ2lm/original/kOdkTD.gif" alt="  Cloudy Meadows Game"  width="auto" height="auto"  width="auto" height="auto"> </img>
-          <p>
-            Cloudy Meadows is a project a friend and I have worked on for the majority of the summer. 
-            Using Local storage and HTML CSS and JavaScript including p5.js. I did a lot of code and most of the art as well. This is the first complete game I have made in awhile
-          </p>
-          <br>
-          <hr>
-          <span class="techtag"> JavaScript</span>
-          <span class="techtag"> p5.js</span>
-          <span class="techtag"> HTML</span>
-          <span class="techtag"> CSS</span>
-          <span class="techtag"> Local Storage</span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="link to play cloudy" href="https://virtualnerd1.itch.io/cloudy-meadows"><i class="fa fa-play" > </i></a> 
-              <a aria-label="link to cloudy's source" href="https://github.com/Zoda390/Cloudy-Medows"><i class="fa fa-code" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
+        // check for collison with the appbar
+        if (isColliding(array[i], document.getElementsByClassName('app-bar')[0])) {
+            //array[i].style.top = maxBottom - array[i].offsetHeight + 'px';
+            if( array[i].classList.contains("desktop-icon")) {
+              array[i].style.top = maxBottom - window.innerHeight/10 + 'px';
+            } else {
+              array[i].style.top = maxBottom - array[i].offsetHeight + 'px';
+            } 
+        } 
 
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Bridxe Frontend Internship </h3>
-              </td>
+        if (rect.top < boundaryTop) {
+            array[i].style.top = boundaryTop + 'px';
+        }
 
-              <td>
-                
-                <time>2022</time> 
-              </td>
+        if (rect.left < boundaryLeft) {
+            array[i].style.left = boundaryLeft + 'px';
+        }
+    }
+};
 
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/Bridxe.jpg" alt="Bridxe" width="auto" height="auto"> </img>
-          <p>
-            I have had the privilege of working with Bridxe as a front end intern. Using react and chart.js I have been fetching from a server to create data visualization components. 
-            This is a remote job with very flexible hours I have been able to learn while I work as well.
-            So far this is my favorite job: making projects, having quick yet productive meetings and getting to do tutorials to learn more all on my time.
-          </p>
-          <br>
-          <hr>
+  let activeWindows = document.getElementsByClassName("window");
 
-          <span class="techtag"> React</span>
-          <span class="techtag"> Chart.js</span>
-          <span class="techtag"> Python</span>
-          <span class="techtag"> AWS</span>
 
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="bridxe home page" href="https://www.bridxe.com"><i class="fa fa-home" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
+    async function update() {
+      if (loading) {
+        document.getElementsByClassName("loader-page")[0].style.display = "block";
+        document.getElementById("de").style.display = "none";
+        await delay( 1200);
+        document.getElementsByClassName("loader-page")[0].style.display = "none";
+        document.getElementById("de").style.display = "block";
+        loading = false;
+      } else {
 
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> My Website</h3>
-              </td>
 
-              <td>
-                
-                <time>2022</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/favicon.ico" alt=" david kozdra website"  width="auto" height="auto"  width="auto" height="auto"> </img>
-
-                    
-          <p>
-            This has been an ongoing project with several iterations and philosophy changes. 
-             I want a project that shows off good UI design and responsiveness.
-             This forces a bit of pressure to be professional and flawless.
-             When this project was started there was so little understanding
-              of what would represent me and how to make things look good.
-          </p>
-          <br>
-          <hr>
-          <span class="techtag"> HTML</span>
-          <span class="techtag"> CSS</span>
-          <span class="techtag"> JavaScript</span>
-          <span class="techtag"> Docker</span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="link to this site" href="index.html"><i class="fa fa-play" > </i></a> 
-              <a aria-label="the source code to this site FOSS forever" href="https://github.com/DavidKozdra/davidkozdra.com"><i class="fa fa-code" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
-
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Hive Mind Nebula</h3>
-              </td>
-
-              <td>
-                
-                <time>2022</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="https://img.itch.zone/aW1nLzg3MzY3ODkuanBn/315x250%23c/QXh3ZL.jpg" alt="Hive Mind Nebula game project"  width="auto" height="auto"> </img>
-
-                    
-          <p>
-            Space has been taken over by a hive mind. Fight to be the team on top in the endless sci fi battle.
-            This project is a 2D multiplayer game made in JavaScript with a team of four others. Node and Socket.io are used to create the server. 
-            p5js was used to create the game. 
-
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> p5.js</span>
-          <span class="techtag"> Node</span>
-          <span class="techtag"> JavaScript</span>
-
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="Play link for Hive mind " href="http://142.93.243.224:3001/"><i class="fa fa-play" > </i></a> 
-              <a aria-label="Source code for hive mind nebula" href="https://github.com/gerzytet/Nebula-hive-mind-reborn"><i class="fa fa-code" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
-
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Precision Infinity </h3>
-              </td>
-
-              <td>
-                
-                <time>2022</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="https://www.precisioninfinity.com/Images/pi-logo.svg" alt=" Precision Infinity"  width="auto" height="auto"> </img>
-
-                    
-          <p>  I had the opportunity to shadow this company learning more about ORM database technology and C# web development.
-            Precision makes admin boards for diverse companies. This means they work closely with database technologies and web development. 
-            They focus on UX as their customers can be anything from lunch ladies to farm owners. 
-            I got the opportunity to see some real world development and talk one on one.
-
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> C#</span>
-          <span class="techtag"> ASP.net </span>
-          <span class="techtag"> Entity Framework </span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="Home Page" href="https://www.precisioninfinity.com/"><i class="fa fa-home" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
-
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Fight Tm Backend Internship</h3>
-              </td>
-
-              <td>
-                
-                <time>2021</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/fight.png" alt="Fight tm social media "  width="auto" height="auto"> </img>
-
-                    
-          <p>This internship was with the MERN stack web development. 
-            Fight is a social media website focused on the Gaming community.
-            my position was backend Engineer. I learned about API development and routing.
-
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> Node </span>
-          <span class="techtag"> Express </span>
-          <span class="techtag"> JavaScript</span>
-
-          <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="link to fight tm home page" href="https://fighttm.com"><i class="fa fa-home" > </i></a> 
-            </td>
-
-          </tr>
-        </table>
-        </div>
-      </li>
-
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3>Daintree E-commerce site</h3>
-              </td>
-
-              <td>
-                
-                <time>2020</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/DainTree.png" alt="Daintree database project"  width="auto" height="auto"> </img>
-
-                    
-          <p>      Website I made with PHP and Mysql to practice database fundamentals and web development. 
-            I made other projects with PHP and databases during this time as well.
-            
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> PHP </span>
-          <span class="techtag"> MySql </span>
-          <span class="techtag"> CSS</span>
-          <span class="techtag"> HTML</span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              
-              <a aria-label="Link to Source code for Daintree" href="https://github.com/DavidKozdra/Daintree"><i class="fa fa-code" > </i></a> 
-              <a aria-label="Link to Daintree project" href="https://php.davidkozdra.com/Login/login.php"><i class="fa fa-play" > </i></a> 
-            </td>
-
-          </tr>
-        </table>
-        </div>
-      </li>
-
-      
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3>Universal Truth</h3>
-              </td>
-
-              <td>
-                
-                <time>2020</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/Space.png" alt="UniversalTruth game"  width="auto" height="auto"> </img>
-
-                    
-          <p>
-      
-            Space is vast and full of resources and in this 2D Unity game the player has to buy everything they can. 
-            The game is made in C# with Unity and I used 2D lighting for the first time. 
-            I made it for the Florida Polytechnic game expo and got 8th/20. 
-            Not terrible as I was on my own and a sophomore, but the game has a lot of issues.
-
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> Unity </span>
-          <span class="techtag"> C# </span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              
-              <a aria-label="" href="https://github.com/DavidKozdra/UniversalTruth"><i class="fa fa-code" > </i></a> 
-              <a aria-label=" " href="http://142.93.243.224:3001/"><i class="fa fa-play" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
-
-
-           
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3>Virtual Developer</h3>
-              </td>
-
-              <td>
-                
-                <time>2020</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/vcc.jpg" alt="Virtual Developer"  width="auto" height="auto"> </img>
-
-          <p>
-
-            Block chain technology is interesting, I know some have their doubts but there are benefits none the less. 
-            I was really excited to learn more about data APIs and smart contracts. Along the way I learned more about node and JavaScript frameworks. 
-          </p>
-          <br>
-          <hr>
-          <span class="techtag"> JavaScript</span>
-          <span class="techtag"> C# </span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              
-              <a aria-label="" href="https://virtualdeveloper.com"><i class="fa fa-home" > </i></a>
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
-           
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3>Florida National News internship</h3>
-              </td>
-
-              <td>
-                
-                <time>2020</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/Logo-FNN-380x310.jpeg" alt="Florida National News"  width="auto" height="auto"> </img>
-
-          <p>
-            Wordpress powers so much of the web, but at the time I had this internship, I was unaware of how useful it is.
-             I found tips and tricks from Google and my friend Jason who had some real good experience in Wordpress and PHP guided me a ton.
-              Florida National News is a nonprofit news publication.
-              Most of what they do is on the website from SSL configuration to simple UI changes; all of it needs to be updated as soon as possible. 
-              I still use Wordpress for freelance work and got my start here. 
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> Wordpress</span>
-          <span class="techtag"> CSS </span>
-          <span class="techtag"> HTML </span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              
-              <a aria-label="" href="https://floridanationalnews.com"><i class="fa fa-home" > </i></a>
-            </td>
-
-          </tr>
-        </table>
-        </div>
-      </li>
-
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3>Florida Polytechnic University</h3>
-              </td>
-
-              <td>
-                
-                <time>2019</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/floridaPoly.jpg" alt="Florida Polytechnic university logo"  width="auto" height="auto"> </img>                
-          <p>
-            I currently attend Florida Polytechnic University. I am earning a Bachelors in Computer Science.
-            There are several ways I have made Poly a part of my life, I am the president of the Media Club, 
-            I work in the Simulation and MultiMedia Lab, and I write for Layers, a student newspaper.
-
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> C </span>
-          <span class="techtag"> webGl</span>
-          <span class="techtag"> Java </span>
-          <span class="techtag"> C++ </span>
-
-          <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="" href="https://floridapoly.edu"><i class="fa fa-home" > </i></a> 
-            </td>
-          </tr>
-        </table>
-        </div>
-      </li>
-
-
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> Blocks Blocks Blocks</h3>
-              </td>
-
-              <td>
-                
-                <time>2018</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-          <img  class="center" style="margin-left: 25%;" src="images/blocks.jpg" alt="Blocks Blocks Blocks game "  width="auto" height="auto"> </img>
-
-                    
-          <p>
-            My first published game it was made in Unity and put on the Android store. 
-            The goal is simple as the ball falls get it to the Goal.
-             The game had a level selector free mode and tons of levels.
-          </p>
-          <br>
-          <hr>
-          
-          <span class="techtag"> Unity </span>
-          <span class="techtag"> C# </span>
-        <table style="width:100%">
-          <tr>
-            <td>
-              <a aria-label="" href="https://magentaautumn.itch.io/blocksblocksblocks"><i class="fa fa-play" > </i></a> 
-            </td>
-
-          </tr>
-        </table>
-        </div>
-      </li>
-
-
-      <li>
-        <div>
-          <table style="width:100%">
-            <tr>
-              <td>
-                <h3> High School Programming Club</h3>
-              </td>
-
-              <td>
-                
-                <time>2016</time> 
-              </td>
-
-  
-            </tr>
-          </table>
-                    
-          <p>
-            I had no real programming knowledge at the time but I had always wanted to know more about how computers worked. It didn't hurt that I also wanted to make games.
-            At first my goal was programming as a hobby and to find some other career but I became obsessed and here we are today.
-
-          </p>
-          <br>
-          <hr>
-
-          <span class="techtag"> Java </span>
-          <span class="techtag"> HTML </span>
-          <span class="techtag"> CSS</span>
-        <table style="width:100%">
-          <tr>
-          </tr>
-        </table>
-        </div>
-      </li>
-
-
-    </ul>
-  </section>
-
-  <section id="Resume" class="tabcontent center">
-
-    <iframe class="embed-responsive" src="./resume.pdf" style="height: 700px;" frameborder="0"></iframe>
-
-    <div class="resume-viewer-mobile">
-      <h1>David Kozdra</h1>Software Engineer<p style="padding-top: 4pt;padding-left: 15pt;text-indent: 0pt;text-align: left;"><a href="mailto:davidkozdra@gmail.com" style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;" target="_blank" name="bookmark0">(772)-696-3847 | </a><a href="https://github.com/DavidKozdra" style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;" target="_blank">davidkozdra@gmail.com | </a><a href="https://davidkozdra.com/" style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;" target="_blank">github.com/DavidKozdra | </a><a href="https://davidkozdra.com/" target="_blank"><span style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;">davidkozdra.com</span></a></p><p style="padding-left: 21pt;text-indent: 0pt;text-align: left;"/><h2 style="padding-left: 13pt;text-indent: 0pt;line-height: 20pt;text-align: left;">Professional Experience &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </h2><p style="padding-top: 1pt;padding-left: 20pt;text-indent: 0pt;text-align: left;"><b>Bridxe </b>| <i>Frontend Engineering Intern </i>| React Node Express Chart</p><p class="s2" style="padding-left: 13pt;text-indent: 0pt;text-align: left;">Price chart for web 3 platforms</p><ul id="l1"><li data-list-text="•"><p style="padding-top: 3pt;padding-left: 42pt;text-indent: -29pt;line-height: 15pt;text-align: left;">Fetched data from the server and visualized it using Chart JS and React Component</p></li><li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 14pt;text-align: left;">Built drop down to change URL to fetch with React</p></li><li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 14pt;text-align: left;">Wrote and Tested endpoints for Python back end API to fetch additional data</p></li><li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 15pt;text-align: left;">Collaborated with team members during meetings weekly to discuss requirements</p><p style="padding-top: 9pt;padding-left: 11pt;text-indent: 0pt;text-align: left;"><b>Fight Tm</b>| <i>Backend Engineering Intern </i>|Node.js Express.js MongoDB Postman</p><p class="s3" style="padding-left: 12pt;text-indent: 0pt;text-align: left;">Social media for gamers and streamers</p></li><li data-list-text="•"><p style="padding-top: 1pt;padding-left: 42pt;text-indent: -29pt;line-height: 13pt;text-align: left;">Added to the express API to add functionality to the user settings routes</p></li><li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 12pt;text-align: left;">Edited Models and tested database changes through MongoDB Compass</p></li><li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 12pt;text-align: left;">Aided front end testing with Postman responses testing HTTP routes</p></li><li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 12pt;text-align: left;">Created guided documentation for internal development including installation Guides</p></li><li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 13pt;text-align: left;"><a href="https://fighttm.com/">fighttm.com</a></p><p style="padding-top: 2pt;padding-left: 13pt;text-indent: 0pt;text-align: left;">2/22 - 8/22</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 11pt;text-indent: 0pt;text-align: left;">7/21 - 10/21</p><p style="text-indent: 0pt;text-align: left;"><br/></p><h2 style="padding-top: 1pt;padding-left: 12pt;text-indent: 0pt;text-align: left;">Projects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </h2><h4 style="padding-left: 14pt;text-indent: 0pt;line-height: 14pt;text-align: left;">Cork Board <span class="p">| MongoDB, Express, React , Node | Team Project</span></h4><p class="s2" style="padding-left: 11pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Intractable user forum social media platform</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 14pt;text-align: left;">Designed a Schema using NoSql Mongo Compass</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 12pt;text-align: left;">Developed a rest API to connect user information and posts for a digital board</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 12pt;text-align: left;">Created React JS Component based UI elements for layout of the pages</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 12pt;text-align: left;">Fetched data from the web server for display on pages</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 14pt;text-align: left;">Worked with a team planning meeting times and roles</p><h4 style="padding-top: 7pt;padding-left: 12pt;text-indent: 0pt;text-align: left;">Hive Mind Nebula <span class="p">| JS HTML CSS | Team Project</span></h4><p class="s2" style="padding-top: 3pt;padding-left: 11pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Multiplayer browser game based on io games</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 14pt;text-align: left;">Built Network events with Node js and game code logic</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 12pt;text-align: left;">Programmed object oriented design of the game with entity types</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 12pt;text-align: left;">Implemented performance fixes by limiting render time</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 14pt;text-align: left;">Led team meetings and organized development with agile focus</p><p style="padding-top: 5pt;padding-left: 13pt;text-indent: 0pt;text-align: left;">03/22 - 04/22</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 11pt;text-indent: 0pt;text-align: left;">02/22- 04/22</p><h4 style="padding-left: 12pt;text-indent: 0pt;line-height: 19pt;text-align: left;">DainTree Ecommerce site <span class="p">| Linux Mysql PHP JQuery Bootstrap | Team Project          </span><span class="s4">02/21 - 04/21</span></h4><p class="s2" style="padding-top: 1pt;padding-left: 12pt;text-indent: 0pt;line-height: 10pt;text-align: left;">Simple Ecommerce demo site</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -31pt;line-height: 12pt;text-align: left;">Developed user login system with database connection, includes cookie based memory</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -31pt;line-height: 12pt;text-align: left;">Users can upload their own items to sell with images and descriptions</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -31pt;line-height: 12pt;text-align: left;">Allowed users to add items to their shopping cart</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -31pt;line-height: 12pt;text-align: left;">Built searching using SQL to search for items based on different attributes</p></li><li data-list-text="•"><p style="padding-left: 43pt;text-indent: -31pt;line-height: 12pt;text-align: left;"><a href="#bookmark0" class="a">Demo : </a><a href="#bookmark0">php.davidkozdra.com/Login/login.php</a></p></li></ul><p class="s5" style="padding-left: 6pt;text-indent: 0pt;line-height: 23pt;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="h2">Education &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p><h4 style="padding-top: 3pt;padding-left: 16pt;text-indent: 0pt;text-align: left;">Florida Polytechnic University <span class="p">| </span>Graduation<span class="p">: 5/23</span></h4><p style="padding-top: 1pt;padding-left: 13pt;text-indent: 0pt;text-align: left;">Bachelor&#39;s of Science: Computer Science</p><h4 style="padding-top: 2pt;padding-left: 13pt;text-indent: 0pt;line-height: 15pt;text-align: left;">Clubs<span class="p">: Media</span></h4><p style="padding-left: 13pt;text-indent: 0pt;line-height: 15pt;text-align: left;">Club(President), Layers media(editor)</p><p style="text-indent: 0pt;text-align: left;"><br/></p><h4 style="padding-top: 2pt;padding-left: 13pt;text-indent: 0pt;text-align: left;">Relevant Courses<span class="p">: Data Structures and Algorithms, Database (SQL), Web Application Development,Software Engineering,Graphics</span></h4><p class="s5" style="padding-top: 1pt;padding-left: 5pt;text-indent: 0pt;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="h2">Skills &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p><p style="padding-top: 1pt;padding-left: 8pt;text-indent: 0pt;line-height: 15pt;text-align: left;">JavaScript(React,Node,MongoDB,Express,WebGL) | C# (WPF, Unity, ASP.net) | PHP (WordPress,SQL,Linux)|</p><p style="padding-left: 8pt;text-indent: 0pt;line-height: 15pt;text-align: left;">Java(JavaFx) | GIT | Jira, Trello | self motivation, leadership skills</p></body></html>
-    </div>
-    
-  </section>
-
-  <section id="AboutMe" class="tabcontent center">
-      <div style="text-align: center; font-size: 2em; font-weight: bold;">
-        <p>Hello, I'm David Kozdra Full Stack Web Developer</p>
-      </div>
-      
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="max-width: 70%;">
-          <p>I have a passion for creating beautiful and intuitive user interfaces, and lots of experience with back end development as well.</p>
-          <br>
-          <p> Interactive development with Unity and webgl helps me hone my programming and visual art skills, and I am always eager to learn new things in the field of computing.</p>
-          <br>
-          <p>In my free time, I enjoy creating pixel art and working to improve my skills. I'm excited to work with you and bring my creativity and expertise to your projects.</p>
-        </div>
-        
-        <img src="images/ME.jpg" alt="Profile picture" style="border-radius: 5%; width: 200px; height: 200px;">
-      </div>
-      
-
-  </section>
-
-  <footer>
-
-      <div class="center">
-        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra"> <i class="fa-brands fa-github fa-4x"> </i></a>
-        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"> <i class="fa-brands fa-linkedin fa-4x"> </i></a>        
-        <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io"> <i class="fa-brands fa-itch-io fa-4x"></i></a>
-      </div>
-  </footer>
-
-  <script src="index.js"> </script>
-  <script src="ai.js"> </script>  
-  <script src="Games.js"> </script>
-
-  <script> 
-    document.getElementById("defaultOpen").click();
-
-    (function () {
-      "use strict";
-    
-      // define variables
-      var items = document.querySelectorAll(".timeline li");
-    
-      // check if an element is in viewport
-      // http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
-      function isElementInViewport(el) {
-        var rect = el.getBoundingClientRect();
-        return (
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-      }
-    
-      function callbackFunc() {
-        for (var i = 0; i < items.length; i++) {
-          if(i==0){
-            items[i].classList.add("in-view");
+        //loop for all desktop icons
+        for (let i = 0; i < desktopIcons.length; i++) {
+          for (let j = 0; j < desktopIcons.length; j++) {
+            if (i != j) {
+              checkCollision(desktopIcons[i], desktopIcons[j]);
+            }
           }
+          applyBoundaries(desktopIcons);
+        }
 
-          if (isElementInViewport(items[i])) {
-            items[i].classList.add("in-view");
-          }
+        activeWindows = document.getElementsByClassName("window");
+        activeWindows = Array.from(activeWindows).filter(window => !window.classList.contains("minimized"));
+
+        applyBoundaries(activeWindows);
+        if (activeWindowCount != activeWindows.length) {
+          ReRenderAppTaskbar();
+          activeWindowCount = activeWindows.length;
+        } else if (windows.length != winLen) {
+          ReRenderAppTaskbar();
+          winLen = windows.length;
         }
       }
+      requestAnimationFrame(update);
+    }
+
+    function resizeWindowTItle(window) {
+      
+      let title = window.querySelector(".window-title");  
+      title.style.width = window.offsetWidth+ "px";
+
+  
+    }
+
+    function ReRenderAppTaskbar() {
+
+      let taskbar = document.getElementsByClassName("app-bar");
+      taskbar[0].innerHTML = "Tasks ";
+
+      for (let i = 0; i < windows.length; i++) {
+        let taskbarButton = document.createElement("button");
+        let taskbarButtonIcon = document.createElement("img");
+        taskbarButtonIcon.classList.add("window-icon");
+        taskbarButtonIcon.src = windows[i].childNodes[0].childNodes[0].src;
+        taskbarButton.classList.add("app-bar-button");
+        if (windows[i].style.display !== "none") {
+          taskbarButton.classList.add("app-bar-button-active");
+        } else {
+          taskbarButton.classList.remove("app-bar-button-active");
+        }
+        taskbarButton.onclick = function () { 
+          if(windows[i].classList.contains("minimized")) {
+            windows[i].classList.remove("minimized");
+          } else {
+            windows[i].classList.add("minimized");
+          }
+        };
+
+        taskbarButton.appendChild(taskbarButtonIcon);
+        
+        taskbarButton.innerHTML += windows[i].id;
+        taskbar[0].appendChild(taskbarButton);
+      }
+    }
+
+    function drawSelectionRect() {
+      //take the mouse pos and draw a rect from the start to the current pos
+      let rect = document.createElement("div");
+      rect.classList.add("selection-rect");
+      document.getElementById("desktop").appendChild(rect);
+    }
+
+
+    function CreateDesktopIconGrid() {
+  const iconSize = 120; // Adjust this based on the desired size of each icon
+  const margin = 10; // Adjust this based on the desired margin between icons
+
+  // Calculate the number of icons per row dynamically
+  const iconsPerRow = Math.floor((window.innerWidth - margin) / (iconSize + margin));
+
+  let ymod = -120;
+  let xmod = 0;
+
+  for (let i = 0; i < desktopIcons.length; i++) {
+    if (i % iconsPerRow === 0) {
+      ymod += iconSize + margin;
+      xmod = 0;
+    }
+    // Set the position of the icon based on the index
+    desktopIcons[i].style.left = xmod * (iconSize + margin) + "px";
+    desktopIcons[i].style.top = ymod + "px";
+
+    xmod += 1;
+  }
+}
+
+    function checkCollision(item1, item2) {
+    const rect1 = item1.getBoundingClientRect();
+    const rect2 = item2.getBoundingClientRect();
+
+    if (
+        rect1.left < rect2.right &&
+        rect1.right > rect2.left &&
+        rect1.top < rect2.bottom &&
+        rect1.bottom > rect2.top
+    ) {
+        // Calculate the overlap in both the x and y directions
+        const overlapX = Math.min(rect1.right - rect2.left, rect2.right - rect1.left);
+        const overlapY = Math.min(rect1.bottom - rect2.top, rect2.bottom - rect1.top);
+
+        // Adjust the positions to resolve the collision
+        item1.style.left = (parseFloat(item1.style.left) || 0) + overlapX + 'px';
+        item1.style.top = (parseFloat(item1.style.top) || 0) + overlapY + 'px';
+        
+    }
+}
+
+
+    function isColliding(item1, item2) {
+      const rect1 = item1.getBoundingClientRect();
+      const rect2 = item2.getBoundingClientRect();
+
+      if (
+        rect1.left < rect2.right &&
+        rect1.right > rect2.left &&
+        rect1.top < rect2.bottom &&
+        rect1.bottom > rect2.top
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+
+    CreateDesktopIconGrid();
+
+
+    // has to do it this way no idea why
+
+    let intro = document.createElement("iframe");
+
+    intro.src = "./intro.html";
+    intro.style.height = "100%";
+    intro.style.width = "100%";
+    createWindow("Intro", intro, "./images/favicon.ico", 400, 200);
+
+    function DisplayDate() {
+      var date = new Date();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var seconds = date.getSeconds();
+      var ampm = "AM";
+      if (hours > 12) {
+        hours = hours - 12;
+        ampm = "PM";
+      }
+      if (hours == 0) {
+        hours = 12;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+      var time = hours + ":" + minutes + ":" + seconds + " " + ampm;
+      document.getElementById("clock").innerHTML = time;
+    }
+
+    setInterval(DisplayDate, 500);
+
+
+    function closeWindow(e, name) {
+      // close the parent window from the event target
+      let window = e.target.closest(".window");
+      window.remove();
+
+    }
+
+    function minimizeWindow(e, name) {
+      let window = e.target.closest(".window ");
+      window.classList.toggle("minimized");
+    }
+
+    function maximizeWindow(e, name) {  
+      let window = e.target.closest(".window");
+
+      if (window != null) {
+        window.classList.toggle("larger");
+        if (window.classList.contains("larger")) {
+          e.target.classList.remove("fa-expand");
+          e.target.classList.add("fa-compress");
+        }else {
+          e.target.classList.remove("fa-compress");
+          e.target.classList.add("fa-expand");
+        }
+      resizeWindowTItle(window)
+      }
+    }
+
+
+
+    function dragElement(title, elmnt) {
+      var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+      // If present, the header is where you move the DIV from:
+      title.onmousedown = dragMouseDown;
+
+      function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        // Get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // Call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+      }
+
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+
+        // Check boundaries
+        const newTop = Math.max(0, Math.min(elmnt.offsetTop - pos2, window.innerHeight - elmnt.offsetHeight));
+        const newLeft = Math.max(0, Math.min(elmnt.offsetLeft - pos1, window.innerWidth - elmnt.offsetWidth));
+
+        // Set the element's new position:
+        elmnt.style.top = newTop + "px";
+        elmnt.style.left = newLeft + "px";
+      }
+
+      function closeDragElement() {
+        // Stop moving when the mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    function setCursor() {
+      //conditionally set the cursor to wait globally
+      document.body.style.cursor = "wait";
+    }
+
+    function deselectAllIcons() {
+      let desktopIcons = document.getElementsByClassName("desktop-icon");
+      for (let i = 0; i < desktopIcons.length; i++) {
+        desktopIcons[i].classList.remove("active");
+      }
+    }
+
+    function selectIcon(e) {
+      if (!e.target.classList.contains("icon-text")) {
+        e.target.classList.toggle("active");
+      }
+
+
+      e.target.classList.toggle("active");
+    }
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function desktopIconRouter(e, newWindowHeaderTitle) {
+      // Set the cursor to the waiting state
+      setCursor(e);
+
+      // Wait for the specified delay
+      await delay((Math.random() * 1000) + 200);
+
+      // Now the delay is complete, proceed to open the window
+      switch (newWindowHeaderTitle) {
+        case "test":
+          createWindow("Test", "This is a test window", "./images/blocks.jpg");
+          break;
+        case "resume":
+            let resume = document.createElement("iframe");
+            resume.classList.add("embed-responsive");
+            resume.src = "./resume.pdf";
+            resume.style.height = "90%";
+            resume.style.marginTop = "50px";
+            resume.style.width = "100%";
+            resume.frameborder = "0";
+           
+            createWindow("Resume", resume, "./images/Resume.png", 800);
+
+            
+          break;
+        
+        case "calculator":
+          let calculator = document.createElement("iframe");
+          calculator.src = "./calculator.html";
+          calculator.style.height = "100%";
+          calculator.style.width = "100%";
+          createWindow("Calculator", calculator, "./images/calculator.png",400);
+          break;
+
+        case "notes":
+          let notes = document.createElement("div");
+          notes.classList.add("notes");
+
+          let textArea = document.createElement("textarea");
+          textArea.classList.add("notes-textarea");
+          textArea.rows = "25";
+          textArea.cols = "45";
+          textArea.placeholder = "Enter your notes here";
+          // local storage for notes get and set on change of value 
+          textArea.onchange = function () {
+            localStorage.setItem("notes", textArea.value);
+          };
+          textArea.value = localStorage.getItem("notes");
+          notes.appendChild(textArea);
+          createWindow("Notes", notes, "./images/notes.png", 500);
+          break;
+
+          case "settings":
+            createWindow("Settings", "This is a test window", "./images/blocks.jpg", 800);
+            break;
+
+          case "about":
+            let about = document.createElement("iframe");
+            about.src = "./about.html";
+            about.style.height = "100%";
+            about.style.width = "100%";
+            createWindow("About", about, "./images/ME.jpg", 800);
+            break;
+
+          case "old":
+            let iframe = document.createElement("iframe");
+            iframe.src = "./index copy.html";
+            iframe.style.height = "700px";
+            iframe.style.width = "100%";
+            createWindow("Old Website", iframe, "./images/favicon.ico", 800);
+            break;
+
+          case "intro":
+
+            let intro = document.createElement("iframe");
+
+            intro.src = "./intro.html";
+            intro.style.height = "100%";
+            intro.style.width = "100%";
+            createWindow("Intro", intro, "./images/favicon.ico", 400, 200);
+          break;
+
+
+          case "error":
+            createWindow("Error", "This is a test window", "./images/drawIcon.png", 200);
+
+          case "draw" : 
+            let draw = document.createElement("iframe");
+            draw.src = "./drawing.html";
+            draw.style.height = "100%";
+            draw.style.width = "100%";
+            draw.style.marginTop = "50px";
+            createWindow("Drawing", draw, "./images/drawIcon.png", 800);
+            break;
+
+          case "GOL":
+            let GOLcontainer = document.createElement("div");
+            let GOL = document.createElement("canvas");
+              GOL.id = "b";
+              GOL.style.marginTop = "50px";
+              GOLcontainer.style.marginTop = "50px";
+            
+            let clearButton = document.createElement("button");
+            clearButton.innerHTML = "Clear";
+            clearButton.onclick = function () {
+              restartGOL();
+            };
+            let pauseButton = document.createElement("button");
+            pauseButton.innerHTML = "Pause";
+            pauseButton.onclick = function () {
+              pauseGOL();
+            };
+            
+            GOLcontainer.appendChild(GOL);
+            GOLcontainer.appendChild(clearButton);
+            GOLcontainer.appendChild(pauseButton);
+            createWindow("Game of Life", GOLcontainer, "./images/GOL.png", 500);
+            currentSlide = -1;
+            init()
+            break;
+        default:
+          console.error("Window not found");
+          break;
+      }
+
+      // Reset the cursor to the default state
+      document.body.style.cursor = "default";
+      e.target.style.cursor = "default";
+    }
+
+    function setCursor(e) {
+      // Your cursor-setting logic here
+      document.body.style.cursor = "wait";
+      // set important cursor styles
+
+      e.target.style.cursor = "wait";
+    }
+    function createWindow(title, content, iconSrc, width,x,y) {
+      
+
+        const id = title.toLowerCase().replace(/\s+/g, '-'); // Generate id based on the title
+        const newWindow = document.createElement("div");
+        newWindow.classList.add("window");
+        newWindow.id = id;
+
+
+        const headerImage = createWindowHeaderImage(iconSrc);
+        const header = createWindowHeader(title, id);
+        const buttons = createWindowButtons(id);
+
+        header.appendChild(headerImage);
+        header.innerHTML += title;
+        header.appendChild(buttons);
+        newWindow.style.width = width + "px";
+        newWindow.marginTop = "50px";
+        newWindow.appendChild(header);
+
+      // Check if the content is a node 
+      if (!(content instanceof Node)) {
+          const windowContent = createWindowContent(content);
+          newWindow.appendChild(windowContent);
+      } else {
+          newWindow.appendChild(content);
+      }
+        newWindow.style.display = "block";
+        document.getElementById("windows").appendChild(newWindow);
+
+        // Set the window position
+        newWindow.style.top = y + "px";
+        newWindow.style.left = x + "px";
+
+        resizeWindowTItle(newWindow);
+        // Initialize drag behavior
+        dragElement(header, newWindow);
+
+        return newWindow;
+    }
+
+    function createWindowHeaderImage(src) {
+        const headerImage = document.createElement("img");
+        headerImage.classList.add("window-icon");
+        headerImage.src = src;
+        return headerImage;
+    }
+
+    function createWindowHeader(title, id) {
+        const header = document.createElement("div");
+        header.classList.add("window-title");
+        return header;
+    }
+
+    function createWindowButtons(id) {
+        const buttons = document.createElement("div");
+        buttons.classList.add("window-buttons");
+        let minIcon = document.createElement("i");
+        minIcon.classList.add("fas");
+        minIcon.classList.add("fa-chevron-down");
+        
+        const buttonMin = createWindowButton(minIcon, function () {
+            minimizeWindow(event, id);
+        });
+
+        let enlargeIcon = document.createElement("i");
+        enlargeIcon.classList.add("fas");
+        enlargeIcon.classList.add("fa-expand");
+
+        const buttonMax = createWindowButton(enlargeIcon, function () {
+            maximizeWindow(event, id);
+        });
+
+        let closeIcon = document.createElement("i");
+        closeIcon.classList.add("fas");
+        closeIcon.classList.add("fa-times");
+
+
+        const buttonClose = createWindowButton(closeIcon, function () {
+            closeWindow(event, id);
+        });
+
+        buttons.appendChild(buttonMin);
+        buttons.appendChild(buttonMax);
+        buttons.appendChild(buttonClose);
+
+        return buttons;
+    }
+
+    function createWindowButton(text, clickHandler) {
+        const button = document.createElement("button");
+        button.classList.add("window-button");
+        button.appendChild(text);
+        button.addEventListener('click', clickHandler);
+        return button;
+    }
+
+    function createWindowContent(content) {
+        const contentElement = document.createElement("div");
+        contentElement.classList.add("window-content");
+
+        const contentText = document.createElement("p");
+        contentText.innerHTML = content;
+
+        // Modify this part to add your specific content, e.g., iframe
+        contentElement.appendChild(contentText);
+        return contentElement;
+    }
     
-      // listen for events
-      window.addEventListener("load", callbackFunc);
-      window.addEventListener("resize", callbackFunc);
-      window.addEventListener("scroll", callbackFunc);
-    })();
-    </script>
+    // Initialize drag for desktop icons
+    for (let i = 0; i < desktopIcons.length; i++) {
+        dragElement(desktopIcons[i], desktopIcons[i]);
+    }
+
+    function moveElement(event, element) {
+      const draggedElement = element;
+
+      element.style.cursor = "grabbing";
+
+      // Check if the mouse is pressed
+      if (event.buttons !== 1) return;
+
+      // Calculate the new position of the dragged element
+      const newX = event.clientX - draggedElement.offsetWidth / 2;
+      const newY = event.clientY - draggedElement.offsetHeight / 2;
+
+      // Set the new position
+      draggedElement.style.left = newX + 'px';
+      draggedElement.style.top = newY + 'px';
+    }
+
+    requestAnimationFrame(update);
+
+
+    function refresh() {
+      location.reload();
+    }
+
+    window.addEventListener('resize', function () {
+      for (let i = 0; i < activeWindows.length; i++) {
+        resizeWindowTItle(activeWindows[i]);
+        applyBoundaries(activeWindows);
+
+      }
+      CreateDesktopIconGrid();
+    });
+  </script>
+
+
 </body>
+
 </html>
