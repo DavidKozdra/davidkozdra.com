@@ -43,7 +43,7 @@ body {
 
 @keyframes flickerScreen {
     0% { opacity: 1; 
-        background: #000;
+        background: aqua;
     }
     50% { opacity: 0.6;
         background: #fff;
@@ -95,7 +95,7 @@ body {
     cursor: pointer;
     width: 100%;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 button {
@@ -139,10 +139,11 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
     border: none;
     min-width: 120px;
+    z-index: 1;
 }
 
 .task-bar button:hover {
@@ -158,6 +159,7 @@ button {
     border: 1px dotted black;
     text-decoration: none;
     color: black;
+    z-index: 20;
 }
 
 .drop-down-content a {
@@ -169,6 +171,7 @@ button {
 .drop-down {
     position: relative;
     display: inline-block;
+    z-index: 20;
 }
 
 .drop-down:hover .drop-down-content {
@@ -208,8 +211,8 @@ button {
 }
 
 .larger {
-    width: 160dvh !important;
-    height: 50dvw !important;
+    width: 98% !important;
+    height: 90% !important;
     overflow: auto; 
     resize: none;
 }
@@ -222,7 +225,7 @@ button {
     background: var(--window-header);
     color: white;
     width: 100%;
-
+    position: fixed;
     cursor: move;
 }
 
@@ -261,7 +264,7 @@ button {
 }
 
 .icon-text {
-    font-size: 12px;
+    font-size: 1rem;
     text-align: center;
     cursor: text;
 }
@@ -380,4 +383,8 @@ button {
 
 
 
+}
+
+::-webkit-resizer{
+    border: 2px solid black;
 }

@@ -47,7 +47,7 @@
         </div>
       </div>
       <div class="drop-down">
-        <button onclick="desktopIconRouter(event,'about')"> About Me </button>
+        <button onclick="desktopIconRouter(event,'about')" > About Me </button>
       </div>
       <div class="drop-down">
         <button> Projects </button>
@@ -194,6 +194,11 @@ const applyBoundaries = (array) => {
       requestAnimationFrame(update);
     }
 
+    function resizeWindowTItle(window) {
+      let title = window.childNodes[0];
+      title.style.width = window.offsetWidth+ "px";
+    }
+
     function ReRenderAppTaskbar() {
 
       let taskbar = document.getElementsByClassName("app-bar");
@@ -280,18 +285,35 @@ const applyBoundaries = (array) => {
 
     CreateDesktopIconGrid();
 
-
-    //Create intro window
-    
     let intro = document.createElement("div");
     let header = document.createElement("h1");
-    header.innerHTML = "Welcome to DK OS";
-    var para = document.createElement("p");
-    para.innerHTML = "This is my personal website made in the theming of a desktop environment " ;
+    header.innerHTML = "Welcome to DK OS 🖥️🖥️🖥️🖥️🖥️🖥️";
+    header.style.color = "#aaff00"; // Lime green text color
+    intro.style.backgroundColor = "#000000"; // Black background color
+    var para1 = document.createElement("p");
+    para1.style.color = "#aaff00"; // Lime green text color
+    para1.innerHTML = "This is my personal website designed as a desktop environment, showcasing my frontend skills and serving as my portfolio. 🎨 Explore various apps, check out my projects, and experience the creativity! 🌟 . This project is inspired by some similar websites I have seen web core athstetics in things like ENA, retro computers like the old macs.";
     intro.appendChild(header);
-    intro.appendChild(para);
-    createWindow("Intro",intro , "./images/blocks.jpg", 400,200 );
-    
+    intro.appendChild(para1);
+
+    let howToUse = document.createElement("div");
+    let howToUseHeader = document.createElement("h2");
+    howToUseHeader.innerHTML = "How to Use";
+    howToUseHeader.style.color = "#aaff00"; // Lime green text color
+    var para2 = document.createElement("p");
+    para2.innerHTML = "Navigate through the desktop icons, Open new Windows, discover applications like a calculator and notepad, and enjoy games—all programmed by me! Simply click on the icons to launch these interactive experiences. I worked hard on the drag and drop system and thanks to my game dev experiance set up some collision where needed its not super responsive also feel free to check out my  <a href='./index copy.html' target='blank'> old website</a>";
+    para2.style.color = "#aaff00"; // Lime green text color
+    howToUse.appendChild(howToUseHeader);
+    howToUse.appendChild(para2);
+    intro.style.padding = "10px";
+    intro.style.height = "100vh";
+    intro.style.width = "100%";
+    intro.style.overflow = "none";
+    intro.style.fontSize=1.2+ "rem ";
+    intro.appendChild(howToUse);
+
+createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
+
 
     function DisplayDate() {
       var date = new Date();
@@ -321,23 +343,31 @@ const applyBoundaries = (array) => {
 
     function closeWindow(e, name) {
       // close the parent window from the event target
-      e.target.parentNode.parentNode.parentNode.remove();
+      let window = e.target.closest(".window");
+      window.remove();
 
     }
 
     function minimizeWindow(e, name) {
-      e.target.parentNode.parentNode.parentNode.style.display = "none";
+      let window = e.target.closest(".window");
+      window.style.display = "none";
+      resizeWindowTItle(window)
     }
 
-    function maximizeWindow(e, name) {
-      let window = e.target.parentNode.parentNode.parentNode;
+    function maximizeWindow(e, name) {  
+      let window = e.target.closest(".window");
 
-      // e.target needs to be a window button 
-      //add larger class
       if (window != null) {
         window.classList.toggle("larger");
-        (window.classList.contains("larger")) ? e.target.innerHTML = "~" : e.target.innerHTML = "[]";
+        if (window.classList.contains("larger")) {
+          e.target.classList.remove("fa-expand");
+          e.target.classList.add("fa-compress");
+        }else {
+          e.target.classList.remove("fa-compress");
+          e.target.classList.add("fa-expand");
+        }
         
+      resizeWindowTItle(window)
       }
     }
 
@@ -434,33 +464,10 @@ const applyBoundaries = (array) => {
           break;
         
         case "calculator":
-          let calculator = document.createElement("div");
-          calculator.classList.add("calculator");
-
-          let calculatorScreen = document.createElement("div");
-          calculatorScreen.classList.add("calculator-screen");
-
-          let calculatorKeys = document.createElement("div");
-          calculatorKeys.classList.add("calculator-keys");
-
-          for (let i = 0; i < 10; i++) {
-            let calculatorKeysButton = document.createElement("button");
-            calculatorKeysButton.classList.add("calculator-keys-button");
-            calculatorKeysButton.innerHTML = i;
-            calculatorKeys.appendChild(calculatorKeysButton);
-          }
-
-          let operatorKeys = ["+", "-", "*", "/"];
-          for (let i = 0; i < operatorKeys.length; i++) {
-            let calculatorKeysButton = document.createElement("button");
-            calculatorKeysButton.classList.add("calculator-keys-button");
-            calculatorKeysButton.innerHTML = operatorKeys[i];
-            calculatorKeys.appendChild(calculatorKeysButton);
-          }
-
-          calculator.appendChild(calculatorScreen);
-          calculator.appendChild(calculatorKeys);
-
+          let calculator = document.createElement("iframe");
+          calculator.src = "./calculator.html";
+          calculator.style.height = "100%";
+          calculator.style.width = "100%";
           createWindow("Calculator", calculator, "./images/blocks.jpg",400);
           break;
 
@@ -487,26 +494,10 @@ const applyBoundaries = (array) => {
             break;
 
           case "about":
-            let about = document.createElement("div");
-            about.classList.add("about");
-            //about.innerHTML = "I have a passion for creating beautiful and intuitive user interfaces, and lots of experience with back end development as well. Interactive development with Unity and webgl helps me hone my programming and visual art skills, and I am always eager to learn new things in the field of computing. In my free time, I enjoy creating pixel art and working to improve my skills. I'm excited to work with you and bring my creativity and expertise to your projects.";
-            let p1 = document.createElement("p");
-            p1.innerHTML = "I have a passion for creating beautiful and intuitive user interfaces, and lots of experience with back end development as well." ;
-            let p2 = document.createElement("p");
-            p2.innerHTML = "Interactive development with Unity and webgl helps me hone my programming and visual art skills, and I am always eager to learn new things in the field of computing.";
-            let p3 = document.createElement("p");
-            p3.innerHTML = "In my free time, I enjoy creating pixel art and working to improve my skills. I'm excited to work with you and bring my creativity and expertise to your projects.";
-            
-            let img = document.createElement("img");
-            let h1 = document.createElement("h1");
-            h1.innerHTML = "David Kozdra MERN Stack Developer";
-            img.src = "./images/ME.jpg";
-            img.id = "face";
-            about.appendChild(h1);
-            about.appendChild(img);
-            about.appendChild(p1);
-            about.appendChild(p2);
-            about.appendChild(p3);
+            let about = document.createElement("iframe");
+            about.src = "./about.html";
+            about.style.height = "100%";
+            about.style.width = "100%";
             createWindow("About", about, "./images/ME.jpg", 800);
             break;
 
@@ -565,6 +556,7 @@ const applyBoundaries = (array) => {
         header.innerHTML += title;
         header.appendChild(buttons);
         newWindow.style.width = width + "px";
+        header.style.width = width + "px";
         newWindow.appendChild(header);
 
       // Check if the content is a node 
@@ -580,6 +572,7 @@ const applyBoundaries = (array) => {
         // Set the window position
         newWindow.style.top = y + "px";
         newWindow.style.left = x + "px";
+
 
         // Initialize drag behavior
         dragElement(header, newWindow);
@@ -601,16 +594,28 @@ const applyBoundaries = (array) => {
     function createWindowButtons(id) {
         const buttons = document.createElement("div");
         buttons.classList.add("window-buttons");
-
-        const buttonMin = createWindowButton("_", function () {
+        let minIcon = document.createElement("i");
+        minIcon.classList.add("fas");
+        minIcon.classList.add("fa-chevron-down");
+        
+        const buttonMin = createWindowButton(minIcon, function () {
             minimizeWindow(event, id);
         });
 
-        const buttonMax = createWindowButton("[]", function () {
+        let enlargeIcon = document.createElement("i");
+        enlargeIcon.classList.add("fas");
+        enlargeIcon.classList.add("fa-expand");
+
+        const buttonMax = createWindowButton(enlargeIcon, function () {
             maximizeWindow(event, id);
         });
 
-        const buttonClose = createWindowButton("X", function () {
+        let closeIcon = document.createElement("i");
+        closeIcon.classList.add("fas");
+        closeIcon.classList.add("fa-times");
+
+
+        const buttonClose = createWindowButton(closeIcon, function () {
             closeWindow(event, id);
         });
 
@@ -624,7 +629,7 @@ const applyBoundaries = (array) => {
     function createWindowButton(text, clickHandler) {
         const button = document.createElement("button");
         button.classList.add("window-button");
-        button.innerHTML = text;
+        button.appendChild(text);
         button.addEventListener('click', clickHandler);
         return button;
     }
