@@ -5,13 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABOUT</title>
-    <link rel="stylesheet" href="css/style.css">
 
     <style>
         body {
             background-image: url("./images/Space.png");
-            background-repeat: repeat;
-            background-color: #cccccc;
+            background-repeat: repeat;  
+            
         }
 
         .main-content {
@@ -19,6 +18,13 @@
             border-radius: 10px;
             height: fit-content;
             width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+
+        img {
+            width: 350px;
+            height: 200px;
         }
 
         .projects-grid {
@@ -29,13 +35,29 @@
             width: fit-content;
             margin: 20%;
             justify-content: center;
+            text-align: center;
         }
+
+        .open-source {
+            display: flex   ;
+            flex-direction: column ;
+        }
+        img:hover {
+            border: 2px solid black;
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
 
         @media screen and (min-width: 1000px) {
             .projects-grid {
-                margin: 0%;
+                margin: 10%;
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
+
+                justify-content: center;
+                text-align: center;
+                
             }
         }
     </style>
@@ -49,7 +71,7 @@
             <p>Who is David Kozdra</p>
         </div>
 
-        <img src="images/ME.jpg" alt="Profile picture" style="border-radius: 5%; width: 200px; height: 200px;">
+        <img src="images/Me.png" alt="Profile picture" style="border-radius: 5%; width: 200px; height: 200px;">
         <div style="border: black 1px solid;">
             <img src="./images/floridaPoly.jpg" alt="" width="100px" height="100px">
 
@@ -69,86 +91,76 @@
                 closer to being the best version of myself. Alot of the projects I have worked on needed small UX changes and accessibility fixes or changes that would add to the local storage</p>
 
 
-                <div class="projects-grid">
+                <div class="open-source">
                     <div>
                         <h1> Lofi </h1>
-                        <a href=""></a>
+                        <a href="https://github.com/riccardobertolini/lofi-music" target="_blank">Lofi Music Player</a>
 
 
                         <h1> weather </h1>
-                        <a href=""></a>
+                        <a href="https://github.com/avinashji1302/Weather_Application_Using_Realtime_API" target="_blank">Weather app based on Location</a>
 
 
                         <h1> Password </h1>
-                        <a href=""></a>
+                        <a href="https://github.com/0ME9A/password" target="_blank"> Password Generator </a>
                     </div>
                 </div>
         </div>
 
         <div style="text-align: center; font-size: 2em; font-weight: bold;">
-            <p>What I Have Done</p>
+            <p>MY WORK </p>
         </div>
 
         <div class="projects-grid">
+       
             <div>
-                <img src="./images/Bridxe.jpg" alt="">
-                <p><strong>Bridxe:</strong> [Brief description of the project]</p>
-            </div>
+                <a href="https://promoter.thepromoapp.com/" target="_blank">
 
-            <div>
                 <img src="./images/PromoSite.png" alt="">
-                <p><strong>Promo:</strong> [Brief description of the project]</p>
+                </a>
+
+                <p><strong>Promo:</strong>  The Promo app an event based social media application. I worked on their web applications and backend server, MongoDB database Express Node and React.js. I built middleware, email automation and tons of backend Rest API routes.</p>
             </div>
 
             <div>
+                <a href="https://redmeters.com">
+
                 <img src="./images/RedMeters.png" alt="">
-                <p><strong>Red Meters:</strong> [Brief description of the project]</p>
+                </a>
+
+                <p><strong>Red Meters:</strong> An IOT and industrial device manufacturer. A temporary job to transition and maintain their code, adding features to their VUE app, changing AWS permissions and using SSH to maintain and edit user devices. I also wrote some python scripts for data visualization.</p>
             </div>
 
             <div>
-                <img src="./images/Bridxe.jpg" alt="">
-                <p><strong>Bridxe:</strong> [Brief description of the project]</p>
-            </div>
+                <a href="https://www.linkedin.com/company/bridxe/" target="_blank">
+                    <img src="./images/Bridxe.jpg" alt="">
+                </a>
     
-            <div>
-                <img src="./images/PromoSite.png" alt="">
-                <p><strong>Promo:</strong> [Brief description of the project]</p>
-            </div>
-    
-            <div>
-                <img src="./images/RedMeters.png" alt="">
-                <p><strong>Red Meters:</strong> [Brief description of the project]</p>
+                <p><strong>Bridxe:</strong>  Bridxe named after a web3 concept was a company creating a platform to properly predict and reevaluate the pricing of blockchain assets. </p>
             </div>
 
             <div>
-                <img src="./images/Bridxe.jpg" alt="">
-                <p><strong>Bridxe:</strong> [Brief description of the project]</p>
+                <a href="https://www.fighttm.com" target="_blank">
+                    <img src="./images/fight.png" alt="">
+                </a>
+                <p><strong>Fight:</strong>  Fight a gamer based social media application. I was able to learn a few important REST API concepts and writing document. </p>
             </div>
     
             <div>
-                <img src="./images/PromoSite.png" alt="">
-                <p><strong>Promo:</strong> [Brief description of the project]</p>
-            </div>
-    
-            <div>
-                <img src="./images/RedMeters.png" alt="">
-                <p><strong>Red Meters:</strong> [Brief description of the project]</p>
-            </div>
-            <div>
-                <img src="./images/Bridxe.jpg" alt="">
-                <p><strong>Bridxe:</strong> [Brief description of the project]</p>
-            </div>
-    
-            <div>
-                <img src="./images/PromoSite.png" alt="">
-                <p><strong>Promo:</strong> [Brief description of the project]</p>
-            </div>
-    
-            <div>
-                <img src="./images/RedMeters.png" alt="">
-                <p><strong>Red Meters:</strong> [Brief description of the project]</p>
+                <a href="https://flpolycon.org/" target="_blank">
+                    <img src="./images/flpcon.webp" alt="">
+                </a>
+                <p><strong>FL Polycon:</strong> Florida Polycon is an annual conferance in Lakeland Florida. I helped set up and edit the content of this wordpress Website.</p>
             </div>
 
+            <div>
+                <a href="https://floridanationalnews.com/" target="_blank">
+                    <img src="./images/Logo-FNN-380x310.jpeg" alt="">
+                </a>
+                <p><strong>Florida Nation News :</strong>  FNN is a news organization focused on the state of florida, one of my first internships and a great introduction to web development.  </p>
+            </div>
+
+         
         </div>
     </div>
     </div>
