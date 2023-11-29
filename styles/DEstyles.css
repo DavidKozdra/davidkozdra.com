@@ -146,6 +146,9 @@ button {
     z-index: 1;
 }
 
+
+
+
 .task-bar button:hover {
     background: var(--window-header) ;
     color: white;
@@ -203,6 +206,19 @@ button {
     resize: both;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 
+    animation: pop-up .3s ease-in-out forwards;
+
+}
+
+@keyframes pop-up {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1; 
+        transform: scale(1);
+    }
 }
 
 
@@ -217,6 +233,7 @@ button {
     overflow: hidden; 
     resize: none;
 }
+
 
 .window-title {
     display: flex;
@@ -237,6 +254,26 @@ button {
     height: 20px;
     margin: 5px;
     border-radius: 50px;
+}
+
+.minimized {
+    animation: shrink .5s linear forwards;
+
+}
+@keyframes shrink {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        opacity: 0.5; 
+        transform: translateY(50vh) scale(0.5);
+    }
+
+    100% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0; /* Optional: Fade out during the animation */
+    }
 }
 
 .desktop-grid {
@@ -317,8 +354,18 @@ button {
 
     display: flex;
     flex-direction: row;
-
+    animation: come-in .1s linear;
 }
+    @keyframes come-in {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        100% {
+            opacity: 1; 
+            transform: scale(1);
+        }
+    }
 
 .app-bar-button-active {
     border-top: 5px solid black;
@@ -372,6 +419,8 @@ button {
     border: 3px solid white;
 }
 
+
+
 @media only screen and (orientation: portrait ) {
     #desktop {
         height: 95dvh;
@@ -383,18 +432,12 @@ button {
         width: 70%;
     }
 
-
-    .status-bar {
+    .task-bar {
+        height: 5%;
         width: 100%;
-        height: 25%;
-
-
-    }
-
-    #Contact {
-        height: 100%;
-        width: 50%;
-        font-size: .5em;
+        font-size: .5rem;
+        display: flex;
+        flex-direction: row;
     }
 
 }
