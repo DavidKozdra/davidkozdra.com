@@ -338,6 +338,8 @@ button {
     background: var(--main-gradient);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
     border-radius:  5px 5px 0px 0px;
+
+    padding: .5%;
 }
 
 .app-bar-button {
@@ -354,7 +356,6 @@ button {
 
     display: flex;
     flex-direction: row;
-    animation: come-in .1s linear;
 }
     @keyframes come-in {
         0% {
@@ -423,7 +424,7 @@ button {
 
 @media only screen and (orientation: portrait ) {
     #desktop {
-        height: 95dvh;
+        height: 85dvh;
         width: 100dvw;
     }
 
@@ -438,6 +439,14 @@ button {
         font-size: .5rem;
         display: flex;
         flex-direction: row;
+    }
+
+    .app-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 5%;
     }
 
 }

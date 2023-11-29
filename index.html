@@ -565,7 +565,7 @@ const applyBoundaries = (array) => {
               GOLcontainer.style.marginTop = "50px";
             
             let clearButton = document.createElement("button");
-            clearButton.innerHTML = "Clear";
+            clearButton.innerHTML = "Restart";
             clearButton.onclick = function () {
               restartGOL();
             };
@@ -574,6 +574,17 @@ const applyBoundaries = (array) => {
             pauseButton.onclick = function () {
               pauseGOL();
             };
+
+            //the buttons are invisible for some reason 
+            clearButton.style.display = "block";
+            pauseButton.style.display = "block";
+            clearButton.style.backgroundColor = "grey";
+            pauseButton.style.backgroundColor = "grey";
+            clearButton.style.color = "black";
+            pauseButton.style.color = "black";
+            clearButton.style.marginTop = "50px";
+            pauseButton.style.marginTop = "50px";
+            
             
             GOLcontainer.appendChild(GOL);
             GOLcontainer.appendChild(clearButton);
