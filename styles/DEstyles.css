@@ -228,6 +228,8 @@ button {
     width: 100%;
     position: fixed;
     cursor: move;
+
+    
 }
 
 .window-icon {
@@ -382,7 +384,18 @@ button {
     }
 
 
+    .status-bar {
+        width: 100%;
+        height: 25%;
 
+
+    }
+
+    #Contact {
+        height: 100%;
+        width: 50%;
+        font-size: .5em;
+    }
 
 }
 

@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="description" content=" David Kozdra is a computer science student at Florida Polytechnic university">
   <meta name="keywords" content="Computer Science ">
-  <meta name="author" content="David Kozdra">
+  <meta name="author" content="David Kozdra"><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
   <title>David Kozdra</title>
 
@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
+  
 </head>
 
 <body>
@@ -43,7 +44,7 @@
           <button onclick="desktopIconRouter(event,'calculator')" > Calculator</button>
           
           <button onclick="desktopIconRouter(event,'notes')" > Notes</button>
-          <button onclick="refresh()"> Power</button>
+          <button onclick="refresh()">  <i class="fa fa-power-off"> </i> </button>
         </div>
       </div>
       <div class="drop-down">
@@ -87,18 +88,38 @@
 
       <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')"
         onmousemove="moveElement(event,this)" tabindex="1">
-        <img src="./images/blocks.jpg"></img>
+        <img src="./images/drawIcon.png"></img>
         <p contenteditable="true" class="icon-text"> Draw</p>
       </div>
 
-      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'test')" tabindex="1">
-        <img src="./images/blocks.jpg"></img>
+
+      
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="1">
+        <img src="./images/GOL.png"></img>
         <div class="icon-text">
-          <p contenteditable="true">Game 1</p>
+          <p contenteditable="true">Game OF Life</p>
         </div>
       </div>
-    </div>
 
+            
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')" tabindex="1">
+        <img src="./images/calculator.png"></img>
+        <div class="icon-text">
+          <p contenteditable="true">Calculator</p>
+        </div>
+      </div>
+
+            
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="1">
+        <img src="./images/notes.png"></img>
+        <div class="icon-text">
+          <p contenteditable="true">Notes</p>
+        </div>
+      </div>
+
+
+
+    </div>
   </div>
   
   <div class="app-bar"> Tasks <div class="btn-group"> </div>
@@ -106,6 +127,7 @@
 </div>
 
 
+  <script src="Games.js"></script>
   <script>
 
 
@@ -157,7 +179,7 @@ const applyBoundaries = (array) => {
     }
 };
 
-
+  let activeWindows = document.getElementsByClassName("window");
 
 
     async function update() {
@@ -179,7 +201,7 @@ const applyBoundaries = (array) => {
           applyBoundaries(desktopIcons);
         }
 
-        let activeWindows = document.getElementsByClassName("window");
+        activeWindows = document.getElementsByClassName("window");
         activeWindows = Array.from(activeWindows).filter(window => window.style.display !== "none");
 
         applyBoundaries(activeWindows);
@@ -195,18 +217,8 @@ const applyBoundaries = (array) => {
     }
 
     function resizeWindowTItle(window) {
-      /*
-       // Find the closest child with class "closestChild" within the parent
-    const closestChild = document.getElementById('parentElement').querySelector('.closestChild');
-
-    if (closestChild) {
-        // Manipulate the closest child (for example, changing its text content)
-        closestChild.textContent = 'Updated content';
-    }
-      */ 
       
       let title = window.querySelector(".window-title");  
-      console.log(title);
       title.style.width = window.offsetWidth+ "px";
 
   
@@ -260,24 +272,26 @@ const applyBoundaries = (array) => {
     }
 
     function checkCollision(item1, item2) {
-      const rect1 = item1.getBoundingClientRect();
-      const rect2 = item2.getBoundingClientRect();
+    const rect1 = item1.getBoundingClientRect();
+    const rect2 = item2.getBoundingClientRect();
 
-      if (
+    if (
         rect1.left < rect2.right &&
         rect1.right > rect2.left &&
         rect1.top < rect2.bottom &&
         rect1.bottom > rect2.top
-      ) {
+    ) {
         // Calculate the overlap in both the x and y directions
         const overlapX = Math.min(rect1.right - rect2.left, rect2.right - rect1.left);
         const overlapY = Math.min(rect1.bottom - rect2.top, rect2.bottom - rect1.top);
 
-        // Move the items to create a gap equal to the overlap
-        item1.style.left = (parseFloat(item1.style.left) || 0) - overlapX + 'px';
-        item1.style.top = (parseFloat(item1.style.top) || 0) - overlapY + 'px';
-      }
+        // Adjust the positions to resolve the collision
+        item1.style.left = (parseFloat(item1.style.left) || 0) + overlapX + 'px';
+        item1.style.top = (parseFloat(item1.style.top) || 0) + overlapY + 'px';
+        
     }
+}
+
 
     function isColliding(item1, item2) {
       const rect1 = item1.getBoundingClientRect();
@@ -298,35 +312,15 @@ const applyBoundaries = (array) => {
 
     CreateDesktopIconGrid();
 
-    let intro = document.createElement("div");
-    let header = document.createElement("h1");
-    header.innerHTML = "Welcome to DK OS 🖥️🖥️🖥️🖥️🖥️🖥️";
-    header.style.color = "#aaff00"; // Lime green text color
-    intro.style.backgroundColor = "#000000"; // Black background color
-    var para1 = document.createElement("p");
-    para1.style.color = "#aaff00"; // Lime green text color
-    para1.innerHTML = "This is my personal website designed as a desktop environment, showcasing my frontend skills and serving as my portfolio. 🎨 Explore various apps, check out my projects, and experience the creativity! 🌟 . This project is inspired by some similar websites I have seen web core athstetics in things like ENA, retro computers like the old macs.";
-    intro.appendChild(header);
-    intro.appendChild(para1);
 
-    let howToUse = document.createElement("div");
-    let howToUseHeader = document.createElement("h2");
-    howToUseHeader.innerHTML = "How to Use";
-    howToUseHeader.style.color = "#aaff00"; // Lime green text color
-    var para2 = document.createElement("p");
-    para2.innerHTML = "Navigate through the desktop icons, Open new Windows, discover applications like a calculator and notepad, and enjoy games—all programmed by me! Simply click on the icons to launch these interactive experiences. I worked hard on the drag and drop system and thanks to my game dev experiance set up some collision where needed its not super responsive also feel free to check out my  <a href='./index copy.html' target='blank'> old website</a>";
-    para2.style.color = "#aaff00"; // Lime green text color
-    howToUse.appendChild(howToUseHeader);
-    howToUse.appendChild(para2);
-    intro.style.padding = "10px";
-    intro.style.height = "100vh";
+    // has to do it this way no idea why
+
+    let intro = document.createElement("iframe");
+
+    intro.src = "./intro.html";
+    intro.style.height = "100%";
     intro.style.width = "100%";
-    intro.style.overflow = "none";
-    intro.style.fontSize=1.2+ "rem ";
-    intro.appendChild(howToUse);
-
-createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
-
+    let introWindow =  createWindow("Intro", intro, "./images/favicon.ico", 400, 200);
 
     function DisplayDate() {
       var date = new Date();
@@ -473,7 +467,7 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
             resume.style.width = "100%";
             resume.frameborder = "0";
            
-            createWindow("Resume", resume, "./images/blocks.jpg");
+            createWindow("Resume", resume, "./images/Resume.png", 800);
 
             
           break;
@@ -483,7 +477,7 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/Calculator.png",400);
+          createWindow("Calculator", calculator, "./images/calculator.png",400);
           break;
 
         case "notes":
@@ -501,7 +495,7 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
           };
           textArea.value = localStorage.getItem("notes");
           notes.appendChild(textArea);
-          createWindow("Notes", notes, "./images/blocks.jpg", 500);
+          createWindow("Notes", notes, "./images/notes.png", 500);
           break;
 
           case "settings":
@@ -524,7 +518,6 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
             createWindow("Old Website", iframe, "./images/favicon.ico", 800);
             break;
 
-
           case "intro":
             // intro the user to the os 
             let intro = document.createElement("div");
@@ -534,12 +527,13 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
             p1.innerHTML = "This is my personal website made in the theming of a desktop environment " ;
             intro.appendChild(header);
             intro.appendChild(p1);
-            createWindow("Intro",intro , "./images/blocks.jpg");
+            
+            createWindow("Intro",intro , "./images/favicon.ico", 400);
           break;
 
 
           case "error":
-            createWindow("Error", "This is a test window", "./images/blocks.jpg", 200);
+            createWindow("Error", "This is a test window", "./images/drawIcon.png", 200);
 
           case "draw" : 
             let draw = document.createElement("iframe");
@@ -547,10 +541,36 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
             draw.style.height = "100%";
             draw.style.width = "100%";
             draw.style.marginTop = "50px";
-            createWindow("Drawing", draw, "./images/blocks.jpg", 800);
+            createWindow("Drawing", draw, "./images/drawIcon.png", 800);
+            break;
+
+          case "GOL":
+            let GOLcontainer = document.createElement("div");
+            let GOL = document.createElement("canvas");
+              GOL.id = "b";
+              GOL.style.marginTop = "50px";
+              GOLcontainer.style.marginTop = "50px";
+            
+            let clearButton = document.createElement("button");
+            clearButton.innerHTML = "Clear";
+            clearButton.onclick = function () {
+              restartGOL();
+            };
+            let pauseButton = document.createElement("button");
+            pauseButton.innerHTML = "Pause";
+            pauseButton.onclick = function () {
+              pauseGOL();
+            };
+            
+            GOLcontainer.appendChild(GOL);
+            GOLcontainer.appendChild(clearButton);
+            GOLcontainer.appendChild(pauseButton);
+            createWindow("Game of Life", GOLcontainer, "./images/GOL.png", 500);
+            currentSlide = -1;
+            init()
             break;
         default:
-          console.log("Window not found");
+          console.error("Window not found");
           break;
       }
 
@@ -567,10 +587,13 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
       e.target.style.cursor = "wait";
     }
     function createWindow(title, content, iconSrc, width,x,y) {
+      
+
         const id = title.toLowerCase().replace(/\s+/g, '-'); // Generate id based on the title
         const newWindow = document.createElement("div");
         newWindow.classList.add("window");
         newWindow.id = id;
+
 
         const headerImage = createWindowHeaderImage(iconSrc);
         const header = createWindowHeader(title, id);
@@ -600,6 +623,8 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
         resizeWindowTItle(newWindow);
         // Initialize drag behavior
         dragElement(header, newWindow);
+
+        return newWindow;
     }
 
     function createWindowHeaderImage(src) {
@@ -702,6 +727,11 @@ createWindow("Intro", intro, "./images/blocks.jpg", 400, 200);
       location.reload();
     }
 
+    window.addEventListener('resize', function () {
+      for (let i = 0; i < activeWindows.length; i++) {
+        resizeWindowTItle(activeWindows[i]);
+      }
+    });
   </script>
 
 

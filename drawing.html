@@ -97,7 +97,6 @@
             colorDiv.style.borderRadius = '50%';
             colorDiv.style.cursor = 'pointer';
             colorDiv.addEventListener('click', () => {
-                console.log(color);
                 setActiveColor(color);
             });
             colorContainer.appendChild(colorDiv);
@@ -153,7 +152,6 @@
                     let last = reverseStack.pop();
                     stack.push(last);
                     ctx.fillStyle = last.color;
-                    console.log(last.color == ctx.fillStyle);
                     ctx.fillRect(last.x, last.y, penSize, penSize);
                 }
             }
