@@ -4,9 +4,11 @@
     --statusBarText: #fff;
     --windowBackground: #fff;
     --windowText: #000;
-
-    --main-gradient : linear-gradient(to right, #768d92, #0083b0);
+    --desktop-background:  rgba(119, 207, 248, 0.8);
+    --main-gradient : linear-gradient(to right, #26505a, #0d323f);
     --window-header: linear-gradient(to right, #26505a, #0d323f);
+    --window-header-hover: linear-gradient(to right, #5d7f8b, #7aa7b3);
+
 }
 
 
@@ -28,6 +30,11 @@ body {
     animation: flickerScreen 5s ease-in-out infinite;
 }
 
+.fa-brands{
+    color: whitesmoke !important;
+}
+
+
 .loader-display {
     top: 50%;
     left: 50%;
@@ -43,7 +50,7 @@ body {
 
 @keyframes flickerScreen {
     0% { opacity: 1; 
-        background: aqua;
+        background: var(--desktop-background);
     }
     50% { opacity: 0.6;
         background: #fff;
@@ -78,7 +85,7 @@ body {
 }
 
 #desktop {
-    background-color: aqua;
+    background-color: var(--desktop-background);
     height: 92dvh;
     width: 100dvw;
     overflow: hidden;
@@ -116,7 +123,8 @@ button {
     padding: 1%;
     border-bottom: #1d1d1d 2px solid;
     border-radius: 0px 0px 5px 5px;
-    height: 1dvh;
+    height: 1dvh;   
+    color : white;
     
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
@@ -134,7 +142,7 @@ button {
 
 .task-bar button {
     background-color: transparent;
-    color: black;
+    color: white;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
@@ -150,15 +158,16 @@ button {
 
 
 .task-bar button:hover {
-    background: var(--window-header) ;
+    background: var(--window-header-hover);
     color: white;
+    justify-content: center;
 }
 
 .drop-down-content {
     display: none ;
     list-style: none; 
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: black;
     border: 1px dotted black;
     text-decoration: none;
     color: black;
@@ -331,7 +340,7 @@ button {
 }
 
 .app-bar {
-    gap : 3px;
+    gap : 25px;
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -339,13 +348,13 @@ button {
     background: var(--main-gradient);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
     border-radius:  5px 5px 0px 0px;
+    color: white;
 
-    padding: .5%;
 }
 
 .app-bar-button {
     background-color: transparent;
-    color: black;
+    color: white;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -370,7 +379,7 @@ button {
     }
 
 .app-bar-button-active {
-    border-top: 5px solid black;
+    border-top: 5px solid var(--desktop-background);
 }
 
 .fa-brands {
