@@ -5,8 +5,8 @@
     --windowBackground: #fff;
     --windowText: #000;
     --desktop-background:  rgba(119, 207, 248, 0.8);
-    --main-gradient : linear-gradient(to right, #26505a, #0d323f);
-    --window-header: linear-gradient(to right, #26505a, #0d323f);
+    --main-gradient : linear-gradient(to right, #393f41, #5b6468);
+    --window-header: linear-gradient(to right, rgb(211, 222, 224), #d0f2ff);
     --window-header-hover: linear-gradient(to right, #5d7f8b, #7aa7b3);
 
 }
@@ -27,7 +27,6 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    animation: flickerScreen 5s ease-in-out infinite;
 }
 
 .fa-brands{
@@ -85,7 +84,7 @@ body {
 }
 
 #desktop {
-    background-color: var(--desktop-background);
+    background: linear-gradient(to right, #7cb0bd, #86989e);
     height: 92dvh;
     width: 100dvw;
     overflow: hidden;
@@ -136,7 +135,6 @@ button {
     justify-content: space-around;
     gap: 10px;
     align-items: center;
-    background: var(--main-gradient);
     width: fit-content;
 }
 
@@ -214,7 +212,7 @@ button {
     overflow: hidden; 
     resize: both;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-    
+
     animation: pop-up .3s ease-in-out forwards;
 }
 
@@ -242,6 +240,8 @@ button {
     height: 90% !important;
     overflow: hidden; 
     resize: none;
+    top : 0;
+    right : 0;
 }
 
 
@@ -251,12 +251,10 @@ button {
     justify-content: space-between;
     align-items: center;
     background: var(--window-header);
-    color: white;
+    color: black;
     width: 100%;
     position: fixed;
-    cursor: move;
-
-    
+    cursor: move;    
 }
 
 .window-icon {
@@ -264,6 +262,10 @@ button {
     height: 20px;
     margin: 5px;
     border-radius: 50px;
+}
+
+.window-buttons {
+    color : black;
 }
 
 .minimized {
@@ -316,7 +318,6 @@ button {
 .icon-text {
     font-size: 1rem;
     text-align: center;
-    cursor: text;
 }
 
 .desktop-icon:hover {

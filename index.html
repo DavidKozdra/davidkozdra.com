@@ -93,12 +93,10 @@
         <p contenteditable="true" class="icon-text"> Draw</p>
       </div>
 
-
-      
       <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="1">
         <img src="./images/GOL.png"></img>
         <div class="icon-text">
-          <p contenteditable="true">Game OF Life</p>
+          <p contenteditable="true">Game Of Life</p>
         </div>
       </div>
 
@@ -181,7 +179,7 @@ const applyBoundaries = (array) => {
 
   let activeWindows = document.getElementsByClassName("window");
 
-
+    let maxZindex =1;
     async function update() {
       if (loading) {
         document.getElementsByClassName("loader-page")[0].style.display = "block";
@@ -200,6 +198,12 @@ const applyBoundaries = (array) => {
               checkCollision(desktopIcons[i], desktopIcons[j]);
             }
           }
+          if (desktopIcons[i].offsetWidth > desktop.offsetWidth) {
+            desktopIcons[i].style.width = desktop.offsetWidth + "px";
+          }
+          if (desktopIcons[i].offsetHeight > desktop.offsetHeight) {
+            desktopIcons[i].style.height = desktop.offsetHeight + "px";
+          }
           applyBoundaries(desktopIcons);
         }
 
@@ -207,6 +211,19 @@ const applyBoundaries = (array) => {
         activeWindows = Array.from(activeWindows).filter(window => !window.classList.contains("minimized"));
       
         activeWindows.map(window => {
+          // if the window is larger than the desktop area then set the dimentions to the desktop area
+          if (window.offsetWidth > desktop.offsetWidth) {
+            window.style.width = desktop.offsetWidth + "px";
+          }
+          if (window.offsetHeight > desktop.offsetHeight) {
+            window.style.height = desktop.offsetHeight + "px";
+          }
+
+          //calculate the max z index
+          if (window.style.zIndex > maxZindex) {
+            maxZindex = window.style.zIndex +1;
+          }
+
           window.childNodes[0].style.width = window.offsetWidth + "px";
         });
 
@@ -414,6 +431,7 @@ const applyBoundaries = (array) => {
         pos3 = e.clientX;
         pos4 = e.clientY;
         document.onmouseup = closeDragElement;
+        document.onpointerup = closeDragElement;
         // Call a function whenever the cursor moves:
         document.onmousemove = elementDrag;
       }
@@ -439,6 +457,7 @@ const applyBoundaries = (array) => {
       function closeDragElement() {
         // Stop moving when the mouse button is released:
         document.onmouseup = null;
+        document.onpointerup = null;
         document.onmousemove = null;
       }
     }
@@ -642,13 +661,17 @@ const applyBoundaries = (array) => {
       } else {
           newWindow.appendChild(content);
       }
+
+        newWindow.onmousedown = function () {
+            newWindow.style.zIndex = maxZindex;
+        };
+
         newWindow.style.display = "block";
         document.getElementById("windows").appendChild(newWindow);
 
         // Set the window position
         newWindow.style.top = y + "px";
         newWindow.style.left = x + "px";
- // Attach the mousedown event to the newWindow
 
 
         resizeWindowTItle(newWindow);
@@ -682,6 +705,7 @@ const applyBoundaries = (array) => {
             minimizeWindow(event, id);
         });
 
+
         let enlargeIcon = document.createElement("i");
         enlargeIcon.classList.add("fas");
         enlargeIcon.classList.add("fa-expand");
@@ -698,6 +722,11 @@ const applyBoundaries = (array) => {
         const buttonClose = createWindowButton(closeIcon, function () {
             closeWindow(event, id);
         });
+
+        
+        buttonMin.style.color = "black";
+        buttonMax.style.color = "black";
+        buttonClose.style.color = "black";
 
         buttons.appendChild(buttonMin);
         buttons.appendChild(buttonMax);
@@ -734,7 +763,7 @@ const applyBoundaries = (array) => {
     function moveElement(event, element) {
       const draggedElement = element;
 
-      element.style.cursor = "grabbing";
+      //element.style.cursor = "grabbing";
 
       // Check if the mouse is pressed
       if (event.buttons !== 1) return;
