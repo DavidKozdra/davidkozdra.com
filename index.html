@@ -391,22 +391,27 @@ const applyBoundaries = (array) => {
 
 
     function CreateDesktopIconGrid() {
-      let ymod = -100;
-      let xmod = 0;
-      for (let i = 0; i < desktopIcons.length; i++) {
-        if(i %10 == 0) {
-          console.log("new row")
-          ymod += 100;
-          xmod = 0;
-        }
-        xmod += 1;
-        // set the position of the icon based on the index
-        desktopIcons[i].style.left = (i%10) * 100+ "px";
-        desktopIcons[i].style.top = ymod + "px";
-      
-      }
-   
+  const iconSize = 120; // Adjust this based on the desired size of each icon
+  const margin = 10; // Adjust this based on the desired margin between icons
+
+  // Calculate the number of icons per row dynamically
+  const iconsPerRow = Math.floor((window.innerWidth - margin) / (iconSize + margin));
+
+  let ymod = -120;
+  let xmod = 0;
+
+  for (let i = 0; i < desktopIcons.length; i++) {
+    if (i % iconsPerRow === 0) {
+      ymod += iconSize + margin;
+      xmod = 0;
     }
+    // Set the position of the icon based on the index
+    desktopIcons[i].style.left = xmod * (iconSize + margin) + "px";
+    desktopIcons[i].style.top = ymod + "px";
+
+    xmod += 1;
+  }
+}
 
     function checkCollision(item1, item2) {
     const rect1 = item1.getBoundingClientRect();
@@ -861,6 +866,7 @@ const applyBoundaries = (array) => {
       for (let i = 0; i < activeWindows.length; i++) {
         resizeWindowTItle(activeWindows[i]);
       }
+      CreateDesktopIconGrid();
     });
   </script>
 
