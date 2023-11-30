@@ -163,6 +163,8 @@ const applyBoundaries = (array) => {
             } else {
               array[i].style.top = maxBottom - array[i].offsetHeight + 'px';
             } 
+            
+            
         } 
 
         if (rect.top < boundaryTop) {
@@ -172,6 +174,7 @@ const applyBoundaries = (array) => {
         if (rect.left < boundaryLeft) {
             array[i].style.left = boundaryLeft + 'px';
         }
+        
     }
 };
 
@@ -188,7 +191,6 @@ const applyBoundaries = (array) => {
         loading = false;
       } else {
 
-
         //loop for all desktop icons
         for (let i = 0; i < desktopIcons.length; i++) {
           for (let j = 0; j < desktopIcons.length; j++) {
@@ -202,7 +204,7 @@ const applyBoundaries = (array) => {
           if (desktopIcons[i].offsetHeight > desktop.offsetHeight) {
             desktopIcons[i].style.height = desktop.offsetHeight + "px";
           }
-          applyBoundaries(desktopIcons);
+          //applyBoundaries(desktopIcons);
         }
 
         activeWindows = document.getElementsByClassName("window");
@@ -448,6 +450,9 @@ const applyBoundaries = (array) => {
 
     function dragElement(title, elmnt) {
       var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      if (title == null) {
+        return;  
+      }
 
       // If present, the header is where you move the DIV from:
       title.onmousedown = dragMouseDown;
@@ -483,14 +488,14 @@ const applyBoundaries = (array) => {
         elmnt.style.left = newLeft + "px";
       }
 
-      function closeDragElement() {
+
+    }
+    function closeDragElement() {
         // Stop moving when the mouse button is released:
         document.onmouseup = null;
         document.onpointerup = null;
         document.onmousemove = null;
       }
-    }
-
     function setCursor() {
       //conditionally set the cursor to wait globally
       document.body.style.cursor = "wait";
@@ -536,7 +541,7 @@ const applyBoundaries = (array) => {
             resume.style.width = "100%";
             resume.frameborder = "0";
            
-            createWindow("Resume", resume, "./images/Resume.png", 800 , false);
+            createWindow("Resume", resume, "./images/Resume.png", 800 );
 
             
           break;
@@ -711,6 +716,20 @@ const applyBoundaries = (array) => {
         }
       };
 
+      newWindow.onmouseleave = function () {
+        //!! set the drag element to null
+        closeDragElement();
+
+      };
+      newWindow.onmouseup = function () {
+        console.log("mouse up");
+        //!! set the drag element to null should work but doesnt
+        closeDragElement();
+
+      };
+
+
+
         newWindow.style.display = "block";
         document.getElementById("windows").appendChild(newWindow);
 
@@ -810,6 +829,10 @@ const applyBoundaries = (array) => {
     }
 
     function moveElement(event, element) {
+      if(element == null) {
+        return;
+      }
+
       const draggedElement = element;
 
       //element.style.cursor = "grabbing";
