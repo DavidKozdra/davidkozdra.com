@@ -41,7 +41,7 @@
       <div class="drop-down">
       <button><img src="images/favicon.ico" alt="david kozdra icon" width="25" height="25" style="border-radius: 50px;"></button>
         <div class="drop-down-content">
-          <button> Settings</button>
+          <button  onclick="desktopIconRouter(event,'Settings')" > Settings</button>
           <button onclick="desktopIconRouter(event,'calculator')" > Calculator</button>
           
           <button onclick="desktopIconRouter(event,'notes')" > Notes</button>
@@ -360,7 +360,7 @@ const applyBoundaries = (array) => {
     intro.src = "./intro.html";
     intro.style.height = "100%";
     intro.style.width = "100%";
-    createWindow("Intro", intro, "./images/favicon.ico", 400, 200);
+    createWindow("Intro", intro, "./images/favicon.ico", 400);
 
     function DisplayDate() {
       var date = new Date();
@@ -525,7 +525,7 @@ const applyBoundaries = (array) => {
       // Now the delay is complete, proceed to open the window
       switch (newWindowHeaderTitle) {
         case "test":
-          createWindow("Test", "This is a test window", "./images/blocks.jpg");
+          createWindow("Test", "This is a test window", "./images/blocks.jpg", false);
           break;
         case "resume":
             let resume = document.createElement("iframe");
@@ -536,17 +536,35 @@ const applyBoundaries = (array) => {
             resume.style.width = "100%";
             resume.frameborder = "0";
            
-            createWindow("Resume", resume, "./images/Resume.png", 800);
+            createWindow("Resume", resume, "./images/Resume.png", 800 , false);
 
             
           break;
         
+        case "Settings":
+          let settingsContainer = document.createElement("div");
+          settingsContainer.classList.add("settings-container");
+
+          let clearDataButton = document.createElement("button");
+          clearDataButton.style.color = "black";
+          clearDataButton.innerHTML = "Clear Data";
+          clearDataButton.onclick = function () {
+            localStorage.clear();
+          };
+
+
+
+          settingsContainer.appendChild(clearDataButton);
+          createWindow("Settings", settingsContainer , "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", 400,false);
+        break;
+
+
         case "calculator":
           let calculator = document.createElement("iframe");
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/calculator.png",400);
+          createWindow("Calculator", calculator, "./images/calculator.png",400,false);
           break;
 
         case "notes":
@@ -568,7 +586,7 @@ const applyBoundaries = (array) => {
           break;
 
           case "settings":
-            createWindow("Settings", "This is a test window", "./images/blocks.jpg", 800);
+            createWindow("Settings", "This is a test window", "./images/blocks.jpg", 800,false);
             break;
 
           case "about":
@@ -587,27 +605,18 @@ const applyBoundaries = (array) => {
             createWindow("Old Website", iframe, "./images/favicon.ico", 800);
             break;
 
-          case "intro":
-
-            let intro = document.createElement("iframe");
-
-            intro.src = "./intro.html";
-            intro.style.height = "100%";
-            intro.style.width = "100%";
-            createWindow("Intro", intro, "./images/favicon.ico", 400, 200);
-          break;
-
 
           case "error":
             createWindow("Error", "This is a test window", "./images/drawIcon.png", 200);
 
           case "draw" : 
             let draw = document.createElement("iframe");
+    
             draw.src = "./drawing.html";
             draw.style.height = "100%";
             draw.style.width = "100%";
             draw.style.marginTop = "50px";
-            createWindow("Drawing", draw, "./images/drawIcon.png", 800);
+            createWindow("Drawing", draw, "./images/drawIcon.png", 800,false);
             break;
 
           case "GOL":
@@ -642,7 +651,7 @@ const applyBoundaries = (array) => {
             GOLcontainer.appendChild(GOL);
             GOLcontainer.appendChild(clearButton);
             GOLcontainer.appendChild(pauseButton);
-            createWindow("Game of Life", GOLcontainer, "./images/GOL.png", 500);
+            createWindow("Game of Life", GOLcontainer, "./images/GOL.png", 500,false);
             currentSlide = -1;
             init()
             break;
@@ -663,7 +672,7 @@ const applyBoundaries = (array) => {
 
       e.target.style.cursor = "wait";
     }
-    function createWindow(title, content, iconSrc, width,x,y) {
+    function createWindow(title, content, iconSrc, width, canResize=true) {
       
 
         const id = title.toLowerCase().replace(/\s+/g, '-'); // Generate id based on the title
@@ -674,7 +683,7 @@ const applyBoundaries = (array) => {
 
         const headerImage = createWindowHeaderImage(iconSrc);
         const header = createWindowHeader(title, id);
-        const buttons = createWindowButtons(id);
+        const buttons = createWindowButtons(id, canResize);
 
         header.appendChild(headerImage);
         header.innerHTML += title;
@@ -692,24 +701,22 @@ const applyBoundaries = (array) => {
       }
 
       newWindow.onmousedown = function () {
-  // Increase the z-index only if it's not already the maximum
-  if (newWindow.style.zIndex !== maxZindex) {
-    maxZindex += 1;
-    newWindow.style.zIndex = maxZindex;
-    console.log(newWindow.style.zIndex);
-  } else {
-    // If the z-index is already the maximum, do nothing
-    console.log("Already at maximum z-index:", newWindow.style.zIndex);
-  }
-};
-
+        // Increase the z-index only if it's not already the maximum
+        if (newWindow.style.zIndex !== maxZindex) {
+          maxZindex += 1;
+          newWindow.style.zIndex = maxZindex;
+        } else {
+          // If the z-index is already the maximum, do nothing
+          console.log("Already at maximum z-index:", newWindow.style.zIndex);
+        }
+      };
 
         newWindow.style.display = "block";
         document.getElementById("windows").appendChild(newWindow);
 
         // Set the window position
-        newWindow.style.top = y + "px";
-        newWindow.style.left = x + "px";
+        //newWindow.style.top = y + "px";
+        //newWindow.style.left = x + "px";
 
 
         resizeWindowTItle(newWindow);
@@ -732,7 +739,7 @@ const applyBoundaries = (array) => {
         return header;
     }
 
-    function createWindowButtons(id) {
+    function createWindowButtons(id , canResize = true) {
         const buttons = document.createElement("div");
         buttons.classList.add("window-buttons");
         let minIcon = document.createElement("i");
@@ -742,15 +749,17 @@ const applyBoundaries = (array) => {
         const buttonMin = createWindowButton(minIcon, function () {
             minimizeWindow(event, id);
         });
+        let buttonMax;
+        console.log(canResize , "can resize")
+        if (canResize) {
+          let maxIcon = document.createElement("i");
+          maxIcon.classList.add("fas");
+          maxIcon.classList.add("fa-expand");
 
-
-        let enlargeIcon = document.createElement("i");
-        enlargeIcon.classList.add("fas");
-        enlargeIcon.classList.add("fa-expand");
-
-        const buttonMax = createWindowButton(enlargeIcon, function () {
-            maximizeWindow(event, id);
-        });
+        buttonMax = createWindowButton(maxIcon, function () {
+              maximizeWindow(event, id);
+          });
+        }
 
         let closeIcon = document.createElement("i");
         closeIcon.classList.add("fas");
@@ -763,11 +772,13 @@ const applyBoundaries = (array) => {
 
         
         buttonMin.style.color = "black";
-        buttonMax.style.color = "black";
         buttonClose.style.color = "black";
 
         buttons.appendChild(buttonMin);
-        buttons.appendChild(buttonMax);
+        if (canResize == true) {
+          buttonMax.style.color = "black";
+          buttons.appendChild(buttonMax);
+        }
         buttons.appendChild(buttonClose);
 
         return buttons;

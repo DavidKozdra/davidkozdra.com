@@ -386,6 +386,19 @@ button {
     border-top: 5px solid var(--desktop-background);
 }
 
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color : black;
+
+}
+
 .fa-brands {
     color: black;
 }
