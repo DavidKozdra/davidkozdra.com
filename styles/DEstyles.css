@@ -467,8 +467,9 @@ button {
 
 
 @media only screen and (orientation: portrait ) {
+
     #desktop {
-        height: 85dvh;
+        height: 93.2dvh;
         width: 100dvw;
     }
 

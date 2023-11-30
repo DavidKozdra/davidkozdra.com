@@ -508,6 +508,9 @@ const applyBoundaries = (array) => {
         document.onpointerup = null;
         document.onmousemove = null;
         document.ontouchend = null;
+
+        // this one fixes the weird bug where the mouse is still in the window and it moves
+        document.onpointermove = null;
       }
     function setCursor() {
       //conditionally set the cursor to wait globally
