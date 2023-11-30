@@ -473,7 +473,7 @@ button {
     }
 
     .desktop-grid {
-        height: 80dvh;
+        height: 70dvh;
         width: 100%;
     }
 
@@ -486,10 +486,11 @@ button {
 
     .app-bar {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
         height: 5%;
+
     }
     #task-bar-icon{
         width: 4vw;
