@@ -277,6 +277,16 @@ button {
     color : black;
 }
 
+
+
+#task-bar-icon{
+    width: 3vw;
+    height: 3.5vh;
+    margin: 5px;
+    border-radius: 50px;
+
+}
+
 .minimized {
     animation: shrink .3s linear forwards;
 
@@ -478,6 +488,12 @@ button {
         justify-content: center;
         align-items: center;
         height: 5%;
+    }
+    #task-bar-icon{
+        width: 4vw;
+        height: 2vh;
+        margin: 5px;
+        border-radius: 50px;
     }
 
 }
