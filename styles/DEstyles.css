@@ -473,8 +473,8 @@ button {
     }
 
     .desktop-grid {
-        height: 90%;
-        width: 70%;
+        height: 80dvh;
+        width: 100%;
     }
 
     .task-bar {
