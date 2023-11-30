@@ -102,15 +102,15 @@
 
             
       <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')" tabindex="1">
-        <img src="./images/calculator.png"></img>
+        <img src="./images/Calculator.jpg"></img>
         <div class="icon-text">
           <p contenteditable="true">Calculator</p>
         </div>
       </div>
 
             
-      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="1">
-        <img src="./images/notes.png"></img>
+      <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="1" style="cursor: pointer;">
+        <img src="./images/Notes.png"></img>
         <div class="icon-text">
           <p contenteditable="true">Notes</p>
         </div>
@@ -569,7 +569,7 @@ const applyBoundaries = (array) => {
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/calculator.png",400,false);
+          createWindow("Calculator", calculator, "./images/Calculator.jpg",400,false);
           break;
 
         case "notes":
@@ -587,7 +587,7 @@ const applyBoundaries = (array) => {
           };
           textArea.value = localStorage.getItem("notes");
           notes.appendChild(textArea);
-          createWindow("Notes", notes, "./images/notes.png", 500);
+          createWindow("Notes", notes, "./images/Notes.png", 500);
           break;
 
           case "settings":
@@ -712,7 +712,7 @@ const applyBoundaries = (array) => {
           newWindow.style.zIndex = maxZindex;
         } else {
           // If the z-index is already the maximum, do nothing
-          console.log("Already at maximum z-index:", newWindow.style.zIndex);
+          console.error("Already at maximum z-index:", newWindow.style.zIndex);
         }
       };
 
@@ -722,7 +722,6 @@ const applyBoundaries = (array) => {
 
       };
       newWindow.onmouseup = function () {
-        console.log("mouse up");
         //!! set the drag element to null should work but doesnt
         closeDragElement();
 
@@ -769,7 +768,6 @@ const applyBoundaries = (array) => {
             minimizeWindow(event, id);
         });
         let buttonMax;
-        console.log(canResize , "can resize")
         if (canResize) {
           let maxIcon = document.createElement("i");
           maxIcon.classList.add("fas");

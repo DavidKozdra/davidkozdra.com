@@ -4,9 +4,9 @@
     --statusBarText: #fff;
     --windowBackground: #fff;
     --windowText: #000;
-    --desktop-background:  rgba(119, 207, 248, 0.8);
-    --main-gradient : linear-gradient(to right, #393f41, #5b6468);
-    --window-header: linear-gradient(to right, rgb(211, 222, 224), #d0f2ff);
+    --desktop-background:  rgba(119, 207, 248, 1);
+    --main-gradient : linear-gradient(to bottom, rgba(57, 63, 65,.7), rgba(91, 100, 104,.7));
+    --window-header: linear-gradient(to right, rgba(211, 222, 224), rgb(208, 242, 255));
     --window-header-hover: linear-gradient(to right, #5d7f8b, #7aa7b3);
 
 }
@@ -15,7 +15,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    font-family: 'Arial', sans-serif;
     background-color: #f1f1f1;
     overflow: hidden;
 }
@@ -38,10 +38,10 @@ body {
     top: 50%;
     left: 50%;
     color: #fff;
-    font-size: 2em;
+    font-size: 5vw;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.4em;
     /*
     font-family: system-ui, -apple-system, BlinkMacSystemFont;
     */
@@ -52,7 +52,7 @@ body {
 
 @keyframes flickerScreen {
     0% { opacity: 1; 
-        background: var(--desktop-background);
+        background: black;
     }
     50% { opacity: 0.6;
         background: #fff;
@@ -75,7 +75,7 @@ body {
     background: var(--main-gradient);
     width: 0dvw;
     height: 2dvw;
-    -webkit-animation: grow 1s linear ; /* Safari */
+    -webkit-animation: grow 1s linear ; 
     animation: grow 1s linear;
 }
 
@@ -87,24 +87,13 @@ body {
 }
 
 #desktop {
-    background: linear-gradient(to right, #7cb0bd, #86989e);
+    background-image: url(../images/backgroundOption2.jpg); 
     height: 92dvh;
     width: 100dvw;
     overflow: hidden;
+    background-size: cover; /* This will scale the background image to cover the entire container */
+    background-repeat: no-repeat;
     z-index: 1;
-}
-
-
-.de-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    border-radius: 5px;
-    font-size: 1rem;
 }
 
 button {
@@ -138,7 +127,7 @@ button {
     justify-content: space-around;
     gap: 10px;
     align-items: center;
-    width: fit-content;
+    width: 20vw;
 }
 
 .task-bar button {
@@ -148,7 +137,7 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1rem;
+    font-size: 2vh;
     cursor: pointer;
     border: none;
     min-width: 120px;
@@ -321,8 +310,9 @@ button {
 }
 
 .icon-text {
-    font-size: 1rem;
+    font-size: 1vh;
     text-align: center;
+    color : white;
 }
 
 .desktop-icon:hover {
@@ -362,7 +352,7 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 1vh;
     cursor: pointer;
     border: 1px dotted black;
     min-width: 120px;
@@ -463,7 +453,7 @@ button {
     .task-bar {
         height: 5%;
         width: 100%;
-        font-size: .5rem;
+        font-size: .5vh;
         display: flex;
         flex-direction: row;
     }
