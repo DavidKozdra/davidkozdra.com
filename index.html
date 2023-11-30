@@ -274,17 +274,6 @@ const applyBoundaries = (array) => {
             windows[i].classList.add("minimized");
           }
         };
-
-        taskbarButton.ontouchstart = function () { 
-          if(windows[i].classList.contains("minimized")) {
-            windows[i].classList.remove("minimized");
-          } else {
-            windows[i].classList.add("minimized");
-          }
-        };
-
-     
-
         taskbarButton.appendChild(taskbarButtonIcon);
         
         taskbarButton.innerHTML += windows[i].id;
