@@ -468,7 +468,9 @@ const applyBoundaries = (array) => {
         pos4 = e.clientY;
         document.onmouseup = closeDragElement;
         document.onpointerup = closeDragElement;
+        document.ontouchend = closeDragElement;
         // Call a function whenever the cursor moves:
+        document.onpointermove = elementDrag;
         document.onmousemove = elementDrag;
       }
 
@@ -497,6 +499,7 @@ const applyBoundaries = (array) => {
         document.onmouseup = null;
         document.onpointerup = null;
         document.onmousemove = null;
+        document.ontouchend = null;
       }
     function setCursor() {
       //conditionally set the cursor to wait globally
