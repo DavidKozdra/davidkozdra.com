@@ -209,8 +209,10 @@ const applyBoundaries = (array) => {
 
         activeWindows = document.getElementsByClassName("window");
         activeWindows = Array.from(activeWindows).filter(window => !window.classList.contains("minimized"));
-      
+        
         activeWindows.map(window => {
+
+          
           // if the window is larger than the desktop area then set the dimentions to the desktop area
           if (window.offsetWidth > desktop.offsetWidth) {
             window.style.width = desktop.offsetWidth + "px";
@@ -400,21 +402,49 @@ const applyBoundaries = (array) => {
     }
 
     function maximizeWindow(e, name) {  
-      let window = e.target.closest(".window");
+  let currentWindow = e.target.closest(".window");
 
-      if (window != null) {
-        window.classList.toggle("larger");
-        if (window.classList.contains("larger")) {
-          e.target.classList.remove("fa-expand");
-          e.target.classList.add("fa-compress");
-        }else {
-          e.target.classList.remove("fa-compress");
-          e.target.classList.add("fa-expand");
-        }
-      resizeWindowTItle(window)
-      }
+  if (currentWindow !== null) {
+    currentWindow.classList.toggle("larger");
+
+    // Check if there's an existing child before removing it
+    if (e.target.childNodes[0] !== undefined) {
+      e.target.childNodes[0].remove();
     }
 
+    let windowbuttons = currentWindow.querySelector(".window-buttons");
+    windowbuttons.childNodes[1].innerHTML="";
+    // Create a new icon element
+    let icon = document.createElement('i');
+    icon.classList.add('fas');
+
+    // Determine the icon class based on the "larger" class
+    if (currentWindow.classList.contains("larger")) {
+      icon.classList.add('fa-compress');
+    } else {
+      icon.classList.add('fa-expand');
+    }
+
+    
+    // Append the icon to the target element
+    windowbuttons.childNodes[1].appendChild(icon);
+
+
+    resizeWindowTItle(currentWindow);
+  }
+}
+
+
+
+
+    //function to check if the window button has both fa-expand and fa-compress
+    function checkWindowButton(e) {
+      if (e.target.classList.contains("fa-expand") && e.target.classList.contains("fa-compress")) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
 
     function dragElement(title, elmnt) {
