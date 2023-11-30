@@ -114,10 +114,10 @@ button {
     padding: 1%;
     border-bottom: #1d1d1d 2px solid;
     border-radius: 0px 0px 5px 5px;
-    height: 1dvh;   
-    color : white;
-    
+    height: 1dvw;   
+    color : white;  
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+
 }
 
 
@@ -128,6 +128,8 @@ button {
     gap: 10px;
     align-items: center;
     width: 20vw;
+
+    font-size: 1dvw;
 }
 
 .task-bar button {
@@ -137,7 +139,7 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 2vh;
+    font-size: 1vw;
     cursor: pointer;
     border: none;
     min-width: 120px;
@@ -174,7 +176,20 @@ button {
     position: relative;
     display: inline-block;
     z-index: 20;
+    justify-content: center;
 }
+
+.navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1%;
+    height: 1dvw;   
+    color : white;
+    width: 50%;
+}
+
 
 .drop-down:hover .drop-down-content {
     display: flex;
@@ -298,15 +313,15 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 50dvh;
+    max-height: 50dvh;
 
     position: absolute;
 }
 
 .desktop-icon img {
-    max-width: 50px;
-    max-height: 50px;
+    max-width: 5vh;
+    max-height: 5vw;
 }
 
 .icon-text {
@@ -452,7 +467,6 @@ button {
 
     .task-bar {
         height: 5%;
-        width: 100%;
         font-size: .5vh;
         display: flex;
         flex-direction: row;

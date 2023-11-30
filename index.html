@@ -39,7 +39,7 @@
 
     <div class="navigation">
       <div class="drop-down">
-      <button><img src="images/favicon.ico" alt="david kozdra icon" width="25" height="25" style="border-radius: 50px;"></button>
+      <button><img src="images/favicon.ico" alt="david kozdra icon" width="30dh" height="30dw" style="border-radius: 50px;"></button>
         <div class="drop-down-content">
           <button  onclick="desktopIconRouter(event,'Settings')" > Settings</button>
           <button onclick="desktopIconRouter(event,'calculator')" > Calculator</button>
@@ -291,13 +291,13 @@ const applyBoundaries = (array) => {
 
 
     function CreateDesktopIconGrid() {
-  const iconSize = 120; // Adjust this based on the desired size of each icon
+  const iconSize = 100; // Adjust this based on the desired icon size
   const margin = 10; // Adjust this based on the desired margin between icons
 
   // Calculate the number of icons per row dynamically
   const iconsPerRow = Math.floor((window.innerWidth - margin) / (iconSize + margin));
-
-  let ymod = -120;
+      // y mod should grow with the window width
+  let ymod = -120 * (window.innerWidth / 5000);
   let xmod = 0;
 
   for (let i = 0; i < desktopIcons.length; i++) {
