@@ -115,13 +115,11 @@
           <p contenteditable="true">Notes</p>
         </div>
       </div>
-
-      
-
     </div>
   </div>
   
-  <div class="app-bar"> Tasks <div class="btn-group"> </div>
+  <div class="app-bar"> Tasks  <div class="btn-group">  </div>
+  
   </div>
 </div>
 
@@ -209,7 +207,7 @@ const applyBoundaries = (array) => {
 
         activeWindows = document.getElementsByClassName("window");
         activeWindows = Array.from(activeWindows).filter(window => !window.classList.contains("minimized"));
-        
+   
         activeWindows.map(window => {
 
           
@@ -223,7 +221,7 @@ const applyBoundaries = (array) => {
 
           //calculate the max z index
           if (window.style.zIndex > maxZindex) {
-            maxZindex = window.style.zIndex +1;
+            maxZindex = window.style.zIndex;
           }
 
           window.childNodes[0].style.width = window.offsetWidth + "px";
@@ -238,6 +236,7 @@ const applyBoundaries = (array) => {
           winLen = windows.length;
         }
       }
+   
       requestAnimationFrame(update);
     }
 
@@ -692,9 +691,18 @@ const applyBoundaries = (array) => {
           newWindow.appendChild(content);
       }
 
-        newWindow.onmousedown = function () {
-            newWindow.style.zIndex = maxZindex;
-        };
+      newWindow.onmousedown = function () {
+  // Increase the z-index only if it's not already the maximum
+  if (newWindow.style.zIndex !== maxZindex) {
+    maxZindex += 1;
+    newWindow.style.zIndex = maxZindex;
+    console.log(newWindow.style.zIndex);
+  } else {
+    // If the z-index is already the maximum, do nothing
+    console.log("Already at maximum z-index:", newWindow.style.zIndex);
+  }
+};
+
 
         newWindow.style.display = "block";
         document.getElementById("windows").appendChild(newWindow);
