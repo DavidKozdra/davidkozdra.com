@@ -57,7 +57,7 @@
           <button onclick="desktopIconRouter(event,'about')"> About Me </button>
         </div>
         <div class="drop-down">
-          <button> Projects </button>
+          <button style="cursor: unset;"> Projects </button>
           <div class="drop-down-content">
             <button onclick="desktopIconRouter(event,'old')"> My Website</button>
             <button> <a href="https://virtualnerd1.itch.io/cloudy-meadows" target="_blank" style="color: whitesmoke;">
@@ -285,8 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
         taskbarButton.onclick = function () {
           if (windows[i].classList.contains("minimized")) {
             windows[i].classList.remove("minimized");
+            setFocusedWindow(windows[i]);
           } else {
             windows[i].classList.add("minimized");
+       
           }
         };
         taskbarButton.appendChild(taskbarButtonIcon);
@@ -478,6 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Call a function whenever the cursor moves:
         document.onpointermove = elementDrag;
         document.onmousemove = elementDrag;
+        //document.onmouseleave = closeDragElement;
       }
 
       function elementDrag(e) {
@@ -508,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.ontouchend = null;
 
       // this one fixes the weird bug where the mouse is still in the window and it moves
-      document.onpointermove = null;
+      //document.onpointermove = null;
     }
     function setCursor() {
       //conditionally set the cursor to wait globally
@@ -688,25 +691,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       newWindow.onmousedown = function () {
-        // Increase the z-index only if it's not already the maximum
-        if (newWindow.style.zIndex !== maxZindex) {
-          maxZindex += 1;
-          newWindow.style.zIndex = maxZindex;
-        } else {
-          // If the z-index is already the maximum, do nothing
-          console.error("Already at maximum z-index:", newWindow.style.zIndex);
-        }
+        setFocusedWindow(newWindow);
       };
 
       newWindow.onmouseleave = function () {
         //!! set the drag element to null
         closeDragElement();
-
+        document.onpointermove = null;
       };
       newWindow.onmouseup = function () {
-        //!! set the drag element to null should work but doesnt
         closeDragElement();
-
+        
+        //!! set the drag element to null should work but doesnt
+        //document.onpointermove = null;
       };
 
 
@@ -722,8 +719,19 @@ document.addEventListener('DOMContentLoaded', () => {
       resizeWindowTItle(newWindow);
       // Initialize drag behavior
       dragElement(header, newWindow);
+      setFocusedWindow(newWindow)
 
       return newWindow;
+    }
+
+    function setFocusedWindow(newWindow){
+      if (newWindow.style.zIndex !== maxZindex) {
+          maxZindex += 1;
+          newWindow.style.zIndex = maxZindex;
+        } else {
+          // If the z-index is already the maximum, do nothing
+          console.error("Already at maximum z-index:", newWindow.style.zIndex);
+        }
     }
 
     function createWindowHeaderImage(src) {

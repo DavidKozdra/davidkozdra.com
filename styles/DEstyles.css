@@ -174,7 +174,7 @@ button {
     border: 1px dotted black;
     text-decoration: none;
     color: black;
-    z-index: 20;
+    z-index: 20000;
     right : 0;
     left: 0%;
 }
@@ -187,7 +187,7 @@ button {
 .drop-down {
     position: relative;
     display: inline-block;
-    z-index: 20;
+    z-index: 2000000;
     justify-content: center;
     align-items: center;
     left: 0%;
