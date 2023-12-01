@@ -38,10 +38,10 @@
     <!-- Navigation Menu -->
 
     <div class="navigation">
-      <div class="drop-down" style="padding: 10%;">
+      <div class="drop-down" style="padding-left: 10%; padding-right: 10%;">
       <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon" id="task-bar-icon" ></button>
         <div class="drop-down-content">
-          <button  onclick="desktopIconRouter(event,'Settings')" > Settings</button>
+          <button id="settingsButton" onclick="desktopIconRouter(event,'System')" > System</button>
           <button onclick="desktopIconRouter(event,'calculator')" > Calculator</button>
           
           <button onclick="desktopIconRouter(event,'notes')" > Notes</button>
@@ -353,15 +353,15 @@ const applyBoundaries = (array) => {
     CreateDesktopIconGrid();
 
 
-    // has to do it this way no idea why
+    // has to do it this way no event
+    //desktopIconRouter(document.getElementById("settingsButton").event, "System");
 
     let intro = document.createElement("iframe");
-
-    intro.src = "./intro.html";
-    intro.style.height = "100%";
-    intro.style.width = "100%";
-    createWindow("Intro", intro, "./images/favicon.ico", 400);
-
+          intro.src = "./intro.html";
+          intro.style.height = "100%";
+          intro.style.width = "100%";
+          createWindow("System", intro, "./images/favicon.ico", 450,false);
+    
     function DisplayDate() {
       var date = new Date();
       var hours = date.getHours();
@@ -550,21 +550,12 @@ const applyBoundaries = (array) => {
             
           break;
         
-        case "Settings":
-          let settingsContainer = document.createElement("div");
-          settingsContainer.classList.add("settings-container");
-
-          let clearDataButton = document.createElement("button");
-          clearDataButton.style.color = "black";
-          clearDataButton.innerHTML = "Clear Data";
-          clearDataButton.onclick = function () {
-            localStorage.clear();
-          };
-
-
-
-          settingsContainer.appendChild(clearDataButton);
-          createWindow("Settings", settingsContainer , "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", 400,false);
+        case "System":
+          let intro = document.createElement("iframe");
+          intro.src = "./intro.html";
+          intro.style.height = "100%";
+          intro.style.width = "100%";
+          createWindow("System", intro, "./images/favicon.ico", 450,false);
         break;
 
 
@@ -594,9 +585,6 @@ const applyBoundaries = (array) => {
           createWindow("Notes", notes, "./images/Notes.png", 500);
           break;
 
-          case "settings":
-            createWindow("Settings", "This is a test window", "./images/blocks.jpg", 800,false);
-            break;
 
           case "about":
             let about = document.createElement("iframe");

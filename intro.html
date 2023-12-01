@@ -5,12 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DK OS</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
       margin: 0;
       padding-top: 20px;
       font-family: Arial, sans-serif;
       height: 100vh;
+      background-color: rgb(243,243,243);
     }
 
     h1, h2, p {
@@ -21,21 +24,21 @@
     h1 {
       font-size: 2em;
       font-weight: bold;
-      color: #aaff00;
+      color: black;
+      text-align: center;
     }
 
     h2 {
       font-size: 1.5em;
-      color: #aaff00;
+      color: black;
     }
 
     p {
       font-size: 1.2em;
-      color: #aaff00;
+      color: black;
     }
 
     #intro {
-      background-color: #000000;
       padding: 10px;
       overflow: none;
       font-size: 1.2rem;   
@@ -45,19 +48,194 @@
     @media screen and (min-width: 1000px) {
       
     }
+
+    .tab {
+      display: none;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      background-color: rgb(243,243,243);
+    }
+
+    #tab-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      column-gap: 0px;
+      row-gap: 0px;
+      width: 100dvw;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .tab-button {
+      background-color: rgb(243,243,243);
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+
+    }
+
+    .tab-button:hover {
+      background-color: rgb(230,230,230);
+    }
+
+    .tab-button.active {
+      border-top : 5px solid  rgb(208, 242, 255);
+    }
+
+    #sys-about {
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+    }
+    
+
+    a:visited {
+
+      color:  rgb(69, 114, 129);
+    }
+    a {
+
+      color:  rgb(139, 198, 218);
+    }
+
+    a:hover {
+
+      color:  rgb(69, 114, 129);
+    }
+
+    #settings {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #settings button {
+      background-color: rgb(243,243,243);
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    #settings button:hover {
+      background-color: rgb(230,230,230);
+    }
   </style>
 </head>
 
 <body>
   <div id="intro">
-    <h1>Welcome to DK OS 🖥️🖥️🖥️🖥️🖥️🖥️</h1>
-    <p>This is my personal website designed as a desktop environment, showcasing my frontend skills and serving as my portfolio. 🎨 Explore various apps, check out my projects, and experience the creativity! 🌟 . This project is inspired by some similar websites I have seen web core aesthetics in things like <a href="https://lmirman.itch.io/somnium"> Somnium </a>, retro computers like the old macs.</p>
-    <br>
-    <div>
-      <h2>How to Use</h2>
-      <p>Navigate through the desktop icons, open new windows, discover applications like a calculator and notepad, and enjoy games—all programmed by me! Simply click on the icons to launch these interactive experiences. I worked hard on the drag and drop system and thanks to my game dev experience set up some collision where needed. It's not super responsive; also, feel free to check out my <a href='./index copy.html' target='_blank'>old website</a>.</p>
+    <div id="tab-container" >
+
+      <button class="tab-button active" onclick="openTab(event, 'welcome')">
+        Welcome
+      </button>
+
+      <button class="tab-button" onclick="openTab(event, 'about')">
+        About
+      </button>
+      <button class="tab-button" onclick="openTab(event, 'help')">
+        Help
+      </button>
+      
+      <button class="tab-button" onclick="openTab(event, 'settings')">
+        Settings
+      </button>
+
     </div>
+
+      <div class="tab active" id="welcome"><h1>Welcome to DK OS 🖥️🖥️🖥️🖥️🖥️🖥️</h1>
+        <p>
+          Thank you for checking out my portfolio website. It is in the style of a Desktop Environment. <br> <br>
+          If you would like to see my take on a more traditional website : 
+          <a href="index copy.html"> My Old website </a>
+        </p>
+      </div>
+      
+      <div class="tab" id="about">
+        <h1>DK OS</h1>
+        <p id="sys-about">
+          <p>
+            version: 1.2.0
+          </p>
+          <p>
+            Memory:  8GB
+          </p>
+          <p>
+            Processor: Intel Core i5
+          </p>
+          <p> Graphics : Intel Iris Plus Graphics 640 1536 MB</p>
+        </p>
+
+        <br>
+        <p> </br> This project is inspired by some similar websites I have seen, web core aesthetics, the game <a href="https://lmirman.itch.io/somnium"> Somnium </a>,and  retro computers like the old macs.</p>
+
+
+
+        <br>
+      </div>
+
+      <div class="tab" id="help">
+        <h1>Help</h1>
+        <p>
+          This desktop is a portfolio website. It is not a real operating system. <br>
+          However it acts alot like your desktop. <br> <br>You can open and close windows, and move them around. <br><br>
+          double click on the icons to open them. 
+          if you have any questions or comments, please email me at <a href="mailto:davidkozdra@gmail.com" target="_blank"><i class="fa-solid fa-envelope"></i><a>
+
+        </p>
+      </div>
+      <div class="tab" id="settings">
+        <h1>Settings</h1>
+        <button onclick="clearData()"> Clear Data</button>
+      </div>
+
   </div>
+
+  <script>  
+
+    function openTab(evt, tabName) {
+      evt.preventDefault();
+      let buttons = document.getElementsByClassName("tab-button");
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+      }
+
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab");
+      for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].classList.remove("active");
+      }
+      let currentTab = document.getElementById(tabName);
+      currentTab.classList.add("active");
+
+      evt.currentTarget.classList.add("active");
+
+      evt.currentTarget.classList.add("active");
+    }
+
+    function clearData() {
+      localStorage.clear();
+      //location.reload();
+    }
+
+
+  </script>
 </body>
 
 </html>

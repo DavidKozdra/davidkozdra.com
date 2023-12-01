@@ -7,8 +7,6 @@
   </head>
 
   <style>
-
-
     body {
       margin: 0;
       padding-top: 20px;
@@ -27,59 +25,61 @@
       margin: 0;
       padding: 0;
       margin-top: 50px;
-        background-color: grey;
+      background-color: grey;
+      width: 10%;
     }
 
     canvas {
-        border: 1px solid black;
-        width: 90%;
-        height: 50%;
+      border: 1px solid black;
+      width: 90%;
+      height: 50%;
     }
-
   </style>
   <body>
-
     <h1>GAME OF LIFE</h1>
 
-    <canvas class="slide" id="b" style="display:block" tabindex="0"  aria-label="conway's game of life"> </canvas>
+    <canvas
+      class="slide"
+      id="b"
+      style="display: block"
+      tabindex="0"
+      aria-label="conway's game of life"
+    >
+    </canvas>
     <div class="button-container">
-        <button onclick="restartGOL()">Restart</button>
-        <button onclick="pauseGOL()">Pause</button>
+      <button onclick="restartGOL()">Restart</button>
+      <button onclick="pauseGOL()">Pause</button>
     </div>
     <script>
+      class entity {
+        constructor(x, y, alive) {
+          this.x = x;
+          this.y = y;
+          this.alive = alive;
+          this.futureStatus;
+        }
+      }
 
-class entity {
-  
-  constructor (x,y,alive){
-    this.x = x;
-    this.y = y;
-    this.alive=alive;
-    this.futureStatus;
-  }
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+      }
+      function isColliding(player, other) {
+        let { x: x1, w: w1, y: y1, h: h1 } = player;
+        let { x: x2, w: w2, y: y2, h: h2 } = other;
 
+        // Check x and y for overlap
+        if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2) {
+          return false;
+        }
 
-}
+        return true;
+      }
 
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
-function isColliding(player,other) {
-  let { x: x1, w: w1, y: y1, h: h1 } = player;
-  let { x: x2, w: w2, y: y2, h: h2 } = other;
+      //timer rect offset
+      let tro = 5;
 
-  // Check x and y for overlap
-  if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2){
-      return false;
-  }
-  
-  return true;
-}
-
-//timer rect offset
-let tro = 5;
-
- let canvasB = document.getElementById("b");
- let ctxB = canvasB.getContext("2d");
+      let canvasB = document.getElementById("b");
+      let ctxB = canvasB.getContext("2d");
       let gridSize = 12;
       let gen = 0;
       let entities = [];
@@ -94,11 +94,16 @@ let tro = 5;
       }
 
       function renderSelected() {
-  for(let i =0; i < selected.length; i++){
-    ctxB.fillStyle = "orange"
-    ctxB.fillRect(selected[i].x,selected[i].y+tro, gridSize-4,gridSize-4);
-  }
-}
+        for (let i = 0; i < selected.length; i++) {
+          ctxB.fillStyle = "orange";
+          ctxB.fillRect(
+            selected[i].x,
+            selected[i].y + tro,
+            gridSize - 4,
+            gridSize - 4
+          );
+        }
+      }
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
@@ -154,7 +159,7 @@ let tro = 5;
 
       function restartGOL() {
         ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
-        selected = []
+        selected = [];
         gridSize = 12;
         gen = 0;
         entities = [];
@@ -167,90 +172,95 @@ let tro = 5;
           }
         }
       }
-      
 
       let genTime = 2000;
       let paused = false;
 
       function pauseGOL() {
         paused = !paused;
+        let pauseButton = document.querySelector("button:nth-child(2)");
+        pauseButton.innerHTML = paused ? "Play" : "Pause";
       }
 
-      
-async function drawCircle() {
- console.log("paused: ", paused)
-  if(paused){
-    return;
-  }
+      async function drawCircle() {
+        if (paused) {
+          return;
+        }
 
-  ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
+        ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
 
-  for (var i = 0; i < entities.length; i++) {
-    let n = 0;
-    let { x, y } = entities[i];
+        for (var i = 0; i < entities.length; i++) {
+          let n = 0;
+          let { x, y } = entities[i];
 
-    for (var j = 0; j < entities.length; j++) {
-      let ox = entities[j].x;
-      let oy = entities[j].y;
+          for (var j = 0; j < entities.length; j++) {
+            let ox = entities[j].x;
+            let oy = entities[j].y;
 
-      // Skip non-alive entities and the cell itself
-      if (!entities[j].alive || (x==ox && y==oy)) {
-        continue;
+            // Skip non-alive entities and the cell itself
+            if (!entities[j].alive || (x == ox && y == oy)) {
+              continue;
+            }
+            if (
+              (x + gridSize === ox && y + gridSize === oy) ||
+              (x - gridSize === ox && y - gridSize === oy) ||
+              (x === ox && y - gridSize === oy) ||
+              (x === ox && y + gridSize === oy) ||
+              (x === ox && y + gridSize === oy)
+            ) {
+              n += 1;
+            }
+            // Rule 6: Left neighbor
+            if (x - gridSize === ox && y === oy) {
+              n += 1;
+            }
+
+            // Rule 7: Right neighbor
+            if (x + gridSize === ox && y === oy) {
+              n += 1;
+            }
+
+            // Rule 8: Upper-right neighbor
+            if (x + gridSize === ox && y - gridSize === oy) {
+              n += 1;
+            }
+
+            // Rule 10: Lower-left neighbor
+            if (x - gridSize === ox && y + gridSize === oy) {
+              n += 1;
+            }
+          }
+          if (
+            (entities[i].alive && (n === 2 || n === 3)) ||
+            (!entities[i].alive && n === 3)
+          ) {
+            entities[i].futureStatus = true; // Cell lives in the next generation
+          } else {
+            entities[i].futureStatus = false; // Cell dies in the next generation
+          }
+
+          // Draw cells
+          ctxB.fillStyle = entities[i].alive ? "green" : "grey";
+          ctxB.fillRect(x, y + tro, gridSize - 1, gridSize - 1);
+          ctxB.font = "10px Arial";
+          ctxB.fillStyle = "white";
+          ctxB.fillText(n, x, y + 10 + tro);
+        }
+
+        // Update entities based on futureStatus
+        for (var i = 0; i < entities.length; i++) {
+          entities[i].alive = entities[i].futureStatus;
+          entities[i].futureStatus = false; // Reset futureStatus
+        }
+
+        gen += 1;
+        ctxB.fillStyle = "black";
+        ctxB.fillText("Gen: " + gen, 250, 147);
+        ctxB.fill();
+        selected = [];
       }
-      if ((x + gridSize === ox && y + gridSize === oy) || (x - gridSize === ox && y - gridSize === oy) ||(x === ox && y - gridSize === oy) || (x === ox && y + gridSize === oy) ||(x === ox && y + gridSize === oy)) {
-        n += 1;
-      }
-          // Rule 6: Left neighbor
-    if (x - gridSize === ox && y === oy) {
-      n += 1;
-    }
-
-    // Rule 7: Right neighbor
-    if (x + gridSize === ox && y === oy) {
-      n += 1;
-    }
-
-    // Rule 8: Upper-right neighbor
-    if (x + gridSize === ox && y - gridSize === oy) {
-      n += 1;
-    }
-
-    // Rule 10: Lower-left neighbor
-    if (x - gridSize === ox && y + gridSize === oy) {
-      n += 1;
-    }
-
-    }
-    if ((entities[i].alive && (n === 2 || n === 3)) || (!entities[i].alive && n === 3)) {
-      entities[i].futureStatus = true; // Cell lives in the next generation
-    } else {
-      entities[i].futureStatus = false; // Cell dies in the next generation
-    }
-    
-    // Draw cells
-    ctxB.fillStyle = entities[i].alive ? "green" : "grey";
-    ctxB.fillRect(x, y+tro, gridSize - 1, gridSize - 1);
-    ctxB.font = "10px Arial";
-    ctxB.fillStyle = "white";
-    ctxB.fillText(n, x, y+10+tro);
-  }
-
-  // Update entities based on futureStatus
-  for (var i = 0; i < entities.length; i++) {
-    entities[i].alive = entities[i].futureStatus;
-    entities[i].futureStatus = false; // Reset futureStatus
-  }
-
-  gen += 1;
-  ctxB.fillStyle = 'black';
-  ctxB.fillText("Gen: " + gen, 250, 147);
-  ctxB.fill();
-  selected = []
-
-}
-drawCircle()
-    const interval = setInterval(drawCircle, genTime);
-
+      drawCircle();
+      const interval = setInterval(drawCircle, genTime);
     </script>
   </body>
 </html>
