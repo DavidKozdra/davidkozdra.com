@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <style>
+
+
+    body {
+      margin: 0;
+      padding-top: 20px;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    button {
+      margin: 0;
+      padding: 0;
+      margin-top: 50px;
+        background-color: grey;
+    }
+
+    canvas {
+        border: 1px solid black;
+        width: 90%;
+        height: 50%;
+    }
+
+  </style>
+  <body>
+
+    <h1>GAME OF LIFE</h1>
+
+    <canvas class="slide" id="b" style="display:block" tabindex="0"  aria-label="conway's game of life"> </canvas>
+    <div class="button-container">
+        <button onclick="restartGOL()">Restart</button>
+        <button onclick="pauseGOL()">Pause</button>
+    </div>
+    <script>
+
+class entity {
+  
+  constructor (x,y,alive){
+    this.x = x;
+    this.y = y;
+    this.alive=alive;
+    this.futureStatus;
+  }
+
+
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+function isColliding(player,other) {
+  let { x: x1, w: w1, y: y1, h: h1 } = player;
+  let { x: x2, w: w2, y: y2, h: h2 } = other;
+
+  // Check x and y for overlap
+  if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2){
+      return false;
+  }
+  
+  return true;
+}
+
+//timer rect offset
+let tro = 5;
+
+ let canvasB = document.getElementById("b");
+ let ctxB = canvasB.getContext("2d");
+      let gridSize = 12;
+      let gen = 0;
+      let entities = [];
+
+      for (var i = 0; i < gridSize; i++) {
+        for (var j = 0; j < gridSize; j++) {
+          //getRandomInt(3)==2
+          entities.push(
+            new entity(i * gridSize, j * gridSize, getRandomInt(3) == 2)
+          );
+        }
+      }
+
+      function renderSelected() {
+  for(let i =0; i < selected.length; i++){
+    ctxB.fillStyle = "orange"
+    ctxB.fillRect(selected[i].x,selected[i].y+tro, gridSize-4,gridSize-4);
+  }
+}
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      canvasB?.addEventListener("mousedown", touchedCell);
+
+      canvasB?.addEventListener("mouseup", touchedCell2);
+
+      let selected = [];
+
+      function touchedCell(event) {
+        const rect = canvasB.getBoundingClientRect();
+        const scaleX = canvasB.width / rect.width;
+        const scaleY = canvasB.height / rect.height;
+        mouseX = (event.clientX - rect.left) * scaleX;
+        mouseY = (event.clientY - rect.top) * scaleY;
+
+        renderSelected();
+        for (var i = 0; i < entities.length; i++) {
+          let cur = entities[i];
+          let x = cur.x;
+          let y = cur.y;
+
+          if (
+            isColliding(
+              { x: mouseX, y: mouseY, w: 1, h: 1 },
+              { x, y, w: gridSize, h: gridSize }
+            ) === true
+          ) {
+            cur.alive = !cur.alive;
+            cur.futureStatus = !cur.futureStatus;
+            if (selected.includes(cur)) {
+              //console.log("remove", selected.indexOf(cur))
+              selected.splice(selected.indexOf(cur), 1);
+            } else {
+              selected.push(cur);
+            }
+          }
+        }
+        renderSelected();
+      }
+
+      function touchedCell2(event) {
+        const rect = canvasB.getBoundingClientRect();
+        const scaleX = canvasB.width / rect.width;
+        const scaleY = canvasB.height / rect.height;
+        let mouse2X = (event.clientX - rect.left) * scaleX;
+        let mouse2Y = (event.clientY - rect.top) * scaleY;
+        // read from global var mouseX and mouseY and
+        //draw a rectangle with some opasity
+        //then use the isColliding function to see if the size would overlap
+      }
+
+      function restartGOL() {
+        ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
+        selected = []
+        gridSize = 12;
+        gen = 0;
+        entities = [];
+        for (var i = 0; i < gridSize; i++) {
+          for (var j = 0; j < gridSize; j++) {
+            //getRandomInt(3)==2
+            entities.push(
+              new entity(i * gridSize, j * gridSize, getRandomInt(3) == 2)
+            );
+          }
+        }
+      }
+      
+
+      let genTime = 2000;
+      let paused = false;
+
+      function pauseGOL() {
+        paused = !paused;
+      }
+
+      
+async function drawCircle() {
+ console.log("paused: ", paused)
+  if(paused){
+    return;
+  }
+
+  ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
+
+  for (var i = 0; i < entities.length; i++) {
+    let n = 0;
+    let { x, y } = entities[i];
+
+    for (var j = 0; j < entities.length; j++) {
+      let ox = entities[j].x;
+      let oy = entities[j].y;
+
+      // Skip non-alive entities and the cell itself
+      if (!entities[j].alive || (x==ox && y==oy)) {
+        continue;
+      }
+      if ((x + gridSize === ox && y + gridSize === oy) || (x - gridSize === ox && y - gridSize === oy) ||(x === ox && y - gridSize === oy) || (x === ox && y + gridSize === oy) ||(x === ox && y + gridSize === oy)) {
+        n += 1;
+      }
+          // Rule 6: Left neighbor
+    if (x - gridSize === ox && y === oy) {
+      n += 1;
+    }
+
+    // Rule 7: Right neighbor
+    if (x + gridSize === ox && y === oy) {
+      n += 1;
+    }
+
+    // Rule 8: Upper-right neighbor
+    if (x + gridSize === ox && y - gridSize === oy) {
+      n += 1;
+    }
+
+    // Rule 10: Lower-left neighbor
+    if (x - gridSize === ox && y + gridSize === oy) {
+      n += 1;
+    }
+
+    }
+    if ((entities[i].alive && (n === 2 || n === 3)) || (!entities[i].alive && n === 3)) {
+      entities[i].futureStatus = true; // Cell lives in the next generation
+    } else {
+      entities[i].futureStatus = false; // Cell dies in the next generation
+    }
+    
+    // Draw cells
+    ctxB.fillStyle = entities[i].alive ? "green" : "grey";
+    ctxB.fillRect(x, y+tro, gridSize - 1, gridSize - 1);
+    ctxB.font = "10px Arial";
+    ctxB.fillStyle = "white";
+    ctxB.fillText(n, x, y+10+tro);
+  }
+
+  // Update entities based on futureStatus
+  for (var i = 0; i < entities.length; i++) {
+    entities[i].alive = entities[i].futureStatus;
+    entities[i].futureStatus = false; // Reset futureStatus
+  }
+
+  gen += 1;
+  ctxB.fillStyle = 'black';
+  ctxB.fillText("Gen: " + gen, 250, 147);
+  ctxB.fill();
+  selected = []
+
+}
+drawCircle()
+    const interval = setInterval(drawCircle, genTime);
+
+    </script>
+  </body>
+</html>

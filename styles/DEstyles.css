@@ -5,10 +5,11 @@
     --windowBackground: #fff;
     --windowText: #000;
     --desktop-background:  rgba(119, 207, 248, 1);
-    --main-gradient : linear-gradient(to bottom, rgba(57, 63, 65,.7), rgba(91, 100, 104,.7));
+    --main-gradient : rgba(9,99,159,255);
     --window-header: linear-gradient(to right, rgba(211, 222, 224), rgb(208, 242, 255));
     --window-header-hover: linear-gradient(to right, #5d7f8b, #7aa7b3);
 
+    --system-grey:  linear-gradient(to bottom, rgba(57, 63, 65,1),rgba(52,52,52,.98));;
 }
 
 
@@ -87,7 +88,7 @@ body {
 }
 
 #desktop {
-    background-image: url(../images/backgroundOption2.jpg); 
+    background-image: url(../images/Rainbow_iPad+2.png); 
     height: 92dvh;
     width: 100dvw;
     overflow: hidden;
@@ -132,6 +133,18 @@ button {
     font-size: 1dvw;
 }
 
+#clock {
+    font-size: 1.2dvh;
+}
+
+#Contact {
+    font-size: 1.5dvh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;    
+    column-gap: 10%;
+}
+
 .task-bar button {
     background-color: transparent;
     color: white;
@@ -139,10 +152,10 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1vw;
+    font-size: 1.3vh;
     cursor: pointer;
     border: none;
-    min-width: 120px;
+    min-width: 50px;
     z-index: 1;
 }
 
@@ -159,15 +172,16 @@ button {
     display: none ;
     list-style: none; 
     position: absolute;
-    background-color: black;
+    background: var(--system-grey);
     border: 1px dotted black;
     text-decoration: none;
     color: black;
     z-index: 20;
+    right : 0;
+    left: 0%;
 }
 
 .drop-down-content a {
-
     text-decoration: none;
     color: black;
 }
@@ -177,6 +191,10 @@ button {
     display: inline-block;
     z-index: 20;
     justify-content: center;
+    align-items: center;
+    left: 0%;
+    right: 0%;
+    margin: 0%;
 }
 
 .navigation {
@@ -196,6 +214,14 @@ button {
     flex-direction: column;
     z-index:2;
 }
+
+.drop-down:hover    {
+    background: var(--window-header-hover);
+    color: white;
+    justify-content: center;
+}
+
+
 
 
 .btn-group {
@@ -281,7 +307,7 @@ button {
 
 #task-bar-icon{
     width: 3vw;
-    height: 3.5vh;
+    height: 4.5vh;
     margin: 5px;
     border-radius: 50px;
 
@@ -335,7 +361,7 @@ button {
 }
 
 .icon-text {
-    font-size: 1vh;
+    font-size: 1.5dvh;
     text-align: center;
     color : white;
 }
@@ -369,6 +395,7 @@ button {
     background: var(--main-gradient);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
     color: white;
+
 }
 
 .app-bar-button {
@@ -377,7 +404,7 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1vh;
+    font-size: 2vh;
     cursor: pointer;
     border: 1px dotted black;
     min-width: 120px;
@@ -499,6 +526,12 @@ button {
         margin: 5px;
         border-radius: 50px;
     }
+
+
+    .desktop-icon img{
+        border-radius: 50%;
+    }
+
 
 }
 
