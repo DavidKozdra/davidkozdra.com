@@ -127,17 +127,17 @@ button {
     color : white;  
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
-
-
-.status-bar {
+.navigation {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    gap: 10px;
+    justify-content: space-between;
     align-items: center;
-    background: var(--main-gradient);
-    width: fit-content;
+    padding: 1%;
+    height: 1dvw;   
+    color : white;
+    width: 50%;
 }
+
 
 .task-bar button {
     background-color: transparent;
@@ -231,7 +231,28 @@ button {
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 
 }
+.status-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 10px;
+    align-items: center;
+    width: 20vw;
 
+    font-size: 1dvw;
+}
+
+#clock {
+    font-size: 1.2dvh;
+}
+
+#Contact {
+    font-size: 1.5dvh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;    
+    column-gap: 10%;
+}
 
 .window-content {
     color : black;
