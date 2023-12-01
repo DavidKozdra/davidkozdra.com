@@ -4,19 +4,16 @@
     --statusBarText: #fff;
     --windowBackground: #fff;
     --windowText: #000;
-    --desktop-background:  rgba(119, 207, 248, 1);
-    --main-gradient : rgba(9,99,159,255);
-    --window-header: linear-gradient(to right, rgba(211, 222, 224), rgb(208, 242, 255));
-    --window-header-hover: linear-gradient(to right, #5d7f8b, #7aa7b3);
 
-    --system-grey:  linear-gradient(to bottom, rgba(57, 63, 65,1),rgba(52,52,52,.98));;
+    --main-gradient : linear-gradient(to right, #768d92, #0083b0);
+    --window-header: linear-gradient(to right, #26505a, #0d323f);
 }
 
 
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
     background-color: #f1f1f1;
     overflow: hidden;
 }
@@ -30,30 +27,27 @@ body {
     bottom: 0;
 }
 
+
 .fa-brands{
     color: whitesmoke !important;
 }
-
 
 .loader-display {
     top: 50%;
     left: 50%;
     color: #fff;
-    font-size: 5vw;
+    font-size: 2em;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.4em;
-    /*
+    letter-spacing: 0.2em;
     font-family: system-ui, -apple-system, BlinkMacSystemFont;
-    */
-    font-family: 'Roboto', sans-serif;
     text-align: center;
     z-index: 5;
 }
 
 @keyframes flickerScreen {
     0% { opacity: 1; 
-        background: black;
+        background: aqua;
     }
     50% { opacity: 0.6;
         background: #fff;
@@ -76,7 +70,7 @@ body {
     background: var(--main-gradient);
     width: 0dvw;
     height: 2dvw;
-    -webkit-animation: grow 1s linear ; 
+    -webkit-animation: grow 1s linear ; /* Safari */
     animation: grow 1s linear;
 }
 
@@ -88,13 +82,27 @@ body {
 }
 
 #desktop {
-    background-image: url(../images/Rainbow_iPad+2.png); 
+    background-image: url(../images/backgroundOption2.jpg); 
     height: 92dvh;
     width: 100dvw;
     overflow: hidden;
     background-size: cover; /* This will scale the background image to cover the entire container */
     background-repeat: no-repeat;
     z-index: 1;
+}
+
+
+
+.de-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
 button {
@@ -127,168 +135,27 @@ button {
     justify-content: space-around;
     gap: 10px;
     align-items: center;
-    width: 20vw;
-
-    font-size: 1dvw;
-}
-
-#clock {
-    font-size: 1.2dvh;
-}
-
-#Contact {
-    font-size: 1.5dvh;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;    
-    column-gap: 10%;
+    background: var(--main-gradient);
+    width: fit-content;
 }
 
 .task-bar button {
     background-color: transparent;
-    color: white;
+    color: black;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1.3vh;
+    font-size: 1rem;
     cursor: pointer;
     border: none;
-    min-width: 50px;
+    min-width: 120px;
     z-index: 1;
 }
-
-
-
 
 .task-bar button:hover {
-    background: var(--window-header-hover);
+    background: var(--window-header) ;
     color: white;
-    justify-content: center;
-}
-
-.drop-down-content {
-    display: none ;
-    list-style: none; 
-    position: absolute;
-    background: var(--system-grey);
-    border: 1px dotted black;
-    text-decoration: none;
-    color: black;
-    z-index: 20;
-    right : 0;
-    left: 0%;
-}
-
-.drop-down-content a {
-    text-decoration: none;
-    color: black;
-}
-
-.drop-down {
-    position: relative;
-    display: inline-block;
-    z-index: 20;
-    justify-content: center;
-    align-items: center;
-    left: 0%;
-    right: 0%;
-    margin: 0%;
-}
-
-.navigation {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1%;
-    height: 1dvw;   
-    color : white;
-    width: 50%;
-}
-
-
-.drop-down:hover .drop-down-content {
-    display: flex;
-    flex-direction: column;
-    z-index:2;
-}
-
-.drop-down:hover    {
-    background: var(--window-header-hover);
-    color: white;
-    justify-content: center;
-}
-
-
-
-
-.btn-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.window {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--windowBackground);
-    border: 1px solid black;
-    border-radius: 5px;
-    width: 50%;
-    height: 50%;
-    z-index: 1;
-    position: absolute;
-    overflow: hidden; 
-    resize: both;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-
-    animation: pop-up .3s ease-in-out forwards;
-}
-
-
-  
-
-@keyframes pop-up {
-    0% {
-        opacity: 0;
-        transform: scale(0) translateY(200vh);
-    }
-    100% {
-        opacity: 1; 
-        transform: scale(1) translateY(0px);
-    }
-}
-
-
-
-.window-content {
-    color : black;
-    width: 100%;
-}
-
-.larger {
-    width: 98% !important;
-    height: 90% !important;
-    overflow: hidden; 
-    resize: none;
-    top : 0;
-    right : 0;
-}
-
-
-.window-title {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--window-header);
-    color: black;
-    width: 100%;
-    position: fixed;
-    cursor: move;    
 }
 
 .window-icon {
@@ -312,24 +179,89 @@ button {
 
 }
 
-.minimized {
-    animation: shrink .3s linear forwards;
+.drop-down-content {
+    display: none ;
+    list-style: none; 
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px dotted black;
+    text-decoration: none;
+    color: black;
+    z-index: 20;
+}
+
+.drop-down-content a {
+    text-decoration: none;
+    color: black;
+}
+
+.drop-down {
+    position: relative;
+    display: inline-block;
+    z-index: 20;
+}
+
+.drop-down:hover .drop-down-content {
+    display: flex;
+    flex-direction: column;
+    z-index:2;
+}
+
+
+.btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.window {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--windowBackground);
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 50%;
+    height: 50%;
+    z-index: 4;
+    position: absolute;
+    overflow: hidden; 
+    resize: both;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 
 }
-@keyframes shrink {
-    0% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    50% {
-        opacity: 0.5; 
-        transform: translateY(50vh) scale(0.5);
-    }
 
-    100% {
-        transform: translateY(100vh) scale(0);
-        opacity: 0; /* Optional: Fade out during the animation */
-    }
+
+.window-content {
+    color : black;
+    width: 100%;
+}
+
+.larger {
+    width: 98% !important;
+    height: 90% !important;
+    overflow: hidden; 
+    resize: none;
+}
+
+.window-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--window-header);
+    color: white;
+    width: 100%;
+    position: fixed;
+    cursor: move;
+}
+
+.window-icon {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    border-radius: 50px;
 }
 
 .desktop-grid {
@@ -348,21 +280,21 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 50dvh;
-    max-height: 50dvh;
+    max-width: 100px;
+    max-height: 100px;
 
     position: absolute;
 }
 
 .desktop-icon img {
-    max-width: 5vh;
-    max-height: 5vw;
+    max-width: 50px;
+    max-height: 50px;
 }
 
 .icon-text {
-    font-size: 1.5dvh;
+    font-size: 1rem;
     text-align: center;
-    color : white;
+    cursor: text;
 }
 
 .desktop-icon:hover {
@@ -386,24 +318,23 @@ button {
 }
 
 .app-bar {
-    gap : 25px;
+    gap : 3px;
     display: flex;
     flex-direction: row;
     justify-content: left;
     overflow-x: visible;
     background: var(--main-gradient);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-    color: white;
-
+    border-radius:  5px 5px 0px 0px;
 }
 
 .app-bar-button {
     background-color: transparent;
-    color: white;
+    color: black;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 2vh;
+    font-size: 16px;
     cursor: pointer;
     border: 1px dotted black;
     min-width: 120px;
@@ -411,33 +342,11 @@ button {
 
     display: flex;
     flex-direction: row;
+
 }
-    @keyframes come-in {
-        0% {
-            opacity: 0;
-            transform: scale(0);
-        }
-        100% {
-            opacity: 1; 
-            transform: scale(1);
-        }
-    }
 
 .app-bar-button-active {
-    border-top: 5px solid var(--desktop-background);
-}
-
-.settings-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    color : black;
-
+    border-top: 5px solid black;
 }
 
 .fa-brands {
@@ -448,14 +357,12 @@ button {
     overflow: hidden; /* Ensures the content is not revealed until the animation */
     border-right: .1em solid black; /* The typwriter cursor */
     white-space: nowrap; /* Keeps the content on a single line */
-    margin: 100px auto; /* Gives that scrolling effect as the typing happens */
+    margin: 10 auto; /* Gives that scrolling effect as the typing happens */
     letter-spacing: .15em; /* Adjust as needed */
     animation: 
-      fadeIn .1s steps(10, end),
-      typing 1s steps(40, end),
-      blink-caret .5s step-end;
-
-    
+      fadeIn 1s steps(10, end),
+      typing 1.5s steps(40, end),
+      blink-caret .75s step-end infinite;
   }
 
   .typewriter a:visited {
