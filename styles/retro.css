@@ -4,6 +4,7 @@
     --statusBarText: #fff;
     --windowBackground: #fff;
     --windowText: #000;
+    --system-grey:  grey;
 
     --main-gradient : linear-gradient(to right, #768d92, #0083b0);
     --window-header: linear-gradient(to right, #26505a, #0d323f);
@@ -138,19 +139,42 @@ button {
     width: 50%;
 }
 
-
 .task-bar button {
     background-color: transparent;
-    color: black;
+
+    color : white;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 1rem;
-    cursor: pointer;
+    cursor: pointer !important;
     border: none;
-    min-width: 120px;
+    min-width: 10px;
     z-index: 1;
+
+
+
+}
+
+.minimized {
+    animation: shrink .003s linear forwards;
+
+}
+@keyframes shrink {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        opacity: 0.5; 
+        transform: translateY(50vh) scale(0.5);
+    }
+
+    100% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0; /* Optional: Fade out during the animation */
+    }
 }
 
 .task-bar button:hover {
@@ -183,11 +207,13 @@ button {
     display: none ;
     list-style: none; 
     position: absolute;
-    background-color: #f9f9f9;
+    background: var(--system-grey);
     border: 1px dotted black;
     text-decoration: none;
     color: black;
-    z-index: 20;
+    z-index: 20000;
+    right : 0;
+    left: 0%;
 }
 
 .drop-down-content a {
@@ -198,8 +224,14 @@ button {
 .drop-down {
     position: relative;
     display: inline-block;
-    z-index: 20;
+    z-index: 2000000;
+    justify-content: center;
+    align-items: center;
+    left: 0%;
+    right: 0%;
+    margin: 0%;
 }
+
 
 .drop-down:hover .drop-down-content {
     display: flex;
@@ -419,11 +451,10 @@ button {
 }
 
 
-
 @media only screen and (orientation: portrait ) {
 
     #desktop {
-        height: 93.2dvh;
+        height: 90dvh;
         width: 100dvw;
     }
 
@@ -437,6 +468,11 @@ button {
         font-size: .5vh;
         display: flex;
         flex-direction: row;
+    }
+
+    .task-bar button {
+
+        font-size: .5rem;
     }
 
     .app-bar {
@@ -459,9 +495,9 @@ button {
         border-radius: 50%;
     }
 
+ 
 
 }
-
 
 .notes {
     margin: 50px;
