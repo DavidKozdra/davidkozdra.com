@@ -466,3 +466,10 @@ button {
 .notes {
     margin: 50px;
 }
+
+
+@media screen and(min-width: 1000px) {
+    .app-bar-buffer {
+        display: flex;
+    }
+}

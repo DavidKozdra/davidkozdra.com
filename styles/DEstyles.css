@@ -129,11 +129,10 @@ button {
     align-items: center;
     width: 20vw;
 
-    font-size: 1dvw;
 }
 
 #clock {
-    font-size: 1.2dvh;
+    font-size: 1.3dvh;
 }
 
 #Contact {
@@ -406,9 +405,8 @@ button {
     font-size: 2vh;
     cursor: pointer;
     border: 1px dotted black;
-    min-width: 120px;
-    min-height: 20px;
-
+    min-width: 12vw;
+    min-height: 2vh;
     display: flex;
     flex-direction: row;
 }
@@ -452,10 +450,8 @@ button {
     letter-spacing: .15em; /* Adjust as needed */
     animation: 
       fadeIn .1s steps(10, end),
-      typing 1s steps(40, end),
-      blink-caret .5s step-end;
-
-    
+      typing .7s steps(40, end),
+      blink-caret .5s step-end;    
   }
 
   .typewriter a:visited {
@@ -537,4 +533,18 @@ button {
 
 .notes {
     margin: 50px;
+}
+.app-bar-buffer {
+    display: none;
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+    z-index: -1;
+}
+
+
+@media screen and(min-width: 1000px) {
+    .app-bar-buffer {
+        display: flex;
+    }
 }
