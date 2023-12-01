@@ -814,6 +814,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize drag for desktop icons
     for (let i = 0; i < desktopIcons.length; i++) {
       dragElement(desktopIcons[i], desktopIcons[i]);
+      desktopIcons[i].onmouseup = function () {
+        
+        document.onpointermove = null;
+        closeDragElement();
+      };
+      
     }
 
     function moveElement(event, element) {
