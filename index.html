@@ -96,18 +96,18 @@
 
       <div class="desktop-grid">
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')"
-          onmousemove="moveElement(event,this)" tabindex="1">
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')"  
+          o tabindex="1">
           <img src="./images/Term.png"></img>
           <p contenteditable="true" class="icon-text"> Terminal</p>
         </div>
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')"
-          onmousemove="moveElement(event,this)" tabindex="1">
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" 
+           tabindex="1">
           <img src="./images/Pallet.png"></img>
           <p contenteditable="true" class="icon-text"> Draw</p>
         </div>
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="1">
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="1"> 
           <img src="./images/GOL.png"></img>
           <div class="icon-text">
             <p contenteditable="true">Game Of Life</p>
@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.ontouchend = null;
 
       // this one fixes the weird bug where the mouse is still in the window and it moves
-      //document.onpointermove = null;
+      document.onpointermove = null;
     }
     function setCursor() {
       //conditionally set the cursor to wait globally
