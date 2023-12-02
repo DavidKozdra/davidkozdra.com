@@ -543,7 +543,7 @@ button {
 }
 
 
-@media screen and(min-width: 1000px) {
+@media screen and(min-width: 900px) {
     .app-bar-buffer {
         display: flex;
     }
