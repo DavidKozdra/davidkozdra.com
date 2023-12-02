@@ -47,6 +47,8 @@
               id="task-bar-icon"></button>
           <div class="drop-down-content">
             <button id="settingsButton" onclick="desktopIconRouter(event,'System')"> System</button>
+            
+            <button onclick="desktopIconRouter(event,'term')"> Terminal</button>
             <button onclick="desktopIconRouter(event,'calculator')"> Calculator</button>
 
             <button onclick="desktopIconRouter(event,'notes')"> Notes</button>
@@ -64,8 +66,9 @@
                 Cloudy Meadows </a></button>
           </div>
         </div>
-        <button onclick="desktopIconRouter(event,'resume')"> Resume</button>
-
+        <div>
+          <button onclick="desktopIconRouter(event,'resume')" > Resume</button>
+  </div>
       </div>
 
       <div class="status-bar">
@@ -93,9 +96,14 @@
 
       <div class="desktop-grid">
 
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')"
+          onmousemove="moveElement(event,this)" tabindex="1">
+          <img src="./images/Term.png"></img>
+          <p contenteditable="true" class="icon-text"> Terminal</p>
+        </div>
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')"
           onmousemove="moveElement(event,this)" tabindex="1">
-          <img src="./images/paintIcon.png"></img>
+          <img src="./images/Pallet.png"></img>
           <p contenteditable="true" class="icon-text"> Draw</p>
         </div>
 
@@ -109,7 +117,7 @@
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')"
           tabindex="1">
-          <img src="./images/Calculator.jpg"></img>
+          <img src="./images/Calc.png"></img>
           <div class="icon-text">
             <p contenteditable="true">Calculator</p>
           </div>
@@ -233,10 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // if the window is larger than the desktop area then set the dimentions to the desktop area
           if (window.offsetWidth > desktop.offsetWidth) {
-            window.style.width = desktop.offsetWidth + "px";
+            window.style.width = desktop.offsetWidth -5 + "px";
           }
           if (window.offsetHeight > desktop.offsetHeight) {
-            window.style.height = desktop.offsetHeight + "px";
+            window.style.height = desktop.offsetHeight -5  + "px";
           }
 
           //calculate the max z index
@@ -551,6 +559,15 @@ document.addEventListener('DOMContentLoaded', () => {
         case "test":
           createWindow("Test", "This is a test window", "./images/blocks.jpg", false);
           break;
+
+        case "term": 
+          let term = document.createElement("iframe");
+          term.style.marginTop = "50px";
+          term.src = "./CMD.html";
+          term.style.height = "100%";
+          term.style.width = "100%";
+          createWindow("Terminal", term, "./images/Term.png", 800);
+          break;
         case "resume":
           let resume = document.createElement("iframe");
           resume.classList.add("embed-responsive");
@@ -579,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/Calculator.jpg", 400, false);
+          createWindow("Calculator", calculator, "./images/Calc.png", 400, false);
           break;
 
         case "notes":
@@ -628,7 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
           draw.style.height = "100%";
           draw.style.width = "100%";
           draw.style.marginTop = "50px";
-          createWindow("Drawing", draw, "./images/paintIcon.png", 800, false);
+          createWindow("Drawing", draw, "./images/Pallet.png", 800, false);
           break;
 
         case "GOL":
