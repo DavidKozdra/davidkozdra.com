@@ -543,12 +543,13 @@ button {
 }
 
 
-@media screen and(min-width: 900px) {
+@media screen and(min-width: 800px) {
     .app-bar-buffer {
         display: flex;
     }
 
     #desktop {
         height: 91dvh;
+        background-color: red;
     }
 }
