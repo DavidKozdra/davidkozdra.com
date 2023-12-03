@@ -564,6 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "term": 
           let term = document.createElement("iframe");
           term.name = "terminal";
+          term.title = "terminal";
           term.style.marginTop = "50px";
           term.src = "./CMD.html";
           term.style.height = "100%";
@@ -574,6 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let resume = document.createElement("iframe");
           resume.classList.add("embed-responsive");
           resume.name = "resume";
+          resume.title = "resume";
           resume.src = "./resume.pdf";
           resume.style.height = "90%";
           resume.style.marginTop = "50px";
@@ -588,6 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "System":
           let intro = document.createElement("iframe");
           intro.name = "Intro Panel";
+          intro.title = "Intro Panel";
           intro.src = "./intro.html";
           intro.style.height = "100%";
           intro.style.width = "100%";
@@ -598,6 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "calculator":
           let calculator = document.createElement("iframe");
           calculator.name = "calculator";
+          calculator.title = "calculator";
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
@@ -608,6 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let notes = document.createElement("div");
           notes.classList.add("notes");
           notes.name = "note pad";
+          notes.title = "note pad";
           let textArea = document.createElement("textarea");
           textArea.classList.add("notes-textarea");
           textArea.rows = "25";
@@ -626,6 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "about":
           let about = document.createElement("iframe");
           about.name = "about David Kozdra";
+          about.title = "about David Kozdra";
           about.src = "./about.html";
           about.style.height = "100%";
           about.style.width = "100%";
@@ -635,6 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "old":
           let iframe = document.createElement("iframe");
           iframe.name = "old website";
+          iframe.title = "old website";
           iframe.src = "./index copy.html";
           iframe.style.height = "700px";
           iframe.style.width = "100%";
@@ -648,6 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "draw":
           let draw = document.createElement("iframe");
           draw.name = "drawing";
+          draw.title = "drawing";
           draw.src = "./drawing.html";
           draw.style.height = "100%";
           draw.style.width = "100%";
@@ -658,6 +666,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "GOL":
           let GOLcontainer = document.createElement("iframe");
           GOLcontainer.name = "Game of Life";
+          GOLcontainer.title = "Game of Life";
           GOLcontainer.src = "./GOL.html";
           GOLcontainer.style.height = "100%";
           GOLcontainer.style.width = "100%";
@@ -821,7 +830,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createWindowButton(text, clickHandler) {
       const button = document.createElement("button");
       button.classList.add("window-button");
-      button.name = text + "button";
+      button.name = text.innerHTML + " button";
       button.appendChild(text);
       button.addEventListener('click', clickHandler);
       return button;
