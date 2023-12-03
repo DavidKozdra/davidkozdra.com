@@ -329,8 +329,10 @@
   </div>
 
   <script>
+    init();
 
-    let defaultStyleSheet = localStorage.getItem('defaultStyleSheet') || 'modern';
+    function init() {
+      let defaultStyleSheet = localStorage.getItem('defaultStyleSheet') || 'modern';
     // Check the radio button for the current stylesheet
     const radioButtons = document.querySelectorAll('input[type="radio"]');
     radioButtons.forEach(button => {
@@ -347,6 +349,8 @@
     }
 
     sendMessage(defaultStyleSheet);
+    }
+
 
     function openTab(evt, tabName) {
       evt.preventDefault();

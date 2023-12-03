@@ -25,7 +25,7 @@
 <body>
   <div class="loader-page">
     <div class="loader-display">
-      <img class="loader-icon" src="./images/favicon.ico"></img>
+      <img class="loader-icon" src="./images/favicon.ico" alt="DK logo white and blue gradient background"></img>
 
       <p class="typewriter">
         Loading DK OS ...
@@ -97,18 +97,18 @@
       <div class="desktop-grid">
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')"  
-          o tabindex="1">
-          <img src="./images/Term.png"></img>
+          o tabindex="0">
+          <img src="./images/Term.png" alt="desktop icon of a computer terminal black and lime green"></img>
           <p contenteditable="true" class="icon-text"> Terminal</p>
         </div>
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" 
-           tabindex="1">
-          <img src="./images/Pallet.png"></img>
+           tabindex="0">
+          <img src="./images/Pallet.png" alt="Art Pallet drawing in pixel art"></img>
           <p contenteditable="true" class="icon-text"> Draw</p>
         </div>
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="1"> 
-          <img src="./images/GOL.png"></img>
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="0"> 
+          <img src="./images/GOL.png" alt="Game of Life Grid of green and grey squares"></img>
           <div class="icon-text">
             <p contenteditable="true">Game Of Life</p>
           </div>
@@ -116,17 +116,17 @@
 
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')"
-          tabindex="1">
-          <img src="./images/Calc.png"></img>
+          tabindex="0">
+          <img src="./images/Calc.png" alt="calculator icon"></img>
           <div class="icon-text">
             <p contenteditable="true">Calculator</p>
           </div>
         </div>
 
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="1"
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="0"
           style="cursor: pointer;">
-          <img src="./images/Notes.png"></img>
+          <img src="./images/Notes.png" alt="yellow note pad "></img>
           <div class="icon-text">
             <p contenteditable="true">Notes</p>
           </div>
@@ -282,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 0; i < windows.length; i++) {
         let taskbarButton = document.createElement("button");
         let taskbarButtonIcon = document.createElement("img");
+        taskbarButtonIcon.alt = "window icon for " + windows[i].id ;
         taskbarButtonIcon.classList.add("window-icon");
         taskbarButtonIcon.src = windows[i].childNodes[0].childNodes[0].src;
         taskbarButton.classList.add("app-bar-button");
@@ -562,6 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "term": 
           let term = document.createElement("iframe");
+          term.name = "terminal";
           term.style.marginTop = "50px";
           term.src = "./CMD.html";
           term.style.height = "100%";
@@ -571,6 +573,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "resume":
           let resume = document.createElement("iframe");
           resume.classList.add("embed-responsive");
+          resume.name = "resume";
           resume.src = "./resume.pdf";
           resume.style.height = "90%";
           resume.style.marginTop = "50px";
@@ -584,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "System":
           let intro = document.createElement("iframe");
+          intro.name = "Intro Panel";
           intro.src = "./intro.html";
           intro.style.height = "100%";
           intro.style.width = "100%";
@@ -593,6 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "calculator":
           let calculator = document.createElement("iframe");
+          calculator.name = "calculator";
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
@@ -602,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case "notes":
           let notes = document.createElement("div");
           notes.classList.add("notes");
-
+          notes.name = "note pad";
           let textArea = document.createElement("textarea");
           textArea.classList.add("notes-textarea");
           textArea.rows = "25";
@@ -620,6 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "about":
           let about = document.createElement("iframe");
+          about.name = "about David Kozdra";
           about.src = "./about.html";
           about.style.height = "100%";
           about.style.width = "100%";
@@ -628,6 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "old":
           let iframe = document.createElement("iframe");
+          iframe.name = "old website";
           iframe.src = "./index copy.html";
           iframe.style.height = "700px";
           iframe.style.width = "100%";
@@ -640,7 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "draw":
           let draw = document.createElement("iframe");
-
+          draw.name = "drawing";
           draw.src = "./drawing.html";
           draw.style.height = "100%";
           draw.style.width = "100%";
@@ -650,6 +657,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "GOL":
           let GOLcontainer = document.createElement("iframe");
+          GOLcontainer.name = "Game of Life";
           GOLcontainer.src = "./GOL.html";
           GOLcontainer.style.height = "100%";
           GOLcontainer.style.width = "100%";
@@ -770,6 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let minIcon = document.createElement("i");
       minIcon.classList.add("fas");
       minIcon.classList.add("fa-chevron-down");
+      minIcon.name = "minimize";
 
       const buttonMin = createWindowButton(minIcon, function () {
         minimizeWindow(event, id);
@@ -788,6 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let closeIcon = document.createElement("i");
       closeIcon.classList.add("fas");
       closeIcon.classList.add("fa-times");
+      closeIcon.name = "close";
 
 
       const buttonClose = createWindowButton(closeIcon, function () {
@@ -811,6 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createWindowButton(text, clickHandler) {
       const button = document.createElement("button");
       button.classList.add("window-button");
+      button.name = text + "button";
       button.appendChild(text);
       button.addEventListener('click', clickHandler);
       return button;
