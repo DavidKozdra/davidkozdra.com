@@ -89,7 +89,7 @@ body {
 
 #desktop {
     background-image: url(../images/Rainbow_iPad+2.png); 
-    height:91.5dvh;
+    height:93.5vh;
     width: 100dvw;
     overflow: hidden;
     background-size: cover; /* This will scale the background image to cover the entire container */

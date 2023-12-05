@@ -255,6 +255,16 @@ document.addEventListener('DOMContentLoaded', () => {
           window.childNodes[0].style.width = window.offsetWidth + "px";
         });
 
+        if(activeWindowCount > 0){
+          //get desktop and set the height to 92 dvh
+          let desktop = document.getElementById("desktop");
+          desktop.style.height = "92dvh";
+        }else {
+          //get desktop and set the height to 100 dvh
+          let desktop = document.getElementById("desktop");
+          desktop.style.height = "93.5dvh";
+        }
+
         applyBoundaries(activeWindows);
         if (activeWindowCount != activeWindows.length) {
           ReRenderAppTaskbar();
