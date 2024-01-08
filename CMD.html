@@ -51,7 +51,8 @@
     </div>
     
 
-    <div class="row-container"> > 
+    <div class="row-container"> 
+        <p class="fileDisplay">></p> 
         <input class="input" contenteditable onkeydown="enterCommand()"> 
     
     </div>
@@ -60,9 +61,113 @@
         let history = [];
         let historyIndex = 0;
 
+        // tree file system
+        let fileSystem = [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"testing lol2 "}]} ]
+        let currentDir = "/";
+        
+
+        function changeDir(dir){
+            if(dir == ".."){
+                //need to go to the parent dir
+                for (let i = 0; i < fileSystem.length; i++) {
+                    if(fileSystem[i].dir == currentDir){
+                        //this should be parent
+                        currentDir = fileSystem[i].dir;
+                    }
+                }
+            }
+
+            //check if dir exists
+            for (let i = 0; i < fileSystem.length; i++) {
+                if(fileSystem[i].dir == dir){
+                    //this should be parent
+                    currentDir = fileSystem[i].dir;
+                    return
+                }
+            }
+
+            print("Directory not found");
+
+        }
+
+        function displayDirContent(dir){
+            // if ls is called 
+            let out = ""
+                for(let i = 0; i < fileSystem.length; i++){
+                    if(fileSystem[i].dir == dir){
+                        for(let j = 0; j < fileSystem[i].files.length; j++){
+                            out += fileSystem[i].files[j].name + " ";
+                        }
+                    }
+                }
+            print(out);
+        }
+        
+        function makeADIR(dir){
+            let parentDir = "";
+            //check if dir exists
+            for (let i = 0; i < fileSystem.length; i++) {
+            
+                if(fileSystem[i].dir == dir){
+                    //this should be parent
+                    print("Directory already exists");
+                    return
+                }
+            }
+
+
+            //add to current 
+            
+            for (let i = 0; i < fileSystem.length; i++) {
+                if(fileSystem[i].dir == currentDir){
+                    //this should be parent
+                    fileSystem[i].files.push({name:dir, dir:true});
+                }
+            }
+
+            //create a new dir
+            fileSystem.push({dir:dir, files:[]});
+            print("Directory created");
+        }
+
+        function makeAFile(file){
+            let parentDir = "";
+            //check if dir exists
+            for (let i = 0; i < fileSystem.length; i++) {
+            
+                if(fileSystem[i].dir == file){
+                    //this should be parent
+                    print("File already exists");
+                    return
+                }
+            }
+            
+            //add to current
+            for (let i = 0; i < fileSystem.length; i++) {
+                if(fileSystem[i].dir == currentDir){
+                    //this should be parent
+                    fileSystem[i].files.push({name:file, dir:false});
+                }
+            }
+        }
 
         evalCommands("help");
 
+
+        function DisplayFileContent(file){
+            // if ls is called 
+            let out = ""
+                for(let i = 0; i < fileSystem.length; i++){
+                    if(fileSystem[i].dir == currentDir){
+                        for(let j = 0; j < fileSystem[i].files.length; j++){
+                            if(fileSystem[i].files[j].name == file){
+                                out += fileSystem[i].files[j].content;
+                            }
+                        }
+                    }
+                }
+            print(out);
+        }
 
         function enterCommand() {
             if (event.keyCode == 13) {
@@ -87,14 +192,13 @@
                     historyIndex--;
                     document.querySelector("input").value = history[history.length - historyIndex];
                 } else {
-                    document.querySelector("input").value = ">";
+                    document.querySelector("input").value = currentDir + ">";
                 }
             }
         }
 
 
         function evalCommands(command) {
-            console.log(command);
             command = command.split(" ");
             switch (command[0]) {
                 case "clear":
@@ -106,20 +210,36 @@
                 case "print":
                     print(command.splice(1).join(" "));
                     break;
+                case "cd":
+                    changeDir(command.splice(1).join(" "));
+                    break;
+                case "ls":
+                    displayDirContent(command.splice(1).join(" ") ? command.splice(1).join(" ") : currentDir);
+                    break;
+                case "mkdir":
+                    makeADIR(command.splice(1).join(" "));
+                    break;
+                case "cat":
+                    DisplayFileContent(command.splice(1).join(" "));
+                    break;
+                case "touch":
+                    makeAFile(command.splice(1).join(" "));
+                    break;
+                
                 default:
                     let prompt = document.createElement("div");
                     prompt.innerHTML = "Command not found";
                     document.querySelector(".output").appendChild(prompt);
                     break;
-
-          
             }
-
+            let fileDisplay = document.querySelector(".fileDisplay");
+            fileDisplay.innerHTML = currentDir + ">";
             let input = document.getElementsByTagName("input")[0];
-                history.push(input.value);
-                historyIndex = 0;
-                input.value = "";
-                input.focus();
+            history.push(input.value);
+            historyIndex = 0;
+            input.value = "";
+            input.focus();
+            
 
         }
 
@@ -143,6 +263,22 @@
             prompt = document.createElement("div");
             prompt.innerHTML = "print - prints the text after the command";
             document.querySelector(".output").appendChild(prompt);
+            prompt = document.createElement("div");
+            prompt.innerHTML = "cd - changes the current directory";
+            document.querySelector(".output").appendChild(prompt);
+            prompt = document.createElement("div");
+            prompt.innerHTML = "ls - lists the files in the current directory";
+            document.querySelector(".output").appendChild(prompt);
+            prompt = document.createElement("div");
+            prompt.innerHTML = "mkdir - creates a new directory";
+            document.querySelector(".output").appendChild(prompt);
+            prompt = document.createElement("div");
+            prompt.innerHTML = "cat - displays the content of a file";
+            document.querySelector(".output").appendChild(prompt);
+            prompt = document.createElement("div");
+            prompt.innerHTML = "touch - creates a new file";
+            document.querySelector(".output").appendChild(prompt);
+            
         }
 
     </script>
