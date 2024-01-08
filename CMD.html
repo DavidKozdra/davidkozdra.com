@@ -64,17 +64,33 @@
         // tree file system
         let fileSystem = [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"testing lol2 "}]} ]
         let currentDir = "/";
-        
+        let commands = [
+            {names:["clear"], description:"clears the screen" , function:clear},
+            {names:["help"], description:"displays this help message" , function:help},
+            {names:["print"], description:"prints the text after the command" , function:print},
+            {names:["cd"], description:"changes the current directory" , function:changeDir},
+            {names:["ls"], description:"lists the files in the current directory" , function:displayDirContent},
+            {names:["mkdir"], description:"creates a new directory" , function:makeADIR},
+            {names:["cat"], description:"displays the content of a file" , function:DisplayFileContent},
+            {names:["touch"], description:"creates a new file" , function:makeAFile},
+            {names:["history"], description:"displays the history of commands" , function:display_history},
+        ]
+            
 
         function changeDir(dir){
             if(dir == ".."){
+                let parent = ""
                 //need to go to the parent dir
                 for (let i = 0; i < fileSystem.length; i++) {
-                    if(fileSystem[i].dir == currentDir){
-                        //this should be parent
-                        currentDir = fileSystem[i].dir;
+                    // search for each dir in dirs for each directory
+                    for (let j = 0; j < fileSystem[i].files.length; j++) {
+                        if(fileSystem[i].files[j].name == currentDir){
+                            parent = fileSystem[i].dir;
+                        }
                     }
                 }
+                currentDir = parent;
+                return
             }
 
             //check if dir exists
@@ -90,11 +106,20 @@
 
         }
 
+        function display_history(){
+            for(let i = 0; i < history.length; i++){
+                print(history[i]);
+            }
+        }
+
         function displayDirContent(dir){
+            dir ? dir = dir : dir = currentDir;
             // if ls is called 
             let out = ""
                 for(let i = 0; i < fileSystem.length; i++){
+                    console.log(fileSystem[i].dir);
                     if(fileSystem[i].dir == dir){
+                        console.log("found");
                         for(let j = 0; j < fileSystem[i].files.length; j++){
                             out += fileSystem[i].files[j].name + " ";
                         }
@@ -200,38 +225,22 @@
 
         function evalCommands(command) {
             command = command.split(" ");
-            switch (command[0]) {
-                case "clear":
-                    clear();
-                    break;
-                case "help":
-                    help();
-                    break;
-                case "print":
-                    print(command.splice(1).join(" "));
-                    break;
-                case "cd":
-                    changeDir(command.splice(1).join(" "));
-                    break;
-                case "ls":
-                    displayDirContent(command.splice(1).join(" ") ? command.splice(1).join(" ") : currentDir);
-                    break;
-                case "mkdir":
-                    makeADIR(command.splice(1).join(" "));
-                    break;
-                case "cat":
-                    DisplayFileContent(command.splice(1).join(" "));
-                    break;
-                case "touch":
-                    makeAFile(command.splice(1).join(" "));
-                    break;
-                
-                default:
-                    let prompt = document.createElement("div");
-                    prompt.innerHTML = "Command not found";
-                    document.querySelector(".output").appendChild(prompt);
-                    break;
+            param = command.splice(1).join(" ");
+            Notfound = true
+            for (let i = 0; i < commands.length; i++) {
+                for (let j = 0; j < commands[i].names.length; j++) {
+                    if (commands[i].names[j] == command[0]) {
+                        commands[i].function(param);
+                        Notfound = false;
+
+                    }
+                }
             }
+
+            if (Notfound) {
+                print("Command not found");
+            }
+
             let fileDisplay = document.querySelector(".fileDisplay");
             fileDisplay.innerHTML = currentDir + ">";
             let input = document.getElementsByTagName("input")[0];
@@ -253,33 +262,23 @@
             document.querySelector(".output").appendChild(prompt);
         }
 
-        function help() {
+        function help(command) {
             let prompt = document.createElement("div");
-            prompt.innerHTML = "clear - clears the screen";
+            for (let i = 0; i < commands.length; i++) {
+                if (command && command == commands[i].names[0] ) {
+                    prompt.innerHTML = commands[i].description;
+                    break;
+                    break;
+                } else {
+                    prompt.innerHTML += commands[i].names[0] + " : " + commands[i].description + "<br>";
+                }
+            }
+
             document.querySelector(".output").appendChild(prompt);
             prompt = document.createElement("div");
-            prompt.innerHTML = "help - displays this help message";
-            document.querySelector(".output").appendChild(prompt);
-            prompt = document.createElement("div");
-            prompt.innerHTML = "print - prints the text after the command";
-            document.querySelector(".output").appendChild(prompt);
-            prompt = document.createElement("div");
-            prompt.innerHTML = "cd - changes the current directory";
-            document.querySelector(".output").appendChild(prompt);
-            prompt = document.createElement("div");
-            prompt.innerHTML = "ls - lists the files in the current directory";
-            document.querySelector(".output").appendChild(prompt);
-            prompt = document.createElement("div");
-            prompt.innerHTML = "mkdir - creates a new directory";
-            document.querySelector(".output").appendChild(prompt);
-            prompt = document.createElement("div");
-            prompt.innerHTML = "cat - displays the content of a file";
-            document.querySelector(".output").appendChild(prompt);
-            prompt = document.createElement("div");
-            prompt.innerHTML = "touch - creates a new file";
-            document.querySelector(".output").appendChild(prompt);
-            
         }
+
+
 
     </script>
 
