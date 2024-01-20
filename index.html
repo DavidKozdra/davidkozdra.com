@@ -20,6 +20,13 @@
 
 
   <script src="Games.js?v=1.0"></script>
+
+  <style>
+    .empty_window {
+      display: none !important;
+
+    }
+  </style>
 </head>
 
 <body>
@@ -150,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   desktopIconRouter(null, "System");
 
+  desktopIconRouter(null, "empty");
 });
 
     let desktopIcons = document.getElementsByClassName("desktop-icon");
@@ -290,6 +298,10 @@ document.addEventListener('DOMContentLoaded', () => {
       taskbar[0].innerHTML = "Tasks ";
 
       for (let i = 0; i < windows.length; i++) {
+        if(windows[i].classList.contains("empty_window")){
+          console.log("empty window");
+          continue;
+        }
         let taskbarButton = document.createElement("button");
         let taskbarButtonIcon = document.createElement("img");
         taskbarButtonIcon.alt = "window icon for " + windows[i].id ;
@@ -570,7 +582,9 @@ document.addEventListener('DOMContentLoaded', () => {
         case "test":
           createWindow("Test", "This is a test window", "./images/blocks.jpg", false);
           break;
-
+          case "empty": 
+          createWindow("empty", null, "./images/Term.png", 800);
+          break;
         case "term": 
           let term = document.createElement("iframe");
           term.name = "terminal";
@@ -750,7 +764,10 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
 
-
+      if (title == "empty") {
+        newWindow.classList.add("empty_window");
+        console.log("empty window renders")
+      }
       newWindow.style.display = "block";
       document.getElementById("windows").appendChild(newWindow);
 
@@ -763,6 +780,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Initialize drag behavior
       dragElement(header, newWindow);
       setFocusedWindow(newWindow)
+
 
       return newWindow;
     }

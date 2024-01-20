@@ -370,8 +370,9 @@ button {
 
 }
 
+
 .app-bar {
-    gap : 3px;
+    gap : 25px;
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -392,7 +393,7 @@ button {
     border: 1px dotted black;
     min-width: 120px;
     min-height: 20px;
-
+    
     display: flex;
     flex-direction: row;
 
@@ -481,7 +482,6 @@ button {
         justify-content: center;
         align-items: center;
         height: 5%;
-
     }
     #task-bar-icon{
         width: 4vw;

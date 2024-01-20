@@ -29,16 +29,16 @@
 
 
         .projects-grid {
-            display: flex;
-            flex-direction: column;
-            column-gap: 10px;
-            padding: 5px;
-            width: fit-content;
-            margin: 20%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px; /* You can adjust the gap value based on your design preferences */
             justify-content: center;
             text-align: center;
-            text-wrap: balance;
+            padding: 5px;
+            width: fit-content;
+            margin: 5%;
         }
+
 
         .open-source {
             display: flex   ;
@@ -49,17 +49,31 @@
             transform: scale(1.1);
             cursor: pointer;
         }
+        #fight {
+            width: 200px;
+            height: 200px;
+        }
 
 
-        @media screen and (min-width: 1000px) {
+        @media screen and (max-width: 1100px) {
             .projects-grid {
                 margin: 10%;
-                display: grid;
+                display: flex;
+                flex-direction: column;
+                width: 80%;
                 grid-template-columns: repeat(3, 1fr);
-
                 justify-content: center;
                 text-align: center;
                 
+            }
+
+            .projects-grid img {
+                width: 80%;
+                height: 80%;
+            }
+            #fight {
+                width: 100%;
+                height: 100%;
             }
         }
     </style>
@@ -73,7 +87,7 @@
             <p>Who is David Kozdra</p>
         </div>
 
-        <img src="images/Me.png" alt="Profile picture David Kozdra handsome young man in a pink shirt" style="border-radius: 5%; width: 420px; height: 300px;">
+        <img src="images/Me.png" alt="Profile picture David Kozdra handsome young man in a pink shirt" style="border-radius: 5%; width: 80%; height: 80%;">
         <div>
             <img src="./images/floridaPoly.jpg" alt="Florida poly logo purple " width="100px" height="100px">
 
@@ -143,7 +157,7 @@
 
             <div>
                 <a href="https://www.fighttm.com" target="_blank" >
-                    <img src="./images/fight.png" alt="Fight tm gold lion logo" style=" width: 350px; height: 400px;">
+                    <img src="./images/fight.png" alt="Fight tm gold lion logo" id="fight">
                 </a>
                 <p><strong>Fight:</strong>  a gamer based social media application. I was able to learn a few important REST API concepts and writing documentation. </p>
             </div>
@@ -161,8 +175,11 @@
                 </a>
                 <p><strong>Florida Nation News :</strong>  FNN is a news organization focused on the state of Florida, one of my first internships and a great introduction to web development.  </p>
             </div>
-
-         
+            <h2 style="text-align: center;">CERTS</h2>
+            <div class="column">
+                <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="8ca3a047-3e02-46ea-85c4-c4607cb0b5a8" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+                <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="ceb80197-fc66-4d0e-a45d-79cd4603b633" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+                <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="33e53e9b-85fa-41f8-8393-f3b22f5912d4" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script></div>
         </div>
     </div>
     </div>

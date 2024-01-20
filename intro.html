@@ -47,7 +47,7 @@
       height: 150vh;
     }
 
-    @media screen and (min-width: 1000px) {}
+
 
     .tab {
       display: none;
@@ -59,12 +59,18 @@
     #tab-container {
       display: flex;
       flex-direction: row;
+      row-gap: 1px;
       justify-content: center;
       align-items: center;
       column-gap: 0px;
       row-gap: 0px;
-      width: 100dvw;
     }
+    @media (max-width: 400px) { /* Adjust the breakpoint value based on your design */
+  #tab-container {
+    flex-direction: column;
+  }
+}
+
 
     .active {
       display: block;
@@ -193,10 +199,6 @@
       font-size: 1.2rem;
       height: 150vh;
     }
-
-
- 
-
 
     .tab {
       display: none ;

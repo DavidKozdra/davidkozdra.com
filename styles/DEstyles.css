@@ -393,8 +393,9 @@ button {
     background: var(--main-gradient);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
     color: white;
-
+    min-height: 25vh;
 }
+
 
 .app-bar-button {
     background-color: transparent;
@@ -409,6 +410,7 @@ button {
     min-height: 2vh;
     display: flex;
     flex-direction: row;
+    
 }
     @keyframes come-in {
         0% {
