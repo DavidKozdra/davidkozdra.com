@@ -34,12 +34,17 @@ body {
     color: whitesmoke !important;
 }
 
-.fa:hover,
+.fa-envelope:hover,
 .fa-brands:hover {
     color: #fff;
-    transform: scale(1.4);
+    transform: scale(1.6);
     border: 1px solid #000;
 }
+
+.fa-brands , .fa-envelope {
+  transform: scale(1.4);
+}
+
 
 .fa-envelope {
     color: #fff;
@@ -150,7 +155,7 @@ button {
     display: flex;
     justify-content: space-between;
     flex-direction: row;    
-    column-gap: 10%;
+    column-gap: 20%;
 }
 
 .task-bar button {
