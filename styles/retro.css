@@ -33,6 +33,11 @@ body {
     color: whitesmoke !important;
 }
 
+.fas {
+    color: whitesmoke !important;
+
+}
+
 .loader-display {
     top: 50%;
     left: 50%;
