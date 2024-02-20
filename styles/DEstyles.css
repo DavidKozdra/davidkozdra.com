@@ -34,6 +34,16 @@ body {
     color: whitesmoke !important;
 }
 
+.fa:hover,
+.fa-brands:hover {
+    color: #fff;
+    transform: scale(1.4);
+    border: 1px solid #000;
+}
+
+.fa-envelope {
+    color: #fff;
+}
 
 .loader-display {
     top: 50%;
