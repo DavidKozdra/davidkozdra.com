@@ -15,7 +15,6 @@
             background-color: black;
             color: limegreen;
             width: 100vw;
-            overflow: hidden;
         }
 
 
@@ -27,10 +26,13 @@
             background-color: transparent;
             border: none;
             color : limegreen;
+            border-bottom:  limegreen 2px solid;
+            min-width: 50%;
         }
 
         input:focus {
             outline: none;
+            border-bottom: none;
         }
 
 
@@ -61,7 +63,99 @@
     
     </div>
 
+
+    <script src="Paul.js">
+/*
+
+        var vars = {}
+        var heap = {}
+        var stack = {}
+        var line_pointer = 0
+        let library = {
+        }
+
+
+        library.define = (name, value) => {
+            vars[name] = value
+        }
+
+        library.assign = (name, value) => {
+            vars[name] = value
+        }
+
+        library.out = (name) => {
+            console.log(vars[name] || name)
+        }
+
+        library.push = (name, value) => {
+            stack[name] = value
+        }
+
+        library.pop = (name) => {
+            console.log(stack[name])
+        }
+
+        library.define_func = (name, value) => {
+            //example defFunc a,b,c,d,e a+b+c+d+e
+            so = value.split(' ')
+            let params = so[1].split(',')
+            let body = so[2]
+            library[name] = (...args) => {
+                
+            }
+        }
+
+        library.clear = () => {
+            vars = {}
+            heap = {}
+            stack = {}
+        }
+
+        function mapLibToCode(command, params) {
+            console.log(line_pointer)
+            //remove all spaces from the command
+            command = command.trim()
+            if (library[command] === undefined) {
+                library.out('erro
+                r on line # ', line_pointer)
+                return
+
+
+            }
+
+
+            // ie the command in lib of the same name then call it with the params destructured
+            // ie mapping them to the function arguments
+            library[command](...params)
+        }
+
+        let code = `
+            define,x,10;
+            out,x;
+            assign,x,20;
+            out,x;
+            clear;
+            max;
+            `
+
+        let lines = code.split(';').filter(line => line.trim() !== '')
+        for (let i = 0; i < lines.length; i++) {
+            line_pointer = i
+            let line = lines[i]
+            console.log(line)
+            let [command, ...params] = line.split(',')
+            mapLibToCode(command, params)
+        }
+
+        //console.log(vars)
+        //console.log(heap)
+*/
+
+    </script> 
+
     <script>
+        
+
         let history = [];
         let historyIndex = 0;
 
@@ -72,7 +166,7 @@
         let commands = [
             {names:["clear"], description:"clears the screen" , function:clear},
             {names:["help"], description:"displays this help message" , function:help},
-            {names:["print"], description:"prints the text after the command" , function:print},
+            {names:["out"], description:"outs the text after the command" , function:out},
             {names:["cd"], description:"changes the current directory" , function:changeDir},
             {names:["ls"], description:"lists the files in the current directory" , function:displayDirContent},
             {names:["mkdir"], description:"creates a new directory" , function:makeADIR},
@@ -80,6 +174,7 @@
             {names:["touch"], description:"creates a new file" , function:makeAFile},
             {names:["history"], description:"displays the history of commands" , function:display_history},
             {names:["alias"], description:"rename a command" , function:addNewNameForCommand},
+            {names:["paul"], description:"little scripting lang", function:paul}
         ]
             
 
@@ -96,7 +191,7 @@
                     }
                 }
                 if(parent == ""){
-                    print("Directory not found are you at / this is the root directory silly billy ;)");
+                    out("Directory not found are you at / this is the root directory silly billy ;)");
                     return
                 }
 
@@ -113,13 +208,13 @@
                 }
             }
 
-            print("Directory not found");
+            out("Directory not found");
 
         }
 
         function display_history(){
             for(let i = 0; i < history.length; i++){
-                print(history[i]);
+                out(history[i]);
             }
         }
 
@@ -141,7 +236,7 @@
                     }
                 }
             }
-            print(out);
+            out(out);
         }
 
         function addNewNameForCommand(command, Newname){
@@ -159,7 +254,7 @@
             
                 if(fileSystem[i].dir == dir){
                     //this should be parent
-                    print("Directory already exists");
+                    out("Directory already exists");
                     return
                 }
             }
@@ -176,7 +271,7 @@
 
             //create a new dir
             fileSystem.push({dir:dir, files:[]});
-            print("Directory created");
+            out("Directory created");
         }
 
         function makeAFile(file){
@@ -186,7 +281,7 @@
             
                 if(fileSystem[i].dir == file){
                     //this should be parent
-                    print("File already exists");
+                    out("File already exists");
                     return
                 }
             }
@@ -215,14 +310,14 @@
                         }
                     }
                 }
-            print(out);
+            out(out);
         }
 
         function enterCommand() {
             if (event.keyCode == 13) {
                 event.preventDefault();
                 let command = document.querySelector("input").value;
-                print(command);
+                out(command);
                 evalCommands(command);
 
             }
@@ -263,7 +358,7 @@
             }
 
             if (Notfound) {
-                print("Command not found");
+                out("Command " |+command+"| not found");
             }
 
             let fileDisplay = document.querySelector(".fileDisplay");
@@ -282,10 +377,11 @@
             document.querySelector(".output").innerHTML = "";
         }
 
-        function print(text) {
+        function out(text) {
             let prompt = document.createElement("div");
             prompt.innerHTML = text;
             document.querySelector(".output").appendChild(prompt);
+            console.log(text)
         }
 
         function help(command) {
@@ -304,9 +400,20 @@
             prompt = document.createElement("div");
         }
 
+        function paul(code) {
+            // takes everything entered and runs it through paul 
+            // call the code evaluation code 
+            execute(code)
+
+
+        }
+
+
+        //need to make a command that takes Paul and then everything after as the code 
 
 
     </script>
+
 
 </body>
 
