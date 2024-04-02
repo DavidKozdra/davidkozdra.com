@@ -48,10 +48,38 @@
             vars[name] = value
         }
         library.out = (toPrint) => {
-       
+            console.log( "to print  ",toPrint)
+            // Split the input string by "+"
+            let segments = toPrint.split("+")
+        
+            // Process each segment
+            segments.forEach((segment, index) => {
+                console.log(segment.startsWith('"'), segment.endsWith('"'))
+                console.log(segment)
+                // Check if the segment corresponds to a variable in the `vars` dictionary
+                if (vars.hasOwnProperty(segment)) {
+                    // If the variable is defined in the `vars` dictionary, replace the segment with its value
+                    segments[index] = vars[segment];
+                } else if (!isNaN(parseFloat(segment)) && isFinite(segment)) {
+                    // If the segment can be parsed as a number, treat it as a number and keep it as is
+                    // Note: This condition will also handle numbers enclosed within double quotes
+                    segments[index] = segment
+                }else if (segment.startsWith('"') && segment.endsWith('"')) {
+                    // If the segment is already enclosed within double quotes, remove the quotes
+                    segments[index] = segment.slice(1, -1);
+                }else {
+                    library.error( line_pointer,"could not be found")
+                    return
+                }
+                // If the segment represents a variable, it will remain unchanged
+            });
+            let result = segments.join(" ");
+
+            out(result)
+
         }
         
-
+        
         library.push = (name, value) => {
             stack[name] = value
         }
@@ -75,7 +103,7 @@
 
         library.error = (line, message) => {
             console.log("ERROR in paul lib  ", message)
-            out("# "+ line + "message : " +message)
+            out("# "+ line + "message : " + message)
         }
 
         library.help = () => {  
@@ -112,7 +140,7 @@
             if (library[command] === undefined) {
                 // might need just an output var that can be added to and then outed, how to make it read js vars by default 
                 library.error(line_pointer, "command |" + command+ "|  not found not recognized or other")
-                console.log(line_pointer)
+                //console.log(line_pointer)
                 return
             }
             // ie the command in lib of the same name then call it with the params destructured
@@ -128,28 +156,36 @@
             clear;
             max;
             `
-
-        function execute(code ) {
-            code = `${code}`
-            console.log(code)
-            let lines = code.split(';').filter(line => line.trim() !== '');
-
-            // Remove the last element from the array if it's empty
-            if (lines.length > 0 && lines[lines.length - 1].trim() === '') {
-                lines.pop();
-            }
-
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].trim(); // Trim any leading or trailing whitespace
-                if (line === '') {
-                    continue; // Skip empty lines
+            function execute(code) {
+                code = `${code}`;
+                let lines = code.split(';').filter(line => line.trim() !== '');
+            
+                // Remove the last element from the array if it's empty
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+                    lines.pop();
                 }
-                let [command, ...params] = line.split(/\s+/); // Split the line by whitespace
-                mapLibToCode(command, params);
-                line_pointer = i; // Set the line pointer after processing the line
+            
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i].trim(); // Trim any leading or trailing whitespace
+                    if (line === '') {
+                        continue; // Skip empty lines
+                    }
+            
+                    // Use a regex pattern to split the line into a command and its parameters
+                    let matches = line.match(/("[^"]+"|\S+)/g); // Match quoted strings or non-whitespace sequences
+                    if (!matches) {
+                        console.error("Invalid line:", line);
+                        continue; // Skip invalid lines
+                    }
+            
+                    let command = matches[0];
+                    let params = matches.slice(1); // Extract parameters (excluding the command)
+            
+                    mapLibToCode(command, params);
+                    line_pointer = i; // Set the line pointer after processing the line
+                }
             }
             
-        }
 
         execute(code)
         //console.log(vars)
