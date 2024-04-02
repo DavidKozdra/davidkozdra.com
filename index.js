@@ -3,15 +3,21 @@ var startTime = Date.now();
 function openPage(evt, pageName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
+
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
+
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
+
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
+    
+    console.log(pageName,document.getElementById(pageName))
     document.getElementById(pageName).style.display = "block";
     evt.currentTarget.className += " active";
+
   }
   var currentSlide =0;
   var flag = false;
