@@ -197,7 +197,12 @@ document.addEventListener('DOMContentLoaded', () => {
       text.innerHTML = file.name;
       icon.appendChild(img);
       icon.appendChild(text);
-      document.getElementById("desktop").appendChild(icon);
+
+      //init drag
+      dragElement(icon, icon);
+
+      //add to the grid
+      document.getElementsByClassName("desktop-grid")[0].appendChild(icon);
     }
   }
 });
@@ -341,7 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       for (let i = 0; i < windows.length; i++) {
         if(windows[i].classList.contains("empty_window")){
-          console.log("empty window");
           continue;
         }
         let taskbarButton = document.createElement("button");
@@ -826,7 +830,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (title == "empty") {
         newWindow.classList.add("empty_window");
-        console.log("empty window renders")
       }
       newWindow.style.display = "block";
       document.getElementById("windows").appendChild(newWindow);
