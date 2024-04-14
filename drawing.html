@@ -26,6 +26,27 @@
 
             overflow: hidden;
         }
+
+        #button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }   
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ddd;
+        }
+
+        button.selected{
+            background-color: #ccc;
+        }
     </style>
 </head>
 <body>
@@ -34,10 +55,11 @@
         <canvas id="drawing" onmousedown="startdraw(event)" onmouseup="stopdraw()" width="500px" height="400px">
         </canvas>
 
-        <div id="button-grid">
+        <div >
+
+            <div> <label for=""> Pen Size</label> 
 
             <button onclick="clearDisplay()"> Clear </button>
-            <div> <label for=""> Pen Size</label> 
                 <input type="text" onchange="updatePen()" placeholder="pen size">  </input>
             </div>
 
@@ -47,6 +69,13 @@
                 <div class="colors-container"> 
                     
                 </div>
+
+                <h1>Layers</h1>
+
+                <div id="button-grid"></div>
+
+
+                <button onclick="saveCanvas()"> Save </button>
             </div>
         </div>
     </div>
@@ -66,9 +95,45 @@
         let mouseX , mouseY;
 
         let layers = [];
+        let currentLayer = 0;
 
 
         let penSize =2;
+
+        function saveCanvas() {
+            var link = document.createElement('a');
+            link.download = 'canvas_image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            for (let i = 1; i < 10; i++) {
+                layers.push([]);
+
+            }
+
+            for (let i = 1; i < layers.length; i++) {
+                let button = document.createElement('button');
+                if (i == 1) {
+                    button.classList.add('selected');
+                }
+                button.innerText = i;
+                button.addEventListener('click', () => {
+                    currentLayer = i;
+                    let buttons = document.querySelectorAll('button');
+                    buttons.forEach((button) => {
+                        button.classList.remove('selected');
+                    });
+                    button.classList.add('selected');
+
+                });
+                document.getElementById('button-grid').appendChild(button);
+            }
+
+
+        });
 
         function hex(x) {
             return ("0" + parseInt(x).toString(16)).slice(-2);
@@ -116,6 +181,12 @@
 
         function clearDisplay() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stack = [];
+            reverseStack = [];
+            layers = [];
+            for (let i = 1; i < 10; i++) {
+                layers.push([]);
+            }
         }
 
 
@@ -123,6 +194,11 @@
 
         function startdraw(event) {
             drawing = true;
+            let x = event.clientX - canvas.offsetLeft;
+            let y = event.clientY - canvas.offsetTop;
+            let pixel = {x: x, y: y, color: activeColor, penSize: penSize};
+            stack.push(pixel);
+            layers[currentLayer].push(pixel);
         }
 
         function stopdraw() {
@@ -164,12 +240,25 @@
         function update() {
             //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-          
             if (drawing) {
+                let pixel = {x: mouseX, y: mouseY, color: activeColor, penSize: penSize};
+                stack.push(pixel);
+                layers[currentLayer].push(pixel);
                 ctx.fillStyle = colorMap(activeColor);
                 ctx.fillRect(mouseX, mouseY, penSize, penSize);
-                stack.push({x: mouseX, y: mouseY, color : colorMap(activeColor), penSize: penSize});
             }
+
+            for (let i = 0; i < layers.length; i++) {
+                let layer = layers[i];
+                for (let j = 0; j < layer.length; j++) {
+                    let pixel = layer[j];
+                    ctx.fillStyle = colorMap(pixel.color);
+                    ctx.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
+                }
+            }
+
+
+
             requestAnimationFrame(update);
         }
 
