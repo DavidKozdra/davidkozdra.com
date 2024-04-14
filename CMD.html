@@ -28,6 +28,8 @@
             border: none;
             color : limegreen;
             width: 100%;
+            padding: 20px;
+            height: 2px;
             border-radius: 5px;
             border: 1px dotted limegreen;
         }
@@ -46,6 +48,17 @@
             color: white;
         }
 
+        textarea {
+            width: 50dvw;
+            height: 100%;
+            background-color: black;
+            color: limegreen;
+            border: 1px solid limegreen;
+            padding: 20px;
+            border-radius: 5px;
+            overflow: scroll\;
+        }
+
       
     </style>
 </head>
@@ -58,7 +71,7 @@
     </div>
     
 
-    <div class="row-container"> 
+    <div class="row-container" id="input-container"> 
         <p class="fileDisplay">></p> 
         <input class="input" contenteditable onkeydown="enterCommand()"> 
     
@@ -69,11 +82,12 @@
         // if the mouse is down I want to focus on the input
         document.querySelector("input").focus();
         document.addEventListener("mousedown", function(){
+            //this does not work 
     document.querySelector("input").focus();
 });
 
 
-        let history = [];
+        let history = localStorage.getItem("history") == null ? [] : JSON.parse(localStorage.getItem("history"));
         let historyIndex = 0;
 
         // tree file system
@@ -89,10 +103,70 @@
             {names:["mkdir"], description:"creates a new directory" , function:makeADIR},
             {names:["cat"], description:"displays the content of a file" , function:DisplayFileContent},
             {names:["touch"], description:"creates a new file" , function:makeAFile},
-            {names:["history"], description:"displays the history of commands" , function:display_history},
+            {names:["history"], description:"displays the history of commands" , function:display_history, flags:{"-c": clearHistory}},
             {names:["alias"], description:"rename a command" , function:addNewNameForCommand},
+            {names:["edit"], description:"edit a file press esc to save" , function:edit_file},
         ]
+        
+        function edit_file(file){
+           /*
+                take this file and get the txt content
+                then display it in a text area
+                then save it back to the file
+           */
+
+
+
+              // save text
+              out = ""
+              found = false;
+                for(let i = 0; i < fileSystem.length; i++){
+                    if(fileSystem[i].dir == currentDir){
+                        for(let j = 0; j < fileSystem[i].files.length; j++){
+                            if(fileSystem[i].files[j].name == file){
+                                out += fileSystem[i].files[j].content;
+                                found = true;
+                            }
+                        }
+                    }
+                }
+
+            if(!found){
+                print("File not found");
+                return
+            }
+
+           let editArea = document.createElement("textarea");
+           editArea.value = out;
+           document.querySelector(".output").appendChild(editArea);
+
+            // command input turn off
+            let input = document.getElementById("input-container")
+            input.style.display = "none";
+
             
+            editArea.addEventListener("keydown", function(event){
+                if(event.keyCode == 27){
+                    //save the file
+                    for(let i = 0; i < fileSystem.length; i++){
+                        if(fileSystem[i].dir == currentDir){
+                            for(let j = 0; j < fileSystem[i].files.length; j++){
+                                if(fileSystem[i].files[j].name == file){
+                                    fileSystem[i].files[j].content = editArea.value;
+                                }
+                            }
+                        }
+                    }
+
+                    //remove the text area
+                    editArea.remove();
+                        // command input turn on
+                // command input turn off
+                input.style.display = "flex";
+                }
+            });
+
+        }
 
         function changeDir(dir){
             if(dir == ".."){
@@ -132,6 +206,12 @@
             for(let i = 0; i < history.length; i++){
                 print(history[i]);
             }
+        }
+
+        function clearHistory(){
+            print("clearing history");
+            history = [];
+            localStorage.setItem("history", JSON.stringify(history));
         }
 
         function displayDirContent(dir){
@@ -260,18 +340,32 @@
 
         function evalCommands(command) {
             command = command.split(" ");
-            param = command.splice(1).join(" ");
-
             //figure out how to take multiple params easily
             Notfound = true
             for (let i = 0; i < commands.length; i++) {
                 for (let j = 0; j < commands[i].names.length; j++) {
                     if (commands[i].names[j] == command[0]) {
+                        //check flags
+                        //for flags in this command, for the command[1 and after]
+                        if(commands[i].flags){
+                            for (let k = 0; k < command.length; k++) {
+                                if(commands[i].flags.hasOwnProperty(command[k])){
+                                    console.log("flag found");
+                                    commands[i].flags[command[k]]();
+                                    Notfound = false;
+                                    return
+                                }
+                            }
+                        }
+
+                        param = command.splice(1).join(" ");
+                        console.log(param);
                         commands[i].function(param);
                         Notfound = false;
                     }
                 }
             }
+            
 
             if (Notfound) {
                 print("Command not found");
@@ -280,12 +374,17 @@
             let fileDisplay = document.querySelector(".fileDisplay");
             fileDisplay.innerHTML = currentDir + ">";
             let input = document.getElementsByTagName("input")[0];
-            history.push(input.value);
+            if (input.value.length > 0) {
+                console.log("input");
+                history.push(input.value);
+            }
+            localStorage.setItem("history", JSON.stringify(history));
             historyIndex = 0;
             input.value = "";
             input.focus();
             
             localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+
 
         }
 
@@ -300,20 +399,32 @@
         }
 
         function help(command) {
-            let prompt = document.createElement("div");
-            for (let i = 0; i < commands.length; i++) {
-                if (command && command == commands[i].names[0] ) {
-                    prompt.innerHTML = commands[i].description;
-                    break;
-                    break;
-                } else {
-                    prompt.innerHTML += commands[i].names[0] + " : " + commands[i].description + "<br>";
-                }
-            }
 
+    let prompt = document.createElement("div");
+    prompt.innerHTML = "";
+    for (let i = 0; i < commands.length; i++) {
+        
+        if (command === commands[i].names[0]) {
+            console.log("found command", commands[i].names[0]);
+            let info = "";
+            // Display flags and description for the specified command
+            for (let key in commands[i].flags) {
+                info += key + " : " + commands[i].flags[key] + "<br>";
+            }
+            // info += commands[i].description;
+            prompt.innerHTML =  command + ": "+ info;
+            console.log(info, "info" , commands[i].description);
             document.querySelector(".output").appendChild(prompt);
-            prompt = document.createElement("div");
+            return;
+        } else {
+            // Display all available commands with their descriptions
+            prompt.innerHTML += commands[i].names[0] + " : " + commands[i].description + "<br>";
         }
+    }
+    document.querySelector(".output").appendChild(prompt);
+}
+
+
 
 
 
