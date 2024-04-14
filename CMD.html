@@ -103,7 +103,7 @@
             {names:["mkdir"], description:"creates a new directory" , function:makeADIR},
             {names:["cat"], description:"displays the content of a file" , function:DisplayFileContent},
             {names:["touch"], description:"creates a new file" , function:makeAFile},
-            {names:["history"], description:"displays the history of commands" , function:display_history, flags:{"-c": clearHistory}},
+            {names:["history"], description:"displays the history of commands" , function:display_history, flags:[ {description: "clears the history of commands", name: "-c", do_it:clearHistory }]},
             {names:["alias"], description:"rename a command" , function:addNewNameForCommand},
             {names:["edit"], description:"edit a file press esc to save" , function:edit_file},
         ]
@@ -313,6 +313,10 @@
             if (event.keyCode == 13) {
                 event.preventDefault();
                 let command = document.querySelector("input").value;
+
+                if (command == "" || !command.trim()) {
+                return
+                }
                 print(command);
                 evalCommands(command);
 
@@ -339,7 +343,22 @@
 
 
         function evalCommands(command) {
+
             command = command.split(" ");
+            console.log(command);
+
+            let pattern = /["]/g;
+            // find or get rid of "" and " " or just spaces in side each item of command
+            for (let i = 0; i < command.length; i++) {
+                //remove from array if is "" or " "
+                if (!command[i].trim() || command[i].match(pattern))  {
+                    // If empty, remove the element from the array
+                    command.splice(i, 1);
+                }
+            }
+
+            console.log(command.length);
+
             //figure out how to take multiple params easily
             Notfound = true
             for (let i = 0; i < commands.length; i++) {
@@ -347,16 +366,16 @@
                     if (commands[i].names[j] == command[0]) {
                         //check flags
                         //for flags in this command, for the command[1 and after]
-                        if(commands[i].flags){
-                            for (let k = 0; k < command.length; k++) {
-                                if(commands[i].flags.hasOwnProperty(command[k])){
-                                    console.log("flag found");
-                                    commands[i].flags[command[k]]();
-                                    Notfound = false;
-                                    return
-                                }
-                            }
-                        }
+                        if (commands[i].flags) {
+    for (let k = 0; k < commands[i].flags.length; k++) {
+        // Check if the name of the flag matches any command in the command array
+        if (command.includes(commands[i].flags[k].name)) {
+            // Call the do_it method on the flag object
+            commands[i].flags[k].do_it();
+        }
+    }
+}
+
 
                         param = command.splice(1).join(" ");
                         console.log(param);
@@ -397,33 +416,41 @@
             prompt.innerHTML = text;
             document.querySelector(".output").appendChild(prompt);
         }
+    function help(command) {
+        let prompt = document.createElement("div");
+        prompt.innerHTML = "";
 
-        function help(command) {
+        for (let i = 0; i < commands.length; i++) {
+            if (command === commands[i].names[0]) {
+                console.log("found command", commands[i].names[0]);
+                let info = "";
+                
 
-    let prompt = document.createElement("div");
-    prompt.innerHTML = "";
-    for (let i = 0; i < commands.length; i++) {
-        
-        if (command === commands[i].names[0]) {
-            console.log("found command", commands[i].names[0]);
-            let info = "";
-            // Display flags and description for the specified command
-            for (let key in commands[i].flags) {
-                info += key + " : " + commands[i].flags[key] + "<br>";
+                // Check if flags exist for the specified command
+                if (commands[i].flags) {
+                    console.log("flags found", commands[i].flags);
+                    for (let j = 0; j < commands[i].flags.length; j++) {
+                        // Concatenate flag information
+                        info += commands[i].flags[j].name + " : " + commands[i].flags[j].description + "<br>";
+                    }
+                }
+
+                // Concatenate command description and flag information
+                prompt.innerHTML = command + ": " + commands[i].description + "<br>" + info;
+                console.log(info, "info", commands[i].description);
+
+                // Append the prompt to the output element
+                document.querySelector(".output").appendChild(prompt);
+                return;
+            } else {
+                // Display all available commands with their descriptions
+                prompt.innerHTML += commands[i].names[0] + " : " + commands[i].description + "<br>";
             }
-            // info += commands[i].description;
-            prompt.innerHTML =  command + ": "+ info;
-            console.log(info, "info" , commands[i].description);
-            document.querySelector(".output").appendChild(prompt);
-            return;
-        } else {
-            // Display all available commands with their descriptions
-            prompt.innerHTML += commands[i].names[0] + " : " + commands[i].description + "<br>";
         }
-    }
-    document.querySelector(".output").appendChild(prompt);
-}
 
+        // Append the prompt to the output element outside the loop
+        document.querySelector(".output").appendChild(prompt);
+    }
 
 
 
