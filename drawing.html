@@ -114,26 +114,51 @@
 
             }
 
-            for (let i = 1; i < layers.length; i++) {
+            for (let i = 0; i < layers.length; i++) {
                 let button = document.createElement('button');
+                button.classList.add('layer-button');
+
+                button.innerText = i+1;
                 if (i == 1) {
                     button.classList.add('selected');
                 }
-                button.innerText = i;
                 button.addEventListener('click', () => {
-                    currentLayer = i;
-                    let buttons = document.querySelectorAll('button');
-                    buttons.forEach((button) => {
-                        button.classList.remove('selected');
-                    });
-                    button.classList.add('selected');
+                    select_layer(i)
 
                 });
                 document.getElementById('button-grid').appendChild(button);
             }
 
 
+            let add_layer_button = document.createElement('button');
+            add_layer_button.innerText = '+';
+            add_layer_button.addEventListener('click', () => {
+                layers.push([]);
+                let button = document.createElement('button');
+                button.classList.add('layer-button');
+                button.innerText = layers.length;
+                let value = layers.length;
+                button.addEventListener('click', () => {
+
+                    select_layer(value-1);
+                });
+                document.getElementById('button-grid').appendChild(button);
+            });
+            document.getElementById('button-grid').appendChild(add_layer_button);
+
+
+
         });
+
+        function select_layer(layer){
+                    currentLayer = layer
+                    let buttons = document.getElementsByClassName('layer-button');
+                    for (let i = 0; i < buttons.length; i++) {
+                        console.log(buttons[i]);
+                        buttons[i].classList.remove('selected');
+                    }
+                    buttons[currentLayer].classList.add('selected');
+        }
 
         function hex(x) {
             return ("0" + parseInt(x).toString(16)).slice(-2);
