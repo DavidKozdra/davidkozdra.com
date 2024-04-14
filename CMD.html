@@ -26,7 +26,7 @@
             font-size: 1rem;
             background-color: transparent;
             border: none;
-            color : limegreen;
+            color: limegreen;
             width: 100%;
             padding: 20px;
             height: 2px;
@@ -58,8 +58,6 @@
             border-radius: 5px;
             overflow: scroll\;
         }
-
-      
     </style>
 </head>
 
@@ -69,89 +67,89 @@
 
 
     </div>
-    
 
-    <div class="row-container" id="input-container"> 
-        <p class="fileDisplay">></p> 
-        <input class="input" contenteditable onkeydown="enterCommand()"> 
-    
+
+    <div class="row-container" id="input-container">
+        <p class="fileDisplay">></p>
+        <input class="input" contenteditable onkeydown="enterCommand()">
+
     </div>
 
     <script>
 
         // if the mouse is down I want to focus on the input
         document.querySelector("input").focus();
-        document.addEventListener("mousedown", function(){
+        document.addEventListener("mousedown", function () {
             //this does not work 
-    document.querySelector("input").focus();
-});
+            document.querySelector("input").focus();
+        });
 
 
         let history = localStorage.getItem("history") == null ? [] : JSON.parse(localStorage.getItem("history"));
         let historyIndex = 0;
 
         // tree file system
-        let fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"testing lol2 "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
-        
+        let fileSystem = (localStorage.getItem("fileSystem") == null) ? [{ dir: "/", files: [{ name: "text.txt", content: "testing lol", dir: false }, { name: "home", dir: true }] }, { dir: "home", files: [{ name: "text2.txt", content: "testing lol2 " }] }] : JSON.parse(localStorage.getItem("fileSystem"));
+
         let currentDir = "/";
         let commands = [
-            {names:["clear"], description:"clears the screen" , function:clear},
-            {names:["help"], description:"displays this help message" , function:help},
-            {names:["print"], description:"prints the text after the command" , function:print},
-            {names:["cd"], description:"changes the current directory" , function:changeDir},
-            {names:["ls"], description:"lists the files in the current directory" , function:displayDirContent},
-            {names:["mkdir"], description:"creates a new directory" , function:makeADIR},
-            {names:["cat"], description:"displays the content of a file" , function:DisplayFileContent},
-            {names:["touch"], description:"creates a new file" , function:makeAFile},
-            {names:["history"], description:"displays the history of commands" , function:display_history, flags:[ {description: "clears the history of commands", name: "-c", do_it:clearHistory }]},
-            {names:["alias"], description:"rename a command" , function:addNewNameForCommand},
-            {names:["edit"], description:"edit a file press esc to save" , function:edit_file},
+            { names: ["clear"], description: "clears the screen", function: clear },
+            { names: ["help"], description: "displays this help message", function: help },
+            { names: ["print"], description: "prints the text after the command", function: print },
+            { names: ["cd"], description: "changes the current directory", function: changeDir },
+            { names: ["ls"], description: "lists the files in the current directory", function: displayDirContent },
+            { names: ["mkdir"], description: "creates a new directory", function: makeADIR },
+            { names: ["cat"], description: "displays the content of a file", function: DisplayFileContent },
+            { names: ["touch"], description: "creates a new file", function: makeAFile },
+            { names: ["history"], description: "displays the history of commands", function: display_history, flags: [{ description: "clears the history of commands", name: "-c", do_it: clearHistory }] },
+            { names: ["alias"], description: "rename a command", function: addNewNameForCommand },
+            { names: ["edit"], description: "edit a file press esc to save", function: edit_file },
         ]
-        
-        function edit_file(file){
-           /*
-                take this file and get the txt content
-                then display it in a text area
-                then save it back to the file
-           */
+
+        function edit_file(file) {
+            /*
+                 take this file and get the txt content
+                 then display it in a text area
+                 then save it back to the file
+            */
 
 
 
-              // save text
-              out = ""
-              found = false;
-                for(let i = 0; i < fileSystem.length; i++){
-                    if(fileSystem[i].dir == currentDir){
-                        for(let j = 0; j < fileSystem[i].files.length; j++){
-                            if(fileSystem[i].files[j].name == file){
-                                out += fileSystem[i].files[j].content;
-                                found = true;
-                            }
+            // save text
+            out = ""
+            found = false;
+            for (let i = 0; i < fileSystem.length; i++) {
+                if (fileSystem[i].dir == currentDir) {
+                    for (let j = 0; j < fileSystem[i].files.length; j++) {
+                        if (fileSystem[i].files[j].name == file) {
+                            out += fileSystem[i].files[j].content;
+                            found = true;
                         }
                     }
                 }
+            }
 
-            if(!found){
+            if (!found) {
                 print("File not found");
                 return
             }
 
-           let editArea = document.createElement("textarea");
-           editArea.value = out;
-           document.querySelector(".output").appendChild(editArea);
+            let editArea = document.createElement("textarea");
+            editArea.value = out;
+            document.querySelector(".output").appendChild(editArea);
 
             // command input turn off
             let input = document.getElementById("input-container")
             input.style.display = "none";
 
-            
-            editArea.addEventListener("keydown", function(event){
-                if(event.keyCode == 27){
+
+            editArea.addEventListener("keydown", function (event) {
+                if (event.keyCode == 27) {
                     //save the file
-                    for(let i = 0; i < fileSystem.length; i++){
-                        if(fileSystem[i].dir == currentDir){
-                            for(let j = 0; j < fileSystem[i].files.length; j++){
-                                if(fileSystem[i].files[j].name == file){
+                    for (let i = 0; i < fileSystem.length; i++) {
+                        if (fileSystem[i].dir == currentDir) {
+                            for (let j = 0; j < fileSystem[i].files.length; j++) {
+                                if (fileSystem[i].files[j].name == file) {
                                     fileSystem[i].files[j].content = editArea.value;
                                 }
                             }
@@ -160,27 +158,27 @@
 
                     //remove the text area
                     editArea.remove();
-                        // command input turn on
-                // command input turn off
-                input.style.display = "flex";
+                    // command input turn on
+                    // command input turn off
+                    input.style.display = "flex";
                 }
             });
 
         }
 
-        function changeDir(dir){
-            if(dir == ".."){
+        function changeDir(dir) {
+            if (dir == "..") {
                 let parent = ""
                 //need to go to the parent dir
                 for (let i = 0; i < fileSystem.length; i++) {
                     // search for each dir in dirs for each directory
                     for (let j = 0; j < fileSystem[i].files.length; j++) {
-                        if(fileSystem[i].files[j].name == currentDir){
+                        if (fileSystem[i].files[j].name == currentDir) {
                             parent = fileSystem[i].dir;
                         }
                     }
                 }
-                if(parent == ""){
+                if (parent == "") {
                     print("Directory not found are you at / this is the root directory silly billy ;)");
                     return
                 }
@@ -191,7 +189,7 @@
 
             //check if dir exists
             for (let i = 0; i < fileSystem.length; i++) {
-                if(fileSystem[i].dir == dir){
+                if (fileSystem[i].dir == dir) {
                     //this should be parent
                     currentDir = fileSystem[i].dir;
                     return
@@ -202,53 +200,53 @@
 
         }
 
-        function display_history(){
-            for(let i = 0; i < history.length; i++){
+        function display_history() {
+            for (let i = 0; i < history.length; i++) {
                 print(history[i]);
             }
         }
 
-        function clearHistory(){
+        function clearHistory() {
             print("clearing history");
             history = [];
             localStorage.setItem("history", JSON.stringify(history));
         }
 
-        function displayDirContent(dir){
+        function displayDirContent(dir) {
             // bro what does this do?
             dir ? dir = dir : dir = currentDir;
             // if ls is called 
             let out = ""
-                for(let i = 0; i < fileSystem.length; i++){
-                    if(fileSystem[i].dir == dir){
-                        for(let j = 0; j < fileSystem[i].files.length; j++){
-                            // check if current item is a dir
-                            if(fileSystem[i].files[j].dir){
-                                out += "<span class='dir'>" + fileSystem[i].files[j].name + "</span> ";
-                            }else{
+            for (let i = 0; i < fileSystem.length; i++) {
+                if (fileSystem[i].dir == dir) {
+                    for (let j = 0; j < fileSystem[i].files.length; j++) {
+                        // check if current item is a dir
+                        if (fileSystem[i].files[j].dir) {
+                            out += "<span class='dir'>" + fileSystem[i].files[j].name + "</span> ";
+                        } else {
 
-                                out += fileSystem[i].files[j].name + " ";
-                            }
+                            out += fileSystem[i].files[j].name + " ";
+                        }
                     }
                 }
             }
             print(out);
         }
 
-        function addNewNameForCommand(command, Newname){
+        function addNewNameForCommand(command, Newname) {
             for (let i = 0; i < commands.length; i++) {
-                if(commands[i].names[0] == command){
+                if (commands[i].names[0] == command) {
                     commands[i].names.push(Newname);
                 }
             }
         }
-        
-        function makeADIR(dir){
+
+        function makeADIR(dir) {
             let parentDir = "";
             //check if dir exists
             for (let i = 0; i < fileSystem.length; i++) {
-            
-                if(fileSystem[i].dir == dir){
+
+                if (fileSystem[i].dir == dir) {
                     //this should be parent
                     print("Directory already exists");
                     return
@@ -257,36 +255,36 @@
 
 
             //add to current 
-            
+
             for (let i = 0; i < fileSystem.length; i++) {
-                if(fileSystem[i].dir == currentDir){
+                if (fileSystem[i].dir == currentDir) {
                     //this should be parent
-                    fileSystem[i].files.push({name:dir, dir:true});
+                    fileSystem[i].files.push({ name: dir, dir: true });
                 }
             }
 
             //create a new dir
-            fileSystem.push({dir:dir, files:[]});
+            fileSystem.push({ dir: dir, files: [] });
             print("Directory created");
         }
 
-        function makeAFile(file){
+        function makeAFile(file) {
             let parentDir = "";
             //check if dir exists
             for (let i = 0; i < fileSystem.length; i++) {
-            
-                if(fileSystem[i].dir == file){
+
+                if (fileSystem[i].dir == file) {
                     //this should be parent
                     print("File already exists");
                     return
                 }
             }
-            
+
             //add to current
             for (let i = 0; i < fileSystem.length; i++) {
-                if(fileSystem[i].dir == currentDir){
+                if (fileSystem[i].dir == currentDir) {
                     //this should be parent
-                    fileSystem[i].files.push({name:file, dir:false});
+                    fileSystem[i].files.push({ name: file, dir: false });
                 }
             }
         }
@@ -294,18 +292,18 @@
         evalCommands("help");
 
 
-        function DisplayFileContent(file){
+        function DisplayFileContent(file) {
             // if ls is called 
             let out = ""
-                for(let i = 0; i < fileSystem.length; i++){
-                    if(fileSystem[i].dir == currentDir){
-                        for(let j = 0; j < fileSystem[i].files.length; j++){
-                            if(fileSystem[i].files[j].name == file){
-                                out += fileSystem[i].files[j].content;
-                            }
+            for (let i = 0; i < fileSystem.length; i++) {
+                if (fileSystem[i].dir == currentDir) {
+                    for (let j = 0; j < fileSystem[i].files.length; j++) {
+                        if (fileSystem[i].files[j].name == file) {
+                            out += fileSystem[i].files[j].content;
                         }
                     }
                 }
+            }
             print(out);
         }
 
@@ -315,7 +313,7 @@
                 let command = document.querySelector("input").value;
 
                 if (command == "" || !command.trim()) {
-                return
+                    return
                 }
                 print(command);
                 evalCommands(command);
@@ -351,7 +349,7 @@
             // find or get rid of "" and " " or just spaces in side each item of command
             for (let i = 0; i < command.length; i++) {
                 //remove from array if is "" or " "
-                if (!command[i].trim() || command[i].match(pattern))  {
+                if (!command[i].trim() || command[i].match(pattern)) {
                     // If empty, remove the element from the array
                     command.splice(i, 1);
                 }
@@ -367,14 +365,14 @@
                         //check flags
                         //for flags in this command, for the command[1 and after]
                         if (commands[i].flags) {
-    for (let k = 0; k < commands[i].flags.length; k++) {
-        // Check if the name of the flag matches any command in the command array
-        if (command.includes(commands[i].flags[k].name)) {
-            // Call the do_it method on the flag object
-            commands[i].flags[k].do_it();
-        }
-    }
-}
+                            for (let k = 0; k < commands[i].flags.length; k++) {
+                                // Check if the name of the flag matches any command in the command array
+                                if (command.includes(commands[i].flags[k].name)) {
+                                    // Call the do_it method on the flag object
+                                    commands[i].flags[k].do_it();
+                                }
+                            }
+                        }
 
 
                         param = command.splice(1).join(" ");
@@ -384,7 +382,7 @@
                     }
                 }
             }
-            
+
 
             if (Notfound) {
                 print("Command not found");
@@ -401,7 +399,7 @@
             historyIndex = 0;
             input.value = "";
             input.focus();
-            
+
             localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
 
 
@@ -416,41 +414,41 @@
             prompt.innerHTML = text;
             document.querySelector(".output").appendChild(prompt);
         }
-    function help(command) {
-        let prompt = document.createElement("div");
-        prompt.innerHTML = "";
+        function help(command) {
+            let prompt = document.createElement("div");
+            prompt.innerHTML = "";
 
-        for (let i = 0; i < commands.length; i++) {
-            if (command === commands[i].names[0]) {
-                console.log("found command", commands[i].names[0]);
-                let info = "";
-                
+            for (let i = 0; i < commands.length; i++) {
+                if (command === commands[i].names[0]) {
+                    console.log("found command", commands[i].names[0]);
+                    let info = "";
 
-                // Check if flags exist for the specified command
-                if (commands[i].flags) {
-                    console.log("flags found", commands[i].flags);
-                    for (let j = 0; j < commands[i].flags.length; j++) {
-                        // Concatenate flag information
-                        info += commands[i].flags[j].name + " : " + commands[i].flags[j].description + "<br>";
+
+                    // Check if flags exist for the specified command
+                    if (commands[i].flags) {
+                        console.log("flags found", commands[i].flags);
+                        for (let j = 0; j < commands[i].flags.length; j++) {
+                            // Concatenate flag information
+                            info += commands[i].flags[j].name + " : " + commands[i].flags[j].description + "<br>";
+                        }
                     }
+
+                    // Concatenate command description and flag information
+                    prompt.innerHTML = command + ": " + commands[i].description + "<br>" + info;
+                    console.log(info, "info", commands[i].description);
+
+                    // Append the prompt to the output element
+                    document.querySelector(".output").appendChild(prompt);
+                    return;
+                } else {
+                    // Display all available commands with their descriptions
+                    prompt.innerHTML += commands[i].names[0] + " : " + commands[i].description + "<br>";
                 }
-
-                // Concatenate command description and flag information
-                prompt.innerHTML = command + ": " + commands[i].description + "<br>" + info;
-                console.log(info, "info", commands[i].description);
-
-                // Append the prompt to the output element
-                document.querySelector(".output").appendChild(prompt);
-                return;
-            } else {
-                // Display all available commands with their descriptions
-                prompt.innerHTML += commands[i].names[0] + " : " + commands[i].description + "<br>";
             }
-        }
 
-        // Append the prompt to the output element outside the loop
-        document.querySelector(".output").appendChild(prompt);
-    }
+            // Append the prompt to the output element outside the loop
+            document.querySelector(".output").appendChild(prompt);
+        }
 
 
 

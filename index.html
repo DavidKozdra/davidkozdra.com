@@ -156,8 +156,12 @@
 
   <script>
 
+    var fileSystem;
+
 document.addEventListener('DOMContentLoaded', () => {
 
+ fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"testing lol2 "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
+        
   window.addEventListener('message', (event) => {
     receiveMessage(event)
   }, false);
@@ -165,6 +169,37 @@ document.addEventListener('DOMContentLoaded', () => {
   desktopIconRouter(null, "System");
 
   desktopIconRouter(null, "empty");
+
+
+  // render the file system if it has content
+  // it should act as a notes icon with the file name as the name
+  // and the content as the content
+  
+  for(let i = 0; i < fileSystem.length; i++){
+    for(let j = 0; j < fileSystem[i].files.length; j++){
+      if (fileSystem[i].files[j].dir) {
+        continue;
+      }
+      let file = fileSystem[i].files[j];
+      let icon = document.createElement("div");
+      icon.classList.add("desktop-icon");
+      icon.onclick = function(){
+        selectIcon(event);
+      };
+      icon.ondblclick = function(){
+        desktopIconRouter(event, "notes",  file.name , {content: file.content, parent: fileSystem[i].dir});
+      };
+      let img = document.createElement("img");
+      img.src = "./images/Notes.png";
+      let text = document.createElement("div");
+      text.classList.add("icon-text");
+      text.contentEditable = "true";
+      text.innerHTML = file.name;
+      icon.appendChild(img);
+      icon.appendChild(text);
+      document.getElementById("desktop").appendChild(icon);
+    }
+  }
 });
 
     let desktopIcons = document.getElementsByClassName("desktop-icon");
@@ -575,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function desktopIconRouter(e, newWindowHeaderTitle) {
+    async function desktopIconRouter(e, newWindowHeaderTitle, newTitle=undefined,data=undefined) {
       // Set the cursor to the waiting state
       if(e != null){
         setCursor(e);
@@ -640,6 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "notes":
           let notes = document.createElement("div");
+       
           notes.classList.add("notes");
           notes.name = "note pad";
           notes.title = "note pad";
@@ -648,13 +684,30 @@ document.addEventListener('DOMContentLoaded', () => {
           textArea.rows = "25";
           textArea.cols = "45";
           textArea.placeholder = "Enter your notes here";
+          if (data) {
+            console.log(data);
+            textArea.textContent = data.content;
+            console.log(textArea.value);
+          }
           // local storage for notes get and set on change of value 
           textArea.onchange = function () {
-            localStorage.setItem("notes", textArea.value);
+            
+            //find this file and update the content
+            for (let i = 0; i < fileSystem.length; i++) {
+                if (fileSystem[i].dir == data.parent) {
+                    for (let j = 0; j < fileSystem[i].files.length; j++) {
+                        if (fileSystem[i].files[j].name == newTitle) {
+                            fileSystem[i].files[j].content = textArea.value;
+                        }
+                    }
+                }
+            }
+            //save in local storage
+            
+            localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
           };
-          textArea.value = localStorage.getItem("notes");
           notes.appendChild(textArea);
-          createWindow("Notes", notes, "./images/Notes.png", 500);
+          createWindow( newTitle ? newTitle : "Notes" , notes, "./images/Notes.png", 500);
           break;
 
 
