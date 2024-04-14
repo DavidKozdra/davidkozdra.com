@@ -27,6 +27,9 @@
             background-color: transparent;
             border: none;
             color : limegreen;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px dotted limegreen;
         }
 
         input:focus {
@@ -62,6 +65,14 @@
     </div>
 
     <script>
+
+        // if the mouse is down I want to focus on the input
+        document.querySelector("input").focus();
+        document.addEventListener("mousedown", function(){
+    document.querySelector("input").focus();
+});
+
+
         let history = [];
         let historyIndex = 0;
 
