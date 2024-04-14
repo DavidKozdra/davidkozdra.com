@@ -101,10 +101,26 @@
             { names: ["mkdir"], description: "creates a new directory", function: makeADIR },
             { names: ["cat"], description: "displays the content of a file", function: DisplayFileContent },
             { names: ["touch"], description: "creates a new file", function: makeAFile },
+            { names: ["rm"], description: "removes a file", function: removeFile},
             { names: ["history"], description: "displays the history of commands", function: display_history, flags: [{ description: "clears the history of commands", name: "-c", do_it: clearHistory }] },
             { names: ["alias"], description: "rename a command", function: addNewNameForCommand },
             { names: ["edit"], description: "edit a file press esc to save", function: edit_file },
         ]
+
+        function removeFile(file) {
+            // remove file
+            for (let i = 0; i < fileSystem.length; i++) {
+                if (fileSystem[i].dir == currentDir) {
+                    for (let j = 0; j < fileSystem[i].files.length; j++) {
+                        if (fileSystem[i].files[j].name == file) {
+                            fileSystem[i].files.splice(j, 1);
+                        }
+                    }
+                }
+            }
+            //save file system
+            localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+        }
 
         function edit_file(file) {
             /*
