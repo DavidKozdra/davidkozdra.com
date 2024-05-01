@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Red Chat - Confirmation Code</title>
+    <style>
+        /* Reset styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+
+        /* Wrapper */
+        .wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Content */
+        .content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Confirmation Code */
+        .confirmation-code {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ff0000; /* Red color for emphasis */
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+
+        /* Social Icons */
+        .social-icons {
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin-right: 10px;
+            text-decoration: none;
+            color: #777;
+        }
+
+        .social-icons a img {
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <img src="https://www.redchip.com/assets/images/corporate/redchip-logo.png" alt="Red Chat" style="display: block; margin: 0 auto; margin-bottom: 20px;">
+            <h1>Red Chat - Your Confirmation Code</h1>
+        </div>
+        <div class="content">
+            <p>Thank you for choosing Red Chat! To complete your registration/verification, please use the following confirmation code:</p>
+            <div class="confirmation-code">
+                <strong>Confirmation Code:</strong> {{verification_code}}
+            </div>
+            <p>Please enter this code on our Red Chat app to verify your email and access your account.</p>
+            <p>If you did not request this code or have any questions, please contact our support team immediately at <a href="mailto:support@redchat.com">support@redchat.com</a>.</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for choosing Red Chat. We look forward to providing you with a seamless messaging experience!</p>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/RedChipCompanies"><img src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-128.png" alt="Facebook"></a>
+                <a href="https://twitter.com/RedChipCompanies"><img src="https://cdn4.iconfinder.com/data/icons/social-media-black-white-2/1227/X-256.png" alt="Twitter"></a>
+                <a href="https://www.youtube.com/@redchip"><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-256.png" alt="YouTube"></a>
+                <a href="mailto:info@redchip.com"><img src="https://cdn0.iconfinder.com/data/icons/social-circle-3/72/Email-256.png" alt="Email"></a>
+            </div>
+            <p>Our mailing address is:<br>RedChip Companies, Inc.<br>431 E Horatio Ave, Ste 100, Maitland, FL 32751</p>
+            <p>Copyright © 2024 RedChip Companies, Inc. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

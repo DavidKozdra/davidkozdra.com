@@ -160,7 +160,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
- fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"testing lol2 "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
+ fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"file 2 write waht you want and it will save "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
         
   window.addEventListener('message', (event) => {
     receiveMessage(event)
