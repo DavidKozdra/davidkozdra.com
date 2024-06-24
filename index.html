@@ -115,6 +115,11 @@
           <img src="./images/Term.png" alt="desktop icon of a computer terminal black and lime green"></img>
           <p contenteditable="true" class="icon-text"> Terminal</p>
         </div>
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dragon_game')"  
+        o tabindex="0">
+        <img src="./images/dragon_fighter.png" alt="desktop icon of a computer terminal black and lime green"></img>
+        <p contenteditable="true" class="icon-text"> dragon fighter balls</p>
+      </div>
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" 
            tabindex="0">
           <img src="./images/Pallet.png" alt="Art Pallet drawing in pixel art"></img>
@@ -675,6 +680,15 @@ document.addEventListener('DOMContentLoaded', () => {
           calculator.style.height = "100%";
           calculator.style.width = "100%";
           createWindow("Calculator", calculator, "./images/Calc.png", 400, false);
+          break;
+        case "dragon_game":
+          let game = document.createElement("iframe");
+          game.name = "dragon_game";
+          game.title = "dragon_game";
+          game.src = "https://main.d3722xrzul5kke.amplifyapp.com/";
+          game.style.height = "100%";
+          game.style.width = "100%";
+          createWindow("Dragon Fighters Balls", game, "./images//dragon_fighter.png", 800, false);
           break;
 
         case "notes":
