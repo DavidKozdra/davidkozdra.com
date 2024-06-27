@@ -163,6 +163,29 @@
 
     var fileSystem;
 
+
+    async function getFavicon(url) {
+  try {
+    // Fetch the HTML content of the URL
+    let response = await fetch(url);
+    let htmlText = await response.text();
+
+    // Parse the HTML content
+    let parser = new DOMParser();
+    let doc = parser.parseFromString(htmlText, 'text/html');
+
+    // Find the favicon link
+    let iconLink = doc.querySelector("link[rel~='icon']");
+
+    // Get the favicon URL
+    let faviconUrl = iconLink ? iconLink.href : '/favicon.ico'; // Default to /favicon.ico if not found
+    return faviconUrl;
+  } catch (error) {
+    console.error('Error fetching favicon:', error);
+    return null;
+  }
+}
+
     function loadUserCustoms(){
       let userCustoms = (localStorage.getItem("userCustoms") == null ) ? [] : JSON.parse(localStorage.getItem("userCustoms"));
 
@@ -210,6 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('message', (event) => {
     receiveMessage(event)
   }, false);
+
+
 
   desktopIconRouter(null, "System");
 
@@ -805,14 +830,10 @@ document.addEventListener('DOMContentLoaded', () => {
           // add a window with the correct user data
           //the iframe is sent in the data object
 
-          let error = document.createElement("iframe");
-          error.name = "your icon";
-
-          error.title = "your icon";
-          error.src = data;
-          error.style.height = "100%";
-          error.style.width = "100%";
-          createWindow(newTitle, data, "./images/favicon.ico", 800);
+  
+          getFavicon(data).then((favicon) => {
+            createWindow(newTitle, data, favicon, 800);
+          });
 
         case "draw":
           let draw = document.createElement("iframe");
@@ -838,7 +859,17 @@ document.addEventListener('DOMContentLoaded', () => {
           init()
           break;
         default:
-          console.error("Window not found");
+          // add window with the correct user data
+          //the iframe is sent in the data object
+          let iframe_custom2 = document.createElement("iframe");
+          iframe_custom2.name = "your icon";
+          iframe_custom2.title = "your icon";
+          iframe_custom2.style.height = "100%";
+          iframe_custom2.style.width = "100%";
+          iframe_custom2.src = data;
+
+
+          createWindow(newWindowHeaderTitle, iframe_custom2, "./images/favicon.ico", 800);
           break;
       }
 
@@ -1075,6 +1106,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Enable the selected stylesheet in the parent document
         document.getElementById(event.data.stylesheetId).disabled = false;
 
+      }
+
+      else if (event.name=="change_desktop_icons_custom") {
+        loadUserCustoms()
       }
     }
 
