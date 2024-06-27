@@ -410,6 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
     userCustoms.push({ name: input.value, data: url_input.value, icon: "./images/Settings.png" });
     localStorage.setItem("userCustoms", JSON.stringify(userCustoms));
     alert("Settings saved!");
+
+    window.parent.postMessage( "change_desktop_icons_custom" , '*');
   };
 
   // Append the inputs and submit button to the form
@@ -420,20 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Append the form to the container
   container.appendChild(form);
 
-  const removeItem = (index) => {
-    let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
-    userCustoms.splice(index, 1);
-    localStorage.setItem("userCustoms", JSON.stringify(userCustoms));
-  };
-
-  const editItem = (index) => {
-    let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
-    let item = userCustoms[index];
-    input.value = item.name;
-    url_input.value = item.data;
-    removeItem(index);
-  };
-
+ 
 
     // add a function to list in settings as components all the userCustoms and add remove and edit functionallity that is toggled by a button
     let userCustomsItem = document.createElement("div");
@@ -445,6 +434,8 @@ if (userCustoms) {
   
   userCustoms.forEach((item, index) => {
     let userCustomsItem = document.createElement("div");
+
+    
     userCustomsItem.innerHTML = `
       <img src="${item.icon}" alt="${item.name}" />
       <h3>${item.name}</h3>
@@ -457,6 +448,26 @@ if (userCustoms) {
   container.appendChild(itemsScrollViewer);
 }
   });
+    }
+
+    function removeItem(index) {
+      let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
+      userCustoms.splice(index, 1);
+      localStorage.setItem("userCustoms", JSON.stringify(userCustoms));
+      
+      window.parent.postMessage( "change_desktop_icons_custom" , '*');
+    }
+
+    function editItem(index) {
+      let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
+      let item = userCustoms[index];
+      let form = document.querySelector("form");
+      form.querySelector("input[name='Title']").value = item.name;
+      form.querySelector("input[name='url']").value = item.data;
+      userCustoms.splice(index, 1);
+      localStorage.setItem("userCustoms", JSON.stringify(userCustoms));
+
+      window.parent.postMessage( "change_desktop_icons_custom" , '*');
     }
 
   

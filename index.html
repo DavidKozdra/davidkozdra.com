@@ -176,8 +176,8 @@
 
     // Find the favicon link
     let iconLink = doc.querySelector("link[rel~='icon']");
-
-    // Get the favicon URL
+    console.log(iconLink);
+    // Get the favicon URL  
     let faviconUrl = iconLink ? iconLink.href : '/favicon.ico'; // Default to /favicon.ico if not found
     return faviconUrl;
   } catch (error) {
@@ -187,6 +187,7 @@
 }
 
     function loadUserCustoms(){
+
       let userCustoms = (localStorage.getItem("userCustoms") == null ) ? [] : JSON.parse(localStorage.getItem("userCustoms"));
 
 if (userCustoms) {
@@ -868,8 +869,9 @@ document.addEventListener('DOMContentLoaded', () => {
           iframe_custom2.style.width = "100%";
           iframe_custom2.src = data;
 
-
-          createWindow(newWindowHeaderTitle, iframe_custom2, "./images/favicon.ico", 800);
+          let fav = await getFavicon(data)
+          console.log(fav)
+          createWindow(newWindowHeaderTitle, iframe_custom2, fav, 800);
           break;
       }
 
