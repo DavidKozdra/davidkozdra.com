@@ -163,7 +163,47 @@
 
     var fileSystem;
 
+    function loadUserCustoms(){
+      let userCustoms = (localStorage.getItem("userCustoms") == null ) ? [] : JSON.parse(localStorage.getItem("userCustoms"));
+
+if (userCustoms) {
+  for (let i = 0; i < userCustoms.length; i++) {
+    let icon = document.createElement("div");
+    icon.classList.add("desktop-icon");
+    icon.onclick = function(){
+      selectIcon(event);
+    };
+    icon.ondblclick = function(){
+      console.log(userCustoms[i].name);
+      console.log(userCustoms[i].data);
+      desktopIconRouter(event, userCustoms[i].name, userCustoms[i].name, userCustoms[i].data);
+    };
+    let img = document.createElement("img");
+    img.src = userCustoms[i].icon;
+    let text = document.createElement("div");
+    text.classList.add("icon-text");
+    text.contentEditable = "true";
+    text.innerHTML = userCustoms[i].name;
+    icon.appendChild(img);
+    icon.appendChild(text);
+
+    //init drag
+    dragElement(icon, icon);
+
+    //add to the grid
+    document.getElementsByClassName("desktop-grid")[0].appendChild(icon);
+  }
+
+}
+    }
+
 document.addEventListener('DOMContentLoaded', () => {
+
+// lets load the user customs desktop icons
+// render them 
+
+  loadUserCustoms();
+
 
  fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"file 2 write waht you want and it will save "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
         
@@ -619,6 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    
     async function desktopIconRouter(e, newWindowHeaderTitle, newTitle=undefined,data=undefined) {
       // Set the cursor to the waiting state
       if(e != null){
@@ -631,7 +672,16 @@ document.addEventListener('DOMContentLoaded', () => {
       // Now the delay is complete, proceed to open the window
       switch (newWindowHeaderTitle) {
         case "test":
-          createWindow("Test", "This is a test window", "./images/blocks.jpg", false);
+          console.log("data", data)
+          // make an iframe
+          let iframe_custom = document.createElement("iframe");
+          iframe_custom.name = "your icon";
+          iframe_custom.title = "your icon";
+          iframe_custom.style.height = "100%";
+          iframe_custom.style.width = "100%";
+          iframe_custom.src = data;
+          //could be user data
+          createWindow(newWindowHeaderTitle , iframe_custom, "./images/favicon.ico", 800);
           break;
           case "empty": 
           createWindow("empty", null, "./images/Term.png", 800);
@@ -751,7 +801,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         case "error":
-          createWindow("Error", "This is a test window", "./images/drawIcon.png", 200);
+          
+          // add a window with the correct user data
+          //the iframe is sent in the data object
+
+          let error = document.createElement("iframe");
+          error.name = "your icon";
+
+          error.title = "your icon";
+          error.src = data;
+          error.style.height = "100%";
+          error.style.width = "100%";
+          createWindow(newTitle, data, "./images/favicon.ico", 800);
 
         case "draw":
           let draw = document.createElement("iframe");

@@ -140,6 +140,21 @@
     #settings button:hover {
       background-color: rgb(230, 230, 230);
     }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="submit"] {
+      padding: 10px;
+      border: 1px solid rgb(139, 198, 218);
+      border-radius: 5px;
+      font-size: 1.2rem;
+    }
   </style>
 
 
@@ -319,7 +334,7 @@
       <h1>Settings</h1>
       <button onclick="clearData()"> Clear Data</button>
 
-      <h1>Theme</h1>
+      <h1 id="theme-display">Theme</h1>
       <label>
         <input type="radio" name="styleToggle" id="modern" onclick="sendMessage('modern')"> Modern
       </label>
@@ -351,7 +366,100 @@
     }
 
     sendMessage(defaultStyleSheet);
+
+    
+document.addEventListener('DOMContentLoaded', () => {
+
+// make a component somewhere that adds a desktop icon to the desktop its a window
+// it will be an iframe with a simple input form for all the items of a userCustums object
+// !!!let container = document.createElement("div");
+  let container = document.getElementById("settings");
+  // Set container style
+
+  let h1 = document.createElement("h1");
+  h1.textContent = "Add a Custom Desktop Icon";
+  container.appendChild(h1);
+
+  // Create the form element
+  let form = document.createElement("form");
+
+  // Create the title input
+  let input = document.createElement("input");
+  input.type = "text";  // Correcting the input type
+  input.name = "Title";
+  input.placeholder = "Enter Title";
+
+  // Create the URL input
+  let url_input = document.createElement("input");
+  url_input.type = "url";
+  url_input.name = "url";
+  url_input.placeholder = "Enter URL";
+
+  // Create the submit button
+  let submit = document.createElement("input");
+  submit.type = "submit";
+  submit.value = "Submit";
+
+  // On submit, store the input data in local storage
+  submit.onclick = (event) => {
+    event.preventDefault(); // Prevent form submission
+    let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
+    if (!userCustoms) {
+      userCustoms = [];
     }
+    userCustoms.push({ name: input.value, data: url_input.value, icon: "./images/Settings.png" });
+    localStorage.setItem("userCustoms", JSON.stringify(userCustoms));
+    alert("Settings saved!");
+  };
+
+  // Append the inputs and submit button to the form
+  form.appendChild(input);
+  form.appendChild(url_input);
+  form.appendChild(submit);
+
+  // Append the form to the container
+  container.appendChild(form);
+
+  const removeItem = (index) => {
+    let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
+    userCustoms.splice(index, 1);
+    localStorage.setItem("userCustoms", JSON.stringify(userCustoms));
+  };
+
+  const editItem = (index) => {
+    let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
+    let item = userCustoms[index];
+    input.value = item.name;
+    url_input.value = item.data;
+    removeItem(index);
+  };
+
+
+    // add a function to list in settings as components all the userCustoms and add remove and edit functionallity that is toggled by a button
+    let userCustomsItem = document.createElement("div");
+
+let userCustoms = JSON.parse(localStorage.getItem("userCustoms"));
+if (userCustoms) {
+  let itemsScrollViewer = document.createElement("div");
+  itemsScrollViewer.style.overflow = "scroll";
+  
+  userCustoms.forEach((item, index) => {
+    let userCustomsItem = document.createElement("div");
+    userCustomsItem.innerHTML = `
+      <img src="${item.icon}" alt="${item.name}" />
+      <h3>${item.name}</h3>
+      <a href=${item.data}>${item.data}</a>
+      <button onclick="removeItem(${index})">Remove</button>
+      <button onclick="editItem(${index})">Edit</button>
+    `;
+    itemsScrollViewer.appendChild(userCustomsItem);
+  });
+  container.appendChild(itemsScrollViewer);
+}
+  });
+    }
+
+  
 
 
     function openTab(evt, tabName) {
@@ -377,6 +485,8 @@
     function clearData() {
       localStorage.clear();
       sessionStorage.clear();
+
+      // this is wrong we want to set our defults back to the default local store values/ or on first read set them 
       //location.reload();
 
     }
@@ -399,5 +509,3 @@
 
   </script>
 </body>
-
-</html>
