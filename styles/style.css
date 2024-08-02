@@ -199,27 +199,6 @@ time {
 }
 
 
-@media screen and (min-width: 70px) {
-  .embed-responsive{
-    display: none;
-  }
-
-  .resume-viewer-mobile{
-    display: block;
-  }
-}
-
-@media screen and (min-width: 600px) {
-  .embed-responsive{
-    display: block;
-  }
-
-  .resume-viewer-mobile{
-    display: none;
-  }
-}
-
-
 
 @media screen and (max-width: 600px) {
   .timeline ul li {
