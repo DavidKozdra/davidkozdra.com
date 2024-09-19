@@ -10,140 +10,267 @@
   <style id="modern">
     body {
       margin: 0;
-      padding-top: 20px;
       font-family: Arial, sans-serif;
-      height: 100vh;
-      background-color: rgb(243, 243, 243);
+      background-color: #f3f3f3;
     }
-
-    h1,
-    h2,
-    p {
+    h1, h2, p {
       margin: 0;
       padding: 0;
     }
-
     h1 {
       font-size: 2em;
       font-weight: bold;
-      color: black;
+      color: #000;
       text-align: center;
     }
-
     h2 {
       font-size: 1.5em;
-      color: black;
+      color: #000;
+      text-align: center;
     }
-
     p {
       font-size: 1.2em;
-      color: black;
+      color: #000;
+      text-align: center;
     }
-
     #intro {
-      padding: 10px;
-      overflow: none;
-      font-size: 1.2rem;
-      height: 150vh;
+      padding: 20px;
     }
-
-
-
     .tab {
       display: none;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      background-color: rgb(243, 243, 243);
     }
-
-    #tab-container {
-      display: flex;
-      flex-direction: row;
-      row-gap: 1px;
-      justify-content: center;
-      align-items: center;
-      column-gap: 0px;
-      row-gap: 0px;
-    }
-    @media (max-width: 400px) { /* Adjust the breakpoint value based on your design */
-  #tab-container {
-    flex-direction: column;
-  }
-}
-
-
-    .active {
+    .tab.active {
       display: block;
     }
+    #tab-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
 
+      position: sticky;
+    }
     .tab-button {
-      background-color: rgb(243, 243, 243);
+      background-color: #f3f3f3;
       border: none;
-      outline: none;
       cursor: pointer;
       font-size: 1.1rem;
       font-weight: bold;
-      padding: 10px;
+      padding: 10px 20px;
       margin: 10px;
       border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-
+      transition: background-color 0.3s;
     }
-
     .tab-button:hover {
-      background-color: rgb(230, 230, 230);
+      background-color: #e6e6e6;
     }
-
     .tab-button.active {
-      border-top: 5px solid rgb(208, 242, 255);
+      border-bottom: 3px solid #d0f2ff;
     }
-
-    #sys-about {
-      font-size: 1.2rem;
-      font-weight: bold;
+    .skills {
+      margin-top: 40px;
+    }
+    .skills-container {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 20px;
     }
-
-
-    a:visited {
-
-      color: rgb(69, 114, 129);
+    .skill-icon {
+      width: 100px;
+      height: 100px;
+      perspective: 1000px;
     }
-
+    .skill-icon .icon {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .skill-icon:hover .icon {
+      transform: rotateY(180deg);
+    }
+    .icon .front,
+    .icon .back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .icon .back {
+      transform: rotateY(180deg);
+    }
+    .icon img {
+      width: 80px;
+      height: 80px;
+    }
     a {
-
-      color: rgb(139, 198, 218);
+      color: #08b6f0;
+      text-decoration: none;
     }
-
     a:hover {
-
-      color: rgb(69, 114, 129);
+      color: #457281;
     }
-
-
-
-    #settings button {
-      background-color: rgb(243, 243, 243);
-      border: none;
-      outline: none;
-      cursor: pointer;
-      font-size: 1.2rem;
-      font-weight: bold;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    #settings {
+      font-size: 1.5em;
       
     }
 
+    #settings button {
+      background-color: #c5baba;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
     #settings button:hover {
-      background-color: rgb(230, 230, 230);
+      background-color: #e6e6e6;
+    }
+    .me {
+      display: block;
+      margin: 20px auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  </style>
+
+  <style id="retro" disabled>
+    body {
+      margin: 0;
+      font-family: "Courier New", Courier, monospace;
+      background-color: #000;
+      color: #aaff00;
+    }
+    h1, h2, p {
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2, p, a {
+      color: #aaff00;
+    }
+    #intro {
+      padding: 20px;
+    }
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+    #tab-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tab-button {
+      background-color: #333;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      color: #aaff00;
+      transition: background-color 0.3s;
+    }
+    .tab-button:hover {
+      background-color: #555;
+    }
+    .tab-button.active {
+      border-bottom: 3px solid #aaff00;
+    }
+    .skills-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    .skill-icon {
+      width: 100px;
+      height: 100px;
+      perspective: 1000px;
+    }
+    .skill-icon .icon {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .skill-icon:hover .icon {
+      transform: rotateY(180deg);
+    }
+    .icon .front,
+    .icon .back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .icon .back {
+      transform: rotateY(180deg);
+    }
+    .icon img {
+      width: 80px;
+      height: 80px;
+    }
+    a {
+      color: #aaff00;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #c7f866;
+    }
+    #settings button {
+      background-color: #333;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      color: #aaff00;
+      transition: background-color 0.3s;
+    }
+    #settings button:hover {
+      background-color: #555;
+    }
+    .me {
+      display: block;
+      margin: 20px auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
     }
   </style>
 
 
   <style id="retro">
+
+
     body {
       margin: 0;
       padding-top: 20px;
@@ -178,14 +305,12 @@
 
     a:visited {
 
-      color:  #84c208;
+      color:  rgb(158, 184, 118);
     }
 
-    a {
-
-      color: #aaff00;
-    }
-
+    a{
+  color: rgb(80, 116, 39);
+}
     a:hover {
 
       color:  #c7f866;
@@ -273,14 +398,95 @@
 
     </div>
 
-    <div class="tab active" id="welcome">
-      <h1>Welcome to DK OS 🖥️🖥️🖥️🖥️🖥️🖥️</h1>
-      <p>
-        Thank you for checking out my portfolio website. It is in the style of a Desktop Environment. <br> <br>
-        If you would like to see my take on a more traditional website :
-        <a href="index copy.html" target="_blank"> My Old website </a>
-      </p>
-    </div>
+
+    <div id="intro">
+
+  
+      <div class="tab active" id="welcome">
+
+      <img src="./images/ME.jpg" class="me" alt="A picture of me, a handsome man">
+        <h1>🖥️ Welcome to DK OS</h1>
+        <p>
+          I am <strong>David Kozdra</strong>, a Software Engineer currently working at
+          <a href="https://redchip.com" target="_blank">RedChip Companies</a>.
+        </p>
+        <p>
+          <a href="https://www.google.com/maps/place/Orlando,+FL/" target="_blank">
+            <i class="fas fa-map-marker-alt"></i> Orlando, Florida
+          </a>
+        </p>
+        <p>
+          <br>
+          Thank you for visiting my portfolio website, designed to resemble a desktop environment.
+          If you're interested in a more traditional website, please check out
+          <a href="index copy.html" target="_blank">my old website</a>.
+        </p>
+        <div class="skills">
+          <h2>Professional Skills</h2>
+          <div class="skills-container">
+            <!-- React (3 years) -->
+            <div class="skill-icon">
+              <div class="icon">
+                <div class="front">
+                  <img src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
+                </div>
+                <div class="back">
+                  <img src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
+                </div>
+              </div>
+              <div class="skill-label" id="react">React<br>3 Years</div>
+            </div>
+            <!-- SQL (2 years) -->
+            <div class="skill-icon">
+              <div class="icon">
+                <div class="front">
+                  <img src="https://imgs.search.brave.com/zytlTCABSvlM0A5tJANnp6NsOZCFjJmaSLgdXxgC4Qc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9icmFu/ZHNsb2dvcy5jb20v/d3AtY29udGVudC91/cGxvYWRzL2ltYWdl/cy9teXNxbC1sb2dv/LTEucG5n" alt="SQL">
+                </div>
+                <div class="back">
+                  <img src="https://imgs.search.brave.com/zytlTCABSvlM0A5tJANnp6NsOZCFjJmaSLgdXxgC4Qc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9icmFu/ZHNsb2dvcy5jb20v/d3AtY29udGVudC91/cGxvYWRzL2ltYWdl/cy9teXNxbC1sb2dv/LTEucG5n" alt="SQL">
+                </div>
+              </div>
+              <div class="skill-label" id="sql">SQL<br>2 Years</div>
+            </div>
+            <!-- Python (2 years) -->
+            <div class="skill-icon">
+              <div class="icon">
+                <div class="front">
+                  <img src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
+                </div>
+                <div class="back">
+                  <img src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
+                </div>
+              </div>
+              <div class="skill-label" id="Python">Python<br>2 Years</div>
+            </div>
+            <!-- Node.js (2 years) -->
+            <div class="skill-icon">
+              <div class="icon">
+                <div class="front">
+                  <img src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
+                </div>
+                <div class="back">
+                  <img src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
+                </div>
+              </div>
+              <div class="skill-label" id="node">Node.js<br>2 Years</div>
+            </div>
+            <!-- MongoDB (Assumed 2 years) -->
+            <div class="skill-icon">
+              <div class="icon">
+                <div class="front">
+                  <img src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
+                </div>
+                <div class="back">
+                  <img src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
+                </div>
+              </div>
+              <div class="skill-label">MongoDB<br>2 Years</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <div class="tab" id="about">
       <h1>DK OS</h1>
@@ -331,28 +537,65 @@
   </div>
 
   <script>
-    init();
-
     function init() {
       let defaultStyleSheet = localStorage.getItem('defaultStyleSheet') || 'modern';
-    // Check the radio button for the current stylesheet
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
-    radioButtons.forEach(button => {
-      button.checked = false;
-      if (button.id === defaultStyleSheet) {
-        button.checked = true;
+      // Check the radio button for the current stylesheet
+      const radioButtons = document.querySelectorAll('input[type="radio"]');
+      radioButtons.forEach(button => {
+        button.checked = false;
+        if (button.id === defaultStyleSheet) {
+          button.checked = true;
+        }
+      });
+
+      let localStyle = localStorage.getItem('stylesheet');
+      if (localStyle) {
+        let style = document.getElementById(localStyle);
+        style.disabled = false;
       }
-    });
 
-    let localStyle = localStorage.getItem('stylesheet');
-    if (localStyle) {
-      let style = document.getElementById(localStyle);
-      style.disabled = false;
+      sendMessage(defaultStyleSheet);
+      updateSkillYears();
     }
 
-    sendMessage(defaultStyleSheet);
-    }
+    function updateSkillYears() {
+      const skillStartDates = {
+        'python': new Date('February 1, 2022'),
+        'node': new Date('January 1, 2021'),
+        'react': new Date('February 1, 2022'),
+        'mongo': new Date('June 1, 2022'),
+        'sql': new Date('January 1, 2020'),
+      };
 
+      const today = new Date();
+
+      for (const skill in skillStartDates) {
+        const startDate = skillStartDates[skill];
+        let yearsOfExperience = today.getFullYear() - startDate.getFullYear();
+
+        // Adjust if the current date is before the start date's anniversary in the current year
+        const startMonthDay = new Date(today.getFullYear(), startDate.getMonth(), startDate.getDate());
+        if (today < startMonthDay) {
+          yearsOfExperience--;
+        }
+
+        // If less than 1 year, show months
+        let experienceText = '';
+          experienceText = yearsOfExperience + (yearsOfExperience === 1 ? ' Year' : ' Years') + " ";
+
+          // Calculate months
+          const months = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
+          experienceText +=  months- (12*yearsOfExperience) + (months === 1 ? ' Month' : ' Months');
+        
+
+        // Update the label
+        const labelElement = document.getElementById(skill);
+        if (labelElement) {
+          const skillName = labelElement.getAttribute('id');
+          labelElement.innerHTML = skillName.charAt(0).toUpperCase() + skillName.slice(1) + '<br>' + experienceText;
+        }
+      }
+    }
 
     function openTab(evt, tabName) {
       evt.preventDefault();
@@ -370,18 +613,13 @@
       currentTab.classList.add("active");
 
       evt.currentTarget.classList.add("active");
-
-      evt.currentTarget.classList.add("active");
     }
 
     function clearData() {
       localStorage.clear();
       sessionStorage.clear();
       //location.reload();
-
     }
-
-
 
     function sendMessage(stylesheetId) {
       //set local stylesheet to disabled
@@ -389,14 +627,15 @@
       styles.forEach(style => {
         if (style.id !== stylesheetId ) {
           style.disabled = true;
-        }else {
+        } else {
           style.disabled = false;
         }
       });
       window.parent.postMessage({ stylesheetId }, '*');
     }
 
-
+    // Initialize the page
+    init();
   </script>
 </body>
 

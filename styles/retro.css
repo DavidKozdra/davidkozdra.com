@@ -226,6 +226,10 @@ button {
     color: black;
 }
 
+a {
+    color: whitesmoke;
+}
+
 .drop-down {
     position: relative;
     display: inline-block;
