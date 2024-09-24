@@ -26,6 +26,20 @@
       display: none !important;
 
     }
+
+    #clock-items {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+}
+
+/* Hide #clock-items on mobile devices */
+@media (max-width: 768px) {
+  #clock-items {
+    display: none;
+  }
+}
+
   </style>
 </head>
 
@@ -49,7 +63,7 @@
       <!-- Navigation Menu -->
 
       <div class="navigation">
-        <div class="drop-down" style="padding-left: 10%; padding-right: 10%;">
+        <div class="drop-down">
           <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon"
               id="task-bar-icon"></button>
           <div class="drop-down-content">
@@ -87,7 +101,8 @@
       </div>
 
       <div class="status-bar">
-        <div id="clock"> </div>
+        
+        <div id="clock-items"><i class="fa-regular fa-clock"></i>  <div id="clock"></div></div>
 
 
         <div id="Contact">
@@ -104,10 +119,10 @@
           <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io"  target="_blank"> <i
               class="fa-brands fa-itch-io fa-1x" ></i></a>
 
+              <div> <i class="fas fa-wifi"></i> </div>
 
         </div>
 
-        <div> <i class="fas fa-wifi"></i> </div>
       </div>
     </div>
 
@@ -676,7 +691,7 @@ document.addEventListener('DOMContentLoaded', () => {
           intro.src = "./intro.html";
           intro.style.height = "100%";
           intro.style.width = "100%";
-          createWindow("System", intro, "./images/favicon.ico", 850, true);
+          createWindow("System", intro, "./images/favicon.ico", 900, true);
           break;
 
 

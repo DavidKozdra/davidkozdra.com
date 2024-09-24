@@ -124,7 +124,7 @@ button {
 .task-bar {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     background: var(--main-gradient);
     padding: 1%;
@@ -139,10 +139,10 @@ button {
 .status-bar {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-start;
     gap: 10px;
     align-items: center;
-    width: 20vw;
+    width: 15vw;
 
 }
 
@@ -191,11 +191,15 @@ button {
     z-index: 20000;
     right : 0;
     left: 0%;
+    min-width: 100px;
+    border-radius: 10px;
+    padding:20px;
 }
 
 .drop-down-content a {
     text-decoration: none;
     color: black;
+    
 }
 
 .drop-down {
@@ -207,6 +211,8 @@ button {
     left: 0%;
     right: 0%;
     margin: 0%;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .navigation {
@@ -319,7 +325,7 @@ button {
 
 #task-bar-icon{
     width: 3vw;
-    height: 4.5vh;
+    height: 3vh;
     margin: 5px;
     border-radius: 50px;
 
