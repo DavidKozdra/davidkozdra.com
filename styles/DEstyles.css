@@ -167,7 +167,7 @@ button {
     font-size: 1.3vh;
     cursor: pointer;
     border: none;
-    min-width: 50px;
+    min-width: 30px;
     z-index: 1;
 }
 

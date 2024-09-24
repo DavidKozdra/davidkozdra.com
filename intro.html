@@ -384,134 +384,111 @@
 <body>
   <div id="intro">
     <div id="tab-container">
-
-      <button class="tab-button active" onclick="openTab(event, 'welcome')">
-        Welcome
-      </button>
-
-      <button class="tab-button" onclick="openTab(event, 'about')">
-        About
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'help')">
-        Help
-      </button>
-
-      <button class="tab-button" onclick="openTab(event, 'settings')">
-        Settings
-      </button>
-
+      <button class="tab-button active" onclick="openTab(event, 'welcome')">Welcome</button>
+      <button class="tab-button" onclick="openTab(event, 'about')">About</button>
+      <button class="tab-button" onclick="openTab(event, 'help')">Help</button>
+      <button class="tab-button" onclick="openTab(event, 'settings')">Settings</button>
     </div>
-
-
-    <div id="intro">
-
-  
-      <div class="tab active" id="welcome">
-
+    
+    <!-- Welcome Tab -->
+    <div class="tab active" id="welcome">
       <img src="./images/ME.jpg" class="me" alt="A picture of me, a handsome man">
-        <h1>🖥️ Welcome to DK OS</h1>
-        <p>
-          I am <strong>David Kozdra</strong>, a Software Engineer currently working at
-          <a href="https://redchip.com" target="_blank">RedChip Companies</a>.
-        </p>
-        <p>
-          <a href="https://www.google.com/maps/place/Orlando,+FL/" target="_blank">
-            <i class="fas fa-map-marker-alt"></i> Orlando, Florida
-          </a>
-        </p>
-        <p>
-          <br>
-          Thank you for visiting my portfolio website, designed to resemble a desktop environment.
-          If you're interested in a more traditional website, please check out
-          <a href="index copy.html" target="_blank">my old website</a>.
-        </p>
-        <div class="skills">
-          <h2>Professional Skills</h2>
-          <div class="skills-container">
-              <!-- React (3 years) -->
-              <div class="skill-icon">
-                <div class="icon">
-                  <img class="front" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
-                  <img class="back" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
-                </div>
-                <div class="skill-label" id="react">React<br>3 Years</div>
-              </div>
-            
-              <!-- SQL (2 years) -->
-              <div class="skill-icon">
-                <div class="icon">
-                  <img class="front" src="https://imgs.search.brave.com/zytlTCABSvlM0A5tJANnp6NsOZCFjJmaSLgdXxgC4Qc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9icmFu/ZHNsb2dvcy5jb20v/d3AtY29udGVudC91/cGxvYWRzL2ltYWdl/cy9teXNxbC1sb2dv/LTEucG5n" alt="SQL">
-                  <img class="back" src="https://imgs.search.brave.com/zytlTCABSvlM0A5tJANnp6NsOZCFjJmaSLgdXxgC4Qc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9icmFu/ZHNsb2dvcy5jb20v/d3AtY29udGVudC91/cGxvYWRzL2ltYWdl/cy9teXNxbC1sb2dv/LTEucG5n" alt="SQL">
-                </div>
-                <div class="skill-label" id="sql">SQL<br>2 Years</div>
-              </div>
-            
-              <!-- Python (2 years) -->
-              <div class="skill-icon">
-                <div class="icon">
-                  <img class="front" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
-                  <img class="back" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
-                </div>
-                <div class="skill-label" id="python">Python<br>2 Years</div>
-              </div>
-            
-              <!-- Node.js (2 years) -->
-              <div class="skill-icon">
-                <div class="icon">
-                  <img class="front" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
-                  <img class="back" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
-                </div>
-                <div class="skill-label" id="node">Node.js<br>2 Years</div>
-              </div>
-            
-              <!-- MongoDB (2 years) -->
-              <div class="skill-icon">
-                <div class="icon">
-                  <img class="front" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
-                  <img class="back" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
-                </div>
-                <div class="skill-label" id="mongo">MongoDB<br>2 Years</div>
-              </div>
+      <h1>🖥️ Welcome to DK OS</h1>
+      <p>
+        I am <strong>David Kozdra</strong>, a Software Engineer currently working at
+        <a href="https://redchip.com" target="_blank">RedChip Companies</a>.
+      </p>
+      <p>
+        <a href="https://www.google.com/maps/place/Orlando,+FL/" target="_blank">
+          <i class="fas fa-map-marker-alt"></i> Orlando, Florida
+        </a>
+      </p>
+      <p>
+        Thank you for visiting my portfolio website, designed to resemble a desktop environment.
+        If you're interested in a more traditional website, please check out
+        <a href="index copy.html" target="_blank">my old website</a>.
+      </p>
+      <div class="skills">
+        <h2>Professional Skills</h2>
+        <div class="skills-container">
+          <!-- React (3 years) -->
+          <div class="skill-icon">
+            <div class="icon">
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
             </div>
-            
-
+            <div class="skill-label" id="react">React<br>3 Years</div>
+          </div>
+          <!-- SQL (2 years) -->
+          <div class="skill-icon">
+            <div class="icon">
+              <img class="front" src="https://example.com/sql-logo.svg" alt="SQL">
+              <img class="back" src="https://example.com/sql-logo.svg" alt="SQL">
+            </div>
+            <div class="skill-label" id="sql">SQL<br>2 Years</div>
+          </div>
+          <!-- Python (2 years) -->
+          <div class="skill-icon">
+            <div class="icon">
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
+            </div>
+            <div class="skill-label" id="python">Python<br>2 Years</div>
+          </div>
+          <!-- Node.js (2 years) -->
+          <div class="skill-icon">
+            <div class="icon">
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
+            </div>
+            <div class="skill-label" id="node">Node.js<br>2 Years</div>
+          </div>
+          <!-- MongoDB (2 years) -->
+          <div class="skill-icon">
+            <div class="icon">
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
+            </div>
+            <div class="skill-label" id="mongo">MongoDB<br>2 Years</div>
+          </div>
+        </div> <!-- Close skills-container -->
+      </div> <!-- Close skills -->
+    </div> <!-- Close welcome tab -->
+    
+    <!-- About Tab -->
     <div class="tab" id="about">
       <h1>DK OS</h1>
       <p id="sys-about">
-      <p>
-        version: 1.2.0
+        Version: 1.2.0<br>
+        Memory: 8GB<br>
+        Processor: Intel Core i5<br>
+        Graphics: Intel Iris Plus Graphics 640 1536 MB
       </p>
       <p>
-        Memory: 8GB
+        This project is inspired by some similar websites I have seen, web core aesthetics, the game 
+        <a href="https://lmirman.itch.io/somnium">Somnium</a>, and retro computers like the old Macs.
       </p>
-      <p>
-        Processor: Intel Core i5
-      </p>
-      <p> Graphics : Intel Iris Plus Graphics 640 1536 MB</p>
-      </p>
-
-      <br>
-      <p> </br> This project is inspired by some similar websites I have seen, web core aesthetics, the game <a
-          href="https://lmirman.itch.io/somnium"> Somnium </a>,and retro computers like the old macs.</p>
-      <br>
     </div>
 
+    <!-- Help Tab -->
     <div class="tab" id="help">
       <h1>Help</h1>
       <p>
-        This desktop is a portfolio website. It is not a real operating system. <br>
-        However it acts a lot like your desktop. <br> <br>You can open and close windows, and move them around. <br><br>
-        double click on the icons to open them.
-        if you have any questions or comments, please email me at <a href="mailto:davidkozdra@gmail.com"
-          target="_blank">davidkozdra@gmail.com <i class="fa-solid fa-envelope"></i><a>
-
+        This desktop is a portfolio website. It is not a real operating system.<br>
+        However, it acts a lot like your desktop.<br><br>
+        You can open and close windows, and move them around.<br><br>
+        Double-click on the icons to open them.<br><br>
+        If you have any questions or comments, please email me at 
+        <a href="mailto:davidkozdra@gmail.com" target="_blank">
+          davidkozdra@gmail.com <i class="fa-solid fa-envelope"></i>
+        </a>
       </p>
     </div>
-    
-    <div class="tab" id="settings" >
-      <h1>Settings</h1>
-      <button onclick="clearData()"> Clear Data</button>
 
+    <!-- Settings Tab -->
+    <div class="tab" id="settings">
+      <h1>Settings</h1>
+      <button onclick="clearData()">Clear Data</button>
       <h1>Theme</h1>
       <label>
         <input type="radio" name="styleToggle" id="modern" onclick="sendMessage('modern')"> Default
@@ -520,8 +497,8 @@
         <input type="radio" name="styleToggle" id="retro" onclick="sendMessage('retro')"> Retro
       </label>
     </div>
+  </div> <!-- Close intro -->
 
-  </div>
 
   <script>
     function init() {
