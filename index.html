@@ -1022,19 +1022,24 @@ document.addEventListener('DOMContentLoaded', () => {
       CreateDesktopIconGrid();
     });
 
-    // Function to handle messages from the iframe
+    // Function to handle messages from the intro iframe
     function receiveMessage(event) {
       if(!event){
         return;
       }
+      console.log(event)
       if (event.data && event.data.stylesheetId) {
         // Disable all parent stylesheets
-
-        const parentStylesheets = document.querySelectorAll('theme');
-        parentStylesheets.forEach(sheet => sheet.disabled = true);
+        const parentStylesheets = document.getElementsByClassName('theme');
+        Array.from(parentStylesheets).forEach(sheet => {
+          console.log(sheet, "sheet")
+          sheet.disabled = true
+        });
         localStorage.setItem('defaultStyleSheet', event.data.stylesheetId);
+        let target_theme = document.getElementById(event.data.stylesheetId)
+        console.log(target_theme)
         // Enable the selected stylesheet in the parent document
-        document.getElementById(event.data.stylesheetId).disabled = false;
+        target_theme.disabled = false;
 
       }
     }

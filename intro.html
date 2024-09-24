@@ -586,8 +586,9 @@
     function sendMessage(stylesheetId) {
       //set local stylesheet to disabled
       let styles = document.getElementsByClassName("theme");
-      console.log(styles)
+      console.log(styles , stylesheetId)
       Array.from(styles).forEach(style => {
+        console.log(style)
         if (style.id !== stylesheetId ) {
             style.disabled = true; // Disable other styles
         } else {
