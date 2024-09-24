@@ -124,7 +124,7 @@ button {
 .task-bar {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     background: var(--main-gradient);
     padding: 1%;
@@ -161,7 +161,6 @@ button {
 .task-bar button {
     background-color: transparent;
     color: white;
-    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -403,7 +402,7 @@ button {
     gap : 25px;
     display: flex;
     flex-direction: row;
-    justify-content: left;
+    justify-content: left !important;
     overflow-x: visible;
     background: var(--main-gradient);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
@@ -528,7 +527,6 @@ button {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        align-items: center;
         height: 5%;
 
     }
