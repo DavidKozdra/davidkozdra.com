@@ -7,7 +7,7 @@ Default theme styles
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--system-font);
     background-color: #f1f1f1;
     overflow: hidden;
 }
@@ -124,6 +124,7 @@ button {
     height: 1dvw;   
     color : white;  
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    min-width: 95dvw;
 }
 
 
@@ -155,7 +156,7 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1.3vh;
+    font-size: 2vh;
     cursor: pointer;
     border: none;
     min-width: 30px;
@@ -184,13 +185,14 @@ button {
     left: 0%;
     min-width: 100px;
     border-radius: 10px;
-    padding:20px;
+    padding:10px;
+    row-gap: 20px;
+
 }
 
 .drop-down-content a {
     text-decoration: none;
     color: black;
-    
 }
 
 .drop-down {
@@ -204,6 +206,10 @@ button {
     margin: 0%;
     padding-left: 10%;
     padding-right: 10%;
+}
+
+.drop-down-content button {
+  font-size: .3em !important;
 }
 
 .navigation {
@@ -222,13 +228,11 @@ button {
     display: flex;
     flex-direction: column;
     z-index:2;
+    cursor: pointer;
+
+    font-size: 5em;
 }
 
-.drop-down:hover    {
-    background: var(--window-header-hover);
-    color: white;
-    justify-content: center;
-}
 
 
 

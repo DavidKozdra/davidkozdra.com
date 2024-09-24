@@ -5,7 +5,7 @@
     --windowBackground: #fff;
     --windowText: #000;
     --system-grey:  grey;
-
+    --system-font: "Roboto";
     --main-gradient : linear-gradient(to right, #768d92, #0083b0);
     --window-header: linear-gradient(to right, #26505a, #0d323f);
 }
