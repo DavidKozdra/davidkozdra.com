@@ -7,7 +7,8 @@
   <title>DK OS</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style id="modern">
+  
+  <style id="modern" class="theme">
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -147,7 +148,7 @@
     }
   </style>
 
-  <style id="retro" disabled>
+  <style id="retro" class="theme" disabled="true">
     body {
       margin: 0;
       font-family: "Courier New", Courier, monospace;
@@ -269,12 +270,6 @@
       border-radius: 50%;
       object-fit: cover;
     }
-  </style>
-
-
-  <style id="retro">
-
-
     body {
       margin: 0;
       padding-top: 20px;
@@ -377,8 +372,10 @@
       display: flex;
       flex-direction: column;
     }
-
   </style>
+
+
+
 </head>
 
 <body>
@@ -494,7 +491,7 @@
         <input type="radio" name="styleToggle" id="modern" onclick="sendMessage('modern')"> Default
       </label>
       <label>
-        <input type="radio" name="styleToggle" id="retro" onclick="sendMessage('retro')"> Retro
+        <input type="radio" name="styleToggle" id="retro"  onclick="sendMessage('retro')"> Retro
       </label>
     </div>
   </div> <!-- Close intro -->
@@ -514,6 +511,7 @@
 
       let localStyle = localStorage.getItem('stylesheet');
       if (localStyle) {
+        console.log(localStyle)
         let style = document.getElementById(localStyle);
         style.disabled = false;
       }
@@ -587,14 +585,21 @@
 
     function sendMessage(stylesheetId) {
       //set local stylesheet to disabled
-      let styles = document.querySelectorAll('style');
-      styles.forEach(style => {
+      let styles = document.getElementsByClassName("theme");
+      console.log(styles)
+      Array.from(styles).forEach(style => {
         if (style.id !== stylesheetId ) {
-          style.disabled = true;
+            style.disabled = true; // Disable other styles
         } else {
-          style.disabled = false;
+            style.disabled = false; // Enable selected style or default
         }
-      });
+
+
+        if (style.id == "default") {
+          style.disabled="false"
+        }
+      
+    });
       window.parent.postMessage({ stylesheetId }, '*');
     }
 

@@ -10,36 +10,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
   <title>David Kozdra</title>
+  <link rel="stylesheet" href="styles/DE_styles.css" id="default">
 
-  <link rel="stylesheet" id="modern" href="styles/DEstyles.css?v=1.14" >
-  <link rel="stylesheet" id="retro" href="styles/retro.css?v=1.2" disabled="true">
-
-
+  <link rel="stylesheet" id="modern" class="theme" href="styles/modern.css?v=1.15" >
+  <link rel="stylesheet" id="retro" class="theme" href="styles/retro.css?v=1.3" disabled="true">
+  
   <link class="import" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-
 
   <script src="Games.js?v=1.0"></script>
 
   <style>
-    .empty_window {
-      display: none !important;
-
+       .empty_window {
+        display: none !important;
     }
-
-    #clock-items {
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-}
-
-/* Hide #clock-items on mobile devices */
-@media (max-width: 768px) {
-  #clock-items {
-    display: none;
+  
+      #clock-items {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
   }
-}
-
+  
+  /* Hide #clock-items on mobile devices */
+  @media (max-width: 768px) {
+    #clock-items {
+      display: none;
+    }
+  }
   </style>
 </head>
 
@@ -90,9 +87,9 @@
                 <button> <a href="http://142.93.243.224:3001/" target="_blank" style="color: whitesmoke;">
                   Nebula Hive Mind </a></button>
 
-                  
+                  <!--
                 <button> <a href="https://red.chat" target="_blank" style="color: whitesmoke;">
-                  Red Chat </a></button>
+                  Red Chat </a></button>-->
           </div>
         </div>
         <div>
@@ -187,6 +184,7 @@
     var fileSystem;
 
 document.addEventListener('DOMContentLoaded', () => {
+  
 
  fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"file 2 write waht you want and it will save "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
         
@@ -291,6 +289,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let maxZindex = 1;
     async function update() {
+
+
       if (loading) {
         document.getElementsByClassName("loader-page")[0].style.display = "block";
         document.getElementById("de").style.display = "none";
@@ -368,7 +368,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function ReRenderAppTaskbar() {
-
       let taskbar = document.getElementsByClassName("app-bar");
       taskbar[0].innerHTML = "Tasks ";
 
@@ -1031,7 +1030,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (event.data && event.data.stylesheetId) {
         // Disable all parent stylesheets
 
-        const parentStylesheets = document.querySelectorAll('link[rel="stylesheet"]:not(.import)');
+        const parentStylesheets = document.querySelectorAll('theme');
         parentStylesheets.forEach(sheet => sheet.disabled = true);
         localStorage.setItem('defaultStyleSheet', event.data.stylesheetId);
         // Enable the selected stylesheet in the parent document
