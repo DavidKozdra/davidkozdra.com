@@ -593,12 +593,6 @@
         } else {
             style.disabled = false; // Enable selected style or default
         }
-
-
-        if (style.id == "default") {
-          style.disabled="false"
-        }
-      
     });
       window.parent.postMessage({ stylesheetId }, '*');
     }

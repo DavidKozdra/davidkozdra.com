@@ -1,232 +1,569 @@
+
+/*
+Default theme styles
+
+*/
+
 body {
-  margin: 0;
-  padding: 0;
-  background-color: red;
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f1f1f1;
+    overflow: hidden;
 }
 
 .loader-page {
-  background-color: #000;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-.fa-brands {
-  color: whitesmoke !important;
-}
-
-.fa-brands, .fa-envelope {
-  transform: scale(1.4);
+.fa-brands{
+    color: whitesmoke !important;
 }
 
 .fa-envelope:hover,
 .fa-brands:hover {
-  transform: scale(1.6);
-  border: 1px solid #000;
+    color: #fff;
+    transform: scale(1.6);
+    border: 1px solid #000;
+}
+
+.fa-brands , .fa-envelope {
+  transform: scale(1.4);
+}
+
+
+.fa-envelope {
+    color: #fff;
+}
+
+.loader-display {
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    font-size: 5vw;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    /*
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    */
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    z-index: 5;
+}
+
+@keyframes flickerScreen {
+    0% { opacity: 1; 
+        background: black;
+    }
+    50% { opacity: 0.6;
+        background: #fff;
+    }
+    100% { opacity: 1; 
+        background: #000;
+    }
 }
 
 .loader-back {
-  position: absolute;
-  top: 50%;
-  left: 40%;
-  border: 5px solid black;
-  width: 20dvw;
-  height: 2dvw;
-  z-index: 5;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    border: 5px solid black;
+    width: 20dvw;
+    height: 2dvw;
+    z-index: 5;
+}
+.loader-icon-inner {
+    background: var(--main-gradient);
+    width: 0dvw;
+    height: 2dvw;
+    -webkit-animation: grow 1s linear ; 
+    animation: grow 1s linear;
 }
 
-.loader-icon-inner {
-  width: 0dvw;
-  height: 2dvw;
-  animation: grow 1s linear;
-}
+
 
 @keyframes grow {
-  0% { width: 0px; }
-  100% { width: 100%; }
+    0% { width: 0px; }
+    100% { width: 100%; }
 }
 
 #desktop {
-  height: 92dvh !important;
-  width: 100dvw;
-  overflow: hidden;
-  background-size: cover;
-  background-repeat: no-repeat ;
-  z-index: 1;
+    background-image: url(../images/Rainbow_iPad+2.png); 
+    height:93.5vh;
+    width: 100dvw;
+    overflow: hidden;
+    background-size: cover; /* This will scale the background image to cover the entire container */
+    background-repeat: no-repeat;
+    z-index: 1;
 }
 
 button {
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  color: white;
-  border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: white;
+
+    border-radius: 5px;
 }
 
 .task-bar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1%;
-  border-bottom: #1d1d1d 2px solid;
-  border-radius: 0px 0px 5px 5px;
-  height: 1dvw;
-  color: white;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--main-gradient);
+    padding: 1%;
+    border-bottom: #1d1d1d 2px solid;
+    border-radius: 0px 0px 5px 5px;
+    height: 1dvw;   
+    color : white;  
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+
+
+.status-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    align-items: center;
+    width: 15vw;
+
+}
+
+#clock {
+    font-size: 1.3dvh;
+}
+
+#Contact {
+    font-size: 1.5dvh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;    
+    column-gap: 20%;
+}
+
+.task-bar button {
+    background-color: transparent;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.3vh;
+    cursor: pointer;
+    border: none;
+    min-width: 30px;
+    z-index: 1;
+}
+
+
+
+
+.task-bar button:hover {
+    background: var(--window-header-hover);
+    color: white;
+    justify-content: center;
 }
 
 .drop-down-content {
-  display: none;
-  list-style: none;
-  position: absolute;
-  background: var(--system-grey);
-  border: 1px dotted black;
-  text-decoration: none;
-  color: black;
-  z-index: 20000;
-  right: 0;
-  left: 0%;
-  border-radius: 10px;
-  padding: 20px;
+    display: none ;
+    list-style: none; 
+    position: absolute;
+    background: var(--system-grey);
+    border: 1px dotted black;
+    text-decoration: none;
+    color: black;
+    z-index: 20000;
+    right : 0;
+    left: 0%;
+    min-width: 100px;
+    border-radius: 10px;
+    padding:20px;
 }
 
 .drop-down-content a {
-  text-decoration: none;
-  color: black;
+    text-decoration: none;
+    color: black;
+    
 }
 
 .drop-down {
-  background-color: red;
-  position: relative;
-  display: inline-block;
-  z-index: 2000000;
-  justify-content: center;
-  align-items: center;
-  margin: 0%;
+    position: relative;
+    display: inline-block;
+    z-index: 2000000;
+    justify-content: center;
+    align-items: center;
+    left: 0%;
+    right: 0%;
+    margin: 0%;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
+.navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1%;
+    height: 1dvw;   
+    color : white;
+    width: 50%;
+}
+
+
 .drop-down:hover .drop-down-content {
-  display: flex;
-  flex-direction: column;
-  z-index: 2;
+    display: flex;
+    flex-direction: column;
+    z-index:2;
+}
+
+.drop-down:hover    {
+    background: var(--window-header-hover);
+    color: white;
+    justify-content: center;
+}
+
+
+
+
+.btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .window {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--windowBackground);
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 50%;
-  height: 50%;
-  position: absolute;
-  overflow: hidden;
-  resize: both;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--windowBackground);
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 50%;
+    height: 50%;
+    z-index: 1;
+    position: absolute;
+    overflow: hidden; 
+    resize: both;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+
+    animation: pop-up .3s ease-in-out forwards;
 }
 
+
+  
+
+@keyframes pop-up {
+    0% {
+        opacity: 0;
+        transform: scale(0) translateY(200vh);
+    }
+    100% {
+        opacity: 1; 
+        transform: scale(1) translateY(0px);
+    }
+}
+
+
+
+.window-content {
+    color : black;
+    width: 100%;
+}
+
+.larger {
+    width: 98% !important;
+    height: 90% !important;
+    overflow: hidden; 
+    resize: none;
+    top : 0;
+    right : 0;
+}
+
+
 .window-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  position: fixed;
-  cursor: move;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--window-header);
+    color: black;
+    width: 100%;
+    position: fixed;
+    cursor: move;    
+}
+
+.window-icon {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    border-radius: 50px;
+}
+
+.window-buttons {
+    color : black;
+}
+
+
+
+#task-bar-icon{
+    width: 3vw;
+    height: 3vh;
+    margin: 5px;
+    border-radius: 50px;
+
+}
+
+.minimized {
+    animation: shrink .3s linear forwards;
+
+}
+@keyframes shrink {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        opacity: 0.5; 
+        transform: translateY(50vh) scale(0.5);
+    }
+
+    100% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0; /* Optional: Fade out during the animation */
+    }
 }
 
 .desktop-grid {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  margin: 20px;
-  height: 80%;
-  width: 90%;
-  position: absolute;
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    margin: 20px;
+    height: 80%;
+    width: 90%;
+    position: absolute;
 }
 
 .desktop-icon {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-width: 50dvh;
-  max-height: 50dvh;
-  position: absolute;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 50dvh;
+    max-height: 50dvh;
+
+    position: absolute;
 }
 
 .desktop-icon img {
-  max-width: 5vh;
-  max-height: 5vw;
+    max-width: 5vh;
+    max-height: 5vw;
 }
+
+.icon-text {
+    font-size: 1.5dvh;
+    text-align: center;
+    color : white;
+}
+
+.desktop-icon:hover {
+    background-color: rgb(104, 104, 179);
+    color: white;
+}
+
+.active {
+    background-color: rgb(48, 48, 114) !important;
+    color: white;
+}
+
+
 
 .selection-rect {
-  position: absolute;
-  border: 1px dotted rgb(0, 110, 255);
-  background-color: rgba(0, 0, 200, .5);
-  z-index: 3;
+    position: absolute;
+    border: 1px dotted rgb(0, 110, 255);
+    background-color: rgba(0, 0, 200, .5);
+    z-index: 3;
+
 }
 
-@keyframes shrink {
-  0% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-  }
-  50% {
-      opacity: 0.5;
-      transform: translateY(50vh) scale(0.5);
-  }
-  100% {
-      transform: translateY(100vh) scale(0);
-      opacity: 0;
-  }
+.app-bar {
+    gap : 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left !important;
+    overflow-x: visible;
+    background: var(--main-gradient);
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    color: white;
+    min-height: 20vh;
 }
 
-@media only screen and (orientation: portrait) {
-  #desktop {
-      height: 92dvh !important;
-      width: 100dvw;
-  }
 
-  .desktop-grid {
-      height: 80dvh;
-      width: 100%;
-  }
-
-  .task-bar {
-      height: 5%;
-      font-size: .5vh;
-      display: flex;
-      flex-direction: row;
-  }
-
-  .app-bar {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      height: 5%;
-  }
-
-  #task-bar-icon {
-      width: 4vw;
-      height: 2vh;
-      margin: 5px;
-      border-radius: 50px;
-  }
-
-  .desktop-icon img {
-      border-radius: 50%;
-  }
+.app-bar-button {
+    background-color: transparent;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 2vh;
+    cursor: pointer;
+    border: 1px dotted black;
+    min-width: 12vw;
+    min-height: 2vh;
+    display: flex;
+    flex-direction: row;
+    
 }
+    @keyframes come-in {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        100% {
+            opacity: 1; 
+            transform: scale(1);
+        }
+    }
+
+.app-bar-button-active {
+    border-top: 5px solid var(--desktop-background);
+}
+
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color : black;
+
+}
+
+.fa-brands {
+    color: black;
+}
+
+.typewriter {
+    overflow: hidden; /* Ensures the content is not revealed until the animation */
+    border-right: .1em solid black; /* The typwriter cursor */
+    white-space: nowrap; /* Keeps the content on a single line */
+    margin: 100px auto; /* Gives that scrolling effect as the typing happens */
+    letter-spacing: .15em; /* Adjust as needed */
+    animation: 
+      fadeIn .1s steps(10, end),
+      typing .7s steps(40, end),
+      blink-caret .5s step-end;    
+  }
+
+  .typewriter a:visited {
+    color: var(--text);
+  }
+  
+  /* The typing effect */
+  @keyframes typing {
+    from { width: 0% }
+    to { width: 50% }
+  }
+  
+  .embed-responsive {
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+  }
+
+.about {
+    display: flex;
+    flex-direction: column;
+}
+
+#face {
+    border-radius: 10%;
+    box-shadow: inset;
+    width: 30%;
+    height: 30%;
+    margin: 10%;
+    display: inline-block;
+    border: 3px solid white;
+}
+
+
+
+@media only screen and (orientation: portrait ) {
+
+    #desktop {
+        height: 92dvh !important;
+        width: 100dvw;
+    }
+
+    .desktop-grid {
+        height: 80dvh;
+        width: 100%;
+    }
+
+    .task-bar {
+        height: 5%;
+        font-size: .5vh;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .app-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        height: 5%;
+
+    }
+    #task-bar-icon{
+        width: 4vw;
+        height: 2vh;
+        margin: 5px;
+        border-radius: 50px;
+    }
+
+
+    .desktop-icon img{
+        border-radius: 50%;
+    }
+
+
+}
+
 
 .notes {
-  margin: 50px;
+    margin: 50px;
 }
+.app-bar-buffer {
+    display: none;
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+    z-index: -1;
+}
+
+
+@media screen and (min-width: 1800px) {
+    /* Your styles for larger screens go here */
+    .app-bar-buffer {
+        /* Example: Adjusting margin for larger screens */
+        margin: 20px;
+    }
+
+    #desktop {
+        height: 91dvh !important;
+    }
+}
+
