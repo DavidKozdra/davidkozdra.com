@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #browser-container {
+            /*
+                grid 
+                3 by 1
+            */
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+        }
+
+        #file-navigation {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        #browser {}
+
+        #top{}
+        
+        #arrows{
+
+            display: flex;
+            flex-direction: row;
+        }
+
+        #search {}
+
+    </style>
+</head>
+<body>
+    
+    <div id="browser-container">
+        <div id="file-navigation">
+            NAV
+        </div>
+
+        <div id="browser">
+            <div id="top">
+                <div id="arrows"></div>
+
+                <div id="search">
+
+                </div>
+            </div>
+            CONTENT
+        </div>
+    </div>
+
+    <script>
+        // find all from files in local storage fileSystem
+        let file_system = localStorage.getItem("filesystem")
+
+
+        //pointer to current dir
+
+
+        function RenderCurrentDir(){
+
+        }
+
+        function TransferTo(dir){
+            //set and render current dir 
+        }
+    </script>
+</body>
+</html>

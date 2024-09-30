@@ -170,6 +170,14 @@
             <p contenteditable="true">Notes</p>
           </div>
         </div>
+
+        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'files')" tabindex="0"
+        style="cursor: pointer;">
+        <img src="./images/Notes.png" alt="yellow note pad "></img>
+        <div class="icon-text">
+          <p contenteditable="true">Files</p>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -759,6 +767,16 @@ document.addEventListener('DOMContentLoaded', () => {
           about.style.height = "100%";
           about.style.width = "100%";
           createWindow("About", about, "./images/ME.jpg", 800);
+          break;
+
+        case "files":
+          let files = document.createElement("iframe");
+          files.name = "files";
+          files.title = "files";
+          files.src = "./file_browser.html";
+          files.style.height = "100%";
+          files.style.width = "100%";
+          createWindow("files", files, "./images/ME.jpg", 800);
           break;
 
         case "old":
