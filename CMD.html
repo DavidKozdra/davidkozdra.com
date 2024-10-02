@@ -89,7 +89,7 @@
         let historyIndex = 0;
 
         // tree file system
-        let fileSystem = (localStorage.getItem("fileSystem") == null) ? [{ dir: "/", files: [{ name: "text.txt", content: "this is a test file you can read it directly or in the terminal", dir: false }, { name: "home", dir: true }] }, { dir: "home", files: [{ name: "text2.txt", content: "testing lol2 " }] }] : JSON.parse(localStorage.getItem("fileSystem"));
+        let fileSystem = (localStorage.getItem("fileSystem") == null) ? [{ dir: "/", files: [{ name: "text.txt", content: "this is a test file you can read it directly or in the terminal", dir: false }, { name: "home", dir: true }] }, { dir: "home", files: [{ name: "text2.txt", content: ":) " }] }] : JSON.parse(localStorage.getItem("fileSystem"));
 
         let currentDir = "/";
         let commands = [
