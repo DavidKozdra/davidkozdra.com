@@ -9,12 +9,19 @@
         #browser-container {
             margin-top: 10%;
             display: grid;
-            grid-template-columns: 1fr 3fr;
+            grid-template-columns: 1fr 1fr 3fr;
         }
 
         #file-navigation {
             display: flex;
             flex-direction: column;
+        }
+
+        #content-viewer{
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+
         }
 
         #browser {
@@ -59,7 +66,7 @@
                 <button id="up-btn">Up</button>
             </div>
             <div id="dir-content">
-                NAV
+                
             </div>
         </div>
 
@@ -69,7 +76,7 @@
                     <input type="text" id="search-input" placeholder="Search files...">
                 </div>
             </div>
-            <div id="file-viewer">
+            <div id="content-viewer">
                 CONTENT
             </div>
         </div>
@@ -96,7 +103,7 @@
                     break
                 }
             }
-            let dirContent = document.getElementById('dir-content');
+            let dirContent = document.getElementById('content-viewer');
             dirContent.innerHTML = ''; // Clear current content
 
             if (!dirObject) {
@@ -109,9 +116,10 @@
                console.log("???", file)
                 let fileElement = document.createElement('div');
 
+                let fileElementTitle = document.createElement('p');
                 let fileElementImage = document.createElement('img');
                 fileElement.className = file.dir ? 'folder' : 'file';
-                fileElement.textContent = file.name;
+                fileElementTitle.textContent = file.name;
 
                 if (file.dir){
                     fileElementImage.src="images/File_System_icon.png"
@@ -120,6 +128,8 @@
                     fileElementImage.src="images/Notes.png"
                 }
                 fileElement.appendChild(fileElementImage)
+
+                fileElement.appendChild(fileElementTitle)
                 fileElement.addEventListener('click', () => {
                     if (file.dir) {
                         // If it's a folder, navigate into it
@@ -128,6 +138,7 @@
                         renderCurrentDir();
                     } else {
                         // Display file content if it's a file
+                        //need an event to open notes 
                         displayFileContent(file);
                     }
                 });
@@ -140,11 +151,7 @@
        
         }
 
-        // Function to display file content in the browser area
-        function displayFileContent(file) {
-            let fileViewer = document.getElementById('file-viewer');
-            fileViewer.textContent = file.content || 'No content available.';
-        }
+    
 
         // Navigate back in directory history
         document.getElementById('back-btn').addEventListener('click', () => {
