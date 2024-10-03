@@ -188,6 +188,8 @@ button {
     padding:10px;
     row-gap: 20px;
 
+    font-size: 1.5dvh;
+
 }
 
 .drop-down-content a {
@@ -206,11 +208,9 @@ button {
     margin: 0%;
     padding-left: 10%;
     padding-right: 10%;
+    cursor: pointer;
 }
 
-.drop-down-content button {
-  font-size: .3em !important;
-}
 
 .navigation {
     display: flex;
@@ -377,6 +377,12 @@ button {
     font-size: 1.5dvh;
     text-align: center;
     color : white;
+    
+  text-shadow:
+  -1px -1px 0 #000,  /* Top-left shadow */
+   1px -1px 0 #000,  /* Top-right shadow */
+  -1px  1px 0 #000,  /* Bottom-left shadow */
+   1px  1px 0 #000;  /* Bottom-right shadow */
 }
 
 .desktop-icon:hover {

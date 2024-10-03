@@ -9,7 +9,7 @@
   <style>
     body {
       margin: 0;
-      padding-top: 20px;
+      padding-top: 5%;
       font-family: Arial, sans-serif;
       height: 100vh;
     }
@@ -26,6 +26,7 @@
       padding: 0;
       margin-top: 50px;
       background-color: grey;
+      font-size: 5dvh;
     }
 
     canvas {
@@ -36,7 +37,20 @@
   </style>
   <body>
     <h1>GAME OF LIFE</h1>
+    <div class="button-container"></div>
+      <!-- Icons and buttons with corresponding actions -->
+      <button onclick="restartGOL()">
+        <span class="icon">🔄</span>Generate
+      </button>
+      <button onclick="restartGOL(true)">
+        <span class="icon">🧹</span>Clear
+      </button>
+      <button onclick="pauseGOL()" id="pause">
+        <span class="icon">⏸️</span>Pause
+      </button>
+    </div>
 
+    <input type="range" min="1" max="100" value="50"  id="gen_slider">
     <canvas
       class="slide"
       id="b"
@@ -45,10 +59,6 @@
       aria-label="conway's game of life"
     >
     </canvas>
-    <div class="button-container">
-      <button onclick="restartGOL()">Restart</button>
-      <button onclick="pauseGOL()">Pause</button>
-    </div>
     <script>
       class entity {
         constructor(x, y, alive) {
@@ -58,6 +68,8 @@
           this.futureStatus;
         }
       }
+
+
 
       function getRandomInt(max) {
         return Math.floor(Math.random() * max);
@@ -156,7 +168,7 @@
         //then use the isColliding function to see if the size would overlap
       }
 
-      function restartGOL() {
+      function restartGOL(clear=false) {
         ctxB.clearRect(0, 0, canvasB.width, canvasB.height);
         selected = [];
         gridSize = 12;
@@ -164,24 +176,34 @@
         entities = [];
         for (var i = 0; i < gridSize; i++) {
           for (var j = 0; j < gridSize; j++) {
-            //getRandomInt(3)==2
-            entities.push(
-              new entity(i * gridSize, j * gridSize, getRandomInt(3) == 2)
-            );
+  
+              entities.push(
+              new entity(i * gridSize, j * gridSize, (clear ? 0 : getRandomInt(3) == 2)))  
           }
         }
+
+        if(clear)  ExecuteGameOfLifeSolution()
       }
 
-      let genTime = 2000;
+
+      let genTime = 5000;
       let paused = false;
+
+      let gen_Slider = document.getElementById("gen_slider")
+      gen_Slider.value = genTime
+      gen_Slider.max = genTime 
+      gen_Slider.min=0;
+    
 
       function pauseGOL() {
         paused = !paused;
-        let pauseButton = document.querySelector("button:nth-child(2)");
+        let pauseButton = document.getElementById("pause");
         pauseButton.innerHTML = paused ? "Play" : "Pause";
       }
 
-      async function drawCircle() {
+
+      // in other words ExecuteGameOfLifeSolution
+      async function ExecuteGameOfLifeSolution() {
         if (paused) {
           return;
         }
@@ -258,8 +280,15 @@
         ctxB.fill();
         selected = [];
       }
-      drawCircle();
-      const interval = setInterval(drawCircle, genTime);
+      ExecuteGameOfLifeSolution();
+      var interval = setInterval(ExecuteGameOfLifeSolution, genTime);
+
+      gen_Slider.oninput = function() {
+        clearInterval(interval)
+        genTime = this.value;
+        console.log(genTime)
+        interval = setInterval(ExecuteGameOfLifeSolution, genTime);
+      }
     </script>
   </body>
 </html>
