@@ -8,10 +8,13 @@
 
   <style>
     body {
-      margin: 0;
+      margin-left:5%;
+      margin-right: 5%;
       padding-top: 5%;
       font-family: Arial, sans-serif;
       height: 100vh;
+      align-items: center;
+      justify-content: center;
     }
 
     h1,
@@ -34,13 +37,57 @@
       width: 90%;
       height: 50%;
     }
+
+    #gen_slider {
+  width: 80%;
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  height: 25px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+  transition: opacity 0.2s;
+  border-radius: 5px; /* Rounded edges */
+}
+
+/* Customize the appearance of the slider thumb */
+#gen_slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default appearance */
+  appearance: none;
+  width: 20px; /* Width of the thumb */
+  height: 20px; /* Height of the thumb */
+  background: #4CAF50; /* Thumb color */
+  cursor: pointer; /* Change cursor to pointer when hovering over thumb */
+  border-radius: 50%; /* Make the thumb circular */
+}
+
+#gen_slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/* Hover effect for the slider */
+#gen_slider:hover {
+  opacity: 1; /* Full opacity when hovered */
+  background: #b3b3b3; /* Darken the background on hover */
+}
+
+/* Focused slider effect */
+#gen_slider:focus {
+  box-shadow: 0 0 10px #4CAF50; /* Add a green glow when focused */
+}
+
   </style>
   <body>
-    <h1>GAME OF LIFE</h1>
+    <h1><center>Conway's GAME OF LIFE<center></h1>
     <div class="button-container"></div>
       <!-- Icons and buttons with corresponding actions -->
       <button onclick="restartGOL()">
-        <span class="icon">🔄</span>Generate
+        <span class="icon">🔄</span>ReGenerate
       </button>
       <button onclick="restartGOL(true)">
         <span class="icon">🧹</span>Clear
@@ -50,7 +97,10 @@
       </button>
     </div>
 
-    <input type="range" min="1" max="100" value="50"  id="gen_slider">
+    <p>Generation TIME</p>
+    <input type="range" min="1" max="5000" value="5000"  id="gen_slider" name="gen_slider">
+
+    <label for="gen_slider" id="gen_time_label"></label>
     <canvas
       class="slide"
       id="b"
@@ -95,6 +145,8 @@
       let gen = 0;
       let entities = [];
 
+      var drawText = true;
+
       for (var i = 0; i < gridSize; i++) {
         for (var j = 0; j < gridSize; j++) {
           //getRandomInt(3)==2
@@ -106,7 +158,7 @@
 
       function renderSelected() {
         for (let i = 0; i < selected.length; i++) {
-          ctxB.fillStyle = "orange";
+          ctxB.fillStyle = "yellow";
           ctxB.fillRect(
             selected[i].x,
             selected[i].y + tro,
@@ -124,6 +176,8 @@
       canvasB?.addEventListener("mouseup", touchedCell2);
 
       let selected = [];
+      let selected_lifeForm = [[]];
+   
 
       function touchedCell(event) {
         const rect = canvasB.getBoundingClientRect();
@@ -193,14 +247,15 @@
       gen_Slider.value = genTime
       gen_Slider.max = genTime 
       gen_Slider.min=0;
+      let gen_time_label = document.getElementById("gen_time_label")
+      gen_time_label.innerHTML = gen_Slider.value
     
 
       function pauseGOL() {
         paused = !paused;
         let pauseButton = document.getElementById("pause");
-        pauseButton.innerHTML = paused ? "Play" : "Pause";
-      }
-
+        pauseButton.innerHTML = paused ? '<span class="icon">▶️</span>Play' : '<span class="icon">⏸️</span>Pause';
+      } 
 
       // in other words ExecuteGameOfLifeSolution
       async function ExecuteGameOfLifeSolution() {
@@ -263,9 +318,17 @@
           // Draw cells
           ctxB.fillStyle = entities[i].alive ? "green" : "grey";
           ctxB.fillRect(x, y + tro, gridSize - 1, gridSize - 1);
-          ctxB.font = "10px Arial";
-          ctxB.fillStyle = "white";
-          ctxB.fillText(n, x, y + 10 + tro);
+
+          if(drawText){
+
+            
+            ctxB.font = "10px Arial";
+            ctxB.fillStyle = "white";
+            ctxB.fillText(n, x+2, y + 10 + tro);
+          }
+
+
+          
         }
 
         // Update entities based on futureStatus
@@ -286,6 +349,7 @@
       gen_Slider.oninput = function() {
         clearInterval(interval)
         genTime = this.value;
+        gen_time_label.innerHTML =this.value
         console.log(genTime)
         interval = setInterval(ExecuteGameOfLifeSolution, genTime);
       }
