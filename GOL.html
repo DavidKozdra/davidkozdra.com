@@ -145,7 +145,7 @@
       let gen = 0;
       let entities = [];
 
-      var drawText = true;
+      var drawText = false;
 
       for (var i = 0; i < gridSize; i++) {
         for (var j = 0; j < gridSize; j++) {
@@ -315,9 +315,22 @@
             entities[i].futureStatus = false; // Cell dies in the next generation
           }
 
-          // Draw cells
-          ctxB.fillStyle = entities[i].alive ? "green" : "grey";
-          ctxB.fillRect(x, y + tro, gridSize - 1, gridSize - 1);
+                  // Draw cells
+        // Assign the fillStyle based on the value of n
+        ctxB.fillStyle = (function() {
+          if (n > 4) {
+            return "#00d30b"; // Bright green
+          } else if (n == 3) {
+            return "#14a02e"; // Medium green
+          } else if (n < 3 && n >= 1) {
+            return "#7c934f"; // Dark green
+          } else {
+            return "grey"; // Default grey
+          }
+        })();
+
+        // Draw the rectangle
+        ctxB.fillRect(x, y + tro, gridSize - 1, gridSize - 1);
 
           if(drawText){
 
@@ -350,7 +363,7 @@
         clearInterval(interval)
         genTime = this.value;
         gen_time_label.innerHTML =this.value
-        console.log(genTime)
+    
         interval = setInterval(ExecuteGameOfLifeSolution, genTime);
       }
     </script>
