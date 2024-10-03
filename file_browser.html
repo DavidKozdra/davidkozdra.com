@@ -7,7 +7,7 @@
 
     <style>
         #browser-container {
-            margin-top: 200px;
+            margin-top: 10%;
             display: grid;
             grid-template-columns: 1fr 3fr;
         }
@@ -39,7 +39,11 @@
             cursor: pointer;
             padding: 5px;
             border-bottom: 1px solid #ddd;
+            flex-direction: column;
+            display: flex;
         }
+
+   
 
         .folder:hover, .file:hover {
             background-color: #f0f0f0;
@@ -104,9 +108,18 @@
             dirObject.files.forEach(file => {
                console.log("???", file)
                 let fileElement = document.createElement('div');
+
+                let fileElementImage = document.createElement('img');
                 fileElement.className = file.dir ? 'folder' : 'file';
                 fileElement.textContent = file.name;
 
+                if (file.dir){
+                    fileElementImage.src="images/File_System_icon.png"
+                }else {
+
+                    fileElementImage.src="images/Notes.png"
+                }
+                fileElement.appendChild(fileElementImage)
                 fileElement.addEventListener('click', () => {
                     if (file.dir) {
                         // If it's a folder, navigate into it
