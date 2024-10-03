@@ -236,7 +236,7 @@
           }
         }
 
-        if(clear)  ExecuteGameOfLifeSolution()
+        if(clear)  ExecuteGameOfLifeSolution(true)
       }
 
 
@@ -258,8 +258,8 @@
       } 
 
       // in other words ExecuteGameOfLifeSolution
-      async function ExecuteGameOfLifeSolution() {
-        if (paused) {
+      async function ExecuteGameOfLifeSolution(oneShot=false) {
+        if (paused && !oneShot) {
           return;
         }
 
