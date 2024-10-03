@@ -95,12 +95,18 @@
       <button onclick="pauseGOL()" id="pause">
         <span class="icon">⏸️</span>Pause
       </button>
+     
+
+      <div>
+        <p>Generation TIME</p>
+        <input type="range" min="1" max="5000" value="5000"  id="gen_slider" name="gen_slider">
+        <label for="gen_slider" id="gen_time_label"></label>
+      </div>
+
+    
+
     </div>
 
-    <p>Generation TIME</p>
-    <input type="range" min="1" max="5000" value="5000"  id="gen_slider" name="gen_slider">
-
-    <label for="gen_slider" id="gen_time_label"></label>
     <canvas
       class="slide"
       id="b"
@@ -109,6 +115,10 @@
       aria-label="conway's game of life"
     >
     </canvas>
+    <label>
+      <input type="checkbox" id="life-display" >
+      Show Life Display
+    </label>
     <script>
       class entity {
         constructor(x, y, alive) {
@@ -144,8 +154,14 @@
       let gridSize = 12;
       let gen = 0;
       let entities = [];
-
+      let life_display = document.getElementById("life-display")
       var drawText = false;
+      life_display.addEventListener("change", (event) => {
+        console.log(event);
+        drawText = event.target.checked;
+        ExecuteGameOfLifeSolution(true)
+        // Update the game state or re-render if necessary
+      });
 
       for (var i = 0; i < gridSize; i++) {
         for (var j = 0; j < gridSize; j++) {
@@ -301,11 +317,14 @@
               n += 1;
             }
 
-            // Rule 10: Lower-left neighbor
+            // Rule 9: Lower-left neighbor
             if (x - gridSize === ox && y + gridSize === oy) {
               n += 1;
             }
+         
           }
+
+          // too much food kills as well as too few 
           if (
             (entities[i].alive && (n === 2 || n === 3)) ||
             (!entities[i].alive && n === 3)
@@ -318,11 +337,11 @@
                   // Draw cells
         // Assign the fillStyle based on the value of n
         ctxB.fillStyle = (function() {
-          if (n > 4) {
+          if (n >= 4) {
             return "#00d30b"; // Bright green
           } else if (n == 3) {
             return "#14a02e"; // Medium green
-          } else if (n < 3 && n >= 1) {
+          } else if (n ==2) {
             return "#7c934f"; // Dark green
           } else {
             return "grey"; // Default grey

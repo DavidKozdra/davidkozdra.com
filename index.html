@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
   <title>David Kozdra</title>
-  <link rel="stylesheet" href="styles/DE_styles.css" id="default">
+  <link rel="stylesheet" href="styles/DE_styles.css?v=.2" id="default">
 
   <link rel="stylesheet" id="modern" class="theme" href="styles/modern.css?v=1.15" >
   <link rel="stylesheet" id="retro" class="theme" href="styles/retro.css?v=1.3" disabled="true">
@@ -61,18 +61,40 @@
 
       <div class="navigation">
         <div class="drop-down">
-          <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon"
-              id="task-bar-icon"></button>
+          <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon" id="task-bar-icon"></button>
           <div class="drop-down-content">
-            <button id="settingsButton" onclick="desktopIconRouter(event,'System')"> System</button>
-            
-            <button onclick="desktopIconRouter(event,'term')"> Terminal</button>
-            <button onclick="desktopIconRouter(event,'calculator')"> Calculator</button>
-
-            <button onclick="desktopIconRouter(event,'notes')"> Notes</button>
-            <button onclick="refresh()"> <i class="fa fa-power-off"> </i> </button>
+      
+              <!-- Tools Category -->
+              <div class="category">
+                  <button class="category-btn">Tools</button>
+                  <div class="sub-category">
+                      <button onclick="desktopIconRouter(event,'notes')">Notes</button>
+                      <button onclick="desktopIconRouter(event,'draw')">Paint</button>
+                      <button onclick="desktopIconRouter(event,'calculator')">Calculator</button>
+                      <button onclick="desktopIconRouter(event,'term')">Terminal</button>
+                  </div>
+              </div>
+      
+              <!-- Games Category -->
+              <div class="category">
+                  <button class="category-btn">Games</button>
+                  <div class="sub-category">
+                      <button onclick="desktopIconRouter(event,'GOL')">Game of Life </button>
+                      <button onclick="desktopIconRouter(event,'dragon_game')">Dragon Ball</button>
+                      <button onclick="desktopIconRouter(event,'nebulahivemind')">Nebula Hive Mind</button>
+                  </div>
+              </div>
+      
+              <!-- Settings -->
+              <button id="settingsButton" onclick="desktopIconRouter(event,'System')">System</button>
+      
+              <!-- Power Button -->
+              <button onclick="refresh()"> <i class="fa fa-power-off"></i> Power</button>
           </div>
-        </div>
+      </div>
+        
+
+
         <div class="drop-down">
           <button onclick="desktopIconRouter(event,'about')"> About Me </button>
         </div>
@@ -299,11 +321,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let maxZindex = 1;
     async function update() {
 
-
       if (loading) {
+
+        let stylesheetId = localStorage.getItem("defaultStyleSheet")
+         window.parent.postMessage({ stylesheetId }, '*');
         document.getElementsByClassName("loader-page")[0].style.display = "block";
         document.getElementById("de").style.display = "none";
-        await delay(1200);
+        await delay(500);
         document.getElementsByClassName("loader-page")[0].style.display = "none";
         document.getElementById("de").style.display = "block";
         loading = false;
@@ -719,8 +743,20 @@ document.addEventListener('DOMContentLoaded', () => {
           game.src = "https://main.d3722xrzul5kke.amplifyapp.com/";
           game.style.height = "100%";
           game.style.width = "100%";
+          game.style.overflowY = "hidden";
           createWindow("Dragon Fighters Balls", game, "./images//dragon_fighter.png", 800, false);
           break;
+          case "nebulahivemind":
+            let neb = document.createElement("iframe");
+            neb.name = "Nebula";
+            neb.title = "Nebula";
+            neb.src = "http://142.93.243.224:3001/";
+            neb.style.height = "100%";
+            neb.style.width = "100%";
+            neb.style.overflowY = "hidden";
+            createWindow("Nebula", neb, "./images/Nebula", 800, false);
+          break;
+
 
         case "notes":
           let notes = document.createElement("div");
@@ -1060,6 +1096,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Enable the selected stylesheet in the parent document
         target_theme.disabled = false;
 
+      }else {
+        console.error("event style sheets not enabled")
       }
     }
 

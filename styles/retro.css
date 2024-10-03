@@ -8,6 +8,7 @@
     --system-font: "Roboto";
     --main-gradient : linear-gradient(to right, #768d92, #0083b0);
     --window-header: linear-gradient(to right, #26505a, #0d323f);
+    --background-image:url(../images/backgroundOption2.jpg);
 }
 
 
@@ -21,7 +22,7 @@
 }
 
 #desktop {
-    background-image: url(../images/backgroundOption2.jpg);
+    background-image: var(--background-image);
 }
 
 .de-button {

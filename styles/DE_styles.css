@@ -1,7 +1,6 @@
 
 /*
-Default theme styles
-
+Shared Desktop env styles for all components 
 */
 
 body {
@@ -13,12 +12,16 @@ body {
 }
 
 .loader-page {
-    background-color: #000;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    background-image: var(--background-image);
+    background-repeat: no-repeat;
+    animation: flickerScreen .5s infinite;
+    width: 100dvw;
+    background-size: cover;
 }
 
 .fa-brands{
@@ -44,7 +47,6 @@ body {
 .loader-display {
     top: 50%;
     left: 50%;
-    color: #fff;
     font-size: 5vw;
     font-weight: 700;
     text-transform: uppercase;
@@ -52,21 +54,10 @@ body {
     /*
     font-family: system-ui, -apple-system, BlinkMacSystemFont;
     */
+    background-repeat: no-repeat;
     font-family: 'Roboto', sans-serif;
     text-align: center;
     z-index: 5;
-}
-
-@keyframes flickerScreen {
-    0% { opacity: 1; 
-        background: black;
-    }
-    50% { opacity: 0.6;
-        background: #fff;
-    }
-    100% { opacity: 1; 
-        background: #000;
-    }
 }
 
 .loader-back {
@@ -77,13 +68,23 @@ body {
     width: 20dvw;
     height: 2dvw;
     z-index: 5;
+
 }
 .loader-icon-inner {
     background: var(--main-gradient);
     width: 0dvw;
     height: 2dvw;
-    -webkit-animation: grow 1s linear ; 
-    animation: grow 1s linear;
+    -webkit-animation: grow .5s linear ; 
+    animation: grow .5s linear;
+}
+
+@keyframes flickerScreen {
+    0% { opacity: .1; 
+    }
+    50% { opacity: 0.6;
+    }
+    100% { opacity: 1; 
+    }
 }
 
 
@@ -94,7 +95,7 @@ body {
 }
 
 #desktop {
-    background-image: url(../images/Rainbow_iPad+2.png); 
+    background-image: var(--background-image); 
     height:93.5vh;
     width: 100dvw;
     overflow: hidden;
@@ -187,7 +188,6 @@ button {
     border-radius: 10px;
     padding:10px;
     row-gap: 20px;
-
     font-size: 1.5dvh;
 
 }
@@ -229,12 +229,55 @@ button {
     flex-direction: column;
     z-index:2;
     cursor: pointer;
-
-    font-size: 5em;
 }
 
 
+.category {
+    margin-bottom: 10px;
+}
 
+.category-btn {
+    background-color: var(--system-grey);
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 1.2dvh;
+    text-align: left;
+    width: 100%;
+}
+
+.category-btn:hover {
+    background-color: var(--window-header-hover);
+    color: white;
+}
+
+.sub-category {
+    display: none;
+    flex-direction: column;
+    margin-left: 20px;
+
+}
+
+.sub-category button {
+    background-color: transparent;
+    border: none;
+    padding: 5px 0;
+    color: var(--text);
+    font-size: 1dvh;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sub-category button:hover {
+    color: var(--window-header-hover);
+    
+}
+
+.category:hover .sub-category {
+    display: flex;
+    flex-direction: column;
+}
 
 
 .btn-group {
@@ -472,8 +515,8 @@ button {
     margin: 100px auto; /* Gives that scrolling effect as the typing happens */
     letter-spacing: .15em; /* Adjust as needed */
     animation: 
-      fadeIn .1s steps(10, end),
-      typing .7s steps(40, end),
+      fadeIn .5s steps(10, end),
+      typing .4s steps(40, end),
       blink-caret .5s step-end;    
   }
 
