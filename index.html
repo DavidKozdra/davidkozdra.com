@@ -195,7 +195,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   
 
- fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"testing lol", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"file 2 write waht you want and it will save "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
+ fileSystem = (localStorage.getItem("fileSystem") == null ) ? [{dir:"/" , files:[{name:"text.txt", content:"thanks for checking out my website friend ", dir:false}, {name:"home", dir:true}]}, {dir:"home" , files:[{name:"text2.txt", content:"file 2 write waht you want and it will save "}]} ] : JSON.parse(localStorage.getItem("fileSystem"));
         
   window.addEventListener('message', (event) => {
     receiveMessage(event)
@@ -777,7 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
           files.src = "./file_browser.html";
           files.style.height = "100%";
           files.style.width = "100%";
-          createWindow("files", files, "./images/ME.jpg", 800);
+          createWindow("files", files, "./images/File_System_icon.png", 800);
           break;
 
         case "old":

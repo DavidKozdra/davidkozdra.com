@@ -7,10 +7,7 @@
 
     <style>
         #browser-container {
-            /*
-                grid 
-                3 by 1
-            */
+            margin-top: 200px;
             display: grid;
             grid-template-columns: 1fr 3fr;
         }
@@ -18,83 +15,145 @@
         #file-navigation {
             display: flex;
             flex-direction: column;
+        }
+
+        #browser {
 
         }
 
-        #browser {}
+        #top {
 
-        #top{}
-        
-        #arrows{
+        }
 
+        #arrows {
             display: flex;
             flex-direction: row;
+            justify-content: space-between;
         }
 
-        #search {}
+        #search {
 
+        }
+
+        .folder, .file {
+            cursor: pointer;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .folder:hover, .file:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
-    
+
     <div id="browser-container">
         <div id="file-navigation">
-            NAV
+            <div id="arrows">
+                <button id="back-btn" disabled>Back</button>
+                <button id="up-btn">Up</button>
+            </div>
+            <div id="dir-content">
+                NAV
+            </div>
         </div>
 
         <div id="browser">
             <div id="top">
-                <div id="arrows"></div>
-
                 <div id="search">
-
+                    <input type="text" id="search-input" placeholder="Search files...">
                 </div>
             </div>
-            CONTENT
+            <div id="file-viewer">
+                CONTENT
+            </div>
         </div>
     </div>
 
     <script>
-        // find all from files in local storage fileSystem
-        let file_system = localStorage.getItem("filesystem")
+        // Get file system data from localStorage (as JSON)
+        let fileSystem = JSON.parse(localStorage.getItem("fileSystem")) || [];
 
-        /*
-        [
-    {
-        "dir": "/",
-        "files": [
-            {
-                "name": "text.txt",
-                "content": "this is a test file you can read it directly or in the terminal\n\nadded from terminal\n\n",
-                "dir": false
-            },
-            {
-                "name": "home",
-                "dir": true
+        // Pointer to current directory
+        let currentDir = "/";
+        let history = [];  // To track directory history for back button
+
+        // Function to render the current directory content
+        function renderCurrentDir() {
+            // Find the current directory object
+            let dirObject = null
+            console.log(fileSystem.length)
+            for (let i = 0; i < fileSystem.length; i++) {
+                console.log(fileSystem[i])
+                if (fileSystem[i].dir == currentDir) {
+                    //this should be parent
+                    dirObject = fileSystem[i];
+                    break
+                }
             }
-        ]
-    },
-    {
-        "dir": "home",
-        "files": [
-            {
-                "name": "text2.txt",
-                "content": "testing lol2 "
-            }
-        ]
-    }
-]
-        */
-        //pointer to current dir
+            let dirContent = document.getElementById('dir-content');
+            dirContent.innerHTML = ''; // Clear current content
 
+            if (!dirObject) {
+                console.log("file system error")
+                return
+            }; // Handle case if directory not found
 
-        function RenderCurrentDir(){
+            console.log(dirObject.files, "??")
+            dirObject.files.forEach(file => {
+               console.log("???", file)
+                let fileElement = document.createElement('div');
+                fileElement.className = file.dir ? 'folder' : 'file';
+                fileElement.textContent = file.name;
 
+                fileElement.addEventListener('click', () => {
+                    if (file.dir) {
+                        // If it's a folder, navigate into it
+                        history.push(currentDir);
+                        currentDir = file.name;
+                        renderCurrentDir();
+                    } else {
+                        // Display file content if it's a file
+                        displayFileContent(file);
+                    }
+                });
+
+                dirContent.appendChild(fileElement);
+            });
+
+            // Enable or disable the "Back" button based on history
+            document.getElementById('back-btn').disabled = history.length === 0;
+       
         }
 
-        function TransferTo(dir){
-            //set and render current dir 
+        // Function to display file content in the browser area
+        function displayFileContent(file) {
+            let fileViewer = document.getElementById('file-viewer');
+            fileViewer.textContent = file.content || 'No content available.';
         }
+
+        // Navigate back in directory history
+        document.getElementById('back-btn').addEventListener('click', () => {
+            if (history.length > 0) {
+                currentDir = history.pop();
+                renderCurrentDir();
+            }
+        });
+
+        // Navigate up in the directory hierarchy
+        document.getElementById('up-btn').addEventListener('click', () => {
+            if (currentDir !== "/") {
+                let parentDir = currentDir.substring(0, currentDir.lastIndexOf('/')) || "/";
+                currentDir = parentDir;
+                renderCurrentDir();
+            }
+        });
+        document.getElementById('up-btn').disabled = currentDir=="/"
+
+        // Initial render
+        renderCurrentDir();
     </script>
+
 </body>
 </html>
