@@ -68,6 +68,8 @@
                 <div class="category">
                     <div class="category-btn">Tools</div>
                     <div class="sub-category">
+                      
+                      <button onclick="desktopIconRouter(event,'files')">Files</button>
                         <button onclick="desktopIconRouter(event,'notes')">Notes</button>
                         <button onclick="desktopIconRouter(event,'draw')">Paint</button>
                         <button onclick="desktopIconRouter(event,'calculator')">Calculator</button>
@@ -80,7 +82,7 @@
                     <div class="category-btn">Games</div>
                     <div class="sub-category">
                         <button onclick="desktopIconRouter(event,'GOL')">Game of Life </button>
-                        <button onclick="desktopIconRouter(event,'dragon_game')">Dragon Ball</button>
+                        <button onclick="desktopIconRouter(event,'dragon_game')">dragon fighter conquest</button>
                         <button onclick="desktopIconRouter(event,'nebulahivemind')">Nebula Hive Mind</button>
                     </div>
                 </div>
@@ -145,8 +147,8 @@
     
                 <div class="category">
                     <div class="category-btn">Academic</div>
-                    <div class="sub-category">
-                        <button > <a href="https://flpolycon.org/"></a> FL-polycon</button>
+                    <div class="sub-sub-category">
+                        <button > <a href="https://flpolycon.org/">FL-polycon</a> </button>
                     </div>
                 </div>
             </div>
@@ -198,7 +200,7 @@
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dragon_game')"  
         o tabindex="0">
         <img src="./images/dragon_fighter.png" alt="desktop icon of a computer terminal black and lime green"></img>
-        <p contenteditable="true" class="icon-text"> dragon fighter balls</p>
+        <p contenteditable="true" class="icon-text"> dragon fighter conquest</p>
       </div>
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" 
            tabindex="0">
@@ -781,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
           game.style.height = "100%";
           game.style.width = "100%";
           game.style.overflowY = "hidden";
-          createWindow("Dragon Fighters Balls", game, "./images//dragon_fighter.png", 800, false);
+          createWindow("dragon fighter conquest", game, "./images//dragon_fighter.png", 800, false);
           break;
           case "nebulahivemind":
             let neb = document.createElement("iframe");

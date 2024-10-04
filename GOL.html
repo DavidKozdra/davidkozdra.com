@@ -99,7 +99,7 @@
 
       <div>
         <p>Generation TIME</p>
-        <input type="range" min="1" max="5000" value="5000"  id="gen_slider" name="gen_slider">
+        <input type="range" min="1" max="5000" value="500"  id="gen_slider" name="gen_slider">
         <label for="gen_slider" id="gen_time_label"></label>
       </div>
 
@@ -256,12 +256,12 @@
       }
 
 
-      let genTime = 5000;
+      let genTime = 500;
       let paused = false;
 
       let gen_Slider = document.getElementById("gen_slider")
       gen_Slider.value = genTime
-      gen_Slider.max = genTime 
+      gen_Slider.max = 5000 
       gen_Slider.min=0;
       let gen_time_label = document.getElementById("gen_time_label")
       gen_time_label.innerHTML = gen_Slider.value
