@@ -59,62 +59,99 @@
     <div class="task-bar">
       <!-- Navigation Menu -->
 
-      <div class="navigation">
-        <div class="drop-down">
-          <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon" id="task-bar-icon"></button>
-          <div class="drop-down-content">
-      
-              <!-- Tools Category -->
-              <div class="category">
-                  <button class="category-btn">Tools</button>
-                  <div class="sub-category">
-                      <button onclick="desktopIconRouter(event,'notes')">Notes</button>
-                      <button onclick="desktopIconRouter(event,'draw')">Paint</button>
-                      <button onclick="desktopIconRouter(event,'calculator')">Calculator</button>
-                      <button onclick="desktopIconRouter(event,'term')">Terminal</button>
-                  </div>
-              </div>
-      
-              <!-- Games Category -->
-              <div class="category">
-                  <button class="category-btn">Games</button>
-                  <div class="sub-category">
-                      <button onclick="desktopIconRouter(event,'GOL')">Game of Life </button>
-                      <button onclick="desktopIconRouter(event,'dragon_game')">Dragon Ball</button>
-                      <button onclick="desktopIconRouter(event,'nebulahivemind')">Nebula Hive Mind</button>
-                  </div>
-              </div>
-      
-              <!-- Settings -->
-              <button id="settingsButton" onclick="desktopIconRouter(event,'System')">System</button>
-      
-              <!-- Power Button -->
-              <button onclick="refresh()"> <i class="fa fa-power-off"></i> Power</button>
-          </div>
-      </div>
+        <div class="navigation">
+          <div class="drop-down">
+            <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon" id="task-bar-icon"></button>
+            <div class="drop-down-content">
         
-
-
-        <div class="drop-down">
-          <button onclick="desktopIconRouter(event,'about')"> About Me </button>
+                <!-- Tools Category -->
+                <div class="category">
+                    <div class="category-btn">Tools</div>
+                    <div class="sub-category">
+                        <button onclick="desktopIconRouter(event,'notes')">Notes</button>
+                        <button onclick="desktopIconRouter(event,'draw')">Paint</button>
+                        <button onclick="desktopIconRouter(event,'calculator')">Calculator</button>
+                        <button onclick="desktopIconRouter(event,'term')">Terminal</button>
+                    </div>
+                </div>
+        
+                <!-- Games Category -->
+                <div class="category">
+                    <div class="category-btn">Games</div>
+                    <div class="sub-category">
+                        <button onclick="desktopIconRouter(event,'GOL')">Game of Life </button>
+                        <button onclick="desktopIconRouter(event,'dragon_game')">Dragon Ball</button>
+                        <button onclick="desktopIconRouter(event,'nebulahivemind')">Nebula Hive Mind</button>
+                    </div>
+                </div>
+        
+                <!-- Settings -->
+                <button id="settingsButton" onclick="desktopIconRouter(event,'System')">System</button>
+        
+                <!-- Power Button -->
+                <button onclick="refresh()" style="padding-bottom: 10%;"> <i class="fa fa-power-off"></i> Power</button>
+            </div>
         </div>
-        <div class="drop-down">
-          <button style="cursor: pointer;"> Projects </button>
-          <div class="drop-down-content">
-            <button onclick="desktopIconRouter(event,'old')"> My Website</button>
+          
 
-            <button> <a href="https://virtualnerd1.itch.io/cloudy-meadows" target="_blank" style="color: whitesmoke;">
-                Cloudy Meadows </a></button>
 
-                <button> <a href="http://142.93.243.224:3001/" target="_blank" style="color: whitesmoke;">
-                  Nebula Hive Mind </a></button>
-
-                  <!--
-                <button> <a href="https://red.chat" target="_blank" style="color: whitesmoke;">
-                  Red Chat </a></button>-->
+          <div class="drop-down">
+            <button onclick="desktopIconRouter(event,'about')"> About Me </button>
           </div>
+          
+
+          <div class="drop-down">
+            <button style="cursor: pointer;" onclick="toggleProjectsDropdown()">Projects</button>
+            <div class="drop-down-content" id="projectsDropdown">
+                <div class="category">
+                    <div class="category-btn">Personal</div>
+                    <div class="sub-category">
+                 
+                        <button class="subcategory-btn">Games</button>
+                        <div class="sub-sub-category">     
+                      <button>
+                          <a href="https://virtualnerd1.itch.io/cloudy-meadows" target="_blank" style="color: whitesmoke;">Cloudy Meadows</a>
+                      </button>
+                      <button>
+                          <a href="http://142.93.243.224:3001/" target="_blank" style="color: whitesmoke;">Nebula Hive Mind</a>
+                      </button>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="category">
+                    <div class="category-btn">Professional</div>
+                    <div class="sub-category">
+                        <button class="subcategory-btn">Promo</button>
+                        <div class="sub-sub-category">
+                          <button>
+                          
+                            <a href="https://play.google.com/store/apps/details?id=com.promoapp.promo" target="_blank" style="color: whitesmoke;">Promo app</a></button>
+                        </div>
+                    </div>
+
+                    <div class="sub-category">
+                      <button class="subcategory-btn">RedChip</button>
+                      <div class="sub-sub-category">
+                        <button>
+                          <a href="https://redchip.com/stocks" target="_blank" style="color: whitesmoke;">Stock Screener</a>
+                      </button>
+                        <button>
+                          <a href="https://red.chat" target="_blank" style="color: whitesmoke;">RedChat</a>
+                      </button>
+                      </div>
+                  </div>
+                </div>
+    
+                <div class="category">
+                    <div class="category-btn">Academic</div>
+                    <div class="sub-category">
+                        <button > <a href="https://flpolycon.org/"></a> FL-polycon</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
+          <div>
           <button onclick="desktopIconRouter(event,'resume')" > Resume</button>
   </div>
       </div>

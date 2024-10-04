@@ -6,55 +6,96 @@
     <title>Document</title>
 
     <style>
-        #browser-container {
-            margin-top: 10%;
-            display: grid;
-            grid-template-columns: 1fr 1fr 3fr;
-        }
+ body {
+    font-family: Arial, sans-serif; /* Set a clean font for the browser */
+    background-color: #f5f5f5; /* Light background for better contrast */
+    margin: 0; /* Remove default margin */
+}
 
-        #file-navigation {
-            display: flex;
-            flex-direction: column;
-        }
+#browser-container {
+    margin-top: 10%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    gap: 20px; /* Add space between columns */
+}
 
-        #content-viewer{
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
+#file-navigation {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff; /* White background for the navigation */
+    border: 1px solid #ddd; /* Light border for separation */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Inner padding */
+}
 
-        }
+#arrows {
+    display: flex;
+    justify-content: space-between;
+}
 
-        #browser {
+button {
+    padding: 8px 12px; /* Button padding */
+    font-size: 14px; /* Button font size */
+    border: none; /* Remove default borders */
+    border-radius: 4px; /* Rounded corners for buttons */
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text for buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+}
 
-        }
+button:hover {
+    background-color: #0056b3; /* Darken button on hover */
+}
 
-        #top {
+#search {
+    margin-top: 10px; /* Space above search */
+}
 
-        }
+#search input {
+    width: 100%; /* Full width input */
+    padding: 8px; /* Padding for the input */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 14px; /* Input font size */
+}
 
-        #arrows {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-        }
+#browser {
+    background-color: #fff; /* White background for content area */
+    border: 1px solid #ddd; /* Light border for content area */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Inner padding */
+}
 
-        #search {
+#content-viewer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px; /* Space above content */
+}
 
-        }
+.folder, .file {
+    cursor: pointer;
+    padding: 10px; /* Padding for items */
+    border-bottom: 1px solid #ddd; /* Light border below items */
+    display: flex;
+    align-items: center; /* Center align items */
+}
 
-        .folder, .file {
-            cursor: pointer;
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
-            flex-direction: column;
-            display: flex;
-        }
+.folder:hover, .file:hover {
+    background-color: #f0f0f0; /* Light background on hover */
+}
 
-   
+.folder img, .file img {
+    width: 24px; /* Set width for icons */
+    height: 24px; /* Set height for icons */
+    margin-right: 10px; /* Space between icon and text */
+}
 
-        .folder:hover, .file:hover {
-            background-color: #f0f0f0;
-        }
+.file p, .folder p {
+    margin: 0; /* Remove default margin */
+    font-size: 14px; /* Set font size */
+    color: #333; /* Darker text for better visibility */
+}
+
     </style>
 </head>
 <body>

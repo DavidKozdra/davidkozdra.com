@@ -231,54 +231,21 @@ button {
     cursor: pointer;
 }
 
-
-.category {
-    margin-bottom: 10px;
-}
-
-.category-btn {
-    background-color: var(--system-grey);
-    color: black;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 1.2dvh;
-    text-align: left;
-    width: 100%;
-}
-
-.category-btn:hover {
-    background-color: var(--window-header-hover);
-    color: white;
-}
-
-.sub-category {
-    display: none;
-    flex-direction: column;
-    margin-left: 20px;
-
-}
-
-.sub-category button {
-    background-color: transparent;
-    border: none;
-    padding: 5px 0;
+.category-btn ,.subcategory-btn{
+    text-decoration: underline;
+    font-weight: bolder;
     color: var(--text);
-    font-size: 1dvh;
-    text-align: left;
-    cursor: pointer;
+
 }
 
-.sub-category button:hover {
-    color: var(--window-header-hover);
-    
+.category-btn:hover ,.subcategory-btn{
+    background-color: transparent;
+
 }
 
-.category:hover .sub-category {
-    display: flex;
-    flex-direction: column;
+.subcategory-btn {
+    text-indent: 5%;
 }
-
 
 .btn-group {
     display: flex;
@@ -346,6 +313,7 @@ button {
     width: 100%;
     position: fixed;
     cursor: move;    
+    user-select: none;
 }
 
 .window-icon {
