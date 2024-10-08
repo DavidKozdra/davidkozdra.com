@@ -139,8 +139,9 @@ button {
 
 }
 
-#clock {
-    font-size: 1.3dvh;
+
+.sub-sub-category button a{
+    color: white;
 }
 
 #Contact {

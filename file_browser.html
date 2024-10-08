@@ -145,7 +145,10 @@
     </div>
 
     <script>
-            let fileSystem = JSON.parse(localStorage.getItem("fileSystem")) || [];
+           // Tree file system with full paths
+
+
+    localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
 
         // Pointer to current directory
         let currentDir = "/";
