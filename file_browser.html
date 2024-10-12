@@ -143,51 +143,53 @@
             </div>
         </div>
     </div>
-
     <script>
-           // Tree file system with full paths
 
-
-    localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
-
+        // tree file system
+        let fileSystem = (localStorage.getItem("fileSystem") == null) ? [{ dir: "/", files: [{ name: "text.txt", content: "this is a test file you can read it directly or in the terminal", dir: false }, { name: "home", dir: true }] }, { dir: "home", files: [{ name: "text2.txt", content: ":) " }] }] : localStorage.getItem("fileSystem");
+        if(!fileSystem){
+            // Save default structure to localStorage
+            localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+        } 
+    
         // Pointer to current directory
         let currentDir = "/";
         let history = [];  // To track directory history for back button
-
+    
         // Function to render the current directory content
         function renderCurrentDir() {
             // Find the current directory object
             let dirObject = fileSystem.find(dir => dir.dir === currentDir);
             let dirContent = document.getElementById('content-viewer');
             dirContent.innerHTML = ''; // Clear current content
-
+    
             if (!dirObject) {
                 console.error("Directory not found");
                 return;
             }
-
+    
             // Render breadcrumbs
             renderBreadcrumbs();
-
+    
             // Get search query
             let searchQuery = document.getElementById('search-input').value.toLowerCase();
-
+    
             // Filter files and folders based on search query
             let filteredFiles = dirObject.files.filter(file => file.name.toLowerCase().includes(searchQuery));
-
+    
             filteredFiles.forEach(file => {
                 let fileElement = document.createElement('div');
                 fileElement.className = file.dir ? 'folder' : 'file';
-
+    
                 let fileElementImage = document.createElement('img');
                 fileElementImage.src = file.dir ? 'images/File_System_icon.png' : 'images/Notes.png';
-
+    
                 let fileElementTitle = document.createElement('p');
                 fileElementTitle.textContent = file.name;
-
+    
                 fileElement.appendChild(fileElementImage);
                 fileElement.appendChild(fileElementTitle);
-
+    
                 fileElement.addEventListener('dblclick', () => {
                     if (file.dir) {
                         // If it's a folder, navigate into it
@@ -199,24 +201,24 @@
                         openFile(file);
                     }
                 });
-
+    
                 dirContent.appendChild(fileElement);
             });
-
+    
             // Update buttons' disabled state
             document.getElementById('back-btn').disabled = history.length === 0;
             document.getElementById('up-btn').disabled = currentDir === '/';
         }
-
+    
         // Function to render breadcrumbs
         function renderBreadcrumbs() {
             let breadcrumbs = document.getElementById('breadcrumbs');
             breadcrumbs.innerHTML = '';
-
+    
             let pathParts = currentDir.split('/').filter(part => part);
             let path = '';
             breadcrumbs.innerHTML += `<a href="#" data-path="/">Home</a> / `;
-
+    
             pathParts.forEach((part, index) => {
                 path += `/${part}`;
                 if (index === pathParts.length - 1) {
@@ -225,7 +227,7 @@
                     breadcrumbs.innerHTML += `<a href="#" data-path="${path}">${part}</a> / `;
                 }
             });
-
+    
             // Add event listeners to breadcrumbs
             const breadcrumbLinks = breadcrumbs.querySelectorAll('a');
             breadcrumbLinks.forEach(link => {
@@ -237,12 +239,13 @@
                 });
             });
         }
-
+    
         // Function to open a file (you can customize this)
         function openFile(file) {
-            //need to use the DE router event
+            // Placeholder for file open action
+            alert("Opening file: " + file.name);
         }
-
+    
         // Navigate back in directory history
         document.getElementById('back-btn').addEventListener('click', () => {
             if (history.length > 0) {
@@ -250,7 +253,7 @@
                 renderCurrentDir();
             }
         });
-
+    
         // Navigate up in the directory hierarchy
         document.getElementById('up-btn').addEventListener('click', () => {
             if (currentDir !== "/") {
@@ -260,15 +263,16 @@
                 renderCurrentDir();
             }
         });
-
+    
         // Event listener for search input
         document.getElementById('search-input').addEventListener('input', () => {
             renderCurrentDir();
         });
-
+    
         // Initial render
         renderCurrentDir();
     </script>
+    
 
 </body>
 </html>
