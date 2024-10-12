@@ -146,11 +146,18 @@
     <script>
 
         // tree file system
-        let fileSystem = (localStorage.getItem("fileSystem") == null) ? [{ dir: "/", files: [{ name: "text.txt", content: "this is a test file you can read it directly or in the terminal", dir: false }, { name: "home", dir: true }] }, { dir: "home", files: [{ name: "text2.txt", content: ":) " }] }] : localStorage.getItem("fileSystem");
+        let fileSystem = (localStorage.getItem("fileSystem") == null) ? [{ dir: "/", files: [{ name: "text.txt", content: "this is a test file you can read it directly or in the terminal", dir: false }, { name: "home", dir: true }] }, { dir: "home", files: [{ name: "text2.txt", content: ":) " }] }] : JSON.parse(localStorage.getItem("fileSystem"));
+
         if(!fileSystem){
             // Save default structure to localStorage
             localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
-        } 
+            console.log("?")
+        }else {
+
+            localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+            fileSystem= fileSystem
+            console.log("!")
+        }
     
         // Pointer to current directory
         let currentDir = "/";
