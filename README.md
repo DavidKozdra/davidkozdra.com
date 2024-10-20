@@ -2,7 +2,7 @@
 
 # David Kozdra Portfolio - DK OS
 
-Welcome to **[David Kozdra's Portfolio](https://davidkozdra.com)**, an interactive front-end experience designed to emulate the look and feel of a desktop environment (DE). This portfolio serves as a showcase of my skills as a front-end developer, blending modern web technologies with my passion for classic operating systems and graphical user interfaces (GUIs) from past computing eras.
+Welcome to **[David Kozdra's Portfolio](https://davidkozdra.com)**, an interactive front-end experience designed to emulate the look and feel of a desktop environment (DE). This portfolio serves as a showcase of my skills as a front-end developer, blending modern web technologies with my interest in classic operating systems and graphical user interfaces (GUIs) from past computing eras.
 
 ## Project Overview
 
