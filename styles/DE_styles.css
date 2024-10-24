@@ -263,7 +263,7 @@ button {
     border: 1px solid black;
     border-radius: 5px;
     width: 50%;
-    height: 50%;
+    height: 100%;
     z-index: 1;
     position: absolute;
     overflow: hidden; 
