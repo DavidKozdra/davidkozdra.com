@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABOUT</title>
+    <title>My Work Experience </title>
 
     <style>
-        body {
-            background-color: rgb(90, 0, 200);
-            background-repeat: repeat;  
-            
-        }
 
+        .hero-bio {
+            display: flex;
+            flex-direction: column;
+            font-size: 1em !important;
+        }
         .main-content {
             background-color: whitesmoke;
             border-radius: 10px;
@@ -46,11 +46,12 @@
             width: fit-content;
             margin: 5%;
         }
+
         .open-source {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
 
 .project {
     border: 1px solid #ccc;
@@ -60,14 +61,14 @@
 
 .project h1 {
     font-size: 1.5em;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 .project iframe {
     width: 100%;
     height: 400px;
     border: none;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .project a {
@@ -114,22 +115,6 @@
 
 <body style="font-size: x-large; ">
     <div class="main-content" style="text-align: center; font-size: 1em; font-weight: bold; background-color: whitesmoke;">
-        <div style="text-align: center; font-size: 2em; font-weight: bold;">
-            <p>Who is David Kozdra</p>
-        </div>
-
-        <img src="images/Me.png" alt="Profile picture David Kozdra handsome young man in a pink shirt" style="border-radius: 5%; width: 30%; height: 30%;">
-        <div>
-            <img src="./images/floridaPoly.jpg" alt="Florida poly logo purple " width="100px" height="100px">
-
-            <p>Hello, my name is David Kozdra, a Full Stack Developer, programmer, and software engineer 💻 . I hold a
-                bachelor's degree in Computer Science from <a href="https://floridapoly.edu/" target="_blank"> Florida Polytechnic
-                    University </a>. My journey in computing began with a deep fascination for understanding the inner
-                workings of things, sparked by games like Minecraft 🎮. This curiosity has driven me to create games,
-                websites, and miscellaneous applications throughout my career. 🌐</p>
-        </div>
-
-
 
         <div style="text-align: center; font-size: 2em; font-weight: bold;">
             <p>MY WORK </p>
@@ -144,7 +129,8 @@
                 <a href="https://redchip.com" target="_blank">
                     <img src="https://www.redchip.com/assets/images/corporate/redchip-logo.png" alt="RedChip logo big red circle">
                 </a>
-                <p>
+                
+                <p class="company-header">
                     <strong>RedChip Companies</strong><br>
                     <em>Software Engineer</em><br>
                     <em>Dec 2023 - Present</em><br>
@@ -157,7 +143,8 @@
                 <a href="https://redmeters.com" target="_blank">
                     <img src="./images/RedMeters.png" alt="Red Meters logo red chevron shape">
                 </a>
-                <p>
+               
+                <p class="company-header">
                     <strong>Red Meters</strong><br>
                     <em>Software Developer</em><br>
                     <em>Oct 2023 - Nov 2023</em><br>
@@ -170,7 +157,8 @@
                 <a href="https://play.google.com/store/apps/details?id=com.promoapp.promo" target="_blank">
                     <img src="./images/PromoSite.png" alt="Promo application logo">
                 </a>
-                <p>
+             
+                <p class="company-header">
                     <strong>Z Axis Solutions / Promo App</strong><br>
                     <em>Junior Software Developer</em> (May 2023 - Sep 2023)<br>
                     Worked on the Promo app, an event-based social media application. I developed web applications and backend servers using MongoDB, Express.js, Node.js, and React.js. Built middleware, email automation, and numerous backend REST API routes.
@@ -182,7 +170,7 @@
                 <a href="https://www.linkedin.com/company/bridxe/" target="_blank">
                     <img src="./images/Bridxe.jpg" alt="BridXe Logo Pink shape">
                 </a>
-                <p>
+                <p class="company-header">
                     <strong>BridXe</strong><br>
                     <em>Frontend Developer Intern</em><br>
                     A company creating a platform to predict and reevaluate the pricing of blockchain assets. I presented data visualizations, enhanced data fetching, and increased API coverage to include over 20 financial reporting platforms.
@@ -194,7 +182,8 @@
                 <a href="https://www.fighttm.com" target="_blank">
                     <img src="./images/fight.png" alt="Fight™ gold lion logo" id="fight">
                 </a>
-                <p>
+                
+                <p class="company-header">
                     <strong>Fight™</strong><br>
                     <em>Backend Engineering Intern</em><br>
                     <em>Jul 2021 - Oct 2021</em><br>

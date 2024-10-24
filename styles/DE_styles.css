@@ -210,8 +210,16 @@ button {
     padding-left: 10%;
     padding-right: 10%;
     cursor: pointer;
+
 }
 
+
+.drop-down-menu-text {
+    cursor: pointer;
+    font-weight: bolder;
+    font-size: 1.5em !important;
+
+}
 
 .navigation {
     display: flex;
@@ -363,14 +371,14 @@ button {
 }
 
 .desktop-grid {
-    display: flex;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define uniform columns */
+    gap: 20px; /* Adjusted gap for better spacing */
     padding: 10px;
-    margin: 20px;
-    height: 80%;
-    width: 90%;
-    position: absolute;
+    margin: 20px; /* Reduced margin for better layout */
 }
+
+
 
 .desktop-icon {
     cursor: pointer;
