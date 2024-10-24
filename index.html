@@ -840,7 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
           about.src = "./about.html";
           about.style.height = "100%";
           about.style.width = "100%";
-          createWindow("About", about, "./images/ME.jpg", 1800);
+          createWindow("About", about, "./images/ME.jpg", 1800,true,true);
           break;
 
         case "files":
@@ -911,12 +911,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       e.target.style.cursor = "wait";
     }
-    function createWindow(title, content, iconSrc, width, canResize = true) {
+    function createWindow(title, content, iconSrc, width, canResize = true, max_size=false) {
 
 
       const id = title.toLowerCase().replace(/\s+/g, '-'); // Generate id based on the title
       const newWindow = document.createElement("div");
+      
       newWindow.classList.add("window");
+      if(max_size){
+        
+      newWindow.classList.add("Max_window");
+      }
       newWindow.id = id;
 
 

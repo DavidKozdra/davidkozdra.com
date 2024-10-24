@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator App</title>
     <style>
         body {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100dvh;
+            height: 100vh; /* Changed from 100dvh to 100vh */
             margin: 0;
             font-family: Arial, sans-serif;
         }
 
         .calculator {
-            padding-top: 20dvh;
             border: 2px solid #ccc;
             border-radius: 5px;
-            width: 100dvw;
-            height: 100dvh;
+            width: 320px; /* Set a fixed width */
         }
 
         .display {
@@ -26,6 +25,7 @@
             text-align: right;
             font-size: 1.5em;
             border-bottom: 1px solid #ccc;
+            height: 50px;
         }
 
         .buttons {
@@ -34,7 +34,7 @@
         }
 
         button {
-            padding: 15px;
+            padding: 20px;
             font-size: 1.2em;
             border: none;
             cursor: pointer;
@@ -44,64 +44,74 @@
         button:active {
             background-color: #ccc;
         }
+
+        /* Optional: Style for the backspace button */
+        .backspace {
+            grid-column: span 2;
+        }
     </style>
-    <title>Calculator App</title>
 </head>
 <body>
-    <div class="calculator" >
+    <div class="calculator">
         <div class="display" id="display">0</div>
         <div class="buttons">
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="backspace()">←</button>
             <button onclick="appendToDisplay('/')">/</button>
             <button onclick="appendToDisplay('*')">*</button>
-            <button onclick="appendToDisplay('-')">-</button>
-            <button onclick="appendToDisplay('+')">+</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button onclick="appendToDisplay('8')">8</button>
+
             <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('-')">-</button>
+
             <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('+')">+</button>
+
             <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
             <button onclick="calculate()">=</button>
-            <button onclick="clearDisplay()">C</button>
+
+            <button onclick="appendToDisplay('0')" class="backspace">0</button>
             <button onclick="appendToDisplay('.')">.</button>
         </div>
     </div>
     <script>
-        // set the calculator to the focused element
-        document.querySelector('.calculator').focus();
-        document.addEventListener('keydown', checkkeyinput);
+        // Remove focus from non-focusable element
+        document.addEventListener('keydown', checkKeyInput);
+
         let displayValue = '0';
         const allowedKeys = ['0','1','2','3','4','5','6','7','8','9','+','-','*','/','.', 'Enter', 'Backspace'];
-        function checkkeyinput(event) {
-  
-            if (event.key == "Enter") {
+
+        function checkKeyInput(event) {
+            if (!allowedKeys.includes(event.key)) return;
+
+            event.preventDefault(); // Prevent default actions like scrolling
+
+            if (event.key === 'Enter') {
                 calculate();
-                return
-            }
-            if (event.key == "Backspace") {
-                displayValue = displayValue.slice(0, -1);
-                return
-            }
-
-            if(allowedKeys.includes(event.key)) {
-
-                appendToDisplay(event.key.toString());
+            } else if (event.key === 'Backspace') {
+                backspace();
+            } else {
+                appendToDisplay(event.key);
             }
         }
 
         function updateDisplay() {
+            if (displayValue === '') {
+                displayValue = '0';
+            }
             if (displayValue == "80085") {
-                alert("Very Funny this is a professional website. move along");
+                alert("Very funny, but let's keep it professional.");
             }
             document.getElementById('display').textContent = displayValue;
         }
 
         function appendToDisplay(value) {
-            if (displayValue === '0') {
+            if (displayValue === '0' && value !== '.') {
                 displayValue = value;
             } else {
                 displayValue += value;
@@ -111,6 +121,15 @@
 
         function clearDisplay() {
             displayValue = '0';
+            updateDisplay();
+        }
+
+        function backspace() {
+            if (displayValue.length > 1) {
+                displayValue = displayValue.slice(0, -1);
+            } else {
+                displayValue = '0';
+            }
             updateDisplay();
         }
 
