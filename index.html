@@ -797,42 +797,110 @@ document.addEventListener('DOMContentLoaded', () => {
           break;
 
 
-        case "notes":
+          case "notes":
           let notes = document.createElement("div");
-       
+
+        let fileSystem = localStorage.getItem("fileSystem") == null
+            ? [
+                {
+                    dir: "/",
+                    files: [
+                        {
+                            name: "text.txt",
+                            content: "this is a test file you can read it directly or in the terminal",
+                            dir: false
+                        },
+                        {
+                            name: "home",
+                            dir: true
+                        }
+                    ]
+                },
+                {
+                    dir: "home",
+                    files: [
+                        {
+                            name: "text2.txt",
+                            content: ":) "
+                        }
+                    ]
+                }
+            ]
+            : JSON.parse(localStorage.getItem("fileSystem"));
+
+          console.log(fileSystem);
+
           notes.classList.add("notes");
           notes.name = "note pad";
           notes.title = "note pad";
+
           let textArea = document.createElement("textarea");
           textArea.classList.add("notes-textarea");
           textArea.rows = "25";
           textArea.cols = "45";
           textArea.placeholder = "Enter your notes here";
+
+          let isNew = false;
+          
           if (data) {
-            console.log(data);
-            textArea.textContent = data.content;
-            console.log(textArea.value);
+              console.log("data obj", data);
+              textArea.textContent = data.content;
+              console.log(textArea.value);
+          } else {
+              console.error("notes not found");
+              // Create new data
+              isNew = true;
           }
-          // local storage for notes get and set on change of value 
+
+          // Local storage for notes: get and set on change of value
           textArea.onchange = function () {
             
-            //find this file and update the content
-            for (let i = 0; i < fileSystem.length; i++) {
-                if (fileSystem[i].dir == data.parent) {
-                    for (let j = 0; j < fileSystem[i].files.length; j++) {
-                        if (fileSystem[i].files[j].name == newTitle) {
-                            fileSystem[i].files[j].content = textArea.value;
-                        }
+            let new_file = { name: "text2.txt"+ String(Math.random()), content: textArea.textContent };
+              // Find this file and update the content
+              for (let i = 0; i < fileSystem.length; i++) {
+                if (isNew) {
+                  console.log(data)
+                    // Get the 'home' directory
+                    let homeDir = fileSystem.find(dir => dir.dir === "home");
+                    if (homeDir) {
+                        // Add the new file to the 'home' directory
+                        homeDir.files.push({
+                            name: new_file.name,
+                            content: textArea.value,
+                            dir: false
+                        });
+                    } else {
+                        // If 'home' directory doesn't exist, create it and add the file
+                        fileSystem.push({
+                            dir: "home",
+                            files: [{
+                                name: data.name,
+                                content: textArea.value,
+                                dir: false
+                            }]
+                        });
                     }
+                    isNew = false; // Reset the flag after adding the file
+                    break
                 }
-            }
-            //save in local storage
-            
-            localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+
+
+                  if (fileSystem[i].dir == data.dir || !isNew) {
+                      for (let j = 0; j < fileSystem[i].files.length; j++) {
+                          if (fileSystem[i].files[j].name == data.name) {
+                              fileSystem[i].files[j].content = textArea.value;
+                          }
+                      }
+                  }
+              }
+              // Save in local storage
+              localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
           };
+
           notes.appendChild(textArea);
-          createWindow( newTitle ? newTitle : "Notes" , notes, "./images/Notes.png", 500);
-          break;
+          console.log("window created")
+          createWindow(newTitle ? newTitle : "Notes", notes, "./images/Notes.png", 500);
+    break;
 
 
         case "about":
@@ -907,11 +975,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setCursor(e) {
-      // Your cursor-setting logic here
-      document.body.style.cursor = "wait";
-      // set important cursor styles
+      if (!e && !e.target ) return
+        if(e.target.style){
+        // Your cursor-setting logic here
+        document.body.style.cursor = "wait";
+        // set important cursor styles
 
-      e.target.style.cursor = "wait";
+        e.target.style.cursor = "wait";
+      }
     }
     function createWindow(title, content, iconSrc, width, canResize = true, max_size=false) {
 
@@ -1127,6 +1198,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       console.log(event)
+
+      if (event.data.file){
+        let file = event.data.file
+        console.log("file", file)
+        let data = {
+          content:file.content,
+          dir:event.data.dir,
+          name:file.name
+        }
+        desktopIconRouter(event,'notes', event.data.file.name ,data)
+      }
+
       if (event.data && event.data.stylesheetId) {
         // Disable all parent stylesheets
         const parentStylesheets = document.getElementsByClassName('theme');
@@ -1141,6 +1224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         target_theme.disabled = false;
 
       }else {
+
         console.error("event style sheets not enabled")
       }
     }
