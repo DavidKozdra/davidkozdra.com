@@ -140,11 +140,17 @@
     }
     .me {
       display: block;
-      margin: 20px auto;
-      width: 150px;
-      height: 150px;
       border-radius: 50%;
-      object-fit: cover;
+    }
+    #welcome {
+      text-indent: 2%;
+    }
+
+    #hero {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      font-size: 1.3em;
     }
   </style>
 
@@ -374,8 +380,6 @@
     }
 
     #welcome {
-      text-align: center;
-      justify-content: center;
       text-indent: 2%;
     }
   </style>
@@ -394,27 +398,40 @@
     
     <!-- Welcome Tab -->
     <div class="tab active" id="welcome">
-      <img src="./images/ME.jpg" class="me" alt="A picture of me, a handsome man">
-      <h1> Welcome to My Website</h1>
-      <p>
-        I am <strong>David Kozdra</strong>, a Software Engineer currently working at
-        <a href="https://redchip.com" target="_blank">RedChip Companies Inc</a>.
-      </p>
-      <p>
-        <a href="https://www.google.com/maps/place/Orlando,+FL/" target="_blank">
-          <i class="fas fa-map-marker-alt"></i> Orlando, Florida
-        </a>
-      </p>
-      <br>
+
+
+      <div id="hero">
+        
+        <div>
+          <img src="./images/ME.jpg" class="me" alt="A picture of me, a handsome man">
+
+        </div>
+  
+        <div> 
+          <h1>David Kozdra</h1>
+              <ul>
+                <li>Software Engineer</li>
+                <li>
+                    <a href="https://redchip.com" target="_blank">RedChip Companies Inc</a>.
+                </li>
+                <li>
+                    <a href="https://www.google.com/maps/place/Orlando,+FL/" target="_blank">
+                        <i class="fas fa-map-marker-alt"></i> Orlando, Florida
+                    </a>
+                </li>
+              </ul>
+        </div>
+      </div>
+  
+
+
       <p>
 
         If you're interested in my take on a more traditional website, please check out
         <a href="index copy.html" target="_blank">my old website</a>.
 
-
-
-
       </p>
+      
       <div class="skills">
         <h2>Professional Skills</h2>
         <div class="skills-container">
