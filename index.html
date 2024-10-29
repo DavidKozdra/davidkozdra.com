@@ -97,60 +97,14 @@
           
 
 
-          <div class="drop-down">
+          <div >
             <button class="drop-down-menu-text" onclick="desktopIconRouter(event,'about')"> Experience  </button>
           </div>
           
 
-          <div class="drop-down">
-            <button class="drop-down-menu-text" onclick="toggleProjectsDropdown()">Projects</button>
-            <div class="drop-down-content" id="projectsDropdown">
-                <div class="category">
-                    <div class="category-btn">Personal</div>
-                    <div class="sub-category">
-                 
-                        <button class="subcategory-btn">Games</button>
-                        <div class="sub-sub-category">     
-                      <button>
-                          <a href="https://virtualnerd1.itch.io/cloudy-meadows" target="_blank" >Cloudy Meadows</a>
-                      </button>
-                      <button>
-                          <a href="http://142.93.243.224:3001/" target="_blank" ">Nebula Hive Mind</a>
-                      </button>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="category">
-                    <div class="category-btn">Professional</div>
-                    <div class="sub-category">
-                        <button class="subcategory-btn">Promo</button>
-                        <div class="sub-sub-category">
-                          <button>     
-                            <a href="https://play.google.com/store/apps/details?id=com.promoapp.promo" target="_blank">Promo app</a></button>
-                        </div>
-                    </div>
+          <div >
+            <button class="drop-down-menu-text"  onclick="desktopIconRouter(event,'projects')">Projects</button>
 
-                    <div class="sub-category">
-                      <button class="subcategory-btn">RedChip</button>
-                      <div class="sub-sub-category">
-                        <button>
-                          <a href="https://redchip.com/stocks" target="_blank" >Stock Screener</a>
-                      </button>
-                        <button>
-                          <a href="https://red.chat" target="_blank" >RedChat</a>
-                      </button>
-                      </div>
-                  </div>
-                </div>
-    
-                <div class="category">
-                    <div class="category-btn">Academic</div>
-                    <div class="sub-sub-category">
-                        <button > <a href="https://flpolycon.org/">FL-polycon</a> </button>
-                    </div>
-                </div>
-            </div>
         </div>
           <div>
           <button  class="drop-down-menu-text" onclick="desktopIconRouter(event,'resume')" > Resume</button>
@@ -912,7 +866,15 @@ document.addEventListener('DOMContentLoaded', () => {
           about.style.width = "100%";
           createWindow("Work", about, "./images/ME.jpg", 1800,true,true);
           break;
-
+        case "projects":
+          let Projects = document.createElement("iframe");
+          Projects.name = "about David Kozdra";
+          Projects.title = "about David Kozdra";
+          Projects.src = "./projects.html";
+          Projects.style.height = "100%";
+          Projects.style.width = "100%";
+          createWindow("projects", Projects, "./images/ME.jpg", 1800,true,true);
+          break;
         case "files":
           let files = document.createElement("iframe");
           files.name = "files";

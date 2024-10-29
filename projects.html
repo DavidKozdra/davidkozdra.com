@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Projects</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            margin-top : 200px;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            padding-top: 100px;
+        }
+
+        #search-input {
+            width: 70dvw !important;
+        }
+        h2 {
+            margin: 0;
+        }
+        /* Container for Projects */
+        .project-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px auto;
+            max-width: 1000px;
+            padding: 0 20px;
+        }
+        /* Project Card Styles */
+        .project {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .project img {
+            width: 300px;
+            height: auto;
+            object-fit: cover;
+        }
+        .project-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+        }
+        .project-content p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .project-content a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+            margin-right: 15px;
+            transition: color 0.2s ease;
+        }
+        .project-content a:hover {
+            color: #0c47a1;
+        }
+        /* Filters Styles */
+        #filters {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        #filters input[type="text"],
+        #filters input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 200px;
+        }
+        #filters strong {
+            margin-right: 10px;
+            font-weight: 500;
+        }
+        .filter-section {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .filter-section label {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .filter-section input[type="checkbox"] {
+            margin-right: 5px;
+            accent-color: #1a73e8;
+        }
+        #reset-button {
+            padding: 10px 20px;
+            background-color: #1a73e8;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            align-self: flex-start;
+            transition: background-color 0.2s ease;
+        }
+        #reset-button:hover {
+            background-color: #0c47a1;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project {
+                flex-direction: column;
+            }
+            .project img {
+                width: 100%;
+            }
+        }
+
+      
+    </style>
+</head>
+<body>
+    <!-- Filters -->
+    <div id="filters">
+        <!-- Search Box -->
+        <input type="text" id="search-input" placeholder="Search projects...">
+
+        <!-- Technologies Filter -->
+        <div class="filter-section" id="technologies-filter">
+            <strong>Filter by Technologies:</strong>
+            <!-- Checkboxes will be appended here -->
+        </div>
+
+        <!-- Tags Filter -->
+        <div class="filter-section" id="tags-filter">
+            <strong>Filter by Tags:</strong>
+            <!-- Checkboxes will be appended here -->
+        </div>
+
+        <!-- Date Filter -->
+        <div class="filter-section" id="date-filter">
+            <strong>Filter by Date:</strong>
+            From: <input type="date" id="date-from">
+            To: <input type="date" id="date-to">
+        </div>
+
+        <button id="reset-button" onclick="resetFilters()">Reset Filters</button>
+    </div>
+
+    <!-- Container for Projects -->
+    <div id="projects-container" class="project-container"></div>
+
+    <!-- JavaScript code -->
+    <script>
+        // Projects array
+        let projects = [
+            {
+                name: "Portfolio Website",
+                platforms: ["Web"],
+                type: "Website",
+                demoUrl: "https://davidkozdra.com",
+                githubUrl: "https://github.com/DavidKozdra/davidkozdra.com",
+                technologies: ["HTML", "CSS", "JavaScript"],
+                people: ["David Kozdra"],
+                date: "2021-10-15",
+                image:"./images/favicon.ico",
+                tag:"personal"
+            },
+            {
+                name: "Real Time Stock Portal",
+                platforms: ["Web"],
+                type: "Website",
+                demoUrl: "https://redchip.com/stocks",
+                githubUrl: "",
+                technologies: ["HTML", "CSS", "JavaScript","PHP","Python"],
+                people: ["David Kozdra"],
+                date: "2024-03-15",
+                image:"./images/stockpage",
+                tag:"work"
+            },
+            {
+                name: "Florida Polycon Site",
+                platforms: ["Web"],
+                type: "Website",
+                demoUrl: "https://flpolycon.org",
+                githubUrl: "",
+                technologies: ["HTML", "CSS","WordPress" ],
+                people: ["David Kozdra"],
+                date: "2022-03-15",
+                image:"./images/flpcon.webp",
+                tag:"academic"
+            },
+        ];
+
+        // Filters
+        let filters = {
+            searchText: '',
+            selectedTechnologies: [],
+            selectedTags:[],
+            dateFrom: null,
+            dateTo: null
+        };
+
+        // Get all unique technologies
+        let allTechnologies = new Set();
+        projects.forEach(project => {
+            project.technologies.forEach(tech => {
+                allTechnologies.add(tech);
+            });
+        });
+        allTechnologies = Array.from(allTechnologies);
+
+        // Get all unique tags
+        let allTags = new Set();
+        projects.forEach(project => {
+            allTags.add(project.tag);
+        });
+        allTags = Array.from(allTags);
+
+        // Get DOM elements
+        const projectsContainer = document.getElementById('projects-container');
+        const searchInput = document.getElementById('search-input');
+        const technologiesFilterDiv = document.getElementById('technologies-filter');
+        const tagsFilterDiv = document.getElementById('tags-filter');
+        const dateFromInput = document.getElementById('date-from');
+        const dateToInput = document.getElementById('date-to');
+
+        // Create checkboxes for technologies
+        allTechnologies.forEach(tech => {
+            const label = document.createElement('label');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = tech;
+
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    filters.selectedTechnologies.push(this.value);
+                } else {
+                    filters.selectedTechnologies = filters.selectedTechnologies.filter(t => t !== this.value);
+                }
+                applyFilters();
+            });
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(tech));
+            technologiesFilterDiv.appendChild(label);
+        });
+
+        // Create checkboxes for tags
+        allTags.forEach(tag => {
+            const label = document.createElement('label');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = tag;
+
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    filters.selectedTags.push(this.value);
+                } else {
+                    filters.selectedTags = filters.selectedTags.filter(t => t !== this.value);
+                }
+                applyFilters();
+            });
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(tag));
+            tagsFilterDiv.appendChild(label);
+        });
+
+        // Event listeners for search input
+        searchInput.addEventListener('input', function() {
+            filters.searchText = this.value;
+            applyFilters();
+        });
+
+        // Event listeners for date inputs
+        dateFromInput.addEventListener('change', function() {
+            filters.dateFrom = this.value ? new Date(this.value) : null;
+            applyFilters();
+        });
+
+        dateToInput.addEventListener('change', function() {
+            filters.dateTo = this.value ? new Date(this.value) : null;
+            applyFilters();
+        });
+
+        // Function to apply filters
+        function applyFilters() {
+            let filteredProjects = projects.filter(project => {
+                // Filter by search text (using regex)
+                if (filters.searchText) {
+                    let regex;
+                    try {
+                        regex = new RegExp(filters.searchText, 'i');
+                    } catch (e) {
+                        // Invalid regex, skip this project
+                        return false;
+                    }
+                    let searchableText = [
+                        project.name,
+                        project.type,
+                        project.platforms.join(' '),
+                        project.technologies.join(' '),
+                        project.people.join(' ')
+                    ].join(' ');
+                    if (!regex.test(searchableText)) {
+                        return false;
+                    }
+                }
+
+                // Filter by technologies
+                if (filters.selectedTechnologies.length > 0) {
+                    let hasAllTechnologies = filters.selectedTechnologies.every(tech => project.technologies.includes(tech));
+                    if (!hasAllTechnologies) {
+                        return false;
+                    }
+                }
+
+                // Filter by tags
+                if (filters.selectedTags.length > 0) {
+                    if (!filters.selectedTags.includes(project.tag)) {
+                        return false;
+                    }
+                }
+
+                // Filter by date
+                let projectDate = new Date(project.date);
+                if (filters.dateFrom && projectDate < filters.dateFrom) {
+                    return false;
+                }
+                if (filters.dateTo && projectDate > filters.dateTo) {
+                    return false;
+                }
+
+                // Passed all filters
+                return true;
+            });
+
+            // Update the render array
+            render_array = filteredProjects;
+
+            renderProjects(render_array);
+        }
+
+        // Function to render projects
+        function renderProjects(projectsToRender) {
+            projectsContainer.innerHTML = "";
+
+            if (projectsToRender.length === 0) {
+                projectsContainer.textContent = "No projects match the filters.";
+                return;
+            }
+
+            projectsToRender.forEach(project => {
+                // Create a container for the project
+                const projectDiv = document.createElement('div');
+                projectDiv.classList.add('project');
+
+                // Project Image
+                const image = document.createElement('img');
+                image.src = project.image;
+                projectDiv.appendChild(image);
+
+                // Project Content
+                const projectContent = document.createElement('div');
+                projectContent.classList.add('project-content');
+
+                // Project Name
+                const name = document.createElement('h2');
+                name.textContent = project.name;
+                projectContent.appendChild(name);
+
+                // Project Type and Date
+                const typeDate = document.createElement('p');
+                typeDate.textContent = `${project.type} • ${new Date(project.date).toLocaleDateString()}`;
+                projectContent.appendChild(typeDate);
+
+                // Platforms
+                const platforms = document.createElement('p');
+                platforms.textContent = `Platforms: ${project.platforms.join(', ')}`;
+                projectContent.appendChild(platforms);
+
+                // Technologies
+                const technologies = document.createElement('p');
+                technologies.textContent = `Technologies: ${project.technologies.join(', ')}`;
+                projectContent.appendChild(technologies);
+
+                // People
+                const people = document.createElement('p');
+                people.textContent = `Developed by: ${project.people.join(', ')}`;
+                projectContent.appendChild(people);
+
+                // Links
+                const links = document.createElement('p');
+
+                if (project.demoUrl) {
+                    const demoLink = document.createElement('a');
+                    demoLink.href = project.demoUrl;
+                    demoLink.textContent = 'Demo';
+                    demoLink.target = '_blank';
+                    links.appendChild(demoLink);
+                }
+
+                if (project.githubUrl) {
+                    if (project.demoUrl) links.appendChild(document.createTextNode(' | '));
+                    const githubLink = document.createElement('a');
+                    githubLink.href = project.githubUrl;
+                    githubLink.textContent = 'GitHub';
+                    githubLink.target = '_blank';
+                    links.appendChild(githubLink);
+                }
+
+                projectContent.appendChild(links);
+                projectDiv.appendChild(projectContent);
+                projectsContainer.appendChild(projectDiv);
+            });
+        }
+
+        // Initialize render array and render projects
+        let render_array = [...projects];
+        renderProjects(render_array);
+
+        // Reset Filters Function
+        function resetFilters(){
+            filters = {
+                searchText: '',
+                selectedTechnologies: [],
+                selectedTags:[],
+                dateFrom: null,
+                dateTo: null
+            };
+
+            // Reset inputs
+            searchInput.value = '';
+            dateFromInput.value = '';
+            dateToInput.value = '';
+
+            // Uncheck all checkboxes
+            document.querySelectorAll('#technologies-filter input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelectorAll('#tags-filter input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            applyFilters();
+        }
+    </script>
+</body>
+</html>
