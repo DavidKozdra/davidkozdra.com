@@ -310,7 +310,7 @@
 
         function DisplayFileContent(file) {
             // if ls is called 
-            let out = ""
+            let out =" "
             for (let i = 0; i < fileSystem.length; i++) {
                 if (fileSystem[i].dir == currentDir) {
                     for (let j = 0; j < fileSystem[i].files.length; j++) {
@@ -320,7 +320,7 @@
                     }
                 }
             }
-            print(out);
+            print( out);
         }
 
         function enterCommand() {
@@ -426,10 +426,17 @@
         }
 
         function print(text) {
+            let output = document.querySelector(".output");
+
+            // Add a line break before the new output
+            let br = document.createElement("br");
+            output.appendChild(br);
+
             let prompt = document.createElement("div");
             prompt.innerHTML = text;
-            document.querySelector(".output").appendChild(prompt);
+            output.appendChild(prompt);
         }
+
         function help(command) {
             let prompt = document.createElement("div");
             prompt.innerHTML = "";

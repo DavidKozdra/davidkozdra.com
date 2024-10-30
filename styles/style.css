@@ -594,11 +594,11 @@ TYPE WRITER CODE
   .btn-group button {
     width: 100%;
     margin-bottom: 10px;
-    border: 1px solid var(--main); /* Green border */
-    color: var(--main); /* White text */
-    padding: 10px 50px; /* Some padding */
-    cursor: pointer; /* Pointer/hand icon */
-    float: left; /* Float the buttons side by side */
+    border: 1px solid var(--main); 
+    color: var(--main); 
+    padding: 10px 50px;
+    cursor: pointer; 
+    float: left; 
     flex-direction: row;
     justify-content: center;
   }

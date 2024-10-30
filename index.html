@@ -4,8 +4,16 @@
 <head>
 
   <meta charset="UTF-8">
-  <meta name="description" content=" David Kozdra is a Software Developer specializing in the MERN stack ">
-  <meta name="keywords" content="Computer Science ">
+  <meta name="description" content="David Kozdra is a full-stack software developer specializing in web applications using MongoDB, Express.js, React.js, and Node.js (MERN stack).">
+<meta name="keywords" content="software developer, web developer, full-stack developer, MERN stack, MongoDB, Express.js, React.js, Node.js, JavaScript, web applications">
+
+
+<meta property="og:title" content="David Kozdra - Software Developer Specializing in MERN Stack">
+<meta property="og:description" content="Full-stack software developer specializing in web applications using MongoDB, Express.js, React.js, and Node.js.">
+<meta property="og:image" content="https://davidkozdra.com/images/favicon.ico">
+<meta property="og:url" content="https://davidkozdra.com">
+<meta property="og:type" content="website">
+
   <meta name="author" content="David Kozdra">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
@@ -30,6 +38,15 @@
     flex-direction: row;
     gap: 2px;
   }
+
+  .menu-icon {
+    width: 20px;               
+    height: 20px;             
+    margin-right: 10px;        
+    vertical-align: middle;   
+    object-fit: contain;       
+}
+
   
   /* Hide #clock-items on mobile devices */
   @media (max-width: 768px) {
@@ -63,36 +80,55 @@
           <div class="drop-down">
             <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon" id="task-bar-icon"></button>
             <div class="drop-down-content">
-        
-                <!-- Tools Category -->
-                <div class="category">
-                    <div class="category-btn">Tools</div>
-                    <div class="sub-category">
-                      
-                      <button onclick="desktopIconRouter(event,'files')">Files</button>
-                        <button onclick="desktopIconRouter(event,'notes')">Notes</button>
-                        <button onclick="desktopIconRouter(event,'draw')">Paint</button>
-                        <button onclick="desktopIconRouter(event,'calculator')">Calculator</button>
-                        <button onclick="desktopIconRouter(event,'term')">Terminal</button>
-                    </div>
-                </div>
-        
-                <!-- Games Category -->
-                <div class="category">
-                    <div class="category-btn">Games</div>
-                    <div class="sub-category">
-                        <button onclick="desktopIconRouter(event,'GOL')">Game of Life </button>
-                        <button onclick="desktopIconRouter(event,'dragon_game')">dbz fighter</button>
-                        <button onclick="desktopIconRouter(event,'nebulahivemind')">Nebula Hive Mind</button>
-                    </div>
-                </div>
-        
-                <!-- Settings -->
-                <button id="settingsButton" onclick="desktopIconRouter(event,'System')">System</button>
-        
-                <!-- Power Button -->
-                <button  onclick="refresh()" style="padding-bottom: 10%;"> <i class="fa fa-power-off"></i> Power</button>
-            </div>
+              <!-- Tools Category -->
+              <div class="category">
+                  <div class="category-btn">Tools</div>
+                  <div class="sub-category">
+                      <button onclick="desktopIconRouter(event,'files')">
+                          <img src="./images/File_System_icon.png" alt="Files Icon" class="menu-icon"> Files
+                      </button>
+                      <button onclick="desktopIconRouter(event,'notes')">
+                          <img src="./images/Notes.png" alt="Notes Icon" class="menu-icon"> Notes
+                      </button>
+                      <button onclick="desktopIconRouter(event,'draw')">
+                          <img src="./images/Pallet.png" alt="Paint Icon" class="menu-icon"> Paint
+                      </button>
+                      <button onclick="desktopIconRouter(event,'calculator')">
+                          <img src="./images/Calc.png" alt="Calculator Icon" class="menu-icon"> Calculator
+                      </button>
+                      <button onclick="desktopIconRouter(event,'term')">
+                          <img src="./images/Term.png" alt="Terminal Icon" class="menu-icon"> Terminal
+                      </button>
+                  </div>
+              </div>
+          
+              <!-- Games Category -->
+              <div class="category">
+                  <div class="category-btn">Games</div>
+                  <div class="sub-category">
+                      <button onclick="desktopIconRouter(event,'GOL')">
+                          <img src="./images/GOL.png" alt="Game of Life Icon" class="menu-icon"> Game of Life
+                      </button>
+                      <button onclick="desktopIconRouter(event,'dragon_game')">
+                          <img src="./images/dragon_fighter.png" alt="DBZ Fighter Icon" class="menu-icon"> DBZ Fighter
+                      </button>
+                      <button onclick="desktopIconRouter(event,'nebulahivemind')">
+                          <img src="./images/Space.png" alt="Nebula Hive Mind Icon" class="menu-icon"> Nebula Hive Mind
+                      </button>
+                  </div>
+              </div>
+          
+              <!-- Settings -->
+              <button id="settingsButton" onclick="desktopIconRouter(event,'System')">
+                  System
+              </button>
+          
+              <!-- Power Button -->
+              <button onclick="refresh()" style="padding-bottom: 10%;">
+                  <i class="fa fa-power-off"></i> Power
+              </button>
+          </div>
+          
         </div>
           
 
