@@ -8,15 +8,14 @@
     <style>
         /* Global Styles */
         body {
-            margin-top : 200px;
+            margin-top: 0;
             font-family: 'Roboto', sans-serif;
             background-color: #f0f2f5;
             color: #333;
-            padding-top: 100px;
         }
 
         #search-input {
-            width: 70dvw !important;
+            width: 70vw !important;
         }
         h2 {
             margin: 0;
@@ -71,19 +70,36 @@
             color: #0c47a1;
         }
         /* Filters Styles */
-        #filters {
+        #filters-container {
             position: fixed;
-            top: 20px;
+            top: 0;
             left: 0;
             width: 100%;
             background-color: #fff;
+            z-index: 100;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #filters {
             padding: 15px 20px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            z-index: 100;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+       
         }
+
+        /* Initially set max-height to a large value to accommodate content */
+        #filters.expanded {
+            max-height: 1000px;
+        }
+
+        /* When collapsed, max-height is 0 */
+        #filters.collapsed {
+            max-height: 30px;
+        }
+
         #filters input[type="text"],
         #filters input[type="date"] {
             padding: 10px;
@@ -111,6 +127,25 @@
             margin-right: 5px;
             accent-color: #1a73e8;
         }
+        #filters-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #toggle-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        /* Rotate the arrow when collapsed */
+        #toggle-button.collapsed {
+            transform: rotate(180deg);
+        }
         #reset-button {
             padding: 10px 20px;
             background-color: #1a73e8;
@@ -121,9 +156,14 @@
             font-size: 16px;
             align-self: flex-start;
             transition: background-color 0.2s ease;
+            margin-right: 10px;
         }
         #reset-button:hover {
             background-color: #0c47a1;
+        }
+        #count-label-text {
+            margin: 0;
+            font-weight: 500;
         }
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -133,37 +173,62 @@
             .project img {
                 width: 100%;
             }
+            #filters input[type="text"],
+            #filters input[type="date"] {
+                width: 100%;
+            }
         }
 
-      
+        #projects-container {
+            margin-top: 250px;
+        }
     </style>
 </head>
 <body>
-    <!-- Filters -->
-    <div id="filters">
-        <!-- Search Box -->
-        <input type="text" id="search-input" placeholder="Search projects...">
-
-        <!-- Technologies Filter -->
-        <div class="filter-section" id="technologies-filter">
-            <strong>Filter by Technologies:</strong>
-            <!-- Checkboxes will be appended here -->
+    <!-- Filters Container -->
+    <div id="filters-container">
+        <!-- Toggle Button and Controls -->
+        <div id="filters-controls">
+            <div style="display: flex; align-items: center;">
+                <button id="reset-button" onclick="resetFilters()">Reset Filters</button>
+                <p id="count-label-text">
+                    Total:
+                    <span id="count-label">0</span>
+                </p>
+            </div>
+            <button id="toggle-button" onclick="toggleDropDown()">&#9650;</button>
         </div>
+        <!-- Filters -->
+        <div id="filters" class="expanded">
+            <!-- Search Box -->
+            <input type="text" id="search-input" placeholder="Search projects...">
 
-        <!-- Tags Filter -->
-        <div class="filter-section" id="tags-filter">
-            <strong>Filter by Tags:</strong>
-            <!-- Checkboxes will be appended here -->
+            <div id="row">
+                <!-- Tags Filter -->
+                <div class="filter-section" id="tags-filter">
+                    <strong>Filter by Tags:</strong>
+                    <!-- Checkboxes will be appended here -->
+                </div>
+
+                <!-- Type Filter -->
+                <div class="filter-section" id="type-filter">
+                    <strong>Filter by Type:</strong>
+                    <!-- Checkboxes will be appended here -->
+                </div>
+            </div>
+            <!-- Technologies Filter -->
+            <div class="filter-section" id="technologies-filter">
+                <strong>Filter by Technologies:</strong>
+                <!-- Checkboxes will be appended here -->
+            </div>
+
+            <!-- Date Filter -->
+            <div class="filter-section" id="date-filter">
+                <strong>Filter by Date:</strong>
+                From: <input type="date" id="date-from">
+                To: <input type="date" id="date-to">
+            </div>
         </div>
-
-        <!-- Date Filter -->
-        <div class="filter-section" id="date-filter">
-            <strong>Filter by Date:</strong>
-            From: <input type="date" id="date-from">
-            To: <input type="date" id="date-to">
-        </div>
-
-        <button id="reset-button" onclick="resetFilters()">Reset Filters</button>
     </div>
 
     <!-- Container for Projects -->
@@ -209,13 +274,38 @@
                 image:"./images/flpcon.webp",
                 tag:"academic"
             },
+            {
+                name: "Promo Mobile App",
+                platforms: ["iOS", "Android"],
+                type: "Mobile App",
+                demoUrl: "https://playstorelink.com",
+                githubUrl: "https://github.com/DavidKozdra/mobile-game-app",
+                technologies: ["CSS", "React Native", "React", "MongoDB", "Node.js"],
+                people: [""],
+                date: "2022-06-10",
+                image:"./images/PromoSite.png",
+                tag:"work"
+            },
+            {
+                name: "Cloudy Meadows",
+                platforms: [ "Web"],
+                type: "Game",
+                demoUrl: "",
+                githubUrl: "",
+                technologies: ["React Native", "JavaScript"],
+                people: [],
+                date: "2022-11-05",
+                image:"./images/Cloudy.png",
+                tag:"work"
+            }
         ];
 
         // Filters
         let filters = {
             searchText: '',
             selectedTechnologies: [],
-            selectedTags:[],
+            selectedTags: [],
+            selectedTypes: [],
             dateFrom: null,
             dateTo: null
         };
@@ -236,13 +326,24 @@
         });
         allTags = Array.from(allTags);
 
+        // Get all unique types
+        let allTypes = new Set();
+        projects.forEach(project => {
+            allTypes.add(project.type);
+        });
+        allTypes = Array.from(allTypes);
+
         // Get DOM elements
         const projectsContainer = document.getElementById('projects-container');
         const searchInput = document.getElementById('search-input');
         const technologiesFilterDiv = document.getElementById('technologies-filter');
         const tagsFilterDiv = document.getElementById('tags-filter');
+        const typeFilterDiv = document.getElementById('type-filter');
         const dateFromInput = document.getElementById('date-from');
         const dateToInput = document.getElementById('date-to');
+        const countLabel = document.getElementById("count-label");
+        const toggleButton = document.getElementById("toggle-button");
+        const filtersDiv = document.getElementById("filters");
 
         // Create checkboxes for technologies
         allTechnologies.forEach(tech => {
@@ -286,6 +387,28 @@
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(tag));
             tagsFilterDiv.appendChild(label);
+        });
+
+        // Create checkboxes for types
+        allTypes.forEach(type => {
+            const label = document.createElement('label');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = type;
+
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    filters.selectedTypes.push(this.value);
+                } else {
+                    filters.selectedTypes = filters.selectedTypes.filter(t => t !== this.value);
+                }
+                applyFilters();
+            });
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(type));
+            typeFilterDiv.appendChild(label);
         });
 
         // Event listeners for search input
@@ -344,6 +467,13 @@
                     }
                 }
 
+                // Filter by types
+                if (filters.selectedTypes.length > 0) {
+                    if (!filters.selectedTypes.includes(project.type)) {
+                        return false;
+                    }
+                }
+
                 // Filter by date
                 let projectDate = new Date(project.date);
                 if (filters.dateFrom && projectDate < filters.dateFrom) {
@@ -359,7 +489,7 @@
 
             // Update the render array
             render_array = filteredProjects;
-
+            countLabel.innerHTML = render_array.length;
             renderProjects(render_array);
         }
 
@@ -439,14 +569,15 @@
 
         // Initialize render array and render projects
         let render_array = [...projects];
-        renderProjects(render_array);
+        applyFilters();
 
         // Reset Filters Function
         function resetFilters(){
             filters = {
                 searchText: '',
                 selectedTechnologies: [],
-                selectedTags:[],
+                selectedTags: [],
+                selectedTypes: [],
                 dateFrom: null,
                 dateTo: null
             };
@@ -463,8 +594,25 @@
             document.querySelectorAll('#tags-filter input[type="checkbox"]').forEach(checkbox => {
                 checkbox.checked = false;
             });
+            document.querySelectorAll('#type-filter input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
 
             applyFilters();
+        }
+
+        // Toggle Filters Visibility
+        function toggleDropDown(){
+            filtersDiv.classList.toggle("collapsed");
+            filtersDiv.classList.toggle("expanded");
+            toggleButton.classList.toggle("collapsed");
+
+            // Change arrow direction
+            if (filtersDiv.classList.contains("collapsed")) {
+                toggleButton.innerHTML = "&#9660;"; // Down arrow
+            } else {
+                toggleButton.innerHTML = "&#9650;"; // Up arrow
+            }
         }
     </script>
 </body>

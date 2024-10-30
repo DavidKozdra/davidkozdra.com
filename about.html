@@ -3,266 +3,319 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- Viewport meta tag for responsive scaling -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Work Experience </title>
+    <title>My Work Experience</title>
 
     <style>
-
-        .hero-bio {
-            display: flex;
-            flex-direction: column;
-            font-size: 1em !important;
+        body {
+            font-size: large;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
         }
+
         .main-content {
             background-color: whitesmoke;
             border-radius: 10px;
-            height: fit-content;
-            width: 100%;
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        .main-content h1,
+        .main-content h2 {
             text-align: center;
-            justify-content: center;
-            text-wrap: balance;
         }
-
-        p{
-            padding-inline: 20px;   
-        }
-        .projects-grid p {
-            text-align: left;
-            font-size: 1em;
-        }
-
-        .projects-grid strong {
-            font-size: 1.2em;
-        }
-
 
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px; /* You can adjust the gap value based on your design preferences */
-            justify-content: center;
-            text-align: center;
-            padding: 5px;
-            width: fit-content;
-            margin: 5%;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .projects-grid .card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .projects-grid .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .projects-grid img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-content {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-content strong {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .card-content em {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .card-content p {
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 0;
+            flex-grow: 1;
         }
 
         .open-source {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
+            padding: 20px;
         }
 
-.project {
-    border: 1px solid #ccc;
-    padding: 15px;
-    background-color: #f9f9f9;
-}
-
-.project h1 {
-    font-size: 1.5em;
-    margin-bottom: 30px;
-}
-
-.project iframe {
-    width: 100%;
-    height: 400px;
-    border: none;
-    margin-bottom: 20px;
-}
-
-.project a {
-    text-decoration: none;
-    color: #007BFF;
-    font-weight: bold;
-}
-
-        img:hover {
-            border: 2px solid black;
-            cursor: pointer;
+        .project {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        #fight {
-            width: 200px;
+
+        .project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .project h1 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .project iframe {
+            width: 100%;
             height: 200px;
+            border: none;
+            margin-bottom: 10px;
         }
-        @media screen and (max-width: 1100px) {
-            .projects-grid {
-                margin: 10%;
-                display: flex;
-                flex-direction: column;
-                width: 80%;
-                grid-template-columns: repeat(3, 1fr);
-                justify-content: center;
-                text-align: center;
-                
+
+        .project a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        .column {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .column div {
+            margin: 10px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                font-size: medium;
             }
 
             .projects-grid img {
-                width: 80%;
-                height: 80%;
+                height: 150px;
             }
-            #fight {
-                width: 100%;
-                height: 100%;
+
+            .project iframe {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: small;
+            }
+
+            .projects-grid img {
+                height: 120px;
+            }
+
+            .project iframe {
+                height: 120px;
             }
         }
     </style>
 
 </head>
 
-<body style="font-size: x-large; ">
-    <div class="main-content" style="text-align: center; font-size: 1em; font-weight: bold; background-color: whitesmoke;">
-
-        <div style="text-align: center; font-size: 2em; font-weight: bold;">
-            <p>MY WORK </p>
-        </div>
-
-
+<body>
+    <div class="main-content">
+        <h1>My Work Experience</h1>
 
         <div class="projects-grid">
 
             <!-- RedChip Companies -->
-            <div>
+            <div class="card">
                 <a href="https://redchip.com" target="_blank">
                     <img src="https://www.redchip.com/assets/images/corporate/redchip-logo.png" alt="RedChip logo big red circle">
                 </a>
-                
-                <p class="company-header">
-                    <strong>RedChip Companies</strong><br>
-                    <em>Software Engineer</em><br>
-                    <em>Dec 2023 - Present</em><br>
-                    The leading small cap relations firm located in Orlando, Florida. In my time at this company, I have built many projects focused on API integrations and data aggregation, including AI chatbot projects and a stock portal.
-                </p>
+                <div class="card-content">
+                    <strong>RedChip Companies</strong>
+                    <em>Software Engineer</em>
+                    <em>Dec 2023 - Present</em>
+                    <p>
+                        The leading small cap relations firm located in Orlando, Florida. In my time at this company, I have built many projects focused on API integrations and data aggregation, including AI chatbot projects and a stock portal.
+                    </p>
+                </div>
             </div>
 
             <!-- Red Meters -->
-            <div>
+            <div class="card">
                 <a href="https://redmeters.com" target="_blank">
                     <img src="./images/RedMeters.png" alt="Red Meters logo red chevron shape">
                 </a>
-               
-                <p class="company-header">
-                    <strong>Red Meters</strong><br>
-                    <em>Software Developer</em><br>
-                    <em>Oct 2023 - Nov 2023</em><br>
-                    An IoT and industrial device manufacturer. A temporary role where I transitioned and maintained their code, added features to their Vue app, changed AWS permissions, and used SSH to maintain and edit user devices. I also wrote Python scripts for data visualization.
-                </p>
+                <div class="card-content">
+                    <strong>Red Meters</strong>
+                    <em>Software Developer</em>
+                    <em>Oct 2023 - Nov 2023</em>
+                    <p>
+                        An IoT and industrial device manufacturer. A temporary role where I transitioned and maintained their code, added features to their Vue app, changed AWS permissions, and used SSH to maintain and edit user devices. I also wrote Python scripts for data visualization.
+                    </p>
+                </div>
             </div>
 
             <!-- Z Axis Solutions / Promo App -->
-            <div>
+            <div class="card">
                 <a href="https://play.google.com/store/apps/details?id=com.promoapp.promo" target="_blank">
                     <img src="./images/PromoSite.png" alt="Promo application logo">
                 </a>
-             
-                <p class="company-header">
-                    <strong>Z Axis Solutions / Promo App</strong><br>
-                    <em>Junior Software Developer</em> (May 2023 - Sep 2023)<br>
-                    Worked on the Promo app, an event-based social media application. I developed web applications and backend servers using MongoDB, Express.js, Node.js, and React.js. Built middleware, email automation, and numerous backend REST API routes.
-                </p>
+                <div class="card-content">
+                    <strong>Z Axis Solutions / Promo App</strong>
+                    <em>Junior Software Developer</em>
+                    <em>May 2023 - Sep 2023</em>
+                    <p>
+                        Worked on the Promo app, an event-based social media application. I developed web applications and backend servers using MongoDB, Express.js, Node.js, and React.js. Built middleware, email automation, and numerous backend REST API routes.
+                    </p>
+                </div>
             </div>
 
             <!-- BridXe -->
-            <div>
+            <div class="card">
                 <a href="https://www.linkedin.com/company/bridxe/" target="_blank">
                     <img src="./images/Bridxe.jpg" alt="BridXe Logo Pink shape">
                 </a>
-                <p class="company-header">
-                    <strong>BridXe</strong><br>
-                    <em>Frontend Developer Intern</em><br>
-                    A company creating a platform to predict and reevaluate the pricing of blockchain assets. I presented data visualizations, enhanced data fetching, and increased API coverage to include over 20 financial reporting platforms.
-                </p>
+                <div class="card-content">
+                    <strong>BridXe</strong>
+                    <em>Frontend Developer Intern</em>
+                    <em>Jan 2023 - Apr 2023</em>
+                    <p>
+                        A company creating a platform to predict and reevaluate the pricing of blockchain assets. I presented data visualizations, enhanced data fetching, and increased API coverage to include over 20 financial reporting platforms.
+                    </p>
+                </div>
             </div>
 
             <!-- Fight™ -->
-            <div>
+            <div class="card">
                 <a href="https://www.fighttm.com" target="_blank">
-                    <img src="./images/fight.png" alt="Fight™ gold lion logo" id="fight">
+                    <img src="./images/fight.png" alt="Fight™ gold lion logo">
                 </a>
-                
-                <p class="company-header">
-                    <strong>Fight™</strong><br>
-                    <em>Backend Engineering Intern</em><br>
-                    <em>Jul 2021 - Oct 2021</em><br>
-                    A gamer-based social media application. I implemented robust authentication and authorization systems, optimized database performance, and contributed to API design to enhance user engagement.
-                </p>
+                <div class="card-content">
+                    <strong>Fight™</strong>
+                    <em>Backend Engineering Intern</em>
+                    <em>Jul 2021 - Oct 2021</em>
+                    <p>
+                        A gamer-based social media application. I implemented robust authentication and authorization systems, optimized database performance, and contributed to API design to enhance user engagement.
+                    </p>
+                </div>
             </div>
 
             <!-- Florida Polycon -->
-            <div>
+            <div class="card">
                 <a href="https://flpolycon.org/" target="_blank">
                     <img src="./images/flpcon.webp" alt="Florida Polycon hydra white and cyan">
                 </a>
-                <p>
-                    <strong>Florida Polycon</strong><br>
-                    <em>Volunteer Web Developer</em><br>
-                    <em>2019 - 2020</em><br>
-                    An annual conference in Lakeland, Florida. I helped set up and edit the content of their WordPress website.
-                </p>
+                <div class="card-content">
+                    <strong>Florida Polycon</strong>
+                    <em>Volunteer Web Developer</em>
+                    <em>2019 - 2020</em>
+                    <p>
+                        An annual conference in Lakeland, Florida. I helped set up and edit the content of their WordPress website.
+                    </p>
+                </div>
             </div>
 
             <!-- Florida National News -->
-            <div>
+            <div class="card">
                 <a href="https://floridanationalnews.com/" target="_blank">
                     <img src="./images/Logo-FNN-380x310.jpeg" alt="FNN logo red white blue">
                 </a>
-                <p>
-                    <strong>Florida National News</strong><br>
-                    <em>Web Development Intern</em><br>
-                    <em>2020</em><br>
-                    A news organization focused on the state of Florida. One of my first internships and a great introduction to web development.
-                </p>
+                <div class="card-content">
+                    <strong>Florida National News</strong>
+                    <em>Web Development Intern</em>
+                    <em>2020</em>
+                    <p>
+                        A news organization focused on the state of Florida. One of my first internships and a great introduction to web development.
+                    </p>
+                </div>
             </div>
 
         </div>
 
+        <h1>Open Source</h1>
+        <p style="text-align: center;">
+            My goal is to work more in the open-source community and have actively contributed to React projects.
+            Embracing the Linux environment, specifically Fedora, I thrive in my terminal, and am always getting
+            closer to being the best version of myself. The projects I have worked on needed UX changes and accessibility fixes or changes that would add to the local storage.
+        </p>
 
-    <div style="text-align: center; font-size: 1em; font-weight: bold; ">
-            <div>
-                <h1>Open Source</h1>
-
-                <p>My goal is to work more in the the open-source community and have actively contributed to React projects.
-                    Embracing the Linux environment, specifically Fedora , I thrive in my terminal, and am always getting
-                    closer to being the best version of myself. The projects I have worked on needed UX changes and accessibility fixes or changes that would add to the local storage</p>
-        
-        
+        <div class="open-source">
+            <div class="project">
+                <h1>Lofi Music Player</h1>
+                <iframe src="https://lofi-music-eight.vercel.app/" frameborder="0"></iframe>
+                <a href="https://lofi-music-eight.vercel.app/" target="_blank">Home</a>
+                <a href="https://github.com/riccardobertolini/lofi-music" target="_blank">GitHub</a>
             </div>
-            <div class="open-source">
-                <div class="project">
-                    <h1>Lofi Music Player</h1>
-                    <iframe src="https://lofi-music-eight.vercel.app/" frameborder="0"></iframe>
-
-                    <a href="https://lofi-music-eight.vercel.app/" target="_blank">Home</a>
-                    <a href="https://github.com/riccardobertolini/lofi-music" target="_blank">GitHub </a>
-                </div>
-                <div class="project">
-                    <h1>Weather App</h1>
-                    <iframe src="https://mellow-cuchufli-1c1c24.netlify.app/" frameborder="0"></iframe>
-
-                    <a href="https://mellow-cuchufli-1c1c24.netlify.app/" target="_blank">Home</a>
-                    <a href="https://github.com/avinashji1302/Weather_Application_Using_Realtime_API" target="_blank">GitHub </a>
-                </div>
-                <div class="project">
-                    <h1>Password Generator</h1>
-                    <iframe src="https://password.ome9a.com/" frameborder="0"></iframe>
-
-                    <a href="https://password.ome9a.com/" target="_blank">Home</a>
-                    <a href="https://github.com/0ME9A/password" target="_blank">GitHub </a>
-                </div>
+            <div class="project">
+                <h1>Weather App</h1>
+                <iframe src="https://mellow-cuchufli-1c1c24.netlify.app/" frameborder="0"></iframe>
+                <a href="https://mellow-cuchufli-1c1c24.netlify.app/" target="_blank">Home</a>
+                <a href="https://github.com/avinashji1302/Weather_Application_Using_Realtime_API" target="_blank">GitHub</a>
             </div>
-            
-            
+            <div class="project">
+                <h1>Password Generator</h1>
+                <iframe src="https://password.ome9a.com/" frameborder="0"></iframe>
+                <a href="https://password.ome9a.com/" target="_blank">Home</a>
+                <a href="https://github.com/0ME9A/password" target="_blank">GitHub</a>
+            </div>
+        </div>
+
+        <h2>Certifications</h2>
+        <div class="column">
+            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="8ca3a047-3e02-46ea-85c4-c4607cb0b5a8" data-share-badge-host="https://www.credly.com"></div>
+            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="ceb80197-fc66-4d0e-a45d-79cd4603b633" data-share-badge-host="https://www.credly.com"></div>
+            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="33e53e9b-85fa-41f8-8393-f3b22f5912d4" data-share-badge-host="https://www.credly.com"></div>
+        </div>
     </div>
-
-    <h2 style="text-align: center;">CERTS</h2>
-    <div class="column">
-        <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="8ca3a047-3e02-46ea-85c4-c4607cb0b5a8" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
-        <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="ceb80197-fc66-4d0e-a45d-79cd4603b633" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
-        <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="33e53e9b-85fa-41f8-8393-f3b22f5912d4" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script></div>
-</div>
-    </div>
-
-
+    <!-- Credly Embed Script -->
+    <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 
 </html>
