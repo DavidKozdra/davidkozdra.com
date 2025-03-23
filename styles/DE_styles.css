@@ -374,10 +374,9 @@ button {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define uniform columns */
     gap: 20px; /* Adjusted gap for better spacing */
-    padding: 10px;
     margin: 20px; /* Reduced margin for better layout */
-}
 
+}
 
 
 .desktop-icon {
@@ -386,9 +385,9 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 50dvh;
-    max-height: 50dvh;
-
+    max-width: 20dvw;
+    max-height: 20dvh;
+    padding-top: 50px;
     position: absolute;
 }
 
@@ -545,6 +544,7 @@ button {
     .desktop-grid {
         height: 80dvh;
         width: 100%;
+        margin-top: 25px;
     }
 
     .task-bar {
