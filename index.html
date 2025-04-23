@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Create a new icon element
         let icon = document.createElement('i');
         icon.classList.add('fas');
-
+        icon.setAttribute("aria-label", "Minimize window button");
         // Determine the icon class based on the "larger" class
         if (currentWindow.classList.contains("larger")) {
           icon.classList.add('fa-compress');
@@ -1087,6 +1087,8 @@ document.addEventListener('DOMContentLoaded', () => {
       minIcon.classList.add("fa-chevron-down");
       minIcon.name = "minimize";
 
+      minButton.setAttribute("aria-label", "Minimize window");
+
       const buttonMin = createWindowButton(minIcon, function () {
         minimizeWindow(event, id);
       });
@@ -1129,6 +1131,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const button = document.createElement("button");
       button.classList.add("window-button");
       button.name = text.innerHTML + " button";
+      minButton.setAttribute("aria-label", text.innerHTML + " button");
+
       button.appendChild(text);
       button.addEventListener('click', clickHandler);
       return button;
