@@ -1087,7 +1087,7 @@ document.addEventListener('DOMContentLoaded', () => {
       minIcon.classList.add("fa-chevron-down");
       minIcon.name = "minimize";
 
-      minButton.setAttribute("aria-label", "Minimize window");
+      minIcon.setAttribute("aria-label", "Minimize window");
 
       const buttonMin = createWindowButton(minIcon, function () {
         minimizeWindow(event, id);
@@ -1131,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const button = document.createElement("button");
       button.classList.add("window-button");
       button.name = text.innerHTML + " button";
-      minButton.setAttribute("aria-label", text.innerHTML + " button");
+      button.setAttribute("aria-label", text.innerHTML + " button");
 
       button.appendChild(text);
       button.addEventListener('click', clickHandler);
