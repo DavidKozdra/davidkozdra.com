@@ -4,6 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy Policy - WinTest</title>
+
+  <!-- Preconnect for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+  <!-- Favicon for SEO/Best Practices -->
+  <link rel="icon" href="/favicon.ico" />
+
+  <!-- Meta for SEO -->
+  <meta name="description" content="Privacy Policy for WinTest Chrome extension — we prioritize your privacy with zero data collection." />
+  <meta name="robots" content="index, follow">
+
   <style>
     :root {
       --md-surface: #ffffff;
@@ -70,8 +83,11 @@
       text-decoration: none;
     }
 
+    a:focus,
     a:hover {
       text-decoration: underline;
+      outline: 2px solid var(--md-secondary);
+      outline-offset: 2px;
     }
 
     .footer-note {
@@ -82,50 +98,62 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <h1>Privacy Policy for WinTest</h1>
     <p><strong>Effective Date:</strong> April 25, 2025</p>
 
-    <h2>Overview</h2>
-    <p>
-      WinTest is a Chrome extension designed to assist web developers in testing their websites
-      across various screen sizes and zoom levels by opening multiple browser windows with
-      user-defined dimensions. We prioritize user privacy and are committed to transparency
-      regarding data handling.
-    </p>
+    <section aria-labelledby="overview">
+      <h2 id="overview">Overview</h2>
+      <p>
+        WinTest is a Chrome extension designed to assist web developers in testing their websites
+        across various screen sizes and zoom levels. We prioritize user privacy and are committed to transparency
+        regarding data handling.
+      </p>
+    </section>
 
-    <h2>Data Collection and Usage</h2>
-    <ul>
-      <li><strong>Local Storage:</strong> WinTest uses Chrome's <code>localStorage</code> to store screen configurations locally.</li>
-      <li><strong>Permissions:</strong> Uses the "tabs" permission only to open windows from the current tab’s URL.</li>
-      <li><strong>No Personal Data:</strong> We do not collect or transmit personal information, browsing history, or user data.</li>
-    </ul>
+    <section aria-labelledby="data-usage">
+      <h2 id="data-usage">Data Collection and Usage</h2>
+      <ul>
+        <li><strong>Local Storage:</strong> WinTest uses Chrome's <code>localStorage</code> to store screen configurations locally.</li>
+        <li><strong>Permissions:</strong> Uses the "tabs" permission only to open windows from the current tab’s URL.</li>
+        <li><strong>No Personal Data:</strong> We do not collect or transmit personal information, browsing history, or user data.</li>
+      </ul>
+    </section>
 
-    <h2>Data Sharing</h2>
-    <p>
-      WinTest does not share, sell, or disclose any user data to third parties.
-    </p>
+    <section aria-labelledby="data-sharing">
+      <h2 id="data-sharing">Data Sharing</h2>
+      <p>
+        WinTest does not share, sell, or disclose any user data to third parties.
+      </p>
+    </section>
 
-    <h2>Security</h2>
-    <p>
-      All data is stored locally in your browser. We do not send any information externally, ensuring complete privacy.
-    </p>
+    <section aria-labelledby="security">
+      <h2 id="security">Security</h2>
+      <p>
+        All data is stored locally in your browser. We do not send any information externally, ensuring complete privacy.
+      </p>
+    </section>
 
-    <h2>Changes to This Policy</h2>
-    <p>
-      We may update this Privacy Policy. Any changes will be posted on this page with an updated effective date.
-    </p>
+    <section aria-labelledby="policy-changes">
+      <h2 id="policy-changes">Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy. Any changes will be posted on this page with an updated effective date.
+      </p>
+    </section>
 
-    <h2>Contact Us</h2>
-    <p>
-      For any questions, contact us at
-      <a href="mailto:davidkozdra@gmail.com?subject=Regarding%20the%20WinTest%20Chrome%20Extension&body=I%20am%20contacting%20you%20in%20regards%20to%20the%20Wintest%20extension%20project">
-        davidkozdra@gmail.com
-      </a>
-      
-    </p>
+    <section aria-labelledby="contact">
+      <h2 id="contact">Contact Us</h2>
+      <p>
+        For any questions, contact us at
+        <a href="mailto:davidkozdra@gmail.com?subject=Regarding%20the%20WinTest%20Chrome%20Extension&body=I%20am%20contacting%20you%20in%20regards%20to%20the%20Wintest%20extension%20project">
+          davidkozdra@gmail.com
+        </a>.
+      </p>
+    </section>
 
-    <p class="footer-note">This policy is compliant with Chrome Web Store Developer Program Policies.</p>
-  </div>
+    <footer class="footer-note" role="contentinfo">
+      This policy is compliant with Chrome Web Store Developer Program Policies.
+    </footer>
+  </main>
 </body>
 </html>
