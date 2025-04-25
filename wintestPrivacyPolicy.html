@@ -18,14 +18,16 @@
   <meta name="robots" content="index, follow">
 
   <style>
-    :root {
-      --md-surface: #ffffff;
-      --md-primary: #6200ee;
-      --md-secondary: #1012a1;
-      --md-on-surface: #202124;
-      --md-muted: #5f6368;
-      --md-border: #e0e0e0;
-    }
+  :root {
+    --md-surface: #ffffff;
+    --md-primary: #6200ee;
+    --md-secondary: #1012a1;
+    --md-on-surface: #202124;
+    --md-muted: #5f6368;
+    --md-border: #e0e0e0;
+    --md-link: #1a73e8; /* strong, accessible blue */
+    --md-link-hover: #174ea6; /* deeper blue on hover */
+  }
 
     body {
       font-family: "Roboto", "Segoe UI", sans-serif;
@@ -79,16 +81,17 @@
     }
 
     a {
-      color: var(--md-secondary);
-      text-decoration: none;
-    }
+  color: var(--md-link);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
 
-    a:focus,
-    a:hover {
-      text-decoration: underline;
-      outline: 2px solid var(--md-secondary);
-      outline-offset: 2px;
-    }
+a:hover,
+a:focus {
+  color: var(--md-link-hover);
+  text-decoration: underline;
+}
 
     .footer-note {
       color: var(--md-muted);
