@@ -4,8 +4,7 @@ const urlsToCache = [
   '/index.html',
   '/styles.css', // add all other static resources here
   '/scripts.js',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  'images/favicon.ico',
 ];
 
 // Install service worker and cache necessary files

@@ -68,6 +68,7 @@ onscroll = (event) => {
   
 
 if ('serviceWorker' in navigator) {
+  console.log("service !")
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
@@ -77,4 +78,6 @@ if ('serviceWorker' in navigator) {
         console.log('Service Worker registration failed: ', error);
       });
   });
+}else {
+  console.log("PWA failure")
 }
