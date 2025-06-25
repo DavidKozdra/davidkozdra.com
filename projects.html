@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>My Projects</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
     <style>
-        /* Global Styles */
         body {
             margin-top: 0;
             font-family: 'Roboto', sans-serif;
@@ -17,10 +16,11 @@
         #search-input {
             width: 70vw !important;
         }
+
         h2 {
             margin: 0;
         }
-        /* Container for Projects */
+
         .project-container {
             display: flex;
             flex-direction: column;
@@ -29,7 +29,7 @@
             max-width: 1000px;
             padding: 0 20px;
         }
-        /* Project Card Styles */
+
         .project {
             background-color: #fff;
             border-radius: 10px;
@@ -39,15 +39,18 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .project:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
+
         .project img {
             width: 300px;
             height: auto;
             object-fit: cover;
         }
+
         .project-content {
             padding: 20px;
             display: flex;
@@ -55,10 +58,12 @@
             justify-content: space-between;
             flex: 1;
         }
+
         .project-content p {
             margin: 10px 0;
             line-height: 1.6;
         }
+
         .project-content a {
             color: #1a73e8;
             text-decoration: none;
@@ -66,10 +71,38 @@
             margin-right: 15px;
             transition: color 0.2s ease;
         }
+
         .project-content a:hover {
             color: #0c47a1;
         }
-        /* Filters Styles */
+
+        .tag-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            margin-top: 10px;
+            width: fit-content;
+        }
+
+        .tag-personal {
+            background-color: #4caf50;
+        }
+
+        .tag-work {
+            background-color: #2196f3;
+        }
+
+        .tag-academic {
+            background-color: #ff9800;
+        }
+
+        .tag-other {
+            background-color: #9c27b0;
+        }
+
         #filters-container {
             position: fixed;
             top: 0;
@@ -87,15 +120,12 @@
             gap: 15px;
             overflow: hidden;
             transition: max-height 0.3s ease;
-       
         }
 
-        /* Initially set max-height to a large value to accommodate content */
         #filters.expanded {
             max-height: 1000px;
         }
 
-        /* When collapsed, max-height is 0 */
         #filters.collapsed {
             max-height: 30px;
         }
@@ -108,25 +138,30 @@
             font-size: 16px;
             width: 200px;
         }
+
         #filters strong {
             margin-right: 10px;
             font-weight: 500;
         }
+
         .filter-section {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
         }
+
         .filter-section label {
             display: flex;
             align-items: center;
             margin-right: 10px;
         }
+
         .filter-section input[type="checkbox"] {
             margin-right: 5px;
             accent-color: #1a73e8;
         }
+
         #filters-controls {
             display: flex;
             align-items: center;
@@ -135,6 +170,7 @@
             cursor: pointer;
             margin-top: 20px;
         }
+
         #toggle-button {
             background: none;
             border: none;
@@ -142,10 +178,11 @@
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-        /* Rotate the arrow when collapsed */
+
         #toggle-button.collapsed {
             transform: rotate(180deg);
         }
+
         #reset-button {
             padding: 10px 20px;
             background-color: #1a73e8;
@@ -158,21 +195,25 @@
             transition: background-color 0.2s ease;
             margin-right: 10px;
         }
+
         #reset-button:hover {
             background-color: #0c47a1;
         }
+
         #count-label-text {
             margin: 0;
             font-weight: 500;
         }
-        /* Responsive Design */
+
         @media (max-width: 768px) {
             .project {
                 flex-direction: column;
             }
+
             .project img {
                 width: 100%;
             }
+
             #filters input[type="text"],
             #filters input[type="date"] {
                 width: 100%;
@@ -191,10 +232,9 @@
         }
     </style>
 </head>
+
 <body>
-    <!-- Filters Container -->
     <div id="filters-container">
-        <!-- Toggle Button and Controls -->
         <div id="filters-controls">
             <div style="display: flex; align-items: center;">
                 <button id="reset-button" onclick="resetFilters()">Reset Filters</button>
@@ -205,31 +245,13 @@
             </div>
             <button id="toggle-button" onclick="toggleDropDown()">&#9650;</button>
         </div>
-        <!-- Filters -->
         <div id="filters" class="expanded">
-            <!-- Search Box -->
             <input type="text" id="search-input" placeholder="Search projects...">
-
             <div id="row">
-                <!-- Tags Filter -->
-                <div class="filter-section" id="tags-filter">
-                    <strong>Filter by Tags:</strong>
-                    <!-- Checkboxes will be appended here -->
-                </div>
-
-                <!-- Type Filter -->
-                <div class="filter-section" id="type-filter">
-                    <strong>Filter by Type:</strong>
-                    <!-- Checkboxes will be appended here -->
-                </div>
+                <div class="filter-section" id="tags-filter"><strong>Filter by Tags:</strong></div>
+                <div class="filter-section" id="type-filter"><strong>Filter by Type:</strong></div>
             </div>
-            <!-- Technologies Filter -->
-            <div class="filter-section" id="technologies-filter">
-                <strong>Filter by Technologies:</strong>
-                <!-- Checkboxes will be appended here -->
-            </div>
-
-            <!-- Date Filter -->
+            <div class="filter-section" id="technologies-filter"><strong>Filter by Technologies:</strong></div>
             <div class="filter-section" id="date-filter">
                 <strong>Filter by Date:</strong>
                 From: <input type="date" id="date-from">
@@ -238,12 +260,9 @@
         </div>
     </div>
 
-    <!-- Container for Projects -->
     <div id="projects-container" class="project-container"></div>
 
-    <!-- JavaScript code -->
     <script>
-        // Projects array
         let projects = [
             {
                 name: "Portfolio Website",
@@ -254,8 +273,9 @@
                 technologies: ["HTML", "CSS", "JavaScript"],
                 people: ["David Kozdra"],
                 date: "2020-04-22",
-                image:"./images/favicon.ico",
-                tag:"personal"
+                image: "./images/favicon.ico",
+                tag: "personal",
+                description: "A personal portfolio website showcasing my background, skills, and featured work."
             },
             {
                 name: "Real Time Stock Portal",
@@ -263,23 +283,25 @@
                 type: "Website",
                 demoUrl: "https://redchip.com/stocks",
                 githubUrl: "",
-                technologies: ["HTML", "CSS", "JavaScript","PHP","Python"],
+                technologies: ["HTML", "CSS", "JavaScript", "PHP", "Python"],
                 people: ["David Kozdra"],
                 date: "2024-03-15",
-                image:"/images/stock_portal.png",
-                tag:"work"
+                image: "/images/stock_portal.png",
+                tag: "work",
+                description: "A real-time stock tracking and analysis portal developed for RedChip. With a 15 min deleyed Python data aggregation backend. Including tabled views of SEC filing data"
             },
             {
                 name: "RedChat AI SEC summarizer",
-                platforms: ["Web", "Android"],
+                platforms: ["Web", "Android", "IOS"],
                 type: "Website",
-                demoUrl: "red.chat",
+                demoUrl: "https://red.chat",
                 githubUrl: "",
-                technologies: ["HTML", "CSS", "React","Python","AWS"],
+                technologies: ["HTML", "CSS", "React", "Python", "AWS"],
                 people: ["David Kozdra"],
                 date: "2024-01-05",
-                image:"/images/red_chat.png",
-                tag:"work"
+                image: "/images/red_chat.png",
+                tag: "work",
+                description: "AI-powered chatbot to summarize SEC filings for quick insights. Loading storing and preparing over 100000 documents for every company on the NYSE and NASDAQ"
             },
             {
                 name: "Florida Polycon Site",
@@ -287,11 +309,12 @@
                 type: "Website",
                 demoUrl: "https://flpolycon.org",
                 githubUrl: "",
-                technologies: ["HTML", "CSS","WordPress" ],
+                technologies: ["HTML", "CSS", "WordPress"],
                 people: ["David Kozdra"],
                 date: "2022-03-15",
-                image:"./images/flpcon.webp",
-                tag:"academic"
+                image: "./images/flpcon.webp",
+                tag: "academic",
+                description: "Conference website for Florida Polytechnic University’s annual event."
             },
             {
                 name: "Promo Mobile App",
@@ -302,24 +325,26 @@
                 technologies: ["CSS", "React Native", "React", "MongoDB", "Node.js"],
                 people: [""],
                 date: "2022-08-20",
-                image:"./images/PromoSite.png",
-                tag:"work"
+                image: "./images/PromoSite.png",
+                tag: "work",
+                description: "Cross-platform mobile app for discovering exclusive local business promotions."
             },
             {
                 name: "Cloudy Meadows",
-                platforms: [ "Web"],
+                platforms: ["Web"],
                 type: "Game",
                 demoUrl: "https://virtualnerd1.itch.io/cloudy-meadows",
                 githubUrl: "https://github.com/Zoda390/Cloudy-Medows",
                 technologies: ["HTML", "JavaScript"],
                 people: [],
                 date: "2022-06-05",
-                image:"https://img.itch.zone/aW1nLzk2NTI0MTYuZ2lm/original/kOdkTD.gif",
-                tag:"personal"
+                image: "https://img.itch.zone/aW1nLzk2NTI0MTYuZ2lm/original/kOdkTD.gif",
+                tag: "personal",
+                description: "A relaxing RPG browser game developed with vanilla JavaScript."
             }
+            
         ];
 
-        // Filters
         let filters = {
             searchText: '',
             selectedTechnologies: [],
@@ -329,30 +354,10 @@
             dateTo: null
         };
 
-        // Get all unique technologies
-        let allTechnologies = new Set();
-        projects.forEach(project => {
-            project.technologies.forEach(tech => {
-                allTechnologies.add(tech);
-            });
-        });
-        allTechnologies = Array.from(allTechnologies);
+        let allTechnologies = [...new Set(projects.flatMap(p => p.technologies))];
+        let allTags = [...new Set(projects.map(p => p.tag))];
+        let allTypes = [...new Set(projects.map(p => p.type))];
 
-        // Get all unique tags
-        let allTags = new Set();
-        projects.forEach(project => {
-            allTags.add(project.tag);
-        });
-        allTags = Array.from(allTags);
-
-        // Get all unique types
-        let allTypes = new Set();
-        projects.forEach(project => {
-            allTypes.add(project.type);
-        });
-        allTypes = Array.from(allTypes);
-
-        // Get DOM elements
         const projectsContainer = document.getElementById('projects-container');
         const searchInput = document.getElementById('search-input');
         const technologiesFilterDiv = document.getElementById('technologies-filter');
@@ -364,234 +369,162 @@
         const toggleButton = document.getElementById("toggle-button");
         const filtersDiv = document.getElementById("filters");
 
-        // Create checkboxes for technologies
         allTechnologies.forEach(tech => {
             const label = document.createElement('label');
-
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = tech;
-
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    filters.selectedTechnologies.push(this.value);
-                } else {
-                    filters.selectedTechnologies = filters.selectedTechnologies.filter(t => t !== this.value);
-                }
+            checkbox.addEventListener('change', () => {
+                filters.selectedTechnologies = checkbox.checked
+                    ? [...filters.selectedTechnologies, tech]
+                    : filters.selectedTechnologies.filter(t => t !== tech);
                 applyFilters();
             });
-
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(tech));
             technologiesFilterDiv.appendChild(label);
         });
 
-        // Create checkboxes for tags
         allTags.forEach(tag => {
             const label = document.createElement('label');
-
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = tag;
-
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    filters.selectedTags.push(this.value);
-                } else {
-                    filters.selectedTags = filters.selectedTags.filter(t => t !== this.value);
-                }
+            checkbox.addEventListener('change', () => {
+                filters.selectedTags = checkbox.checked
+                    ? [...filters.selectedTags, tag]
+                    : filters.selectedTags.filter(t => t !== tag);
                 applyFilters();
             });
-
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(tag));
             tagsFilterDiv.appendChild(label);
         });
 
-        // Create checkboxes for types
         allTypes.forEach(type => {
             const label = document.createElement('label');
-
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = type;
-
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    filters.selectedTypes.push(this.value);
-                } else {
-                    filters.selectedTypes = filters.selectedTypes.filter(t => t !== this.value);
-                }
+            checkbox.addEventListener('change', () => {
+                filters.selectedTypes = checkbox.checked
+                    ? [...filters.selectedTypes, type]
+                    : filters.selectedTypes.filter(t => t !== type);
                 applyFilters();
             });
-
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(type));
             typeFilterDiv.appendChild(label);
         });
 
-        // Event listeners for search input
-        searchInput.addEventListener('input', function() {
-            filters.searchText = this.value;
+        searchInput.addEventListener('input', () => {
+            filters.searchText = searchInput.value;
             applyFilters();
         });
 
-        // Event listeners for date inputs
-        dateFromInput.addEventListener('change', function() {
-            filters.dateFrom = this.value ? new Date(this.value) : null;
+        dateFromInput.addEventListener('change', () => {
+            filters.dateFrom = dateFromInput.value ? new Date(dateFromInput.value) : null;
             applyFilters();
         });
 
-        dateToInput.addEventListener('change', function() {
-            filters.dateTo = this.value ? new Date(this.value) : null;
+        dateToInput.addEventListener('change', () => {
+            filters.dateTo = dateToInput.value ? new Date(dateToInput.value) : null;
             applyFilters();
         });
 
-        // Function to apply filters
         function applyFilters() {
-            let filteredProjects = projects.filter(project => {
-                // Filter by search text (using regex)
+            let filtered = projects.filter(project => {
                 if (filters.searchText) {
-                    let regex;
-                    try {
-                        regex = new RegExp(filters.searchText, 'i');
-                    } catch (e) {
-                        // Invalid regex, skip this project
-                        return false;
-                    }
-                    let searchableText = [
+                    const regex = new RegExp(filters.searchText, 'i');
+                    const searchable = [
                         project.name,
                         project.type,
                         project.platforms.join(' '),
                         project.technologies.join(' '),
                         project.people.join(' ')
                     ].join(' ');
-                    if (!regex.test(searchableText)) {
-                        return false;
-                    }
+                    if (!regex.test(searchable)) return false;
                 }
-
-                // Filter by technologies
-                if (filters.selectedTechnologies.length > 0) {
-                    let hasAllTechnologies = filters.selectedTechnologies.every(tech => project.technologies.includes(tech));
-                    if (!hasAllTechnologies) {
-                        return false;
-                    }
-                }
-
-                // Filter by tags
-                if (filters.selectedTags.length > 0) {
-                    if (!filters.selectedTags.includes(project.tag)) {
-                        return false;
-                    }
-                }
-
-                // Filter by types
-                if (filters.selectedTypes.length > 0) {
-                    if (!filters.selectedTypes.includes(project.type)) {
-                        return false;
-                    }
-                }
-
-                // Filter by date
-                let projectDate = new Date(project.date);
-                if (filters.dateFrom && projectDate < filters.dateFrom) {
-                    return false;
-                }
-                if (filters.dateTo && projectDate > filters.dateTo) {
-                    return false;
-                }
-
-                // Passed all filters
+                if (filters.selectedTechnologies.length && !filters.selectedTechnologies.every(t => project.technologies.includes(t))) return false;
+                if (filters.selectedTags.length && !filters.selectedTags.includes(project.tag)) return false;
+                if (filters.selectedTypes.length && !filters.selectedTypes.includes(project.type)) return false;
+                const projDate = new Date(project.date);
+                if (filters.dateFrom && projDate < filters.dateFrom) return false;
+                if (filters.dateTo && projDate > filters.dateTo) return false;
                 return true;
             });
-
-            // Update the render array
-            render_array = filteredProjects;
-            countLabel.innerHTML = render_array.length;
-            renderProjects(render_array);
+            countLabel.textContent = filtered.length;
+            renderProjects(filtered);
         }
 
-        // Function to render projects
         function renderProjects(projectsToRender) {
             projectsContainer.innerHTML = "";
-
-            if (projectsToRender.length === 0) {
+            if (!projectsToRender.length) {
                 projectsContainer.textContent = "No projects match the filters.";
                 return;
             }
-
             projectsToRender.forEach(project => {
-                // Create a container for the project
                 const projectDiv = document.createElement('div');
                 projectDiv.classList.add('project');
 
-                // Project Image
                 const image = document.createElement('img');
                 image.src = project.image;
                 projectDiv.appendChild(image);
 
-                // Project Content
-                const projectContent = document.createElement('div');
-                projectContent.classList.add('project-content');
+                const content = document.createElement('div');
+                content.classList.add('project-content');
 
-                // Project Name
                 const name = document.createElement('h2');
                 name.textContent = project.name;
-                projectContent.appendChild(name);
+                content.appendChild(name);
 
-                // Project Type and Date
                 const typeDate = document.createElement('p');
                 typeDate.textContent = `${project.type} • ${new Date(project.date).toLocaleDateString()}`;
-                projectContent.appendChild(typeDate);
+                content.appendChild(typeDate);
 
-                // Platforms
                 const platforms = document.createElement('p');
                 platforms.textContent = `Platforms: ${project.platforms.join(', ')}`;
-                projectContent.appendChild(platforms);
+                content.appendChild(platforms);
 
-                // Technologies
-                const technologies = document.createElement('p');
-                technologies.textContent = `Technologies: ${project.technologies.join(', ')}`;
-                projectContent.appendChild(technologies);
+                const techs = document.createElement('p');
+                techs.textContent = `Technologies: ${project.technologies.join(', ')}`;
+                content.appendChild(techs);
 
-                // People
-                const people = document.createElement('p');
-                //people.textContent = `Developed by: ${project.people.join(', ')}`;
-                //projectContent.appendChild(people);
-
-                // Links
-                const links = document.createElement('p');
-
-                if (project.demoUrl) {
-                    const demoLink = document.createElement('a');
-                    demoLink.href = project.demoUrl;
-                    demoLink.textContent = 'Demo';
-                    demoLink.target = '_blank';
-                    links.appendChild(demoLink);
+                if (project.description) {
+                    const desc = document.createElement('p');
+                    desc.textContent = project.description;
+                    content.appendChild(desc);
                 }
 
+                const links = document.createElement('p');
+                if (project.demoUrl) {
+                    const demo = document.createElement('a');
+                    demo.href = project.demoUrl;
+                    demo.textContent = 'Demo';
+                    demo.target = '_blank';
+                    links.appendChild(demo);
+                }
                 if (project.githubUrl) {
                     if (project.demoUrl) links.appendChild(document.createTextNode(' | '));
-                    const githubLink = document.createElement('a');
-                    githubLink.href = project.githubUrl;
-                    githubLink.textContent = 'GitHub';
-                    githubLink.target = '_blank';
-                    links.appendChild(githubLink);
+                    const github = document.createElement('a');
+                    github.href = project.githubUrl;
+                    github.textContent = 'GitHub';
+                    github.target = '_blank';
+                    links.appendChild(github);
                 }
+                content.appendChild(links);
 
-                projectContent.appendChild(links);
-                projectDiv.appendChild(projectContent);
+                const tag = document.createElement('span');
+                tag.className = `tag-badge tag-${project.tag}`;
+                tag.textContent = project.tag.charAt(0).toUpperCase() + project.tag.slice(1);
+                content.appendChild(tag);
+
+                projectDiv.appendChild(content);
                 projectsContainer.appendChild(projectDiv);
             });
         }
 
-        // Initialize render array and render projects
-        let render_array = [...projects];
-        applyFilters();
-
-        // Reset Filters Function
-        function resetFilters(){
+        function resetFilters() {
             filters = {
                 searchText: '',
                 selectedTechnologies: [],
@@ -600,39 +533,44 @@
                 dateFrom: null,
                 dateTo: null
             };
-
-            // Reset inputs
             searchInput.value = '';
             dateFromInput.value = '';
             dateToInput.value = '';
-
-            // Uncheck all checkboxes
-            document.querySelectorAll('#technologies-filter input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            document.querySelectorAll('#tags-filter input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            document.querySelectorAll('#type-filter input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             applyFilters();
         }
 
-        // Toggle Filters Visibility
-        function toggleDropDown(){
-            filtersDiv.classList.toggle("collapsed");
-            filtersDiv.classList.toggle("expanded");
-            toggleButton.classList.toggle("collapsed");
+        let isFiltersOpen = true;
 
-            // Change arrow direction
-            if (filtersDiv.classList.contains("collapsed")) {
-                toggleButton.innerHTML = "&#9660;"; // Down arrow
+        function toggleDropDown() {
+            const isOpen = isFiltersOpen;
+            const toggleLabel = document.getElementById('toggle-label');
+
+            if (isOpen) {
+                // Collapse
+                filtersDiv.style.height = filtersDiv.scrollHeight + 'px'; // Force height first
+                requestAnimationFrame(() => {
+                    filtersDiv.style.height = '0px';
+                });
+                toggleButton.innerHTML = '<span id="toggle-label">Show Filters</span> &#9660;';
             } else {
-                toggleButton.innerHTML = "&#9650;"; // Up arrow
+                // Expand
+                filtersDiv.style.height = 'auto';
+                const targetHeight = filtersDiv.scrollHeight + 'px';
+                filtersDiv.style.height = '0px';
+                requestAnimationFrame(() => {
+                    filtersDiv.style.height = targetHeight;
+                });
+                toggleButton.innerHTML = '<span id="toggle-label">Hide Filters</span> &#9650;';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+
+            isFiltersOpen = !isOpen;
         }
+
+
+        applyFilters();
     </script>
 </body>
+
 </html>
