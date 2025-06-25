@@ -1,306 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DK OS – refreshed</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DK OS</title>
 
-  <!-- ─────────────  SOFT-LIGHT THEME  ───────────── -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style id="modern" class="theme">
-    :root{
-      --bg: #f0f4f8;
-      --surface: #ffffff;
-      --primary: #2d7ff9;
-      --primary-light: #ecf3ff;
-      --text-main: #243b53;
-      --text-muted:#5b6b7f;
-      --radius:14px;
-      --shadow:0 6px 18px rgba(0,0,0,.08);
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
     }
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      background:var(--bg);
-      color:var(--text-main);
-      line-height:1.6;
+    h1, h2, p {
+      margin: 0;
+      padding: 0;
     }
-    a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
-    /* ---------- layout ---------- */
-    #intro{padding:40px 20px;max-width:1100px;margin:auto}
+    h1 {
+      font-size: 2em;
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.5em;
+      color: #000;
+      text-align: center;
+    }
+    p {
+      font-size: 1.2em;
+      color: #000;
+      text-align: center;
+    }
+    #intro {
+      padding: 20px;
+    }
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+    #tab-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
 
-    /* TAB BAR */
-    #tab-container{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:30px}
-    .tab-button{
-      padding:10px 24px;border:none;cursor:pointer;font:600 1rem Inter;
-      background:var(--primary-light);color:var(--primary);border-radius:50px;
-      transition:.25s}
-    .tab-button:hover{background:#d9e9ff}
-    .tab-button.active{background:var(--primary);color:#fff}
+      position: sticky;
+    }
+    .tab-button {
+      background-color: #f3f3f3;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .tab-button:hover {
+      background-color: #e6e6e6;
+    }
+    .tab-button.active {
+      border-bottom: 3px solid #d0f2ff;
+    }
+    .skills {
+      margin: 40px;
+    }
+    .skills-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    .skill-icon {
+      width: 90px;
+      height: 90px;
+      perspective: 1000px;
+    }
+    .skill-icon .icon {
+      width: 80%;
+      height: 80%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .skill-icon:hover .icon {
+      transform: rotateY(180deg);
+    }
+    .icon .front,
+    .icon .back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .icon .back {
+      transform: rotateY(180deg);
+    }
+    .icon img {
+      width: 80px;
+      height: 80px;
+    }
+    a {
+      color: #08b6f0;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #457281;
+    }
+    #settings {
+      font-size: 1.5em;
+      
+    }
 
-    /* TABS */
-    .tab{display:none;animation:fade .4s ease} .tab.active{display:block}
-    @keyframes fade{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
+    #settings button {
+      background-color: #c5baba;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    #settings button:hover {
+      background-color: #e6e6e6;
+    }
+    .me {
+      display: block;
+      border-radius: 50%;
+    }
+    #welcome {
+      text-indent: 2%;
+    }
 
-    /* HERO */
-    #hero{display:flex;flex-wrap:wrap;align-items:center;gap:40px;justify-content:center;margin-bottom:40px}
-    .me{width:160px;height:160px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow)}
-    h1{margin:0 0 8px;font-size:2rem}
-    ul{list-style:none;padding:0;margin:0} li{margin-bottom:6px}
-
-    /* SKILLS */
-    .skills h2{text-align:center;font-size:1.6rem;margin-bottom:20px}
-    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px}
-    .skill-icon{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;text-align:center;transition:.3s transform}
-    .skill-icon:hover{transform:translateY(-6px)}
-    .icon{width:80px;height:80px;margin:0 auto 12px;position:relative;perspective:800px}
-    .icon img{width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;border-radius:10px;backface-visibility:hidden;transition:transform .6s}
-    .icon .back{transform:rotateY(180deg)}
-    .skill-icon:hover .icon img{transform:rotateY(180deg)}
-    .skill-label{font-weight:600;font-size:.95rem;color:var(--text-main)}
-    .skill-label .exp{display:block;font-weight:400;color:var(--text-muted);margin-top:4px;font-size:.85rem}
-
-    /* REVIEWS */
-    #reviews-carousel{max-width:700px;margin:60px auto 0;padding:32px;background:var(--surface);
-      border-radius:var(--radius);box-shadow:var(--shadow);text-align:center}
-    #reviews-carousel img{height:50px;margin-bottom:18px}
-    #reviews-carousel blockquote{margin:0;font-style:italic;color:var(--text-muted)}
-    #reviews-carousel strong{display:block;margin-top:16px}
-
-    /* HELP & SETTINGS panes can inherit body styles */
-
-    /* SMALL SCREEN */
-    @media(max-width:650px){
-      #hero{flex-direction:column;text-align:center}
-      .me{width:120px;height:120px}
+    #hero {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      font-size: 1.3em;
     }
   </style>
 
-  <!-- ─────────────  NEON-DARK THEME  ───────────── -->
-  <style id="retro" class="theme" disabled>
-    :root{
-      --bg:#101013;
-      --surface:#181a1f;
-      --primary:#00e5ff;
-      --primary-light:#00353d;
-      --text-main:#dfe4ea;
-      --text-muted:#8d9aa5;
-      --radius:14px;
-      --shadow:0 4px 14px rgba(0,0,0,.55);
+  <style id="retro" class="theme" disabled="true">
+    body {
+      margin: 0;
+      font-family: "Courier New", Courier, monospace;
+      background-color: #000;
+      color: #aaff00;
     }
-    body{margin:0;font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0d0d11 0%,#12131a 100%);color:var(--text-main)}
-    a{color:var(--primary)} a:hover{color:#7afcff}
-    #intro{padding:40px 20px;max-width:1100px;margin:auto}
+    h1, h2, p {
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2, p, a {
+      color: #aaff00;
+    }
+    #intro {
+      padding: 20px;
+    }
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+    #tab-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tab-button {
+      background-color: #333;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      color: #aaff00;
+      transition: background-color 0.3s;
+    }
+    .tab-button:hover {
+      background-color: #555;
+    }
+    .tab-button.active {
+      border-bottom: 3px solid #aaff00;
+    }
+    .skills {
+      margin: 40px;
+    }
+    .skills-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 40px;
+    }
+    .skill-icon {
+      width: 100px;
+      height: 100px;
+      perspective: 1000px;
+      margin: 15px;
+    }
+    .skill-icon .icon {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .skill-icon:hover .icon {
+      transform: rotateY(180deg);
+    }
+    .icon .front,
+    .icon .back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .icon .back {
+      transform: rotateY(180deg);
+    }
+    .icon img {
+      width: 80px;
+      height: 80px;
+    }
+    a {
+      color: #aaff00;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #c7f866;
+    }
+    #settings button {
+      background-color: #333;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      color: #aaff00;
+      transition: background-color 0.3s;
+    }
+    #settings button:hover {
+      background-color: #555;
+    }
+    .me {
+      display: block;
+      margin: 20px auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    body {
+      margin: 0;
+      padding-top: 20px;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+    }
 
-    /* TAB BAR */
-    #tab-container{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:30px}
-    .tab-button{
-      padding:10px 24px;border:none;cursor:pointer;font:600 1rem Inter;
-      background:var(--surface);color:var(--primary);border-radius:50px;transition:.25s}
-    .tab-button:hover{background:#22252b}
-    .tab-button.active{background:var(--primary);color:#081014}
+    h1,
+    h2,
+    p {
+      margin: 0;
+      padding: 0;
+    }
 
-    .tab{display:none;animation:fade .4s ease} .tab.active{display:block}
-    @keyframes fade{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
+    h1 {
+      font-size: 2em;
+      font-weight: bold;
+      color: #aaff00;
+    }
 
-    #hero{display:flex;flex-wrap:wrap;align-items:center;gap:40px;justify-content:center;margin-bottom:40px}
-    .me{width:160px;height:160px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow)}
-    h1{margin:0 0 8px;font-size:2rem}
-    ul{list-style:none;padding:0;margin:0} li{margin-bottom:6px}
+    h2 {
+      font-size: 1.5em;
+      color: #aaff00;
+    }
 
-    .skills h2{text-align:center;font-size:1.6rem;margin-bottom:20px}
-    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px}
-    .skill-icon{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;text-align:center;transition:.3s transform}
-    .skill-icon:hover{transform:translateY(-6px)}
-    .icon{width:80px;height:80px;margin:0 auto 12px;position:relative;perspective:800px}
-    .icon img{width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;border-radius:10px;backface-visibility:hidden;transition:transform .6s}
-    .icon .back{transform:rotateY(180deg)}
-    .skill-icon:hover .icon img{transform:rotateY(180deg)}
-    .skill-label{font-weight:600;font-size:.95rem;color:var(--primary)}
-    .skill-label .exp{display:block;font-weight:400;color:var(--text-muted);margin-top:4px;font-size:.85rem}
+    p {
+      font-size: 1.2em;
+      color: #aaff00;
+    }
 
-    #reviews-carousel{max-width:700px;margin:60px auto 0;padding:32px;background:var(--surface);
-      border-radius:var(--radius);box-shadow:var(--shadow);text-align:center}
-    #reviews-carousel img{height:50px;margin-bottom:18px}
-    #reviews-carousel blockquote{margin:0;font-style:italic;color:var(--text-muted)}
-    #reviews-carousel strong{display:block;margin-top:16px;color:var(--primary)}
 
-    @media(max-width:650px){
-      #hero{flex-direction:column;text-align:center}
-      .me{width:120px;height:120px}
+
+    a:visited {
+
+      color:  rgb(13, 182, 13);
+    }
+
+    a{
+  color: rgb(4, 206, 38);
+}
+    a:hover {
+
+      color:  #5eff00;
+    }
+
+
+    #intro {
+      background-color: #000000;
+      padding: 10px;
+      overflow: none;
+      font-size: 1.2rem;
+      height: 150vh;
+    }
+
+    .tab {
+      display: none ;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+    }
+
+    #tab-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      column-gap: 0px;
+      row-gap: 0px;
+      width: 100dvw;
+    }
+
+    .active {
+      display: block;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+
+      background-color: grey;
+
+    }
+
+    button:hover {
+      background-color: rgb(49, 47, 47);
+    }
+
+    button.active {
+      border-top: 5px solid #aaff00;
+    }
+
+    #sys-about {
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #welcome {
+      text-indent: 2%;
     }
   </style>
+
+
+
 </head>
 
 <body>
   <div id="intro">
-    <!-- ─── TAB BAR ─────────────────────────────── -->
     <div id="tab-container">
-      <button class="tab-button active" onclick="openTab(event,'welcome')">About David</button>
-      <button class="tab-button" onclick="openTab(event,'help')">Help</button>
-      <button class="tab-button" onclick="openTab(event,'settings')">Settings</button>
+      <button class="tab-button active" onclick="openTab(event, 'welcome')">About David</button>
+      <button class="tab-button" onclick="openTab(event, 'help')">Help</button>
+      <button class="tab-button" onclick="openTab(event, 'settings')">Settings</button>
     </div>
-
-    <!-- ─── WELCOME TAB ─────────────────────────── -->
+    
+    <!-- Welcome Tab -->
     <div class="tab active" id="welcome">
       <div id="hero">
-        <img src="./images/ME.jpg" class="me" alt="David Kozdra" />
-
+        
         <div>
+          <img src="./images/ME.jpg" class="me" alt="A picture of me, a handsome man">
+
+        </div>
+  
+        <div> 
           <h1>David Kozdra</h1>
-          <ul>
-            <li>Software Engineer</li>
-            <li><a href="https://api.holesgame.com/game/" target="_blank">Looking for something new &amp; innovative!</a></li>
-            <li><i class="fas fa-map-marker-alt"></i>&nbsp;<a href="https://www.google.com/maps/place/Orlando,+FL/" target="_blank">Orlando, Florida</a></li>
-          </ul>
+              <ul>
+                <li>Software Engineer</li>
+                <li>
+                    <a href="https://api.holesgame.com/game/" target="_blank"> Looking for some thing new and Innovative! </a>
+                </li>
+                <li>
+                    <a href="https://www.google.com/maps/place/Orlando,+FL/" target="_blank">
+                        <i class="fas fa-map-marker-alt"></i> Orlando, Florida
+                    </a>
+                </li>
+              </ul>
         </div>
       </div>
+  
 
-      <!-- SKILLS -->
-      <section class="skills">
+
+      <p>
+
+        If you're interested in my take on a more traditional website, please check out
+        <a href="index copy.html" target="_blank">my old website</a>.
+
+      </p>
+      
+      <div class="skills">
         <h2>Professional Skills</h2>
         <div class="skills-container">
-          <div class="skill-icon" data-start="2022-02-01">
+          <!-- React (3 years) -->
+          <div class="skill-icon">
             <div class="icon">
-              <img class="front" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React logo"/>
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React">
             </div>
-            <div class="skill-label">React<span class="exp"></span></div>
+            <div class="skill-label" id="react">React<br>3 Years</div>
           </div>
-
-          <div class="skill-icon" data-start="2020-09-01">
+          <!-- SQL (2 years) -->
+          <div class="skill-icon">
             <div class="icon">
-              <img class="front" src="./images/mysql.webp" alt="SQL logo"/>
-              <img class="back"  src="./images/mysql.webp" alt="SQL logo"/>
+              <img class="front" src="./images/mysql.webp" alt="SQL">
+              <img class="back" src="./images/mysql.webp" alt="SQL">
             </div>
-            <div class="skill-label">SQL<span class="exp"></span></div>
+            <div class="skill-label" id="sql">SQL<br>2 Years</div>
           </div>
-
-          <div class="skill-icon" data-start="2022-02-01">
+          <!-- Python (2 years) -->
+          <div class="skill-icon">
             <div class="icon">
-              <img class="front" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python logo"/>
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python">
             </div>
-            <div class="skill-label">Python<span class="exp"></span></div>
+            <div class="skill-label" id="python">Python<br>2 Years</div>
           </div>
-
-          <div class="skill-icon" data-start="2021-01-01">
+          <!-- Node.js (2 years) -->
+          <div class="skill-icon">
             <div class="icon">
-              <img class="front" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js logo"/>
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js">
             </div>
-            <div class="skill-label">Node.js<span class="exp"></span></div>
+            <div class="skill-label" id="node">Node.js<br>2 Years</div>
           </div>
-
-          <div class="skill-icon" data-start="2022-06-01">
+          <!-- MongoDB (2 years) -->
+          <div class="skill-icon">
             <div class="icon">
-              <img class="front" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB logo"/>
+              <img class="front" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB">
             </div>
-            <div class="skill-label">MongoDB<span class="exp"></span></div>
+            <div class="skill-label" id="mongo">MongoDB<br>2 Years</div>
           </div>
-        </div>
-      </section>
-
-          <!-- ─── REVIEWS ─────────────────────────────── -->
-    <div id="reviews-carousel">
-      <img id="review-logo" src="" alt="Company Logo" />
-      <blockquote id="review-text"></blockquote>
-      <strong id="review-name"></strong>
-    </div>
-    </div>
+        </div> <!-- Close skills-container -->
+      </div> <!-- Close skills -->
+    </div> <!-- Close welcome tab -->
+    
 
 
-
-    <!-- ─── HELP TAB ────────────────────────────── -->
+    <!-- Help Tab -->
     <div class="tab" id="help">
       <h1>Help</h1>
       <p>
-        This desktop is a portfolio website, not a real OS.<br>
-        Double-click icons to open them.<br><br>
-        Questions? Email&nbsp;
-        <a href="mailto:davidkozdra@gmail.com?subject=Let's%20Connect" target="_blank">
-          davidkozdra@gmail.com <i class="fas fa-envelope"></i>
+        This desktop is a portfolio website. It is not a real operating system.<br>
+        However, it acts a lot like your desktop.<br><br>
+        You can open and close windows, and move them around.<br><br>
+        Double-click on the icons to open them.<br><br>
+        If you have any questions or comments, please email me at 
+        <a  href="mailto:davidkozdra@gmail.com?subject=Let's%20Connect&body=I%20am%20connecting%20after%20viewing%20your%20website"  target="_blank">
+          davidkozdra@gmail.com <i class="fa-solid fa-envelope"></i>
         </a>
       </p>
     </div>
 
-    <!-- ─── SETTINGS TAB ────────────────────────── -->
+    <!-- Settings Tab -->
     <div class="tab" id="settings">
       <h1>Settings</h1>
       <button onclick="clearData()">Clear Data</button>
-      <h2>Theme</h2>
-      <label><input type="radio" name="theme" checked onclick="setTheme('modern')"> Soft Light</label>
-      <label><input type="radio" name="theme"        onclick="setTheme('retro')"> Neon Dark</label>
+      <h1>Theme</h1>
+      <label>
+        <input type="radio" name="styleToggle" id="modern" onclick="sendMessage('modern')"> Default
+      </label>
+      <label>
+        <input type="radio" name="styleToggle" id="retro"  onclick="sendMessage('retro')"> Retro
+      </label>
     </div>
+  </div> <!-- Close intro -->
 
-    <p style="text-align:center;margin-top:50px">
-      Curious about my older site?&nbsp;<a href="index copy.html" target="_blank">Take a look</a>.
-    </p>
-  </div><!-- /intro -->
 
-  <!-- ─── SCRIPTS ──────────────────────────────── -->
   <script>
-    /* Tabs */
-    function openTab(evt,id){
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      evt.currentTarget.classList.add('active');
-    }
-
-    /* Theme toggle */
-    function setTheme(name){
-      document.querySelectorAll('.theme').forEach(s=>{s.disabled=s.id!==name});
-      localStorage.setItem('theme',name);
-    }
-
-    /* Skill experience calc */
-    function updateExp(){
-      const now=new Date();
-      document.querySelectorAll('.skill-icon').forEach(card=>{
-        const start=new Date(card.dataset.start);
-        let years=now.getFullYear()-start.getFullYear();
-        let months=now.getMonth()-start.getMonth();
-        if(months<0){years--;months+=12;}
-        let txt='';
-        if(years>0) txt+=`${years} yr${years>1?'s':''}`;
-        if(months>0) txt+=`${years>0?', ':''}${months} mo${months>1?'s':''}`;
-        if(!txt) txt='&lt;1 mo';
-        card.querySelector('.exp').innerHTML=' '+txt;
+    function init() {
+      let defaultStyleSheet = localStorage.getItem('defaultStyleSheet') || 'modern';
+      // Check the radio button for the current stylesheet
+      const radioButtons = document.querySelectorAll('input[type="radio"]');
+      radioButtons.forEach(button => {
+        button.checked = false;
+        if (button.id === defaultStyleSheet) {
+          button.checked = true;
+        }
       });
+
+      let localStyle = localStorage.getItem('stylesheet');
+      if (localStyle) {
+        console.log(localStyle)
+        let style = document.getElementById(localStyle);
+        style.disabled = false;
+      }
+
+      sendMessage(defaultStyleSheet);
+      updateSkillYears();
     }
 
-    /* Reviews */
-    const reviews=[
-      {name:'Jonathan Matsumoto @ Bridxe',logo:'./images/Bridxe.jpg',review:'David mastered AWS, D3, Django & React quickly, communicating clearly and leaving maintainable code.'},
-      {name:'Michael Jennings @ Redchip',logo:'https://www.redchip.com/assets/images/corporate/redchip-logo.png',review:'Moves fluidly between complex backend logic and user-facing interfaces, delivering clean code.'},
-      {name:'Mellissa Thomas @ FNN',logo:'./images/Logo-FNN-380x310.jpeg',review:'Self-starter, excellent communicator – a great asset to any team.'}
-    ];
-    let idx=0;
-    function showReview(i){
-      const r=reviews[i];
-      document.getElementById('review-logo').src=r.logo;
-      document.getElementById('review-text').textContent=`"${r.review}"`;
-      document.getElementById('review-name').textContent='— '+r.name;
-    }
-    function startCarousel(){
-      showReview(idx);
-      setInterval(()=>{idx=(idx+1)%reviews.length;showReview(idx);},7000);
+    function updateSkillYears() {
+      const skillStartDates = {
+        'python': new Date('February 1, 2022'),
+        'node': new Date('January 1, 2021'),
+        'react': new Date('February 1, 2022'),
+        'mongo': new Date('June 1, 2022'),
+        'sql': new Date('September 1, 2020'),
+      };
+
+      const today = new Date();
+
+      for (const skill in skillStartDates) {
+        const startDate = skillStartDates[skill];
+        let yearsOfExperience = today.getFullYear() - startDate.getFullYear();
+
+        // Adjust if the current date is before the start date's anniversary in the current year
+        const startMonthDay = new Date(today.getFullYear(), startDate.getMonth(), startDate.getDate());
+        if (today < startMonthDay) {
+          yearsOfExperience--;
+        }
+
+        // If less than 1 year, show months
+        let experienceText = '';
+          experienceText = yearsOfExperience + (yearsOfExperience === 1 ? ' Year' : ' Years') + " ";
+
+          // Calculate months
+          const months = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
+          experienceText +=  months- (12*yearsOfExperience) + (months === 1 ? ' Month' : ' Months');
+        
+
+        // Update the label
+        const labelElement = document.getElementById(skill);
+        if (labelElement) {
+          const skillName = labelElement.getAttribute('id');
+          labelElement.innerHTML = skillName.charAt(0).toUpperCase() + skillName.slice(1) + '<br>' + experienceText;
+        }
+      }
     }
 
-    /* Misc */
-    function clearData(){localStorage.clear();sessionStorage.clear();alert('Local data cleared');}
+    function openTab(evt, tabName) {
+      evt.preventDefault();
+      let buttons = document.getElementsByClassName("tab-button");
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+      }
 
-    /* Init */
-    window.addEventListener('DOMContentLoaded',()=>{
-      updateExp();
-      startCarousel();
-      const saved=localStorage.getItem('theme')||'modern';setTheme(saved);
-      document.querySelector(`input[name="theme"][onclick*="${saved}"]`).checked=true;
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].classList.remove("active");
+      }
+      let currentTab = document.getElementById(tabName);
+      currentTab.classList.add("active");
+
+      evt.currentTarget.classList.add("active");
+    }
+
+    function clearData() {
+      localStorage.clear();
+      sessionStorage.clear();
+      //location.reload();
+    }
+
+    function sendMessage(stylesheetId) {
+      //set local stylesheet to disabled
+      let styles = document.getElementsByClassName("theme");
+      console.log(styles , stylesheetId)
+      Array.from(styles).forEach(style => {
+        console.log(style)
+        if (style.id !== stylesheetId ) {
+            style.disabled = true; // Disable other styles
+        } else {
+            style.disabled = false; // Enable selected style or default
+        }
     });
+      window.parent.postMessage({ stylesheetId }, '*');
+    }
+
+    // Initialize the page
+    init();
   </script>
 </body>
+
 </html>
