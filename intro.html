@@ -78,7 +78,6 @@
     }
   </style>
 
-  <!-- ─────────────  NEON-DARK THEME  ───────────── -->
   <style id="retro" class="theme" disabled>
     :root{
       --bg:#101013;
@@ -232,8 +231,8 @@
       <h1>Settings</h1>
       <button onclick="clearData()">Clear Data</button>
       <h2>Theme</h2>
-      <label><input type="radio" name="theme" checked onclick="setTheme('modern')"> Soft Light</label>
-      <label><input type="radio" name="theme"        onclick="setTheme('retro')"> Neon Dark</label>
+      <label><input type="radio" name="theme" checked onclick="setTheme('modern')"> Modern</label>
+      <label><input type="radio" name="theme" onclick="setTheme('retro')"> Retro</label>
     </div>
 
     <p style="text-align:center;margin-top:50px">
@@ -298,9 +297,12 @@
     window.addEventListener('DOMContentLoaded',()=>{
       updateExp();
       startCarousel();
-      const saved=localStorage.getItem('theme')||'modern';setTheme(saved);
+      const saved=localStorage.getItem('theme')||'modern';
+      setTheme(saved);
       document.querySelector(`input[name="theme"][onclick*="${saved}"]`).checked=true;
     });
+
+    init()
   </script>
 </body>
 </html>

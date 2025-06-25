@@ -1,7 +1,9 @@
-
 /*
 Shared Desktop env styles for all components 
 */
+:root {
+  --system-font: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
 
 body {
     margin: 0;
@@ -24,7 +26,7 @@ body {
     background-size: cover;
 }
 
-.fa-brands{
+.fa-brands {
     color: whitesmoke !important;
 }
 
@@ -35,8 +37,9 @@ body {
     border: 1px solid #000;
 }
 
-.fa-brands , .fa-envelope {
-  transform: scale(1.4);
+.fa-brands,
+.fa-envelope {
+    transform: scale(1.4);
 }
 
 
@@ -70,36 +73,48 @@ body {
     z-index: 5;
 
 }
+
 .loader-icon-inner {
     background: var(--main-gradient);
     width: 0dvw;
     height: 2dvw;
-    -webkit-animation: grow .5s linear ; 
+    -webkit-animation: grow .5s linear;
     animation: grow .5s linear;
 }
 
 @keyframes flickerScreen {
-    0% { opacity: .1; 
+    0% {
+        opacity: .1;
     }
-    50% { opacity: 0.6;
+
+    50% {
+        opacity: 0.6;
     }
-    100% { opacity: 1; 
+
+    100% {
+        opacity: 1;
     }
 }
 
 
 
 @keyframes grow {
-    0% { width: 0px; }
-    100% { width: 100%; }
+    0% {
+        width: 0px;
+    }
+
+    100% {
+        width: 100%;
+    }
 }
 
 #desktop {
-    background-image: var(--background-image); 
-    height:93.5vh;
+    background-image: var(--background-image);
+    height: 93.5vh;
     width: 100dvw;
     overflow: hidden;
-    background-size: cover; /* This will scale the background image to cover the entire container */
+    background-size: cover;
+    /* This will scale the background image to cover the entire container */
     background-repeat: no-repeat;
     z-index: 1;
 }
@@ -122,9 +137,9 @@ button {
     padding: 1%;
     border-bottom: #1d1d1d 2px solid;
     border-radius: 0px 0px 5px 5px;
-    height: 1dvw;   
-    color : white;  
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    height: 1dvw;
+    color: white;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
     min-width: 95dvw;
 }
 
@@ -140,7 +155,7 @@ button {
 }
 
 
-.sub-sub-category button a{
+.sub-sub-category button a {
     color: white;
 }
 
@@ -148,7 +163,7 @@ button {
     font-size: 1.5dvh;
     display: flex;
     justify-content: space-between;
-    flex-direction: row;    
+    flex-direction: row;
     column-gap: 20%;
 }
 
@@ -175,19 +190,19 @@ button {
 }
 
 .drop-down-content {
-    display: none ;
-    list-style: none; 
+    display: none;
+    list-style: none;
     position: absolute;
     background: var(--system-grey);
     border: 1px dotted black;
     text-decoration: none;
     color: black;
     z-index: 20000;
-    right : 0;
+    right: 0;
     left: 0%;
     min-width: 100px;
     border-radius: 10px;
-    padding:10px;
+    padding: 10px;
     row-gap: 20px;
     font-size: 1.5dvh;
 
@@ -227,8 +242,8 @@ button {
     justify-content: space-between;
     align-items: center;
     padding: 1%;
-    height: 1dvw;   
-    color : white;
+    height: 1dvw;
+    color: white;
     width: 50%;
 }
 
@@ -236,18 +251,20 @@ button {
 .drop-down:hover .drop-down-content {
     display: flex;
     flex-direction: column;
-    z-index:2;
+    z-index: 2;
     cursor: pointer;
 }
 
-.category-btn ,.subcategory-btn{
+.category-btn,
+.subcategory-btn {
     text-decoration: underline;
     font-weight: bolder;
     color: var(--text);
 
 }
 
-.category-btn:hover ,.subcategory-btn{
+.category-btn:hover,
+.subcategory-btn {
     background-color: transparent;
 
 }
@@ -274,27 +291,28 @@ button {
     height: 50%;
     z-index: 1;
     position: absolute;
-    overflow: hidden; 
+    overflow: hidden;
     resize: both;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
 
     animation: pop-up .3s ease-in-out forwards;
 }
 
-.Max_window{
+.Max_window {
     height: 90% !important;
 }
 
 
-  
+
 
 @keyframes pop-up {
     0% {
         opacity: 0;
         transform: scale(0) translateY(200vh);
     }
+
     100% {
-        opacity: 1; 
+        opacity: 1;
         transform: scale(1) translateY(0px);
     }
 }
@@ -302,17 +320,17 @@ button {
 
 
 .window-content {
-    color : black;
+    color: black;
     width: 100%;
 }
 
 .larger {
     width: 98% !important;
     height: 90% !important;
-    overflow: hidden; 
+    overflow: hidden;
     resize: none;
-    top : 0;
-    right : 0;
+    top: 0;
+    right: 0;
 }
 
 
@@ -325,7 +343,7 @@ button {
     color: black;
     width: 100%;
     position: fixed;
-    cursor: move;    
+    cursor: move;
     user-select: none;
 }
 
@@ -337,12 +355,12 @@ button {
 }
 
 .window-buttons {
-    color : black;
+    color: black;
 }
 
 
 
-#task-bar-icon{
+#task-bar-icon {
     width: 3vw;
     height: 3vh;
     margin: 5px;
@@ -354,27 +372,33 @@ button {
     animation: shrink .3s linear forwards;
 
 }
+
 @keyframes shrink {
     0% {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
     50% {
-        opacity: 0.5; 
+        opacity: 0.5;
         transform: translateY(50vh) scale(0.5);
     }
 
     100% {
         transform: translateY(100vh) scale(0);
-        opacity: 0; /* Optional: Fade out during the animation */
+        opacity: 0;
+        /* Optional: Fade out during the animation */
     }
 }
 
 .desktop-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define uniform columns */
-    gap: 20px; /* Adjusted gap for better spacing */
-    margin: 20px; /* Reduced margin for better layout */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* Define uniform columns */
+    gap: 20px;
+    /* Adjusted gap for better spacing */
+    margin: 20px;
+    /* Reduced margin for better layout */
 
 }
 
@@ -399,13 +423,17 @@ button {
 .icon-text {
     font-size: 1.5dvh;
     text-align: center;
-    color : white;
-    
-  text-shadow:
-  -1px -1px 0 #000,  /* Top-left shadow */
-   1px -1px 0 #000,  /* Top-right shadow */
-  -1px  1px 0 #000,  /* Bottom-left shadow */
-   1px  1px 0 #000;  /* Bottom-right shadow */
+    color: white;
+
+    text-shadow:
+        -1px -1px 0 #000,
+        /* Top-left shadow */
+        1px -1px 0 #000,
+        /* Top-right shadow */
+        -1px 1px 0 #000,
+        /* Bottom-left shadow */
+        1px 1px 0 #000;
+    /* Bottom-right shadow */
 }
 
 .desktop-icon:hover {
@@ -429,13 +457,13 @@ button {
 }
 
 .app-bar {
-    gap : 25px;
+    gap: 25px;
     display: flex;
     flex-direction: row;
     justify-content: left !important;
     overflow-x: visible;
     background: var(--main-gradient);
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
     color: white;
     min-height: 20vh;
 }
@@ -454,18 +482,20 @@ button {
     min-height: 2vh;
     display: flex;
     flex-direction: row;
-    
+
 }
-    @keyframes come-in {
-        0% {
-            opacity: 0;
-            transform: scale(0);
-        }
-        100% {
-            opacity: 1; 
-            transform: scale(1);
-        }
+
+@keyframes come-in {
+    0% {
+        opacity: 0;
+        transform: scale(0);
     }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
 
 .app-bar-button-active {
     border-top: 5px solid var(--desktop-background);
@@ -480,7 +510,7 @@ button {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    color : black;
+    color: black;
 
 }
 
@@ -489,33 +519,43 @@ button {
 }
 
 .typewriter {
-    overflow: hidden; /* Ensures the content is not revealed until the animation */
-    border-right: .1em solid black; /* The typwriter cursor */
-    white-space: nowrap; /* Keeps the content on a single line */
-    margin: 100px auto; /* Gives that scrolling effect as the typing happens */
-    letter-spacing: .15em; /* Adjust as needed */
-    animation: 
-      fadeIn .5s steps(10, end),
-      typing .4s steps(40, end),
-      blink-caret .5s step-end;    
-  }
+    overflow: hidden;
+    /* Ensures the content is not revealed until the animation */
+    border-right: .1em solid black;
+    /* The typwriter cursor */
+    white-space: nowrap;
+    /* Keeps the content on a single line */
+    margin: 100px auto;
+    /* Gives that scrolling effect as the typing happens */
+    letter-spacing: .15em;
+    /* Adjust as needed */
+    animation:
+        fadeIn .5s steps(10, end),
+        typing .4s steps(40, end),
+        blink-caret .5s step-end;
+}
 
-  .typewriter a:visited {
+.typewriter a:visited {
     color: var(--text);
-  }
-  
-  /* The typing effect */
-  @keyframes typing {
-    from { width: 0% }
-    to { width: 50% }
-  }
-  
-  .embed-responsive {
+}
+
+/* The typing effect */
+@keyframes typing {
+    from {
+        width: 0%
+    }
+
+    to {
+        width: 50%
+    }
+}
+
+.embed-responsive {
     position: absolute;
     width: 100%;
     padding: 0;
     overflow: hidden;
-  }
+}
 
 .about {
     display: flex;
@@ -534,7 +574,7 @@ button {
 
 
 
-@media only screen and (orientation: portrait ) {
+@media only screen and (orientation: portrait) {
 
     #desktop {
         height: 92dvh !important;
@@ -561,7 +601,8 @@ button {
         height: 5%;
 
     }
-    #task-bar-icon{
+
+    #task-bar-icon {
         width: 4vw;
         height: 2vh;
         margin: 5px;
@@ -569,7 +610,7 @@ button {
     }
 
 
-    .desktop-icon img{
+    .desktop-icon img {
         border-radius: 50%;
     }
 
@@ -580,6 +621,7 @@ button {
 .notes {
     margin: 50px;
 }
+
 .app-bar-buffer {
     display: none;
     width: 100px;
@@ -590,6 +632,7 @@ button {
 
 
 @media screen and (min-width: 1800px) {
+
     /* Your styles for larger screens go here */
     .app-bar-buffer {
         /* Example: Adjusting margin for larger screens */
@@ -600,4 +643,3 @@ button {
         height: 91dvh !important;
     }
 }
-
