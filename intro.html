@@ -41,7 +41,8 @@
     .tab-button.active{background:var(--primary);color:#fff}
 
     /* TABS */
-    .tab{display:none;animation:fade .4s ease} .tab.active{display:block}
+    .tab{display:none;animation:fade .4s ease
+    } .tab.active{display:block}
     @keyframes fade{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
 
     /* HERO */
@@ -52,7 +53,7 @@
 
     /* SKILLS */
     .skills h2{text-align:center;font-size:1.6rem;margin-bottom:20px}
-    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px}
+    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px; justify-content: center;}
     .skill-icon{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;text-align:center;transition:.3s transform}
     .skill-icon:hover{transform:translateY(-6px)}
     .icon{width:80px;height:80px;margin:0 auto 12px;position:relative;perspective:800px}
@@ -78,59 +79,258 @@
     }
   </style>
 
-  <style id="retro" class="theme" disabled>
-    :root{
-      --bg:#101013;
-      --surface:#181a1f;
-      --primary:#00e5ff;
-      --primary-light:#00353d;
-      --text-main:#dfe4ea;
-      --text-muted:#8d9aa5;
-      --radius:14px;
-      --shadow:0 4px 14px rgba(0,0,0,.55);
+
+  <style id="retro" class="theme" disabled="true">
+    body {
+      margin: 0;
+      font-family: "Courier New", Courier, monospace;
+      background-color: #000;
+      color: #aaff00;
     }
-    body{margin:0;font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0d0d11 0%,#12131a 100%);color:var(--text-main)}
-    a{color:var(--primary)} a:hover{color:#7afcff}
-    #intro{padding:40px 20px;max-width:1100px;margin:auto}
+    h1, h2, p {
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2, p, a {
+      color: #aaff00;
+    }
+    #intro {
+      padding: 20px;
+    }
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+    #tab-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tab-button {
+      background-color: #333;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      color: #aaff00;
+      transition: background-color 0.3s;
+    }
+    .tab-button:hover {
+      background-color: #555;
+    }
+    .tab-button.active {
+      border-bottom: 3px solid #aaff00;
+    }
+    .skills {
+      margin: 40px;
+    }
+    .skills-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 40px;
+    }
+    .skill-icon {
+      width: 100px;
+      height: 100px;
+      perspective: 1000px;
+      margin: 15px;
+    }
+    .skill-icon .icon {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .skill-icon:hover .icon {
+      transform: rotateY(180deg);
+    }
+    .icon .front,
+    .icon .back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .icon .back {
+      transform: rotateY(180deg);
+    }
+    .icon img {
+      width: 80px;
+      height: 80px;
+    }
+    a {
+      color: #aaff00;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #c7f866;
+    }
+    #settings button {
+      background-color: #333;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      color: #aaff00;
+      transition: background-color 0.3s;
+    }
+    #settings button:hover {
+      background-color: #555;
+    }
+    .me {
+      display: block;
+      margin: 20px auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    body {
+      margin: 0;
+      padding-top: 20px;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+    }
 
-    /* TAB BAR */
-    #tab-container{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:30px}
-    .tab-button{
-      padding:10px 24px;border:none;cursor:pointer;font:600 1rem Inter;
-      background:var(--surface);color:var(--primary);border-radius:50px;transition:.25s}
-    .tab-button:hover{background:#22252b}
-    .tab-button.active{background:var(--primary);color:#081014}
+    h1,
+    h2,
+    p {
+      margin: 0;
+      padding: 0;
+    }
 
-    .tab{display:none;animation:fade .4s ease} .tab.active{display:block}
-    @keyframes fade{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
+    h1 {
+      font-size: 2em;
+      font-weight: bold;
+      color: #aaff00;
+    }
 
-    #hero{display:flex;flex-wrap:wrap;align-items:center;gap:40px;justify-content:center;margin-bottom:40px}
-    .me{width:160px;height:160px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow)}
-    h1{margin:0 0 8px;font-size:2rem}
-    ul{list-style:none;padding:0;margin:0} li{margin-bottom:6px}
+    h2 {
+      font-size: 1.5em;
+      color: #aaff00;
+    }
 
+    p {
+      font-size: 1.2em;
+      color: #aaff00;
+    }
+
+
+
+    a:visited {
+
+      color:  rgb(13, 182, 13);
+    }
+
+    a{
+  color: rgb(4, 206, 38);
+}
+    a:hover {
+
+      color:  #5eff00;
+    }
+
+
+    #intro {
+      background-color: #000000;
+      padding: 10px;
+      overflow: none;
+      font-size: 1.2rem;
+      height: 150vh;
+    }
+
+    .tab {
+      display: none ;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+    }
+
+    #tab-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      column-gap: 0px;
+      row-gap: 0px;
+      width: 100dvw;
+    }
+
+    .active {
+      display: block;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+
+      background-color: grey;
+
+    }
+
+    button:hover {
+      background-color: rgb(49, 47, 47);
+    }
+
+    button.active {
+      border-top: 5px solid #aaff00;
+    }
+
+    #sys-about {
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #welcome {
+      text-indent: 2%;
+    }
+
+
+    /* SKILLS */
     .skills h2{text-align:center;font-size:1.6rem;margin-bottom:20px}
-    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px}
+    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px; justify-content: center;}
     .skill-icon{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;text-align:center;transition:.3s transform}
     .skill-icon:hover{transform:translateY(-6px)}
     .icon{width:80px;height:80px;margin:0 auto 12px;position:relative;perspective:800px}
     .icon img{width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;border-radius:10px;backface-visibility:hidden;transition:transform .6s}
     .icon .back{transform:rotateY(180deg)}
     .skill-icon:hover .icon img{transform:rotateY(180deg)}
-    .skill-label{font-weight:600;font-size:.95rem;color:var(--primary)}
+    .skill-label{font-weight:600;font-size:.95rem;color:var(--text-main)}
     .skill-label .exp{display:block;font-weight:400;color:var(--text-muted);margin-top:4px;font-size:.85rem}
 
+    /* REVIEWS */
     #reviews-carousel{max-width:700px;margin:60px auto 0;padding:32px;background:var(--surface);
       border-radius:var(--radius);box-shadow:var(--shadow);text-align:center}
     #reviews-carousel img{height:50px;margin-bottom:18px}
     #reviews-carousel blockquote{margin:0;font-style:italic;color:var(--text-muted)}
-    #reviews-carousel strong{display:block;margin-top:16px;color:var(--primary)}
+    #reviews-carousel strong{display:block;margin-top:16px}
 
-    @media(max-width:650px){
-      #hero{flex-direction:column;text-align:center}
-      .me{width:120px;height:120px}
-    }
   </style>
+
 </head>
 
 <body>
@@ -231,8 +431,12 @@
       <h1>Settings</h1>
       <button onclick="clearData()">Clear Data</button>
       <h2>Theme</h2>
-      <label><input type="radio" name="theme" checked onclick="setTheme('modern')"> Modern</label>
-      <label><input type="radio" name="theme" onclick="setTheme('retro')"> Retro</label>
+          <label>
+        <input type="radio" name="styleToggle" id="modern" onclick="sendMessage('modern')"> Default
+      </label>
+      <label>
+        <input type="radio" name="styleToggle" id="retro"  onclick="sendMessage('retro')"> Retro
+      </label>
     </div>
 
     <p style="text-align:center;margin-top:50px">
@@ -253,7 +457,7 @@
     /* Theme toggle */
     function setTheme(name){
       document.querySelectorAll('.theme').forEach(s=>{s.disabled=s.id!==name});
-      localStorage.setItem('theme',name);
+      localStorage.setItem('stylesheet',name);
     }
 
     /* Skill experience calc */
@@ -293,15 +497,50 @@
     /* Misc */
     function clearData(){localStorage.clear();sessionStorage.clear();alert('Local data cleared');}
 
-    /* Init */
     window.addEventListener('DOMContentLoaded',()=>{
       updateExp();
       startCarousel();
-      const saved=localStorage.getItem('theme')||'modern';
+      const saved=localStorage.getItem('stylesheet')||'modern';
       setTheme(saved);
       document.querySelector(`input[name="theme"][onclick*="${saved}"]`).checked=true;
     });
 
+
+    function init() {
+      let defaultStyleSheet = localStorage.getItem('defaultStyleSheet') || 'modern';
+      // Check the radio button for the current stylesheet
+      const radioButtons = document.querySelectorAll('input[type="radio"]');
+      radioButtons.forEach(button => {
+        button.checked = false;
+        if (button.id === defaultStyleSheet) {
+          button.checked = true;
+        }
+      });
+
+      let localStyle = localStorage.getItem('stylesheet');
+      if (localStyle) {
+        console.log(localStyle)
+        let style = document.getElementById(localStyle);
+        style.disabled = false;
+      }
+
+      sendMessage(defaultStyleSheet);
+      updateSkillYears();
+    }
+       function sendMessage(stylesheetId) {
+      //set local stylesheet to disabled
+      let styles = document.getElementsByClassName("theme");
+      console.log(styles , stylesheetId)
+      Array.from(styles).forEach(style => {
+        console.log(style)
+        if (style.id !== stylesheetId ) {
+            style.disabled = true; // Disable other styles
+        } else {
+            style.disabled = false; // Enable selected style or default
+        }
+    });
+      window.parent.postMessage({ stylesheetId }, '*');
+    }
     init()
   </script>
 </body>
