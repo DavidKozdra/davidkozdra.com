@@ -115,10 +115,7 @@
                       <button onclick="desktopIconRouter(event,'dragon_game')">
                           <img src="./images/dragon_fighter.png" alt="DBZ Fighter Icon" class="menu-icon"> DBZ Fighter
                       </button>
-                      <button>
-                          <img src="./images/Space.png" alt="Nebula Hive Mind Icon" class="menu-icon"> 
-                          <a href="https://nebula.polypikzel.games/" style="color: white;">Nebula Hive Mind</a>
-                      </button>
+                   
                   </div>
               </div>
           
@@ -781,18 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
           game.style.overflowY = "hidden";
           createWindow("dragon fighter conquest", game, "./images//dragon_fighter.png", 800, false);
           break;
-          case "nebulahivemind":
-            let neb = document.createElement("iframe");
-            neb.name = "Nebula";
-            neb.title = "Nebula";
-            neb.src = "https://nebula.polypikzel.games/";
-            neb.style.height = "100%";
-            neb.style.width = "100%";
-            neb.style.overflowY = "hidden";
-            createWindow("Nebula", neb, "./images/Nebula", 800, false);
-          break;
-
-
+ 
           case "notes":
           let notes = document.createElement("div");
 
