@@ -500,9 +500,15 @@
     window.addEventListener('DOMContentLoaded',()=>{
       updateExp();
       startCarousel();
-      const saved=localStorage.getItem('stylesheet')||'modern';
+      const saved=localStorage.getItem('defaultStyleSheet')||'modern';
       setTheme(saved);
-      document.querySelector(`input[name="theme"][onclick*="${saved}"]`).checked=true;
+
+        setTimeout(()=>{
+
+        sendMessage(saved)
+        }, 50)
+
+      //document.querySelector(`input[name="theme"][onclick*="${saved}"]`).checked = true;
     });
 
 
@@ -523,9 +529,7 @@
         let style = document.getElementById(localStyle);
         style.disabled = false;
       }
-
       sendMessage(defaultStyleSheet);
-      updateSkillYears();
     }
        function sendMessage(stylesheetId) {
       //set local stylesheet to disabled

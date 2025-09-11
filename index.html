@@ -1188,10 +1188,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to handle messages from the intro iframe
     function receiveMessage(event) {
-      if(!event){
+      if(!event || event?.data?.message?.text == "Initializing..."){
         return;
       }
-      console.log(event)
+
 
       if (event.data.file){
         let file = event.data.file
@@ -1219,6 +1219,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       }else {
 
+        console.log(event.data, "ERROR HERE")
         console.error("event style sheets not enabled")
       }
     }
