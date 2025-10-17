@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>David Kozdra — Apps & Support</title>
+  <meta name="description" content="Information and support for apps by David Kozdra." />
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --muted:#6b7280; --accent:#0ea5a3;
+      --maxw:980px; --radius:12px; --shadow: 0 6px 20px rgba(15,23,42,0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(180deg,#f7fbfc 0%, #f6f8fb 100%); color:#0f172a;
+      display:flex; align-items:flex-start; justify-content:center; padding:40px 18px;
+    }
+    .wrap{width:100%; max-width:var(--maxw);}
+    header{
+      display:flex; gap:16px; align-items:center; margin-bottom:24px;
+    }
+    .brand{
+      background:linear-gradient(180deg,#06b6d4,#0891b2);
+      width:72px;height:72px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+      color:white;font-weight:700;font-size:20px;box-shadow:var(--shadow);
+    }
+    .title h1{margin:0;font-size:20px}
+    .title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .grid{
+      display:grid; grid-template-columns: 1fr 320px; gap:18px;
+    }
+    @media (max-width:880px){ .grid{grid-template-columns:1fr} .brand{width:60px;height:60px} }
+    .main{
+      background:var(--card); padding:18px; border-radius:var(--radius); box-shadow:var(--shadow);
+    }
+    .app-list{display:flex;flex-direction:column;gap:12px}
+    .app{
+      display:flex; gap:14px; align-items:center; padding:12px; border-radius:10px; background:#fbfdff; border:1px solid rgba(15,23,42,0.03);
+    }
+    .app .icon{
+      width:64px;height:64px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#06b6d4,#0891b2);color:white;font-weight:700;font-size:18px;
+    }
+    .app .meta{flex:1}
+    .app .meta h3{margin:0;font-size:16px}
+    .app .meta p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:8px; margin-top:10px; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:9px; border:0; cursor:pointer;
+      background:var(--accent); color:#fff; text-decoration:none; font-weight:600; font-size:13px;
+    }
+    .btn.secondary{background:#eef2f7; color:#0f172a; font-weight:600}
+    .btn.ghost{background:transparent; border:1px solid rgba(15,23,42,0.06); color: #0f172a; font-weight:600}
+    .sidebar{
+      background:var(--card); padding:18px; border-radius:var(--radius); box-shadow:var(--shadow);
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .section-title{font-weight:700;font-size:14px;margin-bottom:6px}
+    .support-list{display:flex;flex-direction:column;gap:8px}
+    a.link{color:var(--accent); text-decoration:none; font-weight:600}
+    .muted{color:var(--muted);font-size:13px}
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+    .faq{margin-top:12px; background:#f8fafc; border-radius:10px; padding:12px; border:1px solid rgba(15,23,42,0.03)}
+    .small{font-size:13px;color:var(--muted)}
+    ul.small{margin:8px 0 0;padding-left:18px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <header>
+      <div class="brand" aria-hidden="true">DK</div>
+      <div class="title" aria-labelledby="site-title">
+        <h1 id="site-title">David Kozdra — Apps & Support</h1>
+        <p class="small">A software engineer building cool stuff for himself and others who are interested.</p>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main class="main" aria-label="App information">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="section-title">Apps</div>
+            <div class="small">Install, learn and report issues for each app below.</div>
+          </div>
+          <div class="small">Website: <a class="link" href="https://davidkozdra.com" target="_blank" rel="noopener">davidkozdra.com</a></div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="app-list" id="apps">
+
+          <!-- GitPulse -->
+          <article class="app" data-app="GitPulse">
+            <div class="icon" aria-hidden="true">GP</div>
+            <div class="meta">
+              <h3>GitPulse — Chrome extension</h3>
+              <p class="muted">GitPulse surfaces repo activity (recent commits, open issues, star count, etc.) on links so users can see how "active" a project is before they click. Good for avoiding stale/abandoned repos..</p>
+              <div class="actions">
+                <a class="btn" href="https://chromewebstore.google.com/detail/gitpulse/fiamhceclfnbckgpnmpkhldgbdhiamhg" target="_blank" rel="noopener">Install (Chrome Web Store)</a>
+                <a class="btn secondary" href="#" onclick="openSupportMail(event, 'GitPulse')">Report issue</a>
+                <a class="btn ghost" href="https://chromewebstore.google.com/detail/gitpulse/fiamhceclfnbckgpnmpkhldgbdhiamhg" target="_blank" rel="noopener">Store page</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- DK Pixels (VS Code theme) -->
+          <article class="app" data-app="DK Pixels - VSCODE File Icon Theme">
+            <div class="icon" aria-hidden="true">DK</div>
+            <div class="meta">
+              <h3>DK Pixels — VS Code Pixel Art Theme / File Icons</h3>
+              <p class="muted">Pixel-art file icons and theme for Visual Studio Code.</p>
+              <div class="actions">
+                <a class="btn" href="https://marketplace.visualstudio.com/items?itemName=DavidKozdra.dkpixelart-theme" target="_blank" rel="noopener">Install (VS Code Marketplace)</a>
+                <a class="btn secondary" href="#" onclick="openSupportMail(event, 'DK Pixels - VS Code Theme')">Report issue</a>
+                <a class="btn ghost" href="https://github.com/DavidKozdra/VSC_PixelArtTheme" target="_blank" rel="noopener">Source (GitHub)</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </main>
+
+      <aside class="sidebar" aria-label="Support and contact">
+        <div>
+          <div class="section-title">Contact</div>
+          <div class="small">If you have issues with the apps, email me directly:</div>
+          <div style="margin-top:8px;">
+            <a class="btn" href="mailto:davidkozdra@gmail.com?subject=Support%20Request&body=Hi%20David%2C%0A%0AI%20need%20help%20with%20%5Bapp%20name%5D.%20Describe%20the%20problem%20here.%0A%0APlatform%3A%20%5BWindows%2C%20macOS%2C%20Linux%2C%20Android%5D%0AApp%20Version%3A%20%5Bversion%5D%0A%0AThanks%2C%0A%5Byour%20name%5D">Email support</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Links</div>
+          <div class="support-list">
+            <div class="small">Website: <a class="link" href="https://davidkozdra.com" target="_blank" rel="noopener">davidkozdra.com</a></div>
+            <div class="small">GitHub: <a class="link" href="https://github.com/DavidKozdra" target="_blank" rel="noopener">github.com/DavidKozdra</a></div>
+            <div class="small">Chrome Web Store: <a class="link" href="https://chromewebstore.google.com/detail/gitpulse/fiamhceclfnbckgpnmpkhldgbdhiamhg" target="_blank" rel="noopener">GitPulse</a></div>
+            <div class="small">VS Code Marketplace: <a class="link" href="https://marketplace.visualstudio.com/items?itemName=DavidKozdra.dkpixelart-theme" target="_blank" rel="noopener">DK Pixels</a></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Quick support actions</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn secondary" onclick="openSupportMail(null,'General support')">Report a problem</button>
+            <a class="btn ghost" href="mailto:davidkozdra@gmail.com?subject=Feature%20Request" role="button">Feature request</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Notes</div>
+          <div class="small">When emailing, please include:</div>
+          <ul class="small">
+            <li>App name and version</li>
+            <li>Operating system & version</li>
+            <li>Steps to reproduce the problem</li>
+            <li>Any relevant logs or screenshots</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div>© <strong>David Kozdra</strong> — <span class="muted">Built with ❤️ • <a class="link" href="https://davidkozdra.com" target="_blank" rel="noopener">davidkozdra.com</a></span></div>
+    </footer>
+  </div>
+
+  <script>
+function openSupportMail(e, appName){
+  if (e) e.preventDefault();
+  const to = 'davidkozdra@gmail.com';
+  const subject = encodeURIComponent('Support request: ' + (appName || 'App'));
+  const bodyLines = [
+    'Hi David,',
+    '',
+    'I need help with: ' + (appName || '[app name]'),
+    '',
+    'Platform: [Windows, macOS, Linux, Android, etc]',
+    'App version: [version]',
+    'Steps to reproduce:',
+    '[1. ...]',
+    '',
+    'Logs / additional info:',
+    '',
+    'Thanks,',
+    '[Your name]'
+  ];
+
+  // Use a real newline here (not "\\n")
+  const body = encodeURIComponent(bodyLines.join('\r\n'));
+  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+}
+
+  </script>
+</body>
+</html>
