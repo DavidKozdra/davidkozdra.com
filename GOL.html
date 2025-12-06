@@ -1,114 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
+<style>
+  :root {
+    --bg: #f7f7f7;
+    --text: #222;
+    --primary: #4CAF50;
+    --button-bg: #444;
+    --button-hover: #666;
+    --border: #ccc;
+  }
 
-  <style>
-    body {
-      margin-left:5%;
-      margin-right: 5%;
-      padding-top: 5%;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      align-items: center;
-      justify-content: center;
-    }
+  body {
+    margin: 5%;
+    padding-top: 2%;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    h1,
-    h2,
-    p {
-      margin: 0;
-      padding: 0;
-    }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
-    button {
-      margin: 0;
-      padding: 0;
-      margin-top: 50px;
-      background-color: grey;
-      font-size: 5dvh;
-    }
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 800px;
+  }
 
-    canvas {
-      border: 1px solid black;
-      width: 90%;
-      height: 50%;
-    }
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;]
+  }
 
-    #gen_slider {
-  width: 80%;
-  -webkit-appearance: none; /* Override default CSS styles */
-  appearance: none;
-  height: 25px; /* Specified height */
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
-  transition: opacity 0.2s;
-  border-radius: 5px; /* Rounded edges */
-}
+  button {
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.4rem;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
 
-/* Customize the appearance of the slider thumb */
-#gen_slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default appearance */
-  appearance: none;
-  width: 20px; /* Width of the thumb */
-  height: 20px; /* Height of the thumb */
-  background: #4CAF50; /* Thumb color */
-  cursor: pointer; /* Change cursor to pointer when hovering over thumb */
-  border-radius: 50%; /* Make the thumb circular */
-}
+  button:hover {
+    background: var(--button-hover);
+  }
 
-#gen_slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: #4CAF50;
-  cursor: pointer;
-  border-radius: 50%;
-}
+  button:focus {
+    outline: 3px solid var(--primary);
+  }
 
-/* Hover effect for the slider */
-#gen_slider:hover {
-  opacity: 1; /* Full opacity when hovered */
-  background: #b3b3b3; /* Darken the background on hover */
-}
+  button:active {
+    transform: scale(0.97);
+  }
 
-/* Focused slider effect */
-#gen_slider:focus {
-  box-shadow: 0 0 10px #4CAF50; /* Add a green glow when focused */
-}
+  fieldset {
+    border: 1px solid var(--border);
+    padding: 1rem;
+    border-radius: 8px;
+  }
 
-  </style>
-  <body>
-    <h1><center>Conway's GAME OF LIFE<center>
-    </h1>
-    <p>
-      <a href="https://en.wikipedia.org/wiki/Conway's_Game_of_Life" target="_blank">WHAT IS Conway's GAME OF LIFE</a></p>
-    <div class="button-container"></div>
-      <!-- Icons and buttons with corresponding actions -->
-      <button onclick="restartGOL()">
-        <span class="icon">🔄</span>ReGenerate
+  legend {
+    padding: 0 0.5rem;
+    font-weight: bold;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  #gen_slider {
+    width: 100%;
+    margin-top: 0.5rem;
+    height: 22px;
+    appearance: none;
+    background: #d3d3d3;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.2s;
+  }
+
+  #gen_slider:hover {
+    background: #b3b3b3;
+  }
+
+  #gen_slider:focus {
+    box-shadow: 0 0 8px var(--primary);
+  }
+
+  #gen_slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  canvas {
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 800px;
+    height: 55vh;
+    margin-top: 2rem;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<body>
+
+  <h1>Conway's Game of Life</h1>
+
+  <div class="controls">
+
+    <div class="button-group">
+
+      <button onclick="restartGOL()" aria-label="Regenerate grid">
+        🔄 <span>Re-generate</span>
       </button>
-      <button onclick="restartGOL(true)">
-        <span class="icon">🧹</span>Clear
-      </button>
-      <button onclick="pauseGOL()" id="pause">
-        <span class="icon">⏸️</span>Pause
-      </button>
-     
 
-      <div>
-        <p>Generation TIME</p>
-        <input type="range" min="1" max="5000" value="500"  id="gen_slider" name="gen_slider">
-        <label for="gen_slider" id="gen_time_label"></label>
-      </div>
+      <button onclick="restartGOL(true)" aria-label="Clear grid">
+        🧹 <span>Clear</span>
+      </button>
 
-    
+      <button onclick="pauseGOL()" id="pause" aria-label="Pause simulation">
+        ⏸️ <span>Pause</span>
+      </button>
+
+          <label>
+      <input type="checkbox" id="life-display" >
+      Show Life Display
+    </label>
 
     </div>
+
+    <fieldset>
+      <legend>Generation Speed</legend>
+
+      <label for="gen_slider">Generation Time:</label>
+      <input 
+        type="range"
+        min="1"
+        max="5000"
+        value="500"
+        id="gen_slider"
+        name="gen_slider"
+        aria-describedby="gen_time_label"
+      >
+      <span id="gen_time_label"></span>
+    </fieldset>
+
+    <a href="https://en.wikipedia.org/wiki/Conway's_Game_of_Life" target="_blank">
+      Learn more about Conway's Game of Life →
+    </a>
+
+  </div>
 
     <canvas
       class="slide"
@@ -118,11 +189,10 @@
       aria-label="conway's game of life"
     >
     </canvas>
-    <label>
-      <input type="checkbox" id="life-display" >
-      Show Life Display
-    </label>
+
     <script>
+
+
       class entity {
         constructor(x, y, alive) {
           this.x = x;
@@ -159,6 +229,9 @@
       let entities = [];
       let life_display = document.getElementById("life-display")
       var drawText = false;
+
+
+
       life_display.addEventListener("change", (event) => {
         console.log(event);
         drawText = event.target.checked;
@@ -370,10 +443,12 @@
           entities[i].futureStatus = false; // Reset futureStatus
         }
 
-        gen += 1;
-        ctxB.fillStyle = "black";
-        ctxB.fillText("Gen: " + gen, 250, 147);
-        ctxB.fill();
+        gen += 1
+        document.getElementById("gen_number_label").innerHTML =gen
+ let population = entities.filter(e => e.alive);
+document.getElementById("pop_number_label").textContent = population.length;
+
+
         selected = [];
       }
       ExecuteGameOfLifeSolution();
@@ -386,6 +461,16 @@
     
         interval = setInterval(ExecuteGameOfLifeSolution, genTime);
       }
+
+
+  
+
     </script>
+
+    <div>
+      <p> Generations <span id="gen_number_label"> </span> </p>
+     <p> Pop <span id="pop_number_label"> </span> </p>
+
+    </div>
   </body>
 </html>
