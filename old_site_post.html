@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content=" David Kozdra is a computer science student at Florida Polytechnic university">
+  <meta name="keywords" content="Computer Science ">
+  <meta name="author" content="David Kozdra">
+
+  <title>David Kozdra</title>
+
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+
+<style>
+  #postmort-banner {
+    background-color: grey;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    margin: 20px auto;
+  }
+
+  #postmort-banner a {
+    color: #ffeaea;
+    text-decoration: underline;
+  }
+
+  .hover-overlay {
+    position: fixed;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    display: flex;
+    flex-direction:"row"
+    justify-content: left;
+    align-items: center;
+    padding: 40px;
+    font-size: 1.3rem;
+    text-align: center;
+    z-index: 99999;
+    transition: opacity 0.2s ease;
+    border-radius:20px;
+    pointer-events: none; 
+    max-width:50%;
+
+  }
+
+  .hover-overlay.hidden {
+    opacity: 0;
+  }
+
+  #me-talking {
+    width:40%;
+    height:40%;
+
+    border-radius:20px;
+    border: 4px solid white;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="postmort-banner">Post Last edited Dec 2025 <a href="./old_site.html"> GO BACK </a></div>
+
+<div id="hover-overlay" class="hover-overlay hidden">
+    <image src="./images/ME.jpg" id="me-talking"> </image>
+  <div id="hover-overlay-content"> CONTENT</div>
+</div>
+
+<div class="top">
+  <header class="typewriter" data-info="typewriter">
+    <h1>{David Kozdra}</h1>
+    <h2> Software Engineer</h2>
+  </header>
+
+  <div class="tab btn-group" data-info="navigation">
+    <button class="tablinks" id="defaultOpen" onclick="openPage(event, 'Story')" aria-label="My Story Tab">My Story </button>
+    <button class="tablinks" onclick="openPage(event, 'Resume')" aria-label="My Resume Tab">My Resume</button>
+    <button class="tablinks" onclick="openPage(event, 'AboutMe')" aria-label="About Me Tab">About Me</button>
+  </div>
+</div>
+
+<section id="Story" class="timeline tabcontent" >
+
+  <div class="hero" data-info="hero-section">            
+      <canvas class="slide" id="b" style="display:block" tabindex="0" aria-label="conway's game of life" data-info="game-b"></canvas>
+      <canvas class="slide" id="a" style="display:none" tabindex="0" aria-label="displays a game where moving the mouse moves the player to collect items on click" data-info="game-a"></canvas>
+      <canvas class="slide" id="c" style="display:none" tabindex="0" aria-label="simple dungeon crawler rouge like" data-info="game-c"></canvas>
+
+      <div class="about-me-container">
+          <h1> Full Stack MERN Developer</h1>
+          <img src="./images/Me.png" class="profile-picture" alt="david kozdra pink shirt behind the florida poly logo"/>
+          <div class="techGrid"> 
+            <span class="techtag"> JavaScript</span>
+            <span class="techtag"> React</span>
+            <span class="techtag"> Mongo DB</span>
+            <span class="techtag"> NodeJs</span>
+            <span class="techtag"> C#</span>
+            <span class="techtag"> Git</span> 
+            <span class="techtag"> HTML5</span> 
+            <span class="techtag"> WordPress</span> 
+            <span class="techtag"> Unity</span> 
+            <span class="techtag"> PostMan</span> 
+            <span class="techtag"> Express</span> 
+            <span class="techtag"> React Native</span> 
+          </div>
+      </div>
+    </div>
+
+
+    <div id="arrow"><button aria-label="back to top arrow" onclick="window.scrollTo(0, 0);"><i class="fa-solid fa-arrow-up fa-3x"></i></button> </div>
+
+    <ul data-info="timeline">
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Graduation From Florida Poly</h3></td>
+              <td><time>2023</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/graduation.jpg" alt="Florida Poly Graduation david standing with his diploma" width="auto" height="auto">
+          <p>
+            I have Graduated from Florida Polytechnic University! I now have a Bachelors of Science in Computer Science with a concentration in Software Engineering.
+            There is so much more to learn and I am excited to see what the future holds.
+          </p>
+          <br><hr>
+          <span class="techtag"> JavaScript</span>
+          <span class="techtag"> Unity</span>
+          <span class="techtag"> C#</span>
+          <span class="techtag"> SQL</span>
+          <table style="width:100%">
+            <tr>
+              <td><a href="https://floridapoly.edu/" target="_blank" aria-label="home button"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Z-axis Solutions Fullstack developer</h3></td>
+              <td><time>2022</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/Zaxis.png" alt="z-axis logo" width="auto" height="auto">
+          <p>
+            Z-axis solutions.
+            An event based social media that helped me learn to create a chat system, 
+            notifications work with tickets and lots of data. Web scrapping and creating middle ware and so much more. Over 30 hours a week of work. 
+          </p>
+          <br><hr>
+          <span class="techtag"> Node JS</span>
+          <span class="techtag"> Express</span>
+          <span class="techtag"> MongoDB</span>
+          <span class="techtag"> React.js</span>
+          <span class="techtag"> React Native</span>
+          <table style="width:100%">
+            <tr>
+              <td><a href="https://www.zaxissolutions.com/" target="_blank" aria-label="Z-axis home page"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Cloudy Meadows</h3></td>
+              <td><time>2022</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="https://img.itch.zone/aW1nLzk2NTI0MTYuZ2lm/original/kOdkTD.gif" alt="Cloudy Meadows Game" width="auto" height="auto">
+          <p>
+            Cloudy Meadows is a project a friend and I have worked on for the majority of the summer. 
+            Using Local storage and HTML CSS and JavaScript including p5.js. I did a lot of code and most of the art as well. This is the first complete game I have made in awhile
+          </p>
+          <br><hr>
+          <span class="techtag"> JavaScript</span>
+          <span class="techtag"> p5.js</span>
+          <span class="techtag"> HTML</span>
+          <span class="techtag"> CSS</span>
+          <span class="techtag"> Local Storage</span>
+          <table style="width:100%">
+            <tr>
+              <td>
+                <a aria-label="link to play cloudy" href="https://virtualnerd1.itch.io/cloudy-meadows" target="_blank"><i class="fa fa-play"> </i></a> 
+                <a aria-label="link to cloudy's source" href="https://github.com/Zoda390/Cloudy-Medows" target="_blank"><i class="fa fa-code"> </i></a> 
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Bridxe Frontend Internship </h3></td>
+              <td><time>2022</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/Bridxe.jpg" alt="Bridxe" width="auto" height="auto">
+          <p>
+            I have had the privilege of working with Bridxe as a front end intern. Using react and chart.js I have been fetching from a server to create data visualization components. 
+            This is a remote job with very flexible hours I have been able to learn while I work as well.
+            So far this is my favorite job: making projects, having quick yet productive meetings and getting to do tutorials to learn more all on my time.
+          </p>
+          <br><hr>
+          <span class="techtag"> React</span>
+          <span class="techtag"> Chart.js</span>
+          <span class="techtag"> Python</span>
+          <span class="techtag"> AWS</span>
+          <table style="width:100%">
+            <tr>
+              <td><a aria-label="bridxe home page" href="https://www.bridxe.com" target="_blank"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> My Website</h3></td>
+              <td><time>2022</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/favicon.ico" alt="david kozdra website" width="auto" height="auto">
+          <p>
+            This has been an ongoing project with several iterations and philosophy changes. 
+             I want a project that shows off good UI design and responsiveness.
+             This forces a bit of pressure to be professional and flawless.
+             When this project was started there was so little understanding
+              of what would represent me and how to make things look good.
+          </p>
+          <br><hr>
+          <span class="techtag"> HTML</span>
+          <span class="techtag"> CSS</span>
+          <span class="techtag"> JavaScript</span>
+          <span class="techtag"> Docker</span>
+          <table style="width:100%">
+            <tr>
+              <td>
+                <a aria-label="link to this site" href="index.html" target="_blank"><i class="fa fa-play"> </i></a> 
+                <a aria-label="the source code to this site FOSS forever" href="https://github.com/DavidKozdra/davidkozdra.com" target="_blank"><i class="fa fa-code"> </i></a> 
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Hive Mind Nebula</h3></td>
+              <td><time>2022</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="https://img.itch.zone/aW1nLzg3MzY3ODkuanBn/315x250%23c/QXh3ZL.jpg" alt="Hive Mind Nebula game project" width="auto" height="auto">
+          <p>
+            Space has been taken over by a hive mind. Fight to be the team on top in the endless sci fi battle.
+            This project is a 2D multiplayer game made in JavaScript with a team of four others. Node and Socket.io are used to create the server. 
+            p5js was used to create the game. 
+          </p>
+          <br><hr>
+          <span class="techtag"> p5.js</span>
+          <span class="techtag"> Node</span>
+          <span class="techtag"> JavaScript</span>
+          <table style="width:100%">
+            <tr>
+              <td>
+                <a aria-label="Play link for Hive mind " href="https://nebula.polypikzel.games/" target="_blank"><i class="fa fa-play"> </i></a> 
+                <a aria-label="Source code for hive mind nebula" href="https://github.com/gerzytet/Nebula-hive-mind-reborn" target="_blank"><i class="fa fa-code"> </i></a> 
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Precision Infinity </h3></td>
+              <td><time>2022</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="https://www.precisioninfinity.com/Images/pi-logo.svg" alt="Precision Infinity" width="auto" height="auto">
+          <p>
+            I had the opportunity to shadow this company learning more about ORM database technology and C# web development.
+            Precision makes admin boards for diverse companies. This means they work closely with database technologies and web development. 
+            They focus on UX as their customers can be anything from lunch ladies to farm owners. 
+            I got the opportunity to see some real world development and talk one on one.
+          </p>
+          <br><hr>
+          <span class="techtag"> C#</span>
+          <span class="techtag"> ASP.net </span>
+          <span class="techtag"> Entity Framework </span>
+          <table style="width:100%">
+            <tr>
+              <td><a aria-label="Home Page" href="https://www.precisioninfinity.com/" target="_blank"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Fight Tm Backend Internship</h3></td>
+              <td><time>2021</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/fight.png" alt="Fight tm social media " width="auto" height="auto">
+          <p>
+            This internship was with the MERN stack web development. 
+            Fight is a social media website focused on the Gaming community.
+            my position was backend Engineer. I learned about API development and routing.
+          </p>
+          <br><hr>
+          <span class="techtag"> Node </span>
+          <span class="techtag"> Express </span>
+          <span class="techtag"> JavaScript</span>
+          <table style="width:100%">
+            <tr>
+              <td><a aria-label="link to fight tm home page" href="https://fighttm.com" target="_blank"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Daintree E-commerce site</h3></td>
+              <td><time>2020</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/DainTree.png" alt="Daintree database project" width="auto" height="auto">
+          <p>
+            Website I made with PHP and Mysql to practice database fundamentals and web development. 
+            I made other projects with PHP and databases during this time as well.
+          </p>
+          <br><hr>
+          <span class="techtag"> PHP </span>
+          <span class="techtag"> MySql </span>
+          <span class="techtag"> CSS</span>
+          <span class="techtag"> HTML</span>
+          <table style="width:100%">
+            <tr>
+              <td>
+                <a aria-label="Link to Source code for Daintree" href="https://github.com/DavidKozdra/Daintree" target="_blank"><i class="fa fa-code"> </i></a> 
+                <a aria-label="Link to Daintree project" href="https://php.davidkozdra.com/Login/login.php" target="_blank"><i class="fa fa-play"> </i></a> 
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3>Universal Truth</h3></td>
+              <td><time>2020</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/Space.png" alt="UniversalTruth game" width="auto" height="auto">
+          <p>
+            Space is vast and full of resources and in this 2D Unity game the player has to buy everything they can. 
+            The game is made in C# with Unity and I used 2D lighting for the first time. 
+            I made it for the Florida Polytechnic game expo and got 8th/20. 
+            Not terrible as I was on my own and a sophomore, but the game has a lot of issues.
+          </p>
+          <br><hr>
+          <span class="techtag"> Unity </span>
+          <span class="techtag"> C# </span>
+          <table style="width:100%">
+            <tr>
+              <td>
+                <a aria-label="link to universal truth code" href="https://github.com/DavidKozdra/UniversalTruth" target="_blank"><i class="fa fa-code"> </i></a> 
+                <a aria-label="link to universal truth itch.io page" href="https://magentaautumn.itch.io/universal-truth" target="_blank"><i class="fa fa-play"> </i></a> 
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3>Virtual Developer</h3></td>
+              <td><time>2020</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/vcc.jpg" alt="Virtual Developer" width="auto" height="auto">
+          <p>
+            Block chain technology is interesting, I know some have their doubts but there are benefits none the less. 
+            I was really excited to learn more about data APIs and smart contracts. Along the way I learned more about node and JavaScript frameworks. 
+          </p>
+          <br><hr>
+          <span class="techtag"> JavaScript</span>
+          <span class="techtag"> C# </span>
+          <table style="width:100%">
+            <tr>
+              <td><a aria-label="" href="https://virtualdeveloper.com" target="_blank"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3>Florida National News internship</h3></td>
+              <td><time>2020</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/Logo-FNN-380x310.jpeg" alt="Florida National News" width="auto" height="auto">
+          <p>
+            Wordpress powers so much of the web, but at the time I had this internship, I was unaware of how useful it is.
+             I found tips and tricks from Google and my friend Jason who had some real good experience in Wordpress and PHP guided me a ton.
+              Florida National News is a nonprofit news publication.
+              Most of what they do is on the website from SSL configuration to simple UI changes; all of it needs to be updated as soon as possible. 
+              I still use Wordpress for freelance work and got my start here. 
+          </p>
+          <br><hr>
+          <span class="techtag"> Wordpress</span>
+          <span class="techtag"> CSS </span>
+          <span class="techtag"> HTML </span>
+          <table style="width:100%">
+            <tr>
+              <td><a aria-label="" href="https://floridanationalnews.com" target="_blank"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3>Florida Polytechnic University</h3></td>
+              <td><time>2019</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/floridaPoly.jpg" alt="Florida Polytechnic university logo" width="auto" height="auto">
+          <p>
+            I currently attend Florida Polytechnic University. I am earning a Bachelors in Computer Science.
+            There are several ways I have made Poly a part of my life, I am the president of the Media Club, 
+            I work in the Simulation and MultiMedia Lab, and I write for Layers, a student newspaper.
+          </p>
+          <br><hr>
+          <span class="techtag"> C </span>
+          <span class="techtag"> webGl</span>
+          <span class="techtag"> Java </span>
+          <span class="techtag"> C++ </span>
+          <table style="width:100%">
+            <tr>
+              <td><a aria-label="" href="https://floridapoly.edu" target="_blank"><i class="fa fa-home"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> Blocks Blocks Blocks</h3></td>
+              <td><time>2018</time></td>
+            </tr>
+          </table>
+          <img class="center" style="margin-left: 25%;" src="images/blocks.jpg" alt="Blocks Blocks Blocks game " width="auto" height="auto">
+          <p>
+            My first published game it was made in Unity and put on the Android store. 
+            The goal is simple as the ball falls get it to the Goal.
+             The game had a level selector free mode and tons of levels.
+          </p>
+          <br><hr>
+          <span class="techtag"> Unity </span>
+          <span class="techtag"> C# </span>
+          <table style="width:100%">
+            <tr>
+              <td><a aria-label="" href="https://magentaautumn.itch.io/blocksblocksblocks" target="_blank"><i class="fa fa-play"> </i></a></td>
+            </tr>
+          </table>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <table style="width:100%">
+            <tr>
+              <td><h3> High School Programming Club</h3></td>
+              <td><time>2016</time></td>
+            </tr>
+          </table>
+          <p>
+            I had no real programming knowledge at the time but I had always wanted to know more about how computers worked. It didn't hurt that I also wanted to make games.
+            At first my goal was programming as a hobby and to find some other career but I became obsessed and here we are today.
+          </p>
+          <br><hr>
+          <span class="techtag"> Java </span>
+          <span class="techtag"> HTML </span>
+          <span class="techtag"> CSS</span>
+          <table style="width:100%"><tr></tr></table>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section id="Resume" class="tabcontent center">
+    <iframe class="embed-responsive" src="./resume.pdf" style="height: 700px;" frameborder="0" name="resume" data-info="resume"> </iframe>
+
+    <div class="resume-viewer-mobile">
+      <h1>David Kozdra</h1>Software Engineer
+      <p style="padding-top: 4pt;padding-left: 15pt;text-indent: 0pt;text-align: left;">
+        <a href="mailto:davidkozdra@gmail.com" style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;" target="_blank" name="bookmark0">(772)-696-3847 | </a>
+        <a href="https://github.com/DavidKozdra" target="_blank" style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;">davidkozdra@gmail.com | </a>
+        <a href="https://davidkozdra.com/" target="_blank" style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;">github.com/DavidKozdra | </a>
+        <a href="https://davidkozdra.com/" target="_blank"><span style=" color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 12pt;">davidkozdra.com</span></a>
+      </p>
+      
+      <p style="padding-left: 21pt;text-indent: 0pt;text-align: left;"></p>
+      <h2 style="padding-left: 13pt;text-indent: 0pt;line-height: 20pt;text-align: left;">Professional Experience &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </h2>
+      
+      <p style="padding-top: 1pt;padding-left: 20pt;text-indent: 0pt;text-align: left;"><b>Bridxe </b>| <i>Frontend Engineering Intern </i>| React Node Express Chart</p>
+      <p class="s2" style="padding-left: 13pt;text-indent: 0pt;text-align: left;">Price chart for web 3 platforms</p>
+      <ul id="l1">
+        <li data-list-text="•"><p style="padding-top: 3pt;padding-left: 42pt;text-indent: -29pt;line-height: 15pt;text-align: left;">Fetched data from the server and visualized it using Chart JS and React Component</p></li>
+        <li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 14pt;text-align: left;">Built drop down to change URL to fetch with React</p></li>
+        <li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 14pt;text-align: left;">Wrote and Tested endpoints for Python back end API to fetch additional data</p></li>
+        <li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 15pt;text-align: left;">Collaborated with team members during meetings weekly to discuss requirements</p></li>
+      </ul>
+
+      <p style="padding-top: 9pt;padding-left: 11pt;text-indent: 0pt;text-align: left;"><b>Fight Tm</b>| <i>Backend Engineering Intern </i>|Node.js Express.js MongoDB Postman</p>
+      <p class="s3" style="padding-left: 12pt;text-indent: 0pt;text-align: left;">Social media for gamers and streamers</p>
+      <ul>
+        <li data-list-text="•"><p style="padding-top: 1pt;padding-left: 42pt;text-indent: -29pt;line-height: 13pt;text-align: left;">Added to the express API to add functionality to the user settings routes</p></li>
+        <li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 12pt;text-align: left;">Edited Models and tested database changes through MongoDB Compass</p></li>
+        <li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 12pt;text-align: left;">Aided front end testing with Postman responses testing HTTP routes</p></li>
+        <li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 12pt;text-align: left;">Created guided documentation for internal development including installation Guides</p></li>
+        <li data-list-text="•"><p style="padding-left: 42pt;text-indent: -29pt;line-height: 13pt;text-align: left;"><a href="https://fighttm.com/">fighttm.com</a></p></li>
+      </ul>
+      
+      <p style="padding-top: 2pt;padding-left: 13pt;text-indent: 0pt;text-align: left;">2/22 - 8/22</p>
+      <p style="text-indent: 0pt;text-align: left;"><br/></p>
+      <p style="padding-left: 11pt;text-indent: 0pt;text-align: left;">7/21 - 10/21</p>
+      <p style="text-indent: 0pt;text-align: left;"><br/></p>
+
+      <h2 style="padding-top: 1pt;padding-left: 12pt;text-indent: 0pt;text-align: left;">Projects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </h2>
+      <h4 style="padding-left: 14pt;text-indent: 0pt;line-height: 14pt;text-align: left;">Cork Board <span class="p">| MongoDB, Express, React , Node | Team Project</span></h4>
+      <p class="s2" style="padding-left: 11pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Intractable user forum social media platform</p>
+      <ul>
+        <li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 14pt;text-align: left;">Designed a Schema using NoSql Mongo Compass</p></li>
+        <li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 12pt;text-align: left;">Developed a rest API to connect user information and posts for a digital board</p></li>
+        <li data-list-text="•"><p style="padding-left: 43pt;text-indent: -32pt;line-height: 12pt;text-align: left;">Aided front end testing with Postman responses testing HTTP routes</p></li>
+      </ul>
+    </div>
+  </section>
+  <section id="AboutMe" class="tabcontent center" data-info="aboutme">
+      <div style="text-align: center; font-size: 2em; font-weight: bold;">
+        <p>Hello, I'm David Kozdra Full Stack Web Developer</p>
+      </div>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="max-width: 70%;">
+          <p>I have a goal to create beautiful and intuitive user interfaces, and lots of experience with back end development as well.</p>
+          <br>
+          <p> Interactive development with Unity and webgl helps me hone my programming and visual art skills, and I am always eager to learn new things in the field of computing.</p>
+          <br>
+          <p>In my free time, I enjoy creating pixel art and working to improve my skills. I'm excited to work with you and bring my creativity and expertise to your projects.</p>
+        </div>
+        
+        <img src="images/ME.jpg" alt="Profile picture" style="border-radius: 5%; width: 200px; height: 200px;">
+      </div>
+    
+  </section>
+
+    <footer data-info="footer">
+
+      <div class="center">
+        <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra" target="_blank"> <i class="fa-brands fa-github fa-4x"> </i></a>
+        <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/" target="_blank"> <i class="fa-brands fa-linkedin fa-4x"> </i></a>        
+        <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io" target="_blank"> <i class="fa-brands fa-itch-io fa-4x"></i></a>
+      </div>
+  </footer>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const hoverMeta = {
+    typewriter: `
+      This header uses a JavaScript typewriter effect.
+      Letters are inserted one by one with timed delays to create a retro terminal feel. <br><br>
+      It sets the tone of the site as "developer aesthetic". but its hard to read till it is done , bet it sucks for screen reading users 
+      its been done I liked it 
+    `,
+    navigation: `
+      using tabs for navigation felt more fun than new pages 
+      Instead of loading new pages, each tab shows/hides content via CSS and JavaScript.
+      Super lightweight and instant—no frameworks needed.
+    `,
+    "hero-section": `
+      The hero section uses THREE interactive canvas elements.
+      Each canvas runs a small game or animation:<br><br>
+      - Conway's Game of Life<br><br>
+      - A collectible mouse-driven game<br><br>
+      - A would be dungeon crawler<br><br>
+
+      some fun ideas to show I can keep you on the site, animate and make things interactive 
+      all while showing my love for game dev 
+      <br><br>
+      I do wish I had added some images and sprites but the problem was that made me think of each demo as a long term project and I need a job to eat ;) 
+    `,
+    timeline: `
+      The timeline uses "in-view" detection with getBoundingClientRect(). animated and easy to add to,
+       I do wish in the code I made it more data based with components but this worked, and I saw some tuts and w3 school posts that had the idea already,
+       <br><br> had to do alot to make it work and look nice here never loved the tech name crumbs and that is why this has changed in the current site so so much
+<br><br>
+       The Home and Demo buttons work well and have mostly stayed but the play button is a bit unclear with the arrows
+    `,
+    "game-a": `
+      Game A is the mouse-movement collector game. Simple and shows my personality I think this was coded in like 2 hours<br><br>
+      It uses canvas event listeners and animation loops to spawn items and track collisions.
+    `,
+    "game-b": `
+      Game B is Conway's Game of Life. I gave myself a weekend to build this after reading the rule set a few times and working with grids in js canvas for some other projects<br><br>
+      Each tick updates grid states based on cellular automata rules. There is a slightly newer version on the current site its mostly the same, <br><br> it has been done a 100 times and if you paid me to make it it would be 10000 times better, but for me it is fun and it works
+    `,
+    "game-c": `
+      Game C is a simple dungeon crawler.
+      it fails to inform the user what to do (press WASD) and is clearly unfinnished, but it shows the idea and was made rather fast.
+      It's tile-based and rendered on canvas with keyboard controls.
+    `,
+    resume: `
+      The resume section embeds your PDF directly into the page inside an iframe.
+      For mobile, you display a simplified text-only version for readability. but now it does both and it didnt used to as a resulting issue with the media query, this could have been fixed but at the time I was starting the DE idea 
+    `,
+    "about-section": `
+      This About Me section combines text and an image with a simple responsive flex layout.
+      It's simple missing things like , who I really am which is hard to convey and harder to get people to read and understand, overall some images would have been better placed, of me, Poly stuff, or just the langs and tech I used at the time like Unity JS React and SQL.
+    `,
+    footer: `
+      Simple footer with Font Awesome icons linking to GitHub, LinkedIn, and itch.io.
+      Its a clear style that I always liked on this site
+    `
+  };
+
+  // Hover behavior for ANYTHING with data-info
+  const overlay = document.getElementById("hover-overlay");
+  const box = document.getElementById("hover-overlay-content");
+
+  document.querySelectorAll("[data-info]").forEach(el => {
+    
+    el.addEventListener("mouseenter", () => {
+      const key = el.dataset.info;
+      box.innerHTML = hoverMeta[key] || "(No commentary)";
+      overlay.classList.remove("hidden");
+    });
+
+    el.addEventListener("mouseleave", () => {
+      overlay.classList.add("hidden");
+    });
+
+  });
+});
+
+
+</script>
+
+  <script src="index.js"> </script>
+  <script src="ai.js"> </script>  
+  <script src="Games.js"> </script>
+
+
+</body>
+</html>

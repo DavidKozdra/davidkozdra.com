@@ -12,10 +12,41 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<style>
+  #postmort-banner {
+    background-color: grey;        
+    color: white;
+    padding: 12px 20px;
+    text-align: center;           
+    font-family: sans-serif;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    margin: 20px auto;    
+    color : black;        
+  }
 
+  #postmort-banner a {
+    text-decoration: underline;
+  }
+</style>
 </head>
+
 <body>
-  
+<div id="postmort-banner" style="padding:1rem; background:#f8f8f8; border-left:4px solid #cc0000;">
+  <p>
+    This site is so old, I wrote a
+    <a href="./old_site_post.html">post-mortem ☠️</a>
+  </p>
+
+  <small>
+    I stopped development of this part of the site a long time ago, so there may be bugs and unfinished features.
+    Much of this was public-facing up until the end of my time at Poly, and after Red Meters screwed me,
+    I started working on the DE experiment which I think was creative and fun but I see all versions of my site as art and I don't want to hide the cool ideas I had here.
+  </small>
+</div>
+
+
+
   <div class="top">
   <header class="typewriter" >
     <h1>{David Kozdra}</h1>
@@ -737,45 +768,5 @@
   <script src="ai.js"> </script>  
   <script src="Games.js"> </script>
 
-  <script> 
-    document.getElementById("defaultOpen").click();
-
-    (function () {
-      "use strict";
-    
-      // define variables
-      var items = document.querySelectorAll(".timeline li");
-    
-      // check if an element is in viewport
-      // http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
-      function isElementInViewport(el) {
-        var rect = el.getBoundingClientRect();
-        return (
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-      }
-    
-      function callbackFunc() {
-        for (var i = 0; i < items.length; i++) {
-          if(i==0){
-            items[i].classList.add("in-view");
-          }
-
-          if (isElementInViewport(items[i])) {
-            items[i].classList.add("in-view");
-          }
-        }
-      }
-    
-      // listen for events
-      window.addEventListener("load", callbackFunc);
-      window.addEventListener("resize", callbackFunc);
-      window.addEventListener("scroll", callbackFunc);
-    })();
-    </script>
 </body>
 </html>
