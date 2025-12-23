@@ -498,24 +498,50 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    function checkCollision(item1, item2) {
+        function checkCollision(item1, item2) {
       const rect1 = item1.getBoundingClientRect();
       const rect2 = item2.getBoundingClientRect();
 
-      if (
+      return (
         rect1.left < rect2.right &&
         rect1.right > rect2.left &&
         rect1.top < rect2.bottom &&
         rect1.bottom > rect2.top
-      ) {
-        // Calculate the overlap in both the x and y directions
-        const overlapX = Math.min(rect1.right - rect2.left, rect2.right - rect1.left);
-        const overlapY = Math.min(rect1.bottom - rect2.top, rect2.bottom - rect1.top);
+      );
+    }
 
-        // Adjust the positions to resolve the collision
-        item1.style.left = (parseFloat(item1.style.left) || 0) + overlapX + 'px';
-        item1.style.top = (parseFloat(item1.style.top) || 0) + overlapY + 'px';
-
+    function resolveIconCollisions(draggedIcon) {
+      const icons = Array.from(desktopIcons);
+      const COLLISION_OFFSET = 10;
+      
+      for (let icon of icons) {
+        if (icon === draggedIcon) continue;
+        
+        if (checkCollision(draggedIcon, icon)) {
+          const rect1 = draggedIcon.getBoundingClientRect();
+          const rect2 = icon.getBoundingClientRect();
+          
+          // Calculate overlap
+          const overlapX = Math.min(rect1.right - rect2.left, rect2.right - rect1.left);
+          const overlapY = Math.min(rect1.bottom - rect2.top, rect2.bottom - rect1.top);
+          
+          // Move in the direction with less overlap
+          if (overlapX < overlapY) {
+            // Move horizontally
+            if (rect1.left < rect2.left) {
+              draggedIcon.style.left = (parseFloat(draggedIcon.style.left) - overlapX - COLLISION_OFFSET) + 'px';
+            } else {
+              draggedIcon.style.left = (parseFloat(draggedIcon.style.left) + overlapX + COLLISION_OFFSET) + 'px';
+            }
+          } else {
+            // Move vertically
+            if (rect1.top < rect2.top) {
+              draggedIcon.style.top = (parseFloat(draggedIcon.style.top) - overlapY - COLLISION_OFFSET) + 'px';
+            } else {
+              draggedIcon.style.top = (parseFloat(draggedIcon.style.top) + overlapY + COLLISION_OFFSET) + 'px';
+            }
+          }
+        }
       }
     }
 
@@ -627,8 +653,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function dragElement(title, elmnt) {
+        function dragElement(title, elmnt) {
       var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      var isDragging = false;
       if (title == null) {
         return;
       }
@@ -639,20 +666,21 @@ document.addEventListener('DOMContentLoaded', () => {
       function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
+        isDragging = true;
 
         // Get the mouse cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onpointerup = closeDragElement;
-        document.ontouchend = closeDragElement;
+        document.onmouseup = handleDragEnd;
+        document.onpointerup = handleDragEnd;
+        document.ontouchend = handleDragEnd;
         // Call a function whenever the cursor moves:
         document.onpointermove = elementDrag;
         document.onmousemove = elementDrag;
-        //document.onmouseleave = closeDragElement;
       }
 
       function elementDrag(e) {
+        if (!isDragging) return;
         e = e || window.event;
         e.preventDefault();
         // Calculate the new cursor position:
@@ -661,16 +689,38 @@ document.addEventListener('DOMContentLoaded', () => {
         pos3 = e.clientX;
         pos4 = e.clientY;
 
-        // Check boundaries
-        const newTop = Math.max(0, Math.min(elmnt.offsetTop - pos2, window.innerHeight - elmnt.offsetHeight));
-        const newLeft = Math.max(0, Math.min(elmnt.offsetLeft - pos1, window.innerWidth - elmnt.offsetWidth));
+        // Get desktop boundaries
+        const desktop = document.getElementById('desktop');
+        const taskBar = document.querySelector('.task-bar');
+        const appBar = document.querySelector('.app-bar');
+        
+        const minTop = taskBar ? taskBar.offsetHeight + 10 : 10;
+        const maxTop = appBar ? window.innerHeight - appBar.offsetHeight - elmnt.offsetHeight - 10 : window.innerHeight - elmnt.offsetHeight - 10;
+        const minLeft = 10;
+        const maxLeft = window.innerWidth - elmnt.offsetWidth - 10;
+
+        // Calculate new position with boundaries
+        let newTop = elmnt.offsetTop - pos2;
+        let newLeft = elmnt.offsetLeft - pos1;
+        
+        // Clamp values to boundaries
+        newTop = Math.max(minTop, Math.min(newTop, maxTop));
+        newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
 
         // Set the element's new position:
         elmnt.style.top = newTop + "px";
         elmnt.style.left = newLeft + "px";
       }
 
-
+      function handleDragEnd() {
+        isDragging = false;
+        closeDragElement();
+        
+        // Check for icon collisions only when drag ends
+        if (elmnt.classList.contains('desktop-icon')) {
+          resolveIconCollisions(elmnt);
+        }
+      }
     }
     function closeDragElement() {
       // Stop moving when the mouse button is released:

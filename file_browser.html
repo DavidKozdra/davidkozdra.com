@@ -169,12 +169,26 @@
             }
         ];
 
-        let fileSystem = JSON.parse(localStorage.getItem("fileSystem")) || defaultFileSystem;
-
-        // Save default structure to localStorage if not already present
-        if (!localStorage.getItem("fileSystem")) {
-            localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+        // Function to sync file system from parent
+        function syncFileSystem() {
+            try {
+                let storedFS = localStorage.getItem("fileSystem");
+                if (storedFS) {
+                    fileSystem = JSON.parse(storedFS);
+                    console.log('File system loaded:', fileSystem);
+                } else {
+                    fileSystem = defaultFileSystem;
+                    localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+                }
+            } catch (error) {
+                console.error('Error loading file system:', error);
+                fileSystem = defaultFileSystem;
+            }
         }
+
+        // Initialize with sync
+        let fileSystem;
+        syncFileSystem();
 
         // Pointer to current directory
         let currentDir = "/";
@@ -268,8 +282,14 @@
 
         // Function to open a file
         function openFile(file) {
-            alert(`File Content:\n\n${file.content}`);
-            // You can customize this function to display the file content in a modal or new window
+            // Send message to parent window to open the notes app with this file
+            const messageData = {
+                file: file,
+                dir: currentDir,
+                action: 'openFile'
+            };
+            window.parent.postMessage(messageData, '*');
+            console.log('Sending file to parent:', messageData);
         }
 
         // Navigate back in directory history
@@ -294,6 +314,18 @@
         document.getElementById('search-input').addEventListener('input', () => {
             renderCurrentDir();
         });
+
+        // Refresh file system periodically to stay in sync
+        setInterval(() => {
+            let storedFS = localStorage.getItem("fileSystem");
+            if (storedFS) {
+                let newFS = JSON.parse(storedFS);
+                if (JSON.stringify(newFS) !== JSON.stringify(fileSystem)) {
+                    fileSystem = newFS;
+                    renderCurrentDir();
+                }
+            }
+        }, 1000);
 
         // Initial render
         renderCurrentDir();
