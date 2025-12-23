@@ -365,20 +365,14 @@ document.addEventListener('DOMContentLoaded', () => {
         loading = false;
       } else {
 
-        //loop for all desktop icons
+                //loop for all desktop icons - only check boundaries, not collisions in main loop
         for (let i = 0; i < desktopIcons.length; i++) {
-          for (let j = 0; j < desktopIcons.length; j++) {
-            if (i != j) {
-              checkCollision(desktopIcons[i], desktopIcons[j]);
-            }
-          }
           if (desktopIcons[i].offsetWidth > desktop.offsetWidth) {
             desktopIcons[i].style.width = desktop.offsetWidth + "px";
           }
           if (desktopIcons[i].offsetHeight > desktop.offsetHeight) {
             desktopIcons[i].style.height = desktop.offsetHeight + "px";
           }
-          //applyBoundaries(desktopIcons);
         }
 
         activeWindows = document.getElementsByClassName("window");
@@ -475,26 +469,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function CreateDesktopIconGrid() {
+        function CreateDesktopIconGrid() {
       const iconSize = 100; // Adjust this based on the desired icon size
-      const margin = 10; // Adjust this based on the desired margin between icons
+      const margin = 20; // Adjust this based on the desired margin between icons
+      const startX = 20; // Starting X position
+      const startY = 20; // Starting Y position
 
       // Calculate the number of icons per row dynamically
-      const iconsPerRow = Math.floor((window.innerWidth - margin) / (iconSize + margin));
-      // y mod should grow with the window width
-      let ymod = -120 * (window.innerWidth / 5000);
-      let xmod = 0;
+      const iconsPerRow = Math.floor((window.innerWidth - startX - margin) / (iconSize + margin));
+      let yPosition = startY;
+      let xPosition = startX;
+      let currentRow = 0;
 
       for (let i = 0; i < desktopIcons.length; i++) {
-        if (i % iconsPerRow === 0) {
-          ymod += iconSize + margin;
-          xmod = 0;
+        // Move to next row if needed
+        if (i > 0 && i % iconsPerRow === 0) {
+          yPosition += iconSize + margin;
+          xPosition = startX;
+          currentRow++;
         }
+        
         // Set the position of the icon based on the index
-        desktopIcons[i].style.left = xmod * (iconSize + margin) + "px";
-        desktopIcons[i].style.top = ymod + "px";
-
-        xmod += 1;
+        desktopIcons[i].style.left = xPosition + "px";
+        desktopIcons[i].style.top = yPosition + "px";
+        
+        // Move X position for next icon in row
+        xPosition += iconSize + margin;
       }
     }
 
