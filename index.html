@@ -829,7 +829,7 @@ document.addEventListener('DOMContentLoaded', () => {
           createWindow("dragon fighter conquest", game, "./images//dragon_fighter.png", 800, false);
           break;
  
-          case "notes":
+                    case "notes":
           let notes = document.createElement("div");
 
         let fileSystem = localStorage.getItem("fileSystem") == null
@@ -849,18 +849,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     ]
                 },
                 {
-                    dir: "home",
+                    dir: "/home",
                     files: [
                         {
                             name: "text2.txt",
-                            content: ":) "
+                            content: ":) ",
+                            dir: false
                         }
                     ]
                 }
             ]
             : JSON.parse(localStorage.getItem("fileSystem"));
 
-          console.log(fileSystem);
+          console.log("File system:", fileSystem);
+          console.log("Data received:", data);
 
           notes.classList.add("notes");
           notes.name = "note pad";
@@ -873,64 +875,67 @@ document.addEventListener('DOMContentLoaded', () => {
           textArea.placeholder = "Enter your notes here";
 
           let isNew = false;
+          let currentFileDir = null;
+          let currentFileName = null;
           
-          if (data) {
-              console.log("data obj", data);
-              textArea.textContent = data.content;
-              console.log(textArea.value);
+          if (data && data.content !== undefined) {
+              console.log("Opening existing file:", data);
+              textArea.value = data.content;
+              currentFileDir = data.dir;
+              currentFileName = data.name;
           } else {
-              console.error("notes not found");
-              // Create new data
+              console.log("Creating new note");
               isNew = true;
+              currentFileDir = "/home";
+              currentFileName = "note_" + Date.now() + ".txt";
           }
 
           // Local storage for notes: get and set on change of value
-          textArea.onchange = function () {
-            
-            let new_file = { name: "text2.txt"+ String(Math.random()), content: textArea.textContent };
-              // Find this file and update the content
-              for (let i = 0; i < fileSystem.length; i++) {
-                if (isNew) {
-                  console.log(data)
-                    // Get the 'home' directory
-                    let homeDir = fileSystem.find(dir => dir.dir === "home");
-                    if (homeDir) {
-                        // Add the new file to the 'home' directory
-                        homeDir.files.push({
-                            name: new_file.name,
-                            content: textArea.value,
-                            dir: false
-                        });
-                    } else {
-                        // If 'home' directory doesn't exist, create it and add the file
-                        fileSystem.push({
-                            dir: "home",
-                            files: [{
-                                name: data.name,
-                                content: textArea.value,
-                                dir: false
-                            }]
-                        });
-                    }
-                    isNew = false; // Reset the flag after adding the file
-                    break
-                }
-
-
-                  if (fileSystem[i].dir == data.dir || !isNew) {
-                      for (let j = 0; j < fileSystem[i].files.length; j++) {
-                          if (fileSystem[i].files[j].name == data.name) {
-                              fileSystem[i].files[j].content = textArea.value;
-                          }
+          textArea.oninput = function () {
+              console.log("Text changed, saving...");
+              
+              if (isNew) {
+                  // Creating a new file
+                  let targetDir = fileSystem.find(dir => dir.dir === currentFileDir);
+                  
+                  if (targetDir) {
+                      targetDir.files.push({
+                          name: currentFileName,
+                          content: textArea.value,
+                          dir: false
+                      });
+                  } else {
+                      // Create directory if it doesn't exist
+                      fileSystem.push({
+                          dir: currentFileDir,
+                          files: [{
+                              name: currentFileName,
+                              content: textArea.value,
+                              dir: false
+                          }]
+                      });
+                  }
+                  isNew = false;
+                  console.log("New file created:", currentFileName);
+              } else {
+                  // Updating existing file
+                  let targetDir = fileSystem.find(dir => dir.dir === currentFileDir);
+                  
+                  if (targetDir) {
+                      let file = targetDir.files.find(f => f.name === currentFileName && !f.dir);
+                      if (file) {
+                          file.content = textArea.value;
+                          console.log("File updated:", currentFileName);
                       }
                   }
               }
-              // Save in local storage
+              
+              // Save to localStorage
               localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
           };
 
           notes.appendChild(textArea);
-          console.log("window created")
+          console.log("Notes window created for:", currentFileName);
           createWindow(newTitle ? newTitle : "Notes", notes, "./images/Notes.png", 500);
     break;
 
@@ -1236,41 +1241,54 @@ document.addEventListener('DOMContentLoaded', () => {
       CreateDesktopIconGrid();
     });
 
-    // Function to handle messages from the intro iframe
+        // Function to handle messages from the intro iframe
     function receiveMessage(event) {
       if(!event || event?.data?.message?.text == "Initializing..."){
         return;
       }
 
+      console.log('Received message:', event.data);
 
-      if (event.data.file){
-        let file = event.data.file
-        console.log("file", file)
+      // Handle file opening from file browser
+      if (event.data.file && event.data.action === 'openFile'){
+        let file = event.data.file;
+        console.log("Opening file:", file);
         let data = {
-          content:file.content,
-          dir:event.data.dir,
-          name:file.name
-        }
-        desktopIconRouter(event,'notes', event.data.file.name ,data)
+          content: file.content,
+          dir: event.data.dir,
+          name: file.name
+        };
+        // Pass null as first parameter since we don't have an actual event
+        desktopIconRouter(null, 'notes', file.name, data);
+        return;
       }
 
+      // Handle legacy file opening (keeping for backwards compatibility)
+      if (event.data.file){
+        let file = event.data.file;
+        console.log("file", file);
+        let data = {
+          content: file.content,
+          dir: event.data.dir,
+          name: file.name
+        };
+        desktopIconRouter(event, 'notes', event.data.file.name, data);
+        return;
+      }
+
+      // Handle theme changes
       if (event.data && event.data.stylesheetId) {
         // Disable all parent stylesheets
         const parentStylesheets = document.getElementsByClassName('theme');
         Array.from(parentStylesheets).forEach(sheet => {
-          console.log(sheet, "sheet")
-          sheet.disabled = true
+          console.log(sheet, "sheet");
+          sheet.disabled = true;
         });
         localStorage.setItem('defaultStyleSheet', event.data.stylesheetId);
-        let target_theme = document.getElementById(event.data.stylesheetId)
-        console.log(target_theme)
+        let target_theme = document.getElementById(event.data.stylesheetId);
+        console.log(target_theme);
         // Enable the selected stylesheet in the parent document
         target_theme.disabled = false;
-
-      }else {
-
-        console.log(event.data, "ERROR HERE")
-        console.error("event style sheets not enabled")
       }
     }
 
