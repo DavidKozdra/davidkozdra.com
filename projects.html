@@ -9,12 +9,12 @@
         body {
             margin-top: 0;
             font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
+            background-color: #f8f9fa;
             color: #333;
         }
 
         #search-input {
-            width: 70vw !important;
+            width: 100% !important;
         }
 
         h2 {
@@ -24,35 +24,36 @@
         .project-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             margin: 20px auto;
-            max-width: 1000px;
+            max-width: 1200px;
             padding: 0 20px;
         }
 
         .project {
             background-color: #fff;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             display: flex;
-            flex-direction: row;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #e9ecef;
         }
 
         .project:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
         }
 
         .project img {
             width: 300px;
-            height: auto;
+            height: 200px;
             object-fit: cover;
+            background: #f8f9fa;
         }
 
         .project-content {
-            padding: 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -60,12 +61,13 @@
         }
 
         .project-content p {
-            margin: 10px 0;
+            margin: 8px 0;
             line-height: 1.6;
+            color: #666;
         }
 
         .project-content a {
-            color: #1a73e8;
+            color: #007bff;
             text-decoration: none;
             font-weight: 500;
             margin-right: 15px;
@@ -73,110 +75,218 @@
         }
 
         .project-content a:hover {
-            color: #0c47a1;
+            color: #0056b3;
+            text-decoration: underline;
         }
 
         .tag-badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 4px 12px;
+            border-radius: 16px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
             color: white;
-            margin-top: 10px;
+            margin-top: 12px;
             width: fit-content;
+            text-transform: capitalize;
         }
 
         .tag-personal {
-            background-color: #4caf50;
+            background-color: #28a745;
         }
 
         .tag-work {
-            background-color: #2196f3;
+            background-color: #007bff;
         }
 
         .tag-academic {
-            background-color: #ff9800;
+            background-color: #fd7e14;
         }
 
         .tag-other {
-            background-color: #9c27b0;
+            background-color: #6f42c1;
         }
 
         #filters-container {
-            position: fixed;
+            position: sticky;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #fff;
+            background: #ffffff;
             z-index: 100;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        #filters-controls {
+            padding-top: 40px !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: #ffffff;
         }
 
         #filters {
-            padding: 15px 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            background: #ffffff;
+            transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
         }
 
         #filters.expanded {
-            max-height: 1000px;
+            max-height: 800px;
+            padding: 0 24px 20px 24px;
+            opacity: 1;
         }
 
         #filters.collapsed {
-            max-height: 30px;
+            max-height: 0;
+            padding: 0 24px;
+            opacity: 0;
         }
 
-        #filters input[type="text"],
+        #search-input {
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 15px;
+            width: 100%;
+            background: #f8f9fa;
+            transition: all 0.2s ease;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: #007bff;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        #search-input::placeholder {
+            color: #6c757d;
+        }
+
         #filters input[type="date"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            width: 200px;
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 160px;
+            background: #f8f9fa;
+            color: #333;
+            margin-right: 10px;
+            transition: all 0.2s ease;
+        }
+
+        #filters input[type="date"]:focus {
+            outline: none;
+            border-color: #007bff;
+            background: #ffffff;
         }
 
         #filters strong {
-            margin-right: 10px;
-            font-weight: 500;
+            margin-right: 12px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+            min-width: 80px;
+            display: inline-block;
         }
 
         .filter-section {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
+            margin-bottom: 4px;
         }
 
-        .filter-section label {
+        .filter-section > div {
             display: flex;
-            align-items: center;
-            margin-right: 10px;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex: 1;
         }
 
-        .filter-section input[type="checkbox"] {
-            margin-right: 5px;
-            accent-color: #1a73e8;
-        }
-
-        #filters-controls {
-            display: flex;
+        .filter-pill {
+            display: inline-flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #495057;
+            transition: all 0.2s ease;
             cursor: pointer;
-            margin-top: 20px;
+            user-select: none;
+        }
+
+        .filter-pill:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+            transform: translateY(-1px);
+        }
+
+        .filter-pill.active {
+            background: #007bff;
+            border-color: #0056b3;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        }
+
+        .filter-pill .remove-btn {
+            margin-left: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .filter-pill .remove-btn:hover {
+            opacity: 1;
+        }
+
+        #active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            min-height: 20px;
+        }
+
+        #active-filters:empty {
+            display: none;
+        }
+
+        #active-filters .filter-pill {
+            background: #007bff;
+            border-color: #0056b3;
+            color: #ffffff;
         }
 
         #toggle-button {
-            background: none;
+            background: transparent;
             border: none;
-            font-size: 24px;
+            font-size: 18px;
             cursor: pointer;
             transition: transform 0.3s ease;
+            color: #6c757d;
+            padding: 8px;
+        }
+
+        #toggle-button:hover {
+            color: #495057;
+            background: #f8f9fa;
+            border-radius: 4px;
         }
 
         #toggle-button.collapsed {
@@ -184,25 +294,33 @@
         }
 
         #reset-button {
-            padding: 10px 20px;
-            background-color: #1a73e8;
-            color: #fff;
+            padding: 8px 16px;
+            background: #dc3545;
+            color: #ffffff;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
-            align-self: flex-start;
-            transition: background-color 0.2s ease;
-            margin-right: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-right: 16px;
+            transition: all 0.2s ease;
         }
 
         #reset-button:hover {
-            background-color: #0c47a1;
+            background: #c82333;
+            transform: translateY(-1px);
         }
 
         #count-label-text {
             margin: 0;
             font-weight: 500;
+            color: #495057;
+            font-size: 15px;
+        }
+
+        #count-label {
+            color: #007bff;
+            font-weight: 600;
         }
 
         @media (max-width: 768px) {
@@ -214,20 +332,92 @@
                 width: 100%;
             }
 
-            #filters input[type="text"],
+            #filters-controls {
+                padding: 15px 20px;
+            }
+
+            #filters {
+                padding: 0 20px 20px 20px;
+            }
+
+            #search-input {
+                font-size: 16px;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .filter-pill {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            #reset-button {
+                padding: 10px 18px;
+                font-size: 13px;
+                margin-right: 12px;
+            }
+
+            #toggle-button {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+            }
+
+            #count-label-text {
+                font-size: 14px;
+            }
+
             #filters input[type="date"] {
-                width: 100%;
+                width: 140px;
+                margin-bottom: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .project-container {
+                padding: 0 12px;
+                margin-top: 20px;
+            }
+
+            #filters-controls {
+                padding: 12px 16px;
+            }
+
+            #filters {
+                padding: 0 16px 16px 16px;
+            }
+
+            .filter-pill {
+                font-size: 12px;
+                padding: 5px 10px;
+                margin: 3px;
+            }
+
+            #reset-button {
+                padding: 8px 14px;
+                font-size: 12px;
+                margin-right: 10px;
+            }
+
+            #toggle-button {
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
             }
         }
 
         #projects-container {
-            margin-top: 250px;
+            margin-top: 20px;
         }
 
         .project img {
-            width: 50%;
+            width: 300px;
             height: auto;
-            object-fit: contain;
+            object-fit: cover;
             display: block;
         }
     </style>
@@ -239,21 +429,28 @@
             <div style="display: flex; align-items: center;">
                 <button id="reset-button" onclick="resetFilters()">Reset Filters</button>
                 <p id="count-label-text">
-                    Total:
-                    <span id="count-label">0</span>
+                    <span id="count-label">0</span> projects found
                 </p>
             </div>
             <button id="toggle-button" onclick="toggleDropDown()">&#9650;</button>
         </div>
         <div id="filters" class="expanded">
-            <input type="text" id="search-input" placeholder="Search projects...">
-            <div id="row">
-                <div class="filter-section" id="tags-filter"><strong>Filter by Tags:</strong></div>
-                <div class="filter-section" id="type-filter"><strong>Filter by Type:</strong></div>
+            <input type="text" id="search-input" placeholder="🔍 Search projects...">
+            <div id="active-filters"></div>
+            <div class="filter-section" id="technologies-filter">
+                <strong>Technologies:</strong>
+                <div id="tech-pills"></div>
             </div>
-            <div class="filter-section" id="technologies-filter"><strong>Filter by Technologies:</strong></div>
+            <div class="filter-section" id="tags-filter">
+                <strong>Tags:</strong>
+                <div id="tag-pills"></div>
+            </div>
+            <div class="filter-section" id="type-filter">
+                <strong>Type:</strong>
+                <div id="type-pills"></div>
+            </div>
             <div class="filter-section" id="date-filter">
-                <strong>Filter by Date:</strong>
+                <strong>Date Range:</strong>
                 From: <input type="date" id="date-from">
                 To: <input type="date" id="date-to">
             </div>
@@ -273,7 +470,7 @@
                 technologies: ["HTML", "CSS", "JavaScript"],
                 people: ["David Kozdra"],
                 date: "2020-04-22",
-                image: "./images/favicon.ico",
+                image: "/images/brand/favicon.ico",
                 tag: "personal",
                 description: "A personal portfolio website showcasing my background, skills, and featured work."
             },
@@ -286,7 +483,7 @@
                 technologies: ["HTML", "CSS", "JavaScript", "PHP", "Python"],
                 people: ["David Kozdra"],
                 date: "2024-03-15",
-                image: "/images/stock_portal.png",
+                image: "/images/projects/stock_portal.png",
                 tag: "work",
                 description: "A real-time stock tracking and analysis portal developed for RedChip. With a 15 min deleyed Python data aggregation backend. Including tabled views of SEC filing data"
             },
@@ -299,7 +496,7 @@
                 technologies: ["HTML", "CSS", "React", "Python", "AWS"],
                 people: ["David Kozdra"],
                 date: "2024-01-05",
-                image: "/images/red_chat.png",
+                image: "/images/projects/red_chat.png",
                 tag: "work",
                 description: "AI-powered chatbot to summarize SEC filings for quick insights. Loading storing and preparing over 100000 documents for every company on the NYSE and NASDAQ"
             },
@@ -312,7 +509,7 @@
                 technologies: ["HTML", "CSS", "WordPress"],
                 people: ["David Kozdra"],
                 date: "2022-03-15",
-                image: "./images/flpcon.webp",
+                image: "/images/company-logos/flpcon.webp",
                 tag: "academic",
                 description: "Conference website for Florida Polytechnic University’s annual event."
             },
@@ -325,22 +522,61 @@
                 technologies: ["CSS", "React Native", "React", "MongoDB", "Node.js"],
                 people: [""],
                 date: "2022-08-20",
-                image: "./images/PromoSite.png",
+                image: "/images/company-logos/PromoSite.png",
                 tag: "work",
                 description: "Cross-platform mobile app for discovering exclusive local business promotions."
+            },
+            {
+                name: "Holes Game",
+                platforms: ["Web"],
+                type: "Game",
+                demoUrl: "https://muddygame.net/game/",
+                githubUrl: "https://github.com/DavidKozdra/Holes_Client",
+                technologies: ["HTML", "CSS", "JavaScript", "p5.js", "Socket.io", "AWS"],
+                people: ["David Kozdra", "Team"],
+                date: "2022-05-20",
+                image: "/images/projects/holes.png",
+                tag: "personal",
+                description: "A multiplayer sandbox browser game developed with vanilla JavaScript."
+            },
+            {
+                name: "GitPulse",
+                platforms: ["Web"],
+                type: "Tool",
+                demoUrl: "https://chromewebstore.google.com/detail/gitpulse/fiamhceclfnbckgpnmpkhldgbdhiamhg",
+                githubUrl: "https://github.com/DavidKozdra/GitPulse",
+                technologies: ["HTML", "CSS", "JavaScript"],
+                people: ["David Kozdra"],
+                date: "2023-06-15",
+                image: "/images/projects/gitpulse.png",
+                tag: "personal",
+                description: "GitHub activity visualization tool for tracking repository metrics. Available on Chrome Web Store."
+            },
+            {
+                name: "Prompto",
+                platforms: ["Web"],
+                type: "Tool",
+                demoUrl: "",
+                githubUrl: "",
+                technologies: ["HTML", "CSS", "JavaScript"],
+                people: ["David Kozdra"],
+                date: "2023-09-10",
+                image: "/images/projects/prompto.png",
+                tag: "personal",
+                description: "Prompt management and optimization tool for AI workflows."
             },
             {
                 name: "Cloudy Meadows",
                 platforms: ["Web"],
                 type: "Game",
                 demoUrl: "https://virtualnerd1.itch.io/cloudy-meadows",
-                githubUrl: "https://github.com/Zoda390/Cloudy-Medows",
-                technologies: ["HTML", "JavaScript"],
-                people: [],
-                date: "2022-06-05",
-                image: "https://img.itch.zone/aW1nLzk2NTI0MTYuZ2lm/original/kOdkTD.gif",
+                githubUrl: "https://github.com/DavidKozdra/Cloudy-Meadows-Deluxe",
+                technologies: ["HTML", "CSS", "JavaScript", "p5.js"],
+                people: ["David Kozdra"],
+                date: "2026-01-01",
+                image: "/images/projects/cloudy_logo.png",
                 tag: "personal",
-                description: "A relaxing RPG browser game developed with vanilla JavaScript."
+                description: "A farming RPG browser game developed with vanilla JavaScript and p5.js."
             }
             
         ];
@@ -360,62 +596,100 @@
 
         const projectsContainer = document.getElementById('projects-container');
         const searchInput = document.getElementById('search-input');
-        const technologiesFilterDiv = document.getElementById('technologies-filter');
-        const tagsFilterDiv = document.getElementById('tags-filter');
-        const typeFilterDiv = document.getElementById('type-filter');
+        const techPillsDiv = document.getElementById('tech-pills');
+        const tagPillsDiv = document.getElementById('tag-pills');
+        const typePillsDiv = document.getElementById('type-pills');
         const dateFromInput = document.getElementById('date-from');
         const dateToInput = document.getElementById('date-to');
         const countLabel = document.getElementById("count-label");
         const toggleButton = document.getElementById("toggle-button");
         const filtersDiv = document.getElementById("filters");
+        const activeFiltersDiv = document.getElementById('active-filters');
 
-        allTechnologies.forEach(tech => {
-            const label = document.createElement('label');
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = tech;
-            checkbox.addEventListener('change', () => {
-                filters.selectedTechnologies = checkbox.checked
-                    ? [...filters.selectedTechnologies, tech]
-                    : filters.selectedTechnologies.filter(t => t !== tech);
-                applyFilters();
+        function createPill(items, selectedArray, type) {
+            const container = type === 'tech' ? techPillsDiv : 
+                             type === 'tag' ? tagPillsDiv : typePillsDiv;
+            
+            items.forEach(item => {
+                const pill = document.createElement('div');
+                pill.className = 'filter-pill';
+                pill.textContent = item;
+                pill.dataset.value = item;
+                pill.dataset.type = type;
+                
+                if (selectedArray.includes(item)) {
+                    pill.classList.add('active');
+                }
+                
+                pill.addEventListener('click', () => togglePill(item, type));
+                container.appendChild(pill);
             });
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(tech));
-            technologiesFilterDiv.appendChild(label);
-        });
+        }
 
-        allTags.forEach(tag => {
-            const label = document.createElement('label');
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = tag;
-            checkbox.addEventListener('change', () => {
-                filters.selectedTags = checkbox.checked
-                    ? [...filters.selectedTags, tag]
-                    : filters.selectedTags.filter(t => t !== tag);
-                applyFilters();
-            });
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(tag));
-            tagsFilterDiv.appendChild(label);
-        });
+        function togglePill(value, type) {
+            const arrayKey = type === 'tech' ? 'selectedTechnologies' :
+                           type === 'tag' ? 'selectedTags' : 'selectedTypes';
+            const array = filters[arrayKey];
+            
+            if (array.includes(value)) {
+                filters[arrayKey] = array.filter(item => item !== value);
+            } else {
+                filters[arrayKey] = [...array, value];
+            }
+            
+            updatePillStates();
+            updateActiveFilters();
+            applyFilters();
+        }
 
-        allTypes.forEach(type => {
-            const label = document.createElement('label');
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = type;
-            checkbox.addEventListener('change', () => {
-                filters.selectedTypes = checkbox.checked
-                    ? [...filters.selectedTypes, type]
-                    : filters.selectedTypes.filter(t => t !== type);
-                applyFilters();
+        function updatePillStates() {
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                const type = pill.dataset.type;
+                const value = pill.dataset.value;
+                const arrayKey = type === 'tech' ? 'selectedTechnologies' :
+                               type === 'tag' ? 'selectedTags' : 'selectedTypes';
+                
+                if (filters[arrayKey].includes(value)) {
+                    pill.classList.add('active');
+                } else {
+                    pill.classList.remove('active');
+                }
             });
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(type));
-            typeFilterDiv.appendChild(label);
-        });
+        }
+
+        function updateActiveFilters() {
+            activeFiltersDiv.innerHTML = '';
+            
+            const allActive = [
+                ...filters.selectedTechnologies.map(v => ({ value: v, type: 'tech' })),
+                ...filters.selectedTags.map(v => ({ value: v, type: 'tag' })),
+                ...filters.selectedTypes.map(v => ({ value: v, type: 'type' }))
+            ];
+            
+            allActive.forEach(filter => {
+                const pill = document.createElement('div');
+                pill.className = 'filter-pill active';
+                pill.innerHTML = `
+                    ${filter.value}
+                    <span class="remove-btn" onclick="removeFilter('${filter.value}', '${filter.type}')">×</span>
+                `;
+                activeFiltersDiv.appendChild(pill);
+            });
+        }
+
+        function removeFilter(value, type) {
+            event.stopPropagation();
+            const arrayKey = type === 'tech' ? 'selectedTechnologies' :
+                           type === 'tag' ? 'selectedTags' : 'selectedTypes';
+            filters[arrayKey] = filters[arrayKey].filter(item => item !== value);
+            updatePillStates();
+            updateActiveFilters();
+            applyFilters();
+        }
+
+        createPill(allTechnologies, filters.selectedTechnologies, 'tech');
+        createPill(allTags, filters.selectedTags, 'tag');
+        createPill(allTypes, filters.selectedTypes, 'type');
 
         searchInput.addEventListener('input', () => {
             filters.searchText = searchInput.value;
@@ -536,7 +810,8 @@
             searchInput.value = '';
             dateFromInput.value = '';
             dateToInput.value = '';
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updatePillStates();
+            updateActiveFilters();
             applyFilters();
         }
 
@@ -544,27 +819,20 @@
 
         function toggleDropDown() {
             const isOpen = isFiltersOpen;
-            const toggleLabel = document.getElementById('toggle-label');
+            const filtersDiv = document.getElementById('filters');
+            const toggleButton = document.getElementById('toggle-button');
 
             if (isOpen) {
-                // Collapse
-                filtersDiv.style.height = filtersDiv.scrollHeight + 'px'; // Force height first
-                requestAnimationFrame(() => {
-                    filtersDiv.style.height = '0px';
-                });
-                toggleButton.innerHTML = '<span id="toggle-label">Show Filters</span> &#9660;';
+                filtersDiv.classList.remove('expanded');
+                filtersDiv.classList.add('collapsed');
+                toggleButton.innerHTML = '&#9660;';
+                toggleButton.classList.add('collapsed');
             } else {
-                // Expand
-                filtersDiv.style.height = 'auto';
-                const targetHeight = filtersDiv.scrollHeight + 'px';
-                filtersDiv.style.height = '0px';
-                requestAnimationFrame(() => {
-                    filtersDiv.style.height = targetHeight;
-                });
-                toggleButton.innerHTML = '<span id="toggle-label">Hide Filters</span> &#9650;';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                filtersDiv.classList.remove('collapsed');
+                filtersDiv.classList.add('expanded');
+                toggleButton.innerHTML = '&#9650;';
+                toggleButton.classList.remove('collapsed');
             }
-
             isFiltersOpen = !isOpen;
         }
 

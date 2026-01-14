@@ -134,15 +134,80 @@
             margin: 0 10px;
         }
 
-        .column {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 20px;
-        }
 
-        .column div {
-            margin: 10px;
+        .certifications-section {
+            background: #f7f8fa;
+            padding: 40px 0 60px 0;
+        }
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: stretch;
+        }
+        .cert-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 28px 24px 20px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 320px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .cert-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+            transform: translateY(-4px) scale(1.02);
+        }
+        .cert-card .credly-badge {
+            width: 100%;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .cert-card h3 {
+            color: #22314a;
+            font-size: 1.18em;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.01em;
+        }
+        .cert-card .cert-meta {
+            font-size: 1em;
+            color: #444;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .cert-card .cert-meta strong {
+            color: #22314a;
+            font-weight: 600;
+        }
+        .cert-card .cert-desc {
+            color: #555;
+            font-size: 0.98em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .cert-card .cert-link {
+            margin-top: auto;
+            display: inline-block;
+            padding: 8px 18px;
+            background: #3498db;
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+        .cert-card .cert-link:hover {
+            background: #217dbb;
         }
 
         /* Responsive Styles */
@@ -189,7 +254,7 @@
                 </a>
                     <strong>Cognara (Meta Contingent Worker)</strong>
                     <em>Software Engineer </em>
-                    <em>Oct 2024 - Present · 4 mos</em>
+                    <em>Oct 2024 - Present</em>
                     <em>Remote</em>
                     <p>
                         Cognara is a technology consulting firm that provides services to Meta (formerly Facebook). In this role, I am helping build state of the art UI automation tools internal testing and QA Engineering projects. So far the highlight of my career and learning alot from some of the smartest colleagues I have had to date.
@@ -205,7 +270,7 @@
                     <em>Software Engineer</em>
                     <em>Dec 2023 - June 2025</em>
                     <p>
-                        The leading small cap relations firm located in Orlando, Florida. In my time at this company, I  built many projects focused on API integrations and data aggregation, including AI chatbot projects and a stock portal. The major innovations of this company came directly from my innitiatives.
+                        The leading small cap relations firm located in Orlando, Florida. In my time at this company, I built many projects focused on API integrations and data aggregation, including AI chatbot projects and a stock portal. The major innovations of this company came directly from my initiatives.
                     </p>
                 </div>
             </div>
@@ -338,23 +403,55 @@
             </div>
         </div>
 
-        <h2>Certifications</h2>
-        <div class="column">
-            <!-- Certified in Cyber Security (CC) -->
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="ceb80197-fc66-4d0e-a45d-79cd4603b633" data-share-badge-host="https://www.credly.com"></div>
-            
-            <!-- Docker Foundations Professional Certificate -->
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="8ca3a047-3e02-46ea-85c4-c4607cb0b5a8" data-share-badge-host="https://www.credly.com"></div>
-            
-            <!-- Introduction to Web Accessibility - edX (LinkedIn Learning) -->
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="e34f4fed27c34eb98197e2e096bd84d8" data-share-badge-host="https://www.credly.com"></div>
-            
-            <!-- Additional Certification Placeholder -->
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="212c8dbf6f2fcd7c94562f717c084ac4a28b37a661685416289d31d08f6d1f36" data-share-badge-host="https://www.credly.com"></div>
-        </div>
+                                <section class="certifications-section">
+                                    <h2 style="text-align:center; margin-bottom:32px;">Certifications</h2>
+                                    <div class="certifications-grid">
+                                        <!-- Docker Foundations Professional (Credly) -->
+                                        <div class="cert-card">
+                                            <img src="./images/company-logos/docker.png" alt="Docker, Inc logo" style="height:60px; margin-bottom:12px;">
+                                            <h3>Docker Foundations Professional Certificate</h3>
+                                            <div class="cert-meta"><strong>Issued by:</strong> <a href="https://www.docker.com/" target="_blank">Docker, Inc</a></div>
+                                            <div class="cert-meta"><strong>Date:</strong> Sep 2025</div>
+                                            <div class="cert-desc">Direct certification from Docker, Inc. covering containerization, Docker products, and production deployment.</div>
+                                            <div class="cert-meta"><strong>Skills:</strong> Containerization · Docker Products</div>
+                                            <a class="cert-link" href="https://www.linkedin.com/learning/certificates/212c8dbf6f2fcd7c94562f717c084ac4a28b37a661685416289d31d08f6d1f36" target="_blank">Show credential</a>
+                                        </div>
+
+                                        <!-- Enok Learn Mentor Level 1 -->
+                                        <div class="cert-card">
+                                            <img src="./images/company-logos/enok.png" alt="Enok Learn logo" style="height:60px; margin-bottom:12px;">
+                                            <h3>Mentor Level 1</h3>
+                                            <div class="cert-meta"><strong>Issued by:</strong> Enok Learn</div>
+                                            <div class="cert-meta"><strong>Date:</strong> Jun 2024</div>
+                                            <div class="cert-desc">Certificate of completion as a mentor and coach.</div>
+                                            <div class="cert-meta"><strong>Skills:</strong> Mentorship · Leadership · Communication</div>
+                                            <a class="cert-link" href="https://enok.co/mentor-list?authenticityToken=Mxf27c9bf5" target="_blank">Show credential</a>
+                                        </div>
+
+                                        <!-- ISC2 Certified in Cyber Security (CC) (Credly) -->
+                                        <div class="cert-card">
+                                            <img src="./images/company-logos/isc2.png" alt="ISC2 logo" style="height:60px; margin-bottom:12px;">
+                                            <h3>Certified in Cyber Security (CC)</h3>
+                                            <div class="cert-meta"><strong>Issued by:</strong> ISC2</div>
+                                            <div class="cert-meta"><strong>Date:</strong> Aug 2023 <span style="font-weight:400">(Expires Aug 2026)</span></div>
+                                            <div class="cert-desc">Certification in cybersecurity and computer networking.</div>
+                                            <div class="cert-meta"><strong>Skills:</strong> Cybersecurity · Computer Networking</div>
+                                            <a class="cert-link" href="https://www.credly.com/earner/earned/badge/8ca3a047-3e02-46ea-85c4-c4607cb0b5a8" target="_blank">Show credential</a>
+                                        </div>
+
+                                        <!-- edX Verified Certificate for Introduction to Web Accessibility -->
+                                        <div class="cert-card">
+                                            <img src="./images/company-logos/edx.png" alt="edX logo" style="height:60px; margin-bottom:12px;">
+                                            <h3>Introduction to Web Accessibility</h3>
+                                            <div class="cert-meta"><strong>Issued by:</strong> edX</div>
+                                            <div class="cert-meta"><strong>Date:</strong> Jul 2023</div>
+                                            <div class="cert-desc">Verified certificate for web accessibility fundamentals.</div>
+                                            <div class="cert-meta"><strong>Skills:</strong> HTML5 · WCAG · CSS</div>
+                                            <a class="cert-link" href="https://courses.edx.org/certificates/e34f4fed27c34eb98197e2e096bd84d8" target="_blank">Show credential</a>
+                                        </div>
+                                    </div>
+                                </section>
     </div>
-    <!-- Credly Embed Script -->
-    <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 
 </html>
