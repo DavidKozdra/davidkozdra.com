@@ -10,7 +10,7 @@
     --window-header-hover: linear-gradient(to right, #5d7f8b, #7aa7b3);
     --system-font:  'Roboto', sans-serif;
     --system-grey:  linear-gradient(to bottom, rgba(57, 63, 65,1),rgba(52,52,52,.98));
-    --background-image: url(../images/Rainbow_iPad+2.png);
+    --background-image: url(../images/projects/Rainbow_iPad+2.png);
 }
 
 .fa-envelope {
@@ -24,7 +24,7 @@
 }
 
 #desktop {
-    background-image: var(--background-image)
+    background-image: var(--background-image);
 }
 
 .task-bar button {
@@ -38,7 +38,7 @@
 
 .desktop-icon img {
     max-width: 5vh;
-    max-height: 5vw;
+    max-height: 5vh;
 }
 
 .icon-text {
@@ -48,7 +48,7 @@
 
 .app-bar {
     background: var(--main-gradient);
-    min-height: 20vh;
+    min-height: 5vh;
 }
 
 .app-bar-button-active {

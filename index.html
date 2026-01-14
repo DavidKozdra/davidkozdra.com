@@ -63,7 +63,7 @@
 <body>
   <div class="loader-page">
     <div class="loader-display">
-      <img class="loader-icon" src="./images/favicon.ico" alt="DK logo white and blue gradient background"></img>
+      <img class="loader-icon" src="./images/brand/favicon.ico" alt="DK logo white and blue gradient background"></img>
 
       <p class="typewriter">
         Loading DK OS ...
@@ -81,26 +81,26 @@
 
         <div class="navigation">
           <div class="drop-down">
-            <button style="padding: 0%;"><img src="images/favicon.ico" alt="david kozdra icon" id="task-bar-icon"></button>
+            <button style="padding: 0%;"><img src="images/brand/favicon.ico" alt="david kozdra icon" id="task-bar-icon"></button>
             <div class="drop-down-content">
               <!-- Tools Category -->
               <div class="category">
                   <div class="category-btn">Tools</div>
                   <div class="sub-category">
                       <button onclick="desktopIconRouter(event,'files')">
-                          <img src="./images/File_System_icon.png" alt="Files Icon" class="menu-icon"> Files
+                          <img src="./images/ui-icons/File_System_icon.png" alt="Files Icon" class="menu-icon"> Files
                       </button>
                       <button onclick="desktopIconRouter(event,'notes')">
-                          <img src="./images/Notes.png" alt="Notes Icon" class="menu-icon"> Notes
+                          <img src="./images/ui-icons/Notes.png" alt="Notes Icon" class="menu-icon"> Notes
                       </button>
                       <button onclick="desktopIconRouter(event,'draw')">
-                          <img src="./images/Pallet.png" alt="Paint Icon" class="menu-icon"> Paint
+                          <img src="./images/ui-icons/Pallet.png" alt="Paint Icon" class="menu-icon"> Paint
                       </button>
                       <button onclick="desktopIconRouter(event,'calculator')">
-                          <img src="./images/Calc.png" alt="Calculator Icon" class="menu-icon"> Calculator
+                          <img src="./images/ui-icons/Calc.png" alt="Calculator Icon" class="menu-icon"> Calculator
                       </button>
                       <button onclick="desktopIconRouter(event,'term')">
-                          <img src="./images/Term.png" alt="Terminal Icon" class="menu-icon"> Terminal
+                          <img src="./images/ui-icons/Term.png" alt="Terminal Icon" class="menu-icon"> Terminal
                       </button>
                   </div>
               </div>
@@ -110,10 +110,10 @@
                   <div class="category-btn">Games</div>
                   <div class="sub-category">
                       <button onclick="desktopIconRouter(event,'GOL')">
-                          <img src="./images/GOL.png" alt="Game of Life Icon" class="menu-icon"> Game of Life
+                          <img src="./images/ui-icons/GOL.png" alt="Game of Life Icon" class="menu-icon"> Game of Life
                       </button>
                       <button onclick="desktopIconRouter(event,'dragon_game')">
-                          <img src="./images/dragon_fighter.png" alt="DBZ Fighter Icon" class="menu-icon"> DBZ Fighter
+                          <img src="./images/ui-icons/dragon_fighter.png" alt="DBZ Fighter Icon" class="menu-icon"> DBZ Fighter
                       </button>
                    
                   </div>
@@ -184,24 +184,24 @@
         
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')"  
           o tabindex="0">
-          <img src="./images/Term.png" alt="desktop icon of a computer terminal black and lime green"></img>
+          <img src="./images/ui-icons/Term.png" alt="desktop icon of a computer terminal black and lime green"></img>
           <p contenteditable="true" class="icon-text"> Terminal</p>
         </div>
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dragon_game')"  
         o tabindex="0">
-        <img src="./images/dragon_fighter.png" alt="desktop icon of a computer terminal black and lime green"></img>
+        <img src="./images/ui-icons/dragon_fighter.png" alt="desktop icon of a computer terminal black and lime green"></img>
         <p contenteditable="true" class="icon-text"> dbz fighter</p>
       </div>
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" 
            tabindex="0">
-          <img src="./images/Pallet.png" alt="Art Pallet drawing in pixel art"></img>
+          <img src="./images/ui-icons/Pallet.png" alt="Art Pallet drawing in pixel art"></img>
           <p contenteditable="true" class="icon-text"> Draw</p>
         </div>
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="0"> 
-          <img src="./images/GOL.png" alt="Game of Life Grid of green and grey squares"></img>
+          <img src="./images/ui-icons/GOL.png" alt="Game of Life Grid of green and grey squares"></img>
           <div class="icon-text">
             <p contenteditable="true">Game Of Life</p>
           </div>
@@ -210,7 +210,7 @@
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')"
           tabindex="0">
-          <img src="./images/Calc.png" alt="calculator icon"></img>
+          <img src="./images/ui-icons/Calc.png" alt="calculator icon"></img>
           <div class="icon-text">
             <p contenteditable="true">Calculator</p>
           </div>
@@ -219,7 +219,7 @@
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="0"
           style="cursor: pointer;">
-          <img src="./images/Notes.png" alt="yellow note pad "></img>
+          <img src="./images/ui-icons/Notes.png" alt="yellow note pad "></img>
           <div class="icon-text">
             <p contenteditable="true">Notes</p>
           </div>
@@ -227,7 +227,7 @@
 
         <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'files')" tabindex="0"
         style="cursor: pointer;">
-        <img src="./images/File_System_icon.png" alt="yellow note pad "></img>
+        <img src="./images/ui-icons/File_System_icon.png" alt="yellow note pad "></img>
         <div class="icon-text">
           <p contenteditable="true">Files</p>
         </div>
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         desktopIconRouter(event, "notes",  file.name , {content: file.content, parent: fileSystem[i].dir});
       };
       let img = document.createElement("img");
-      img.src = "./images/Notes.png";
+      img.src = "./images/ui-icons/Notes.png";
       let text = document.createElement("div");
       text.classList.add("icon-text");
       text.contentEditable = "true";
@@ -768,10 +768,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Now the delay is complete, proceed to open the window
       switch (newWindowHeaderTitle) {
         case "test":
-          createWindow("Test", "This is a test window", "./images/blocks.jpg", false);
+          createWindow("Test", "This is a test window", "./images/projects/blocks.jpg", false);
           break;
           case "empty": 
-          createWindow("empty", null, "./images/Term.png", 800);
+          createWindow("empty", null, "./images/ui-icons/Term.png", 800);
           break;
         case "term": 
           let term = document.createElement("iframe");
@@ -781,7 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
           term.src = "./CMD.html";
           term.style.height = "100%";
           term.style.width = "100%";
-          createWindow("Terminal", term, "./images/Term.png", 800);
+          createWindow("Terminal", term, "./images/ui-icons/Term.png", 800);
           break;
         case "resume":
           let resume = document.createElement("iframe");
@@ -793,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
           resume.style.width = "100%";
           resume.frameborder = "0";
 
-          createWindow("Resume", resume, "./images/Resume.png", 800);
+          createWindow("Resume", resume, "./images/projects/Resume.png", 800);
 
 
           break;
@@ -805,7 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
           intro.src = "./intro.html";
           intro.style.height = "100%";
           intro.style.width = "100%";
-          createWindow("Welcome", intro, "./images/favicon.ico", 1200, true);
+          createWindow("Welcome", intro, "./images/brand/favicon.ico", 1200, true);
           break;
 
 
@@ -816,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
           calculator.src = "./calculator.html";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/Calc.png", 400, false);
+          createWindow("Calculator", calculator, "./images/ui-icons/Calc.png", 400, false);
           break;
         case "dragon_game":
           let game = document.createElement("iframe");
@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
           game.style.height = "100%";
           game.style.width = "100%";
           game.style.overflowY = "hidden";
-          createWindow("dragon fighter conquest", game, "./images//dragon_fighter.png", 800, false);
+          createWindow("dragon fighter conquest", game, "./images/ui-icons/dragon_fighter.png", 800, false);
           break;
  
                     case "notes":
@@ -936,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           notes.appendChild(textArea);
           console.log("Notes window created for:", currentFileName);
-          createWindow(newTitle ? newTitle : "Notes", notes, "./images/Notes.png", 500);
+          createWindow(newTitle ? newTitle : "Notes", notes, "./images/ui-icons/Notes.png", 500);
     break;
 
 
@@ -947,7 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
           about.src = "./about.html";
           about.style.height = "100%";
           about.style.width = "100%";
-          createWindow("Work", about, "./images/ME.jpg", 1800,true,true);
+          createWindow("Work", about, "./images/profile/ME.jpg", 1800,true,true);
           break;
         case "projects":
           let Projects = document.createElement("iframe");
@@ -956,7 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
           Projects.src = "./projects.html";
           Projects.style.height = "100%";
           Projects.style.width = "100%";
-          createWindow("projects", Projects, "./images/ME.jpg", 1800,true,true);
+          createWindow("projects", Projects, "./images/profile/ME.jpg", 1800,true,true);
           break;
         case "files":
           let files = document.createElement("iframe");
@@ -965,7 +965,7 @@ document.addEventListener('DOMContentLoaded', () => {
           files.src = "./file_browser.html";
           files.style.height = "100%";
           files.style.width = "100%";
-          createWindow("files", files, "./images/File_System_icon.png", 800);
+          createWindow("files", files, "./images/ui-icons/File_System_icon.png", 800);
           break;
 
         case "old":
@@ -975,12 +975,12 @@ document.addEventListener('DOMContentLoaded', () => {
           iframe.src = "./old_site.html";
           iframe.style.height = "700px";
           iframe.style.width = "100%";
-          createWindow("Old Website", iframe, "./images/favicon.ico", 800);
+          createWindow("Old Website", iframe, "./images/brand/favicon.ico", 800);
           break;
 
 
         case "error":
-          createWindow("Error", "This is a test window", "./images/drawIcon.png", 200);
+          createWindow("Error", "This is a test window", "./images/ui-icons/Pallet.png", 200);
 
         case "draw":
           let draw = document.createElement("iframe");
@@ -990,7 +990,7 @@ document.addEventListener('DOMContentLoaded', () => {
           draw.style.height = "100%";
           draw.style.width = "100%";
           draw.style.marginTop = "50px";
-          createWindow("Drawing", draw, "./images/Pallet.png", 1000, false);
+          createWindow("Drawing", draw, "./images/ui-icons/Pallet.png", 1000, false);
           break;
 
         case "GOL":
@@ -1001,7 +1001,7 @@ document.addEventListener('DOMContentLoaded', () => {
           GOLcontainer.style.height = "100%";
           GOLcontainer.style.width = "100%";
 
-          createWindow("Game of Life", GOLcontainer, "./images/GOL.png", 500, false);
+          createWindow("Game of Life", GOLcontainer, "./images/ui-icons/GOL.png", 500, false);
           currentSlide = -1;
           init()
           break;

@@ -82,7 +82,10 @@ if ('serviceWorker' in navigator) {
   console.log("PWA failure")
 }
 
-    document.getElementById("defaultOpen").click();
+    const defaultOpen = document.getElementById("defaultOpen");
+    if (defaultOpen) {
+        defaultOpen.click();
+    }
 
     (function () {
       "use strict";
