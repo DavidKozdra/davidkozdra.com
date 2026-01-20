@@ -46,8 +46,8 @@
         }
 
         .project img {
-            width: 300px;
-            height: 200px;
+            width: 50%;
+            aspect-ratio: 16/9;
             object-fit: cover;
             background: #f8f9fa;
         }
@@ -327,11 +327,6 @@
             .project {
                 flex-direction: column;
             }
-
-            .project img {
-                width: 100%;
-            }
-
             #filters-controls {
                 padding: 15px 20px;
             }
@@ -415,9 +410,7 @@
         }
 
         .project img {
-            width: 300px;
-            height: auto;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
         }
     </style>
