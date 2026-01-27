@@ -35,6 +35,13 @@ body {
     border: 1px solid #000;
 }
 
+.fa-envelope:focus,
+.fa-brands:focus {
+    outline: 2px solid #007acc;
+    outline-offset: 2px;
+    transform: scale(1.6);
+}
+
 .fa-brands , .fa-envelope {
   transform: scale(1.4);
 }
