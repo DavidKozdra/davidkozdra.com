@@ -1,0 +1,11 @@
+# robots.txt for davidkozdra.com
+
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas if any
+# Disallow: /admin/
+# Disallow: /private/
+
+# Sitemap location
+Sitemap: https://davidkozdra.com/sitemap.xml

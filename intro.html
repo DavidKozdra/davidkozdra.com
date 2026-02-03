@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DK OS – refreshed</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 
   <!-- ─────────────  SOFT-LIGHT THEME  ───────────── -->
   <style id="modern" class="theme">
@@ -349,7 +351,7 @@
     <!-- ─── WELCOME TAB ─────────────────────────── -->
     <div class="tab active" id="welcome">
       <div id="hero">
-        <img src="./images/profile/ME.jpg" class="me" alt="David Kozdra" />
+        <img src="./images/profile/ME.webp" class="me" alt="David Kozdra" />
 
         <div>
           <h1>David Kozdra</h1>
@@ -375,8 +377,8 @@
 
           <div class="skill-icon" data-start="2020-09-01">
             <div class="icon">
-              <img class="front" src="./images/projects/mysql.webp" alt="SQL logo"/>
-              <img class="back"  src="./images/projects/mysql.webp" alt="SQL logo"/>
+              <img class="front" src="./images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
+              <img class="back"  src="./images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
             </div>
             <div class="skill-label">SQL<span class="exp"></span></div>
           </div>
@@ -482,9 +484,9 @@
 
     /* Reviews */
     const reviews=[
-      {name:'Jonathan Matsumoto @ Bridxe',logo:'./images/company-logos/Bridxe.jpg',review:'David mastered AWS, D3, Django & React quickly, communicating clearly and leaving maintainable code.'},
+      {name:'Jonathan Matsumoto @ Bridxe',logo:'./images/company-logos/Bridxe.webp',review:'David mastered AWS, D3, Django & React quickly, communicating clearly and leaving maintainable code.'},
       {name:'Michael Jennings @ Redchip',logo:'https://www.redchip.com/assets/images/corporate/redchip-logo.png',review:'Moves fluidly between complex backend logic and user-facing interfaces, delivering clean code.'},
-      {name:'Mellissa Thomas @ FNN',logo:'./images/company-logos/Logo-FNN-380x310.jpeg',review:'Self-starter, excellent communicator – a great asset to any team.'}
+      {name:'Mellissa Thomas @ FNN',logo:'./images/company-logos/Logo-FNN-380x310.webp',review:'Self-starter, excellent communicator – a great asset to any team.'}
     ];
     let idx=0;
     function showReview(i){

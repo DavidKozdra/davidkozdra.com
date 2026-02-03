@@ -10,29 +10,124 @@
 
 <meta property="og:title" content="David Kozdra - Software Developer Specializing in MERN Stack">
 <meta property="og:description" content="Full-stack software developer specializing in web applications using MongoDB, Express.js, React.js, and Node.js.">
-<meta property="og:image" content="https://davidkozdra.com/images/favicon.ico">
+<meta property="og:image" content="https://davidkozdra.com/images/favicon.webp">
 <meta property="og:url" content="https://davidkozdra.com">
 <meta property="og:type" content="website">
 
   <meta name="author" content="David Kozdra">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <meta name="theme-color" content="#1e3a8a">
+
+  <link rel="canonical" href="https://davidkozdra.com/">
 
   <title>David Kozdra</title>
-  <link rel="stylesheet" href="styles/DE_styles.css" id="default">
+  <link rel="stylesheet" href="styles/DE_styles.css" id="default" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles/DE_styles.css"></noscript>
 
   <link rel="manifest" href="/manifest.json" />
-  <link rel="stylesheet" id="modern" class="theme" href="styles/modern.css?v=1.15" >
-  <link rel="stylesheet" id="retro" class="theme" href="styles/retro.css?v=1.3" disabled="true">
+  <link rel="stylesheet" id="modern" class="theme" href="styles/modern.css?v=1.15" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles/modern.css?v=1.15"></noscript>
+  <link rel="stylesheet" id="retro" class="theme" href="styles/retro.css?v=1.3" disabled="true" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles/retro.css?v=1.3"></noscript>
   
-  <link class="import" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="icon" type="image/x-icon" href="/images/brand/favicon.ico">
-
-  <script src="Games.js?v=1.0"></script>
-
-  <script src="index.js"></script>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://main.d3722xrzul5kke.amplifyapp.com">
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link class="import" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link rel="icon" type="image/x-icon" href="/images/brand/favicon.webp">
   <style>
+    @font-face {
+      font-display: swap;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "David Kozdra",
+    "jobTitle": "Full-Stack Software Developer",
+    "url": "https://davidkozdra.com",
+    "sameAs": [
+      "https://github.com/DavidKozdra",
+      "https://www.linkedin.com/in/david-kozdra-5ab269186/",
+      "https://magentaautumn.itch.io"
+    ],
+    "knowsAbout": ["MongoDB", "Express.js", "React.js", "Node.js", "MERN Stack", "JavaScript"],
+    "email": "davidkozdra@gmail.com"
+  }
+  </script>
+
+  <script src="Games.js?v=1.0" defer></script>
+
+  <script src="index.js" defer></script>
+  <style>
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #000;
+      color: #fff;
+      padding: 8px;
+      text-decoration: none;
+      z-index: 100000;
+    }
+    
+    .skip-link:focus {
+      top: 0;
+    }
+    
+    /* Focus visible styles for keyboard navigation */
+    button:focus-visible,
+    a:focus-visible,
+    [role="button"]:focus-visible {
+      outline: 3px solid #4a9eff;
+      outline-offset: 2px;
+    }
+    
+    .desktop-icon:focus-visible {
+      outline: 3px solid #4a9eff;
+      outline-offset: 2px;
+      background: rgba(74, 158, 255, 0.2);
+    }
+    
+    /* Visually hidden but accessible to screen readers */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+    
        .empty_window {
         display: none !important;
+    }
+    
+    /* Performance optimization for loader */
+    .loader-page {
+      content-visibility: auto;
+      min-height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+    }
+    
+    /* Performance optimization for windows */
+    .window {
+      content-visibility: auto;
+      contain: layout style paint;
     }
   
       #clock-items {
@@ -50,6 +145,22 @@
     color: white !important;     
 }
 
+  /* Window button touch targets */
+  .window-button {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+  }
+  
+  .window-button i {
+    pointer-events: none;
+  }
   
   /* Hide #clock-items on mobile devices */
   @media (max-width: 768px) {
@@ -61,9 +172,14 @@
 </head>
 
 <body>
+  <a href="#desktop" class="skip-link">Skip to main content</a>
+  <h1 class="visually-hidden">David Kozdra - Full-Stack Software Developer Portfolio</h1>
   <div class="loader-page">
     <div class="loader-display">
-      <img class="loader-icon" src="./images/brand/favicon.ico" alt="DK logo white and blue gradient background"></img>
+      <picture>
+        <source srcset="./images/brand/favicon.webp" type="image/webp">
+        <img class="loader-icon" src="./images/brand/favicon.webp" alt="DK logo white and blue gradient background" width="100" height="100" fetchpriority="high">
+      </picture>
 
       <p class="typewriter">
         Loading DK OS ...
@@ -76,31 +192,34 @@
 
   </div>
   <div id="de">
-    <div class="task-bar">
+    <header class="task-bar" role="banner">
       <!-- Navigation Menu -->
 
-        <div class="navigation">
+        <nav class="navigation" aria-label="Main navigation">
           <div class="drop-down">
-            <button style="padding: 0%;"><img src="images/brand/favicon.ico" alt="david kozdra icon" id="task-bar-icon"></button>
+            <button style="padding: 0%;" aria-label="Open menu" aria-expanded="false" aria-haspopup="true"><picture>
+                <source srcset="images/brand/favicon.webp" type="image/webp">
+                <img src="images/brand/favicon.webp" alt="" id="task-bar-icon" width="32" height="32" role="presentation">
+              </picture></button>
             <div class="drop-down-content">
               <!-- Tools Category -->
               <div class="category">
                   <div class="category-btn">Tools</div>
                   <div class="sub-category">
-                      <button onclick="desktopIconRouter(event,'files')">
-                          <img src="./images/ui-icons/File_System_icon.png" alt="Files Icon" class="menu-icon"> Files
+                      <button onclick="desktopIconRouter(event,'files')" aria-label="Open Files application">
+                          <img src="./images/ui-icons/File_System_icon.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Files
                       </button>
-                      <button onclick="desktopIconRouter(event,'notes')">
-                          <img src="./images/ui-icons/Notes.png" alt="Notes Icon" class="menu-icon"> Notes
+                      <button onclick="desktopIconRouter(event,'notes')" aria-label="Open Notes application">
+                          <img src="./images/ui-icons/Notes.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Notes
                       </button>
-                      <button onclick="desktopIconRouter(event,'draw')">
-                          <img src="./images/ui-icons/Pallet.png" alt="Paint Icon" class="menu-icon"> Paint
+                      <button onclick="desktopIconRouter(event,'draw')" aria-label="Open Paint application">
+                          <img src="./images/ui-icons/Pallet.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Paint
                       </button>
-                      <button onclick="desktopIconRouter(event,'calculator')">
-                          <img src="./images/ui-icons/Calc.png" alt="Calculator Icon" class="menu-icon"> Calculator
+                      <button onclick="desktopIconRouter(event,'calculator')" aria-label="Open Calculator application">
+                          <img src="./images/ui-icons/Calc.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Calculator
                       </button>
-                      <button onclick="desktopIconRouter(event,'term')">
-                          <img src="./images/ui-icons/Term.png" alt="Terminal Icon" class="menu-icon"> Terminal
+                      <button onclick="desktopIconRouter(event,'term')" aria-label="Open Terminal application">
+                          <img src="./images/ui-icons/Term.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Terminal
                       </button>
                   </div>
               </div>
@@ -109,24 +228,24 @@
               <div class="category">
                   <div class="category-btn">Games</div>
                   <div class="sub-category">
-                      <button onclick="desktopIconRouter(event,'GOL')">
-                          <img src="./images/ui-icons/GOL.png" alt="Game of Life Icon" class="menu-icon"> Game of Life
+                      <button onclick="desktopIconRouter(event,'GOL')" aria-label="Open Game of Life application">
+                          <img src="./images/ui-icons/GOL.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Game of Life
                       </button>
-                      <button onclick="desktopIconRouter(event,'dragon_game')">
-                          <img src="./images/ui-icons/dragon_fighter.png" alt="DBZ Fighter Icon" class="menu-icon"> DBZ Fighter
+                      <button onclick="desktopIconRouter(event,'dragon_game')" aria-label="Open DBZ Fighter game">
+                          <img src="./images/ui-icons/dragon_fighter.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> DBZ Fighter
                       </button>
                    
                   </div>
               </div>
           
               <!-- Settings -->
-              <button id="settingsButton" onclick="desktopIconRouter(event,'System')">
+              <button id="settingsButton" onclick="desktopIconRouter(event,'System')" aria-label="Open System settings">
                   System
               </button>
           
               <!-- Power Button -->
-              <button onclick="refresh()" style="padding-bottom: 10%;">
-                  <i class="fa fa-power-off"></i> Power
+              <button onclick="refresh()" style="padding-bottom: 10%;" aria-label="Restart system">
+                  <i class="fa fa-power-off" aria-hidden="true"></i> Power
               </button>
           </div>
           
@@ -135,18 +254,18 @@
 
 
           <div >
-            <button class="drop-down-menu-text" onclick="desktopIconRouter(event,'about')"> Experience  </button>
+            <button class="drop-down-menu-text" onclick="desktopIconRouter(event,'about')" aria-label="View work experience"> Experience  </button>
           </div>
           
 
           <div >
-            <button class="drop-down-menu-text"  onclick="desktopIconRouter(event,'projects')">Projects</button>
+            <button class="drop-down-menu-text"  onclick="desktopIconRouter(event,'projects')" aria-label="View projects">Projects</button>
 
         </div>
           <div>
-          <button  class="drop-down-menu-text" onclick="desktopIconRouter(event,'resume')" > Resume</button>
+          <button  class="drop-down-menu-text" onclick="desktopIconRouter(event,'resume')" aria-label="View resume"> Resume</button>
   </div>
-      </div>
+      </nav>
 
       <div class="status-bar">
         
@@ -154,90 +273,104 @@
 
 
         <div id="Contact">
-          <a aria-label="David Kozdra's EMAIL" href="mailto:davidkozdra@gmail.com?subject=Let's%20Connect&body=I%20am%20connecting%20after%20viewing%20your%20website" target="_blank">
-            <i class="fa fa-envelope fa-1x"></i>
+          <a aria-label="Email David Kozdra" href="mailto:davidkozdra@gmail.com?subject=Let's%20Connect&body=I%20am%20connecting%20after%20viewing%20your%20website">
+            <i class="fa fa-envelope fa-1x" aria-hidden="true"></i>
           </a>
           
-          <a aria-label="David Kozdra's Github" href="https://github.com/DavidKozdra" target="_blank"> <i
-              class="fa-brands fa-github fa-1x">
+          <a aria-label="Visit David Kozdra's GitHub profile" href="https://github.com/DavidKozdra" target="_blank" rel="noopener noreferrer"> <i
+              class="fa-brands fa-github fa-1x" aria-hidden="true">
             </i></a>
 
-          <a aria-label="David Kozdra's linkedin" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"
-            target="_blank"> <i class="fa-brands fa-linkedin fa-1x"> </i></a>
+          <a aria-label="Visit David Kozdra's LinkedIn profile" href="https://www.linkedin.com/in/david-kozdra-5ab269186/"
+            target="_blank" rel="noopener noreferrer"> <i class="fa-brands fa-linkedin fa-1x" aria-hidden="true"> </i></a>
 
-          <a aria-label="David Kozdra's itch.io" href="https://magentaautumn.itch.io"  target="_blank"> <i
-              class="fa-brands fa-itch-io fa-1x" ></i></a>
+          <a aria-label="Visit David Kozdra's itch.io page" href="https://magentaautumn.itch.io"  target="_blank" rel="noopener noreferrer"> <i
+              class="fa-brands fa-itch-io fa-1x" aria-hidden="true"></i></a>
 
               <div> <i class="fas fa-wifi"></i> </div>
 
         </div>
 
       </div>
-    </div>
+    </header>
 
-    <div id="desktop" ondrag="drawSelectionRect()">
+    <main id="desktop" ondrag="drawSelectionRect()">
       <div id="windows">
 
       </div>
       
       <div class="desktop-grid">
         
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')"  
-          o tabindex="0">
-          <img src="./images/ui-icons/Term.png" alt="desktop icon of a computer terminal black and lime green"></img>
-          <p contenteditable="true" class="icon-text"> Terminal</p>
+        <div class="desktop-icon" role="button" aria-label="Terminal application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'term')" tabindex="0">
+          <picture>
+            <source srcset="./images/ui-icons/Term.webp" type="image/webp">
+            <img src="./images/ui-icons/Term.webp" alt="" width="64" height="64" role="presentation">
+          </picture>
+          <p class="icon-text">Terminal</p>
         </div>
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dragon_game')"  
-        o tabindex="0">
-        <img src="./images/ui-icons/dragon_fighter.png" alt="desktop icon of a computer terminal black and lime green"></img>
-        <p contenteditable="true" class="icon-text"> dbz fighter</p>
-      </div>
-
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" 
-           tabindex="0">
-          <img src="./images/ui-icons/Pallet.png" alt="Art Pallet drawing in pixel art"></img>
-          <p contenteditable="true" class="icon-text"> Draw</p>
+        <div class="desktop-icon" role="button" aria-label="DBZ Fighter game" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dragon_game')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'dragon_game')" tabindex="0">
+          <picture>
+            <source srcset="./images/ui-icons/dragon_fighter.webp" type="image/webp">
+            <img src="./images/ui-icons/dragon_fighter.webp" alt="" width="64" height="64" role="presentation">
+          </picture>
+          <p class="icon-text">dbz fighter</p>
         </div>
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" tabindex="0"> 
-          <img src="./images/ui-icons/GOL.png" alt="Game of Life Grid of green and grey squares"></img>
+        <div class="desktop-icon" role="button" aria-label="Paint application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'draw')" tabindex="0">
+          <picture>
+            <source srcset="./images/ui-icons/Pallet.webp" type="image/webp">
+            <img src="./images/ui-icons/Pallet.webp" alt="" width="64" height="64" role="presentation">
+          </picture>
+          <p class="icon-text">Draw</p>
+        </div>
+
+        <div class="desktop-icon" role="button" aria-label="Game of Life application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'GOL')" tabindex="0"> 
+          <picture>
+            <source srcset="./images/ui-icons/GOL.webp" type="image/webp">
+            <img src="./images/ui-icons/GOL.webp" alt="" width="64" height="64" role="presentation">
+          </picture>
           <div class="icon-text">
-            <p contenteditable="true">Game Of Life</p>
+            <p>Game Of Life</p>
           </div>
         </div>
 
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')"
-          tabindex="0">
-          <img src="./images/ui-icons/Calc.png" alt="calculator icon"></img>
+<div class="desktop-icon" role="button" aria-label="Calculator application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'calculator')" tabindex="0">
+          <picture>
+            <source srcset="./images/ui-icons/Calc.webp" type="image/webp">
+            <img src="./images/ui-icons/Calc.webp" alt="" width="64" height="64" role="presentation">
+          </picture>
           <div class="icon-text">
-            <p contenteditable="true">Calculator</p>
+            <p>Calculator</p>
           </div>
         </div>
 
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" tabindex="0"
+        <div class="desktop-icon" role="button" aria-label="Notes application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'notes')" tabindex="0"
           style="cursor: pointer;">
-          <img src="./images/ui-icons/Notes.png" alt="yellow note pad "></img>
+          <picture>
+            <source srcset="./images/ui-icons/Notes.webp" type="image/webp">
+            <img src="./images/ui-icons/Notes.webp" alt="" width="64" height="64" role="presentation">
+          </picture>
           <div class="icon-text">
-            <p contenteditable="true">Notes</p>
+            <p>Notes</p>
           </div>
         </div>
 
-        <div class="desktop-icon" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'files')" tabindex="0"
+        <div class="desktop-icon" role="button" aria-label="Files application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'files')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'files')" tabindex="0"
         style="cursor: pointer;">
-        <img src="./images/ui-icons/File_System_icon.png" alt="yellow note pad "></img>
+        <img src="./images/ui-icons/File_System_icon.webp" alt="" width="64" height="64" role="presentation"></img>
         <div class="icon-text">
-          <p contenteditable="true">Files</p>
+          <p>Files</p>
         </div>
       </div>
       </div>
-    </div>
+    </main>
 
-    <div class="app-bar"> Tasks <div class="btn-group"> </div>
+    <footer class="app-bar" role="contentinfo" aria-label="Application taskbar"> Tasks <div class="btn-group"> </div>
     <div class="app-bar-buffer">buffer</div>
-    </div>
+    </footer>
   </div>
 
 
@@ -270,17 +403,28 @@ document.addEventListener('DOMContentLoaded', () => {
       let file = fileSystem[i].files[j];
       let icon = document.createElement("div");
       icon.classList.add("desktop-icon");
+      icon.setAttribute("role", "button");
+      icon.setAttribute("tabindex", "0");
+      icon.setAttribute("aria-label", `Open ${file.name}`);
       icon.onclick = function(){
         selectIcon(event);
       };
       icon.ondblclick = function(){
         desktopIconRouter(event, "notes",  file.name , {content: file.content, parent: fileSystem[i].dir});
       };
+      icon.onkeypress = function(e){
+        if(e.key === 'Enter') {
+          desktopIconRouter(e, "notes",  file.name , {content: file.content, parent: fileSystem[i].dir});
+        }
+      };
       let img = document.createElement("img");
-      img.src = "./images/ui-icons/Notes.png";
+      img.src = "./images/ui-icons/Notes.webp";
+      img.setAttribute("alt", "");
+      img.setAttribute("role", "presentation");
+      img.setAttribute("width", "64");
+      img.setAttribute("height", "64");
       let text = document.createElement("div");
       text.classList.add("icon-text");
-      text.contentEditable = "true";
       text.innerHTML = file.name;
       icon.appendChild(img);
       icon.appendChild(text);
@@ -436,10 +580,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let taskbarButton = document.createElement("button");
         let taskbarButtonIcon = document.createElement("img");
-        taskbarButtonIcon.alt = "window icon for " + windows[i].id ;
+        taskbarButtonIcon.alt = "";
+        taskbarButtonIcon.setAttribute("role", "presentation");
         taskbarButtonIcon.classList.add("window-icon");
         taskbarButtonIcon.src = windows[i].childNodes[0].childNodes[0].src;
         taskbarButton.classList.add("app-bar-button");
+        taskbarButton.setAttribute("aria-label", `Toggle ${windows[i].id} window`);
         if (windows[i].classList.contains("minimized")) {
           taskbarButton.classList.remove("app-bar-button-active");
         } else {
@@ -768,10 +914,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Now the delay is complete, proceed to open the window
       switch (newWindowHeaderTitle) {
         case "test":
-          createWindow("Test", "This is a test window", "./images/projects/blocks.jpg", false);
+          createWindow("Test", "This is a test window", "./images/projects/blocks.webp", false);
           break;
           case "empty": 
-          createWindow("empty", null, "./images/ui-icons/Term.png", 800);
+          createWindow("empty", null, "./images/ui-icons/Term.webp", 800);
           break;
         case "term": 
           let term = document.createElement("iframe");
@@ -779,21 +925,23 @@ document.addEventListener('DOMContentLoaded', () => {
           term.title = "terminal";
           term.style.marginTop = "50px";
           term.src = "./CMD.html";
+          term.loading = "lazy";
           term.style.height = "100%";
           term.style.width = "100%";
-          createWindow("Terminal", term, "./images/ui-icons/Term.png", 800);
+          createWindow("Terminal", term, "./images/ui-icons/Term.webp", 800);
           break;
         case "resume":
           let resume = document.createElement("iframe");
           resume.name = "resume";
           resume.title = "resume";
           resume.src = "./resume.html";
+          resume.loading = "lazy";
           resume.style.height = "90%";
           resume.style.marginTop = "50px";
           resume.style.width = "100%";
           resume.frameborder = "0";
 
-          createWindow("Resume", resume, "./images/projects/Resume.png", 800);
+          createWindow("Resume", resume, "./images/projects/Resume.webp", 800);
 
 
           break;
@@ -805,7 +953,7 @@ document.addEventListener('DOMContentLoaded', () => {
           intro.src = "./intro.html";
           intro.style.height = "100%";
           intro.style.width = "100%";
-          createWindow("Welcome", intro, "./images/brand/favicon.ico", 1200, true);
+          createWindow("Welcome", intro, "./images/brand/favicon.webp", 1200, true);
           break;
 
 
@@ -814,19 +962,21 @@ document.addEventListener('DOMContentLoaded', () => {
           calculator.name = "calculator";
           calculator.title = "calculator";
           calculator.src = "./calculator.html";
+          calculator.loading = "lazy";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/ui-icons/Calc.png", 400, false);
+          createWindow("Calculator", calculator, "./images/ui-icons/Calc.webp", 400, false);
           break;
         case "dragon_game":
           let game = document.createElement("iframe");
           game.name = "dragon_game";
           game.title = "dragon_game";
           game.src = "https://main.d3722xrzul5kke.amplifyapp.com/";
+          game.loading = "lazy";
           game.style.height = "100%";
           game.style.width = "100%";
           game.style.overflowY = "hidden";
-          createWindow("dragon fighter conquest", game, "./images/ui-icons/dragon_fighter.png", 800, false);
+          createWindow("dragon fighter conquest", game, "./images/ui-icons/dragon_fighter.webp", 800, false);
           break;
  
                     case "notes":
@@ -861,30 +1011,36 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
             : JSON.parse(localStorage.getItem("fileSystem"));
 
-          console.log("File system:", fileSystem);
-          console.log("Data received:", data);
+
 
           notes.classList.add("notes");
           notes.name = "note pad";
           notes.title = "note pad";
+
+          let label = document.createElement("label");
+          label.className = "visually-hidden";
+          label.setAttribute("for", "notes-textarea");
+          label.textContent = "Note content";
 
           let textArea = document.createElement("textarea");
           textArea.classList.add("notes-textarea");
           textArea.rows = "25";
           textArea.cols = "45";
           textArea.placeholder = "Enter your notes here";
+          textArea.setAttribute("aria-label", "Note content");
+          textArea.id = "notes-textarea";
 
           let isNew = false;
           let currentFileDir = null;
           let currentFileName = null;
           
           if (data && data.content !== undefined) {
-              console.log("Opening existing file:", data);
+
               textArea.value = data.content;
               currentFileDir = data.dir;
               currentFileName = data.name;
           } else {
-              console.log("Creating new note");
+
               isNew = true;
               currentFileDir = "/home";
               currentFileName = "note_" + Date.now() + ".txt";
@@ -892,7 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Local storage for notes: get and set on change of value
           textArea.oninput = function () {
-              console.log("Text changed, saving...");
+
               
               if (isNew) {
                   // Creating a new file
@@ -916,7 +1072,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       });
                   }
                   isNew = false;
-                  console.log("New file created:", currentFileName);
+
               } else {
                   // Updating existing file
                   let targetDir = fileSystem.find(dir => dir.dir === currentFileDir);
@@ -925,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       let file = targetDir.files.find(f => f.name === currentFileName && !f.dir);
                       if (file) {
                           file.content = textArea.value;
-                          console.log("File updated:", currentFileName);
+
                       }
                   }
               }
@@ -934,9 +1090,10 @@ document.addEventListener('DOMContentLoaded', () => {
               localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
           };
 
+          notes.appendChild(label);
           notes.appendChild(textArea);
-          console.log("Notes window created for:", currentFileName);
-          createWindow(newTitle ? newTitle : "Notes", notes, "./images/ui-icons/Notes.png", 500);
+
+          createWindow(newTitle ? newTitle : "Notes", notes, "./images/ui-icons/Notes.webp", 500);
     break;
 
 
@@ -945,27 +1102,30 @@ document.addEventListener('DOMContentLoaded', () => {
           about.name = "about David Kozdra";
           about.title = "about David Kozdra";
           about.src = "./about.html";
+          about.loading = "lazy";
           about.style.height = "100%";
           about.style.width = "100%";
-          createWindow("Work", about, "./images/profile/ME.jpg", 1800,true,true);
+          createWindow("Work", about, "./images/profile/ME.webp", 1800,true,true);
           break;
         case "projects":
           let Projects = document.createElement("iframe");
           Projects.name = "about David Kozdra";
           Projects.title = "about David Kozdra";
           Projects.src = "./projects.html";
+          Projects.loading = "lazy";
           Projects.style.height = "100%";
           Projects.style.width = "100%";
-          createWindow("projects", Projects, "./images/profile/ME.jpg", 1800,true,true);
+          createWindow("projects", Projects, "./images/profile/ME.webp", 1800,true,true);
           break;
         case "files":
           let files = document.createElement("iframe");
           files.name = "files";
           files.title = "files";
           files.src = "./file_browser.html";
+          files.loading = "lazy";
           files.style.height = "100%";
           files.style.width = "100%";
-          createWindow("files", files, "./images/ui-icons/File_System_icon.png", 800);
+          createWindow("files", files, "./images/ui-icons/File_System_icon.webp", 800);
           break;
 
         case "old":
@@ -973,24 +1133,26 @@ document.addEventListener('DOMContentLoaded', () => {
           iframe.name = "old website";
           iframe.title = "old website";
           iframe.src = "./old_site.html";
+          iframe.loading = "lazy";
           iframe.style.height = "700px";
           iframe.style.width = "100%";
-          createWindow("Old Website", iframe, "./images/brand/favicon.ico", 800);
+          createWindow("Old Website", iframe, "./images/brand/favicon.webp", 800);
           break;
 
 
         case "error":
-          createWindow("Error", "This is a test window", "./images/ui-icons/Pallet.png", 200);
+          createWindow("Error", "This is a test window", "./images/ui-icons/Pallet.webp", 200);
 
         case "draw":
           let draw = document.createElement("iframe");
           draw.name = "drawing";
           draw.title = "drawing";
           draw.src = "./drawing.html";
+          draw.loading = "lazy";
           draw.style.height = "100%";
           draw.style.width = "100%";
           draw.style.marginTop = "50px";
-          createWindow("Drawing", draw, "./images/ui-icons/Pallet.png", 1000, false);
+          createWindow("Drawing", draw, "./images/ui-icons/Pallet.webp", 1000, false);
           break;
 
         case "GOL":
@@ -998,10 +1160,11 @@ document.addEventListener('DOMContentLoaded', () => {
           GOLcontainer.name = "Game of Life";
           GOLcontainer.title = "Game of Life";
           GOLcontainer.src = "./GOL.html";
+          GOLcontainer.loading = "lazy";
           GOLcontainer.style.height = "100%";
           GOLcontainer.style.width = "100%";
 
-          createWindow("Game of Life", GOLcontainer, "./images/ui-icons/GOL.png", 500, false);
+          createWindow("Game of Life", GOLcontainer, "./images/ui-icons/GOL.webp", 500, false);
           currentSlide = -1;
           init()
           break;
@@ -1128,13 +1291,10 @@ document.addEventListener('DOMContentLoaded', () => {
       let minIcon = document.createElement("i");
       minIcon.classList.add("fas");
       minIcon.classList.add("fa-chevron-down");
-      minIcon.name = "minimize";
-
-      minIcon.setAttribute("aria-label", "Minimize window");
 
       const buttonMin = createWindowButton(minIcon, function () {
         minimizeWindow(event, id);
-      });
+      }, "Minimize window");
       let buttonMax;
       if (canResize) {
         let maxIcon = document.createElement("i");
@@ -1143,18 +1303,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         buttonMax = createWindowButton(maxIcon, function () {
           maximizeWindow(event, id);
-        });
+        }, "Maximize window");
       }
 
       let closeIcon = document.createElement("i");
       closeIcon.classList.add("fas");
       closeIcon.classList.add("fa-times");
-      closeIcon.name = "close";
-
 
       const buttonClose = createWindowButton(closeIcon, function () {
         closeWindow(event, id);
-      });
+      }, "Close window");
 
 
       buttonMin.style.color = "black";
@@ -1170,13 +1328,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return buttons;
     }
 
-    function createWindowButton(text, clickHandler) {
+    function createWindowButton(icon, clickHandler, ariaLabel) {
       const button = document.createElement("button");
       button.classList.add("window-button");
-      button.name = text.innerHTML + " button";
-      button.setAttribute("aria-label", text.innerHTML + " button");
+      button.setAttribute("aria-label", ariaLabel);
+      button.type = "button";
 
-      button.appendChild(text);
+      icon.setAttribute("aria-hidden", "true");
+      button.appendChild(icon);
       button.addEventListener('click', clickHandler);
       return button;
     }
@@ -1247,12 +1406,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      console.log('Received message:', event.data);
+
 
       // Handle file opening from file browser
       if (event.data.file && event.data.action === 'openFile'){
         let file = event.data.file;
-        console.log("Opening file:", file);
+
         let data = {
           content: file.content,
           dir: event.data.dir,
@@ -1266,7 +1425,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Handle legacy file opening (keeping for backwards compatibility)
       if (event.data.file){
         let file = event.data.file;
-        console.log("file", file);
+
         let data = {
           content: file.content,
           dir: event.data.dir,
@@ -1281,12 +1440,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Disable all parent stylesheets
         const parentStylesheets = document.getElementsByClassName('theme');
         Array.from(parentStylesheets).forEach(sheet => {
-          console.log(sheet, "sheet");
+
           sheet.disabled = true;
         });
         localStorage.setItem('defaultStyleSheet', event.data.stylesheetId);
         let target_theme = document.getElementById(event.data.stylesheetId);
-        console.log(target_theme);
+
         // Enable the selected stylesheet in the parent document
         target_theme.disabled = false;
       }
