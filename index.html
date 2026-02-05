@@ -115,6 +115,9 @@
     /* Performance optimization for loader */
     .loader-page {
       content-visibility: auto;
+    }
+    
+    .loader-page[style*="display: block"] {
       min-height: 100vh;
       position: fixed;
       top: 0;
