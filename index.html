@@ -554,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
           desktop.style.height = "93.5dvh";
         }
 
-        applyBoundaries(activeWindows);
+        // applyBoundaries(activeWindows);
         if (activeWindowCount != activeWindows.length) {
           ReRenderAppTaskbar();
           activeWindowCount = activeWindows.length;
@@ -838,23 +838,9 @@ document.addEventListener('DOMContentLoaded', () => {
         pos3 = e.clientX;
         pos4 = e.clientY;
 
-        // Get desktop boundaries
-        const desktop = document.getElementById('desktop');
-        const taskBar = document.querySelector('.task-bar');
-        const appBar = document.querySelector('.app-bar');
-        
-        const minTop = taskBar ? taskBar.offsetHeight + 10 : 10;
-        const maxTop = appBar ? window.innerHeight - appBar.offsetHeight - elmnt.offsetHeight - 10 : window.innerHeight - elmnt.offsetHeight - 10;
-        const minLeft = 10;
-        const maxLeft = window.innerWidth - elmnt.offsetWidth - 10;
-
-        // Calculate new position with boundaries
+        // Calculate new position
         let newTop = elmnt.offsetTop - pos2;
         let newLeft = elmnt.offsetLeft - pos1;
-        
-        // Clamp values to boundaries
-        newTop = Math.max(minTop, Math.min(newTop, maxTop));
-        newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
 
         // Set the element's new position:
         elmnt.style.top = newTop + "px";
@@ -1397,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', function () {
       for (let i = 0; i < activeWindows.length; i++) {
         resizeWindowTItle(activeWindows[i]);
-        applyBoundaries(activeWindows);
+        // applyBoundaries(activeWindows);
 
       }
       CreateDesktopIconGrid();
