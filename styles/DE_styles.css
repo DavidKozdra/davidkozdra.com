@@ -390,7 +390,7 @@ button {
     width: 100%;
     /* allow vertical scroll when many icons, but prevent horizontal overflow */
     max-height: 68vh;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     padding: 12px 16px;
     justify-content: start;
