@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DK OS – refreshed</title>
+  <title>DK OS </title>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -486,13 +486,14 @@
     const reviews=[
       {name:'Jonathan Matsumoto @ Bridxe',logo:'./images/company-logos/Bridxe.webp',review:'David mastered AWS, D3, Django & React quickly, communicating clearly and leaving maintainable code.'},
       {name:'Michael Jennings @ Redchip',logo:'https://www.redchip.com/assets/images/corporate/redchip-logo.png',review:'Moves fluidly between complex backend logic and user-facing interfaces, delivering clean code.'},
-      {name:'Mellissa Thomas @ FNN',logo:'./images/company-logos/Logo-FNN-380x310.webp',review:'Self-starter, excellent communicator – a great asset to any team.'}
+      {name:'Mellissa Thomas @ FNN',logo:'./images/company-logos/Logo-FNN-380x310.webp',review:'Self-starter, excellent communicator – a great asset to any team.'},
+      {name:'Dave Gentry @ RedChip Companies Inc',logo:'https://www.redchip.com/assets/images/corporate/redchip-logo.png',review:'David Kozdra is in the top 3.6% of programmers globally'}
     ];
     let idx=0;
     function showReview(i){
       const r=reviews[i];
       document.getElementById('review-logo').src=r.logo;
-      document.getElementById('review-text').textContent=`"${r.review}"`;
+      document.getElementById('review-text').textContent=`${r.review}`;
       document.getElementById('review-name').textContent='— '+r.name;
     }
     function startCarousel(){
