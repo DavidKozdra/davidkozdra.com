@@ -8,7 +8,11 @@
     --system-font: "Roboto";
     --main-gradient : linear-gradient(to right, #768d92, #0083b0);
     --window-header: linear-gradient(to right, #26505a, #0d323f);
-    --background-image:url(../images/projects/backgroundOption2.webp);
+    --background-image-fallback: url("../images/projects/backgroundOption2.jpg");
+    --background-image: image-set(
+        url("../images/projects/backgroundOption2.webp") type("image/webp") 1x,
+        url("../images/projects/backgroundOption2.jpg") type("image/jpeg") 1x
+    );
 }
 
 
@@ -22,7 +26,8 @@
 }
 
 #desktop {
-    background-image: var(--background-image);
+    background-image: var(--background-image-fallback, url("../images/projects/backgroundOption2.jpg"));
+    background-image: var(--background-image, var(--background-image-fallback, url("../images/projects/backgroundOption2.jpg")));
 }
 
 .de-button {

@@ -10,7 +10,11 @@
     --window-header-hover: linear-gradient(to right, #5d7f8b, #7aa7b3);
     --system-font:  'Roboto', sans-serif;
     --system-grey:  linear-gradient(to bottom, rgba(57, 63, 65,1),rgba(52,52,52,.98));
-    --background-image: url(../images/projects/Rainbow_iPad+2.webp);
+    --background-image-fallback: url("../images/projects/rainbow-ipad-2.png");
+    --background-image: image-set(
+        url("../images/projects/rainbow-ipad-2.webp") type("image/webp") 1x,
+        url("../images/projects/rainbow-ipad-2.png") type("image/png") 1x
+    );
 }
 
 .fa-envelope {
@@ -24,7 +28,8 @@
 }
 
 #desktop {
-    background-image: var(--background-image);
+    background-image: var(--background-image-fallback, url("../images/projects/rainbow-ipad-2.png"));
+    background-image: var(--background-image, var(--background-image-fallback, url("../images/projects/rainbow-ipad-2.png")));
 }
 
 .task-bar button {
