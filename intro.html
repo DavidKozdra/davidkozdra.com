@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DK OS </title>
+  <title>DK OS</title>
+
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 
-  <!-- ─────────────  SOFT-LIGHT THEME  ───────────── -->
-  <style id="modern" class="theme">
+  <style id="modern-theme" class="theme">
     :root{
       --bg: #f0f4f8;
       --surface: #ffffff;
@@ -22,6 +22,7 @@
       --radius:14px;
       --shadow:0 6px 18px rgba(0,0,0,.08);
     }
+
     body{
       margin:0;
       font-family:'Inter',sans-serif;
@@ -29,326 +30,508 @@
       color:var(--text-main);
       line-height:1.6;
     }
-    a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
-    /* ---------- layout ---------- */
-    #intro{padding:70px 20px 40px 20px;max-width:1100px;margin:auto}
 
-    /* TAB BAR */
-    #tab-container{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:30px}
+    a{color:var(--primary);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    #intro{
+      padding:70px 20px 40px;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    #tab-container{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:30px;
+    }
+
     .tab-button{
-      padding:10px 24px;border:none;cursor:pointer;font:600 1rem Inter;
-      background:var(--primary-light);color:var(--primary);border-radius:50px;
-      transition:.25s}
+      padding:10px 24px;
+      border:none;
+      cursor:pointer;
+      font:600 1rem Inter, sans-serif;
+      background:var(--primary-light);
+      color:var(--primary);
+      border-radius:50px;
+      transition:.25s;
+    }
+
     .tab-button:hover{background:#d9e9ff}
     .tab-button.active{background:var(--primary);color:#fff}
 
-    /* TABS */
-    .tab{display:none;animation:fade .4s ease
-    } .tab.active{display:block}
-    @keyframes fade{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .tab{display:none;animation:fade .4s ease}
+    .tab.active{display:block}
 
-    /* HERO */
-    #hero{display:flex;flex-wrap:wrap;align-items:center;gap:40px;justify-content:center;margin-bottom:40px}
-    .me{width:160px;height:160px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow)}
+    @keyframes fade{
+      from{opacity:.3;transform:translateY(6px)}
+      to{opacity:1;transform:none}
+    }
+
+    #hero{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:40px;
+      justify-content:center;
+      margin-bottom:40px;
+    }
+
+    .me{
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      object-fit:cover;
+      box-shadow:var(--shadow);
+    }
+
     h1{margin:0 0 8px;font-size:2rem}
-    ul{list-style:none;padding:0;margin:0} li{margin-bottom:6px}
+    ul{list-style:none;padding:0;margin:0}
+    li{margin-bottom:6px}
 
-    /* SKILLS */
-    .skills h2{text-align:center;font-size:1.6rem;margin-bottom:20px}
-    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px; justify-content: center;}
-    .skill-icon{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;text-align:center;transition:.3s transform}
+    .skills h2{
+      text-align:center;
+      font-size:1.6rem;
+      margin-bottom:20px;
+    }
+
+    .skills-container{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+      gap:24px;
+      justify-content:center;
+    }
+
+    .skill-icon{
+      background:var(--surface);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+      text-align:center;
+      transition:.3s transform;
+    }
+
     .skill-icon:hover{transform:translateY(-6px)}
-    .icon{width:80px;height:80px;margin:0 auto 12px;position:relative;perspective:800px}
-    .icon img{width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;border-radius:10px;backface-visibility:hidden;transition:transform .6s}
+
+    .icon{
+      width:80px;
+      height:80px;
+      margin:0 auto 12px;
+      position:relative;
+      perspective:800px;
+    }
+
+    .icon img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      position:absolute;
+      top:0;
+      left:0;
+      border-radius:10px;
+      backface-visibility:hidden;
+      transition:transform .6s;
+    }
+
     .icon .front{transform:rotateY(0deg)}
     .icon .back{transform:rotateY(180deg)}
     .skill-icon:hover .icon .front{transform:rotateY(180deg)}
     .skill-icon:hover .icon .back{transform:rotateY(360deg)}
-    .skill-label{font-weight:600;font-size:.95rem;color:var(--text-main)}
-    .skill-label .exp{display:block;font-weight:400;color:var(--text-muted);margin-top:4px;font-size:.85rem}
 
-    /* REVIEWS */
-    #reviews-carousel{max-width:700px;margin:60px auto 0;padding:32px;background:var(--surface);
-      border-radius:var(--radius);box-shadow:var(--shadow);text-align:center}
-    #reviews-carousel img{height:50px;margin-bottom:18px}
-    #reviews-carousel blockquote{margin:0;font-style:italic;color:var(--text-muted)}
-    #reviews-carousel strong{display:block;margin-top:16px}
+    .skill-label{
+      font-weight:600;
+      font-size:.95rem;
+      color:var(--text-main);
+    }
 
-    /* HELP & SETTINGS panes can inherit body styles */
+    .skill-label .exp{
+      display:block;
+      font-weight:400;
+      color:var(--text-muted);
+      margin-top:4px;
+      font-size:.85rem;
+    }
 
-    /* SMALL SCREEN */
+    #reviews-carousel{
+      max-width:900px;
+      margin:60px auto 0;
+      padding:32px 20px;
+      background:var(--surface);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    #reviews-carousel h2{
+      margin:0 0 20px;
+      font-size:1.6rem;
+    }
+
+    .reviews-track-wrapper{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .reviews-track{
+      flex:1;
+      min-height:220px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .review-slide{
+      display:none;
+      animation:fade .35s ease;
+      padding:10px 20px;
+    }
+
+    .review-slide.active{
+      display:block;
+    }
+
+    .review-slide img{
+      height:52px;
+      max-width:180px;
+      object-fit:contain;
+      margin-bottom:18px;
+    }
+
+    .review-slide blockquote{
+      margin:0;
+      font-style:italic;
+      color:var(--text-muted);
+      font-size:1rem;
+    }
+
+    .review-slide strong{
+      display:block;
+      margin-top:16px;
+      color:var(--text-main);
+    }
+
+    .review-nav{
+      width:44px;
+      height:44px;
+      border:none;
+      border-radius:50%;
+      background:var(--primary-light);
+      color:var(--primary);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.2s ease;
+      flex-shrink:0;
+    }
+
+    .review-nav:hover{
+      background:#d9e9ff;
+      transform:translateY(-1px);
+    }
+
+    .review-dots{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .review-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      border:none;
+      background:#c7d2e0;
+      cursor:pointer;
+      padding:0;
+    }
+
+    .review-dot.active{
+      background:var(--primary);
+    }
+
     @media(max-width:650px){
-      #hero{flex-direction:column;text-align:center}
-      .me{width:120px;height:120px}
+      #hero{
+        flex-direction:column;
+        text-align:center;
+      }
+
+      .me{
+        width:120px;
+        height:120px;
+      }
+
+      .reviews-track-wrapper{
+        gap:8px;
+      }
+
+      .review-nav{
+        width:38px;
+        height:38px;
+      }
+
+      .review-slide{
+        padding:10px 4px;
+      }
     }
   </style>
 
-
-  <style id="retro" class="theme" disabled="true">
-    body {
-      margin: 0;
-      font-family: "Courier New", Courier, monospace;
-      background-color: #000;
-      color: #aaff00;
-    }
-    h1, h2, p {
-      margin: 0;
-      padding: 0;
-    }
-    h1, h2, p, a {
-      color: #aaff00;
-    }
-    #intro {
-      padding: 20px;
-    }
-    .tab {
-      display: none;
-    }
-    .tab.active {
-      display: block;
-    }
-    #tab-container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .tab-button {
-      background-color: #333;
-      border: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: bold;
-      padding: 10px 20px;
-      margin: 10px;
-      border-radius: 5px;
-      color: #aaff00;
-      transition: background-color 0.3s;
-    }
-    .tab-button:hover {
-      background-color: #555;
-    }
-    .tab-button.active {
-      border-bottom: 3px solid #aaff00;
-    }
-    .skills {
-      margin: 40px;
-    }
-    .skills-container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin: 40px;
-    }
-    .skill-icon {
-      width: 100px;
-      height: 100px;
-      perspective: 1000px;
-      margin: 15px;
-    }
-    .skill-icon .icon {
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-      position: relative;
-    }
-    .skill-icon:hover .icon {
-      transform: rotateY(180deg);
-    }
-    .icon .front,
-    .icon .back {
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .icon .back {
-      transform: rotateY(180deg);
-    }
-    .icon img {
-      width: 80px;
-      height: 80px;
-    }
-    a {
-      color: #aaff00;
-      text-decoration: none;
-    }
-    a:hover {
-      color: #c7f866;
-    }
-    #settings button {
-      background-color: #333;
-      border: none;
-      cursor: pointer;
-      font-size: 1.2rem;
-      font-weight: bold;
-      padding: 10px 20px;
-      margin: 10px;
-      border-radius: 5px;
-      color: #aaff00;
-      transition: background-color 0.3s;
-    }
-    #settings button:hover {
-      background-color: #555;
-    }
-    .me {
-      display: block;
-      margin: 20px auto;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    body {
-      margin: 0;
-      padding-top: 20px;
-      font-family: Arial, sans-serif;
-      height: 100vh;
+  <style id="retro-theme" class="theme" disabled>
+    :root{
+      --surface:#111;
+      --primary:#aaff00;
+      --text-main:#aaff00;
+      --text-muted:#c7ff7a;
     }
 
-    h1,
-    h2,
-    p {
-      margin: 0;
-      padding: 0;
+    body{
+      margin:0;
+      font-family:"Courier New", Courier, monospace;
+      background-color:#000;
+      color:#aaff00;
+      padding-top:20px;
+      min-height:100vh;
     }
 
-    h1 {
-      font-size: 2em;
-      font-weight: bold;
-      color: #aaff00;
+    h1, h2, p, a{
+      color:#aaff00;
+      margin:0;
+      padding:0;
     }
 
-    h2 {
-      font-size: 1.5em;
-      color: #aaff00;
+    a{text-decoration:none}
+    a:hover{color:#c7f866}
+    a:visited{color:rgb(13, 182, 13)}
+
+    #intro{
+      background-color:#000;
+      padding:20px 10px;
+      font-size:1.2rem;
     }
 
-    p {
-      font-size: 1.2em;
-      color: #aaff00;
+    .tab{display:none}
+    .tab.active{display:block}
+
+    #tab-container{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      width:100%;
     }
 
-
-
-    a:visited {
-
-      color:  rgb(13, 182, 13);
+    .tab-button{
+      background-color:#333;
+      border:none;
+      cursor:pointer;
+      font-size:1.1rem;
+      font-weight:bold;
+      padding:10px 20px;
+      margin:10px;
+      border-radius:5px;
+      color:#aaff00;
+      transition:background-color 0.3s;
     }
 
-    a{
-  color: rgb(4, 206, 38);
-}
-    a:hover {
+    .tab-button:hover{background-color:#555}
+    .tab-button.active{border-bottom:3px solid #aaff00}
 
-      color:  #5eff00;
+    .me{
+      display:block;
+      margin:20px auto;
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      object-fit:cover;
     }
 
-
-    #intro {
-      background-color: #000000;
-      padding: 10px;
-      overflow: none;
-      font-size: 1.2rem;
-      height: 150vh;
+    .skills{
+      margin:40px 0;
     }
 
-    .tab {
-      display: none ;
-      font-family: Arial, sans-serif;
-      height: 100vh;
+    .skills h2{
+      text-align:center;
+      font-size:1.6rem;
+      margin-bottom:20px;
+      color:#aaff00;
     }
 
-    #tab-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      column-gap: 0px;
-      row-gap: 0px;
-      width: 100dvw;
+    .skills-container{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+      gap:24px;
+      justify-content:center;
     }
 
-    .active {
-      display: block;
+    .skill-icon{
+      background:#111;
+      border:1px solid #355400;
+      padding:20px;
+      text-align:center;
+      transition:.3s transform;
     }
 
-    button {
-      border: none;
-      outline: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: bold;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-
-      background-color: grey;
-
-    }
-
-    button:hover {
-      background-color: rgb(49, 47, 47);
-    }
-
-    button.active {
-      border-top: 5px solid #aaff00;
-    }
-
-    #sys-about {
-      font-size: 1.2rem;
-      font-weight: bold;
-      display: flex;
-      flex-direction: column;
-    }
-
-    #welcome {
-      text-indent: 2%;
-    }
-
-
-    /* SKILLS */
-    .skills h2{text-align:center;font-size:1.6rem;margin-bottom:20px}
-    .skills-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px; justify-content: center;}
-    .skill-icon{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;text-align:center;transition:.3s transform}
     .skill-icon:hover{transform:translateY(-6px)}
-    .icon{width:80px;height:80px;margin:0 auto 12px;position:relative;perspective:800px}
-    .icon img{width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;border-radius:10px;backface-visibility:hidden;transition:transform .6s}
+
+    .icon{
+      width:80px;
+      height:80px;
+      margin:0 auto 12px;
+      position:relative;
+      perspective:800px;
+    }
+
+    .icon img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      position:absolute;
+      top:0;
+      left:0;
+      backface-visibility:hidden;
+      transition:transform .6s;
+    }
+
     .icon .front{transform:rotateY(0deg)}
     .icon .back{transform:rotateY(180deg)}
     .skill-icon:hover .icon .front{transform:rotateY(180deg)}
     .skill-icon:hover .icon .back{transform:rotateY(360deg)}
-    .skill-label{font-weight:600;font-size:.95rem;color:var(--text-main)}
-    .skill-label .exp{display:block;font-weight:400;color:var(--text-muted);margin-top:4px;font-size:.85rem}
 
-    /* REVIEWS */
-    #reviews-carousel{max-width:700px;margin:60px auto 0;padding:32px;background:var(--surface);
-      border-radius:var(--radius);box-shadow:var(--shadow);text-align:center}
-    #reviews-carousel img{height:50px;margin-bottom:18px}
-    #reviews-carousel blockquote{margin:0;font-style:italic;color:var(--text-muted)}
-    #reviews-carousel strong{display:block;margin-top:16px}
+    .skill-label{
+      font-weight:600;
+      font-size:.95rem;
+      color:#aaff00;
+    }
 
+    .skill-label .exp{
+      display:block;
+      font-weight:400;
+      color:#c7ff7a;
+      margin-top:4px;
+      font-size:.85rem;
+    }
+
+    button{
+      background-color:#333;
+      border:none;
+      cursor:pointer;
+      font-size:1.1rem;
+      font-weight:bold;
+      padding:10px 20px;
+      margin:10px;
+      border-radius:5px;
+      color:#aaff00;
+      transition:background-color 0.3s;
+    }
+
+    button:hover{background-color:#555}
+
+    #reviews-carousel{
+      max-width:900px;
+      margin:60px auto 0;
+      padding:24px 20px;
+      background:#111;
+      border:2px solid #aaff00;
+      text-align:center;
+    }
+
+    #reviews-carousel h2{
+      margin:0 0 20px;
+      color:#aaff00;
+    }
+
+    .reviews-track-wrapper{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .reviews-track{
+      flex:1;
+      min-height:220px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .review-slide{
+      display:none;
+      padding:10px 20px;
+    }
+
+    .review-slide.active{
+      display:block;
+    }
+
+    .review-slide img{
+      height:52px;
+      max-width:180px;
+      object-fit:contain;
+      margin-bottom:18px;
+    }
+
+    .review-slide blockquote{
+      margin:0;
+      font-style:italic;
+      color:#c7ff7a;
+    }
+
+    .review-slide strong{
+      display:block;
+      margin-top:16px;
+      color:#aaff00;
+    }
+
+    .review-nav{
+      width:44px;
+      height:44px;
+      border:2px solid #aaff00;
+      border-radius:50%;
+      background:#222;
+      color:#aaff00;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .review-nav:hover{
+      background:#333;
+    }
+
+    .review-dots{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .review-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      border:1px solid #aaff00;
+      background:#222;
+      cursor:pointer;
+      padding:0;
+    }
+
+    .review-dot.active{
+      background:#aaff00;
+    }
   </style>
-
 </head>
 
 <body>
   <div id="intro">
-    <!-- ─── TAB BAR ─────────────────────────────── -->
     <div id="tab-container">
       <button class="tab-button active" onclick="openTab(event,'welcome')">About David</button>
       <button class="tab-button" onclick="openTab(event,'help')">Help</button>
       <button class="tab-button" onclick="openTab(event,'settings')">Settings</button>
     </div>
 
-    <!-- ─── WELCOME TAB ─────────────────────────── -->
     <div class="tab active" id="welcome">
       <div id="hero">
         <img src="./images/profile/ME.webp" class="me" alt="David Kozdra" />
@@ -363,14 +546,13 @@
         </div>
       </div>
 
-      <!-- SKILLS -->
       <section class="skills">
         <h2>Professional Skills</h2>
         <div class="skills-container">
           <div class="skill-icon" data-start="2022-02-01">
             <div class="icon">
               <img class="front" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React logo"/>
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React logo"/>
             </div>
             <div class="skill-label">React<span class="exp"></span></div>
           </div>
@@ -378,7 +560,7 @@
           <div class="skill-icon" data-start="2020-09-01">
             <div class="icon">
               <img class="front" src="./images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
-              <img class="back"  src="./images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
+              <img class="back" src="./images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
             </div>
             <div class="skill-label">SQL<span class="exp"></span></div>
           </div>
@@ -386,7 +568,7 @@
           <div class="skill-icon" data-start="2022-02-01">
             <div class="icon">
               <img class="front" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python logo"/>
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/python-5.svg" alt="Python logo"/>
             </div>
             <div class="skill-label">Python<span class="exp"></span></div>
           </div>
@@ -394,7 +576,7 @@
           <div class="skill-icon" data-start="2021-01-01">
             <div class="icon">
               <img class="front" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js logo"/>
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js logo"/>
             </div>
             <div class="skill-label">Node.js<span class="exp"></span></div>
           </div>
@@ -402,24 +584,32 @@
           <div class="skill-icon" data-start="2022-06-01">
             <div class="icon">
               <img class="front" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB logo"/>
-              <img class="back"  src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB logo"/>
+              <img class="back" src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB logo"/>
             </div>
             <div class="skill-label">MongoDB<span class="exp"></span></div>
           </div>
         </div>
       </section>
 
-          <!-- ─── REVIEWS ─────────────────────────────── -->
-    <div id="reviews-carousel">
-      <img id="review-logo" src="" alt="Company Logo" />
-      <blockquote id="review-text"></blockquote>
-      <strong id="review-name"></strong>
+      <section id="reviews-carousel" aria-label="Reviews carousel">
+        <h2>Reviews</h2>
+
+        <div class="reviews-track-wrapper">
+          <button class="review-nav prev" type="button" aria-label="Previous review">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+
+          <div class="reviews-track" id="reviews-track"></div>
+
+          <button class="review-nav next" type="button" aria-label="Next review">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="review-dots" id="review-dots" aria-label="Review navigation"></div>
+      </section>
     </div>
-    </div>
 
-
-
-    <!-- ─── HELP TAB ────────────────────────────── -->
     <div class="tab" id="help">
       <h1>Help</h1>
       <p>
@@ -432,127 +622,209 @@
       </p>
     </div>
 
-    <!-- ─── SETTINGS TAB ────────────────────────── -->
     <div class="tab" id="settings">
       <h1>Settings</h1>
       <button onclick="clearData()">Clear Data</button>
       <h2>Theme</h2>
-          <label>
-        <input type="radio" name="styleToggle" id="modern" onclick="sendMessage('modern')"> Default
+
+      <label>
+        <input type="radio" name="styleToggle" id="modern-radio" onclick="setTheme('modern-theme')"> Default
       </label>
       <label>
-        <input type="radio" name="styleToggle" id="retro"  onclick="sendMessage('retro')"> Retro
+        <input type="radio" name="styleToggle" id="retro-radio" onclick="setTheme('retro-theme')"> Retro
       </label>
     </div>
 
     <p style="text-align:center;margin-top:50px">
       Curious about my older site?&nbsp;<a href="./old_site.html" target="_blank">Take a look</a>.
     </p>
-  </div><!-- /intro -->
+  </div>
 
-  <!-- ─── SCRIPTS ──────────────────────────────── -->
   <script>
-    /* Tabs */
-    function openTab(evt,id){
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
+    function openTab(evt, id) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       evt.currentTarget.classList.add('active');
     }
 
-    /* Theme toggle */
-    function setTheme(name){
-      document.querySelectorAll('.theme').forEach(s=>{s.disabled=s.id!==name});
-      localStorage.setItem('stylesheet',name);
-    }
-
-    /* Skill experience calc */
-    function updateExp(){
-      const now=new Date();
-      document.querySelectorAll('.skill-icon').forEach(card=>{
-        const start=new Date(card.dataset.start);
-        let years=now.getFullYear()-start.getFullYear();
-        let months=now.getMonth()-start.getMonth();
-        if(months<0){years--;months+=12;}
-        let txt='';
-        if(years>0) txt+=`${years} yr${years>1?'s':''}`;
-        if(months>0) txt+=`${years>0?', ':''}${months} mo${months>1?'s':''}`;
-        if(!txt) txt='&lt;1 mo';
-        card.querySelector('.exp').innerHTML=' '+txt;
+    function setTheme(themeId) {
+      document.querySelectorAll('.theme').forEach(style => {
+        style.disabled = style.id !== themeId;
       });
+
+      localStorage.setItem('selectedTheme', themeId);
+
+      const modernRadio = document.getElementById('modern-radio');
+      const retroRadio = document.getElementById('retro-radio');
+
+      if (modernRadio) modernRadio.checked = themeId === 'modern-theme';
+      if (retroRadio) retroRadio.checked = themeId === 'retro-theme';
+
+      window.parent.postMessage({ stylesheetId: themeId }, '*');
     }
 
-    /* Reviews */
-    const reviews=[
-      {name:'Jonathan Matsumoto @ Bridxe',logo:'./images/company-logos/Bridxe.webp',review:'David mastered AWS, D3, Django & React quickly, communicating clearly and leaving maintainable code.'},
-      {name:'Michael Jennings @ Redchip',logo:'https://www.redchip.com/assets/images/corporate/redchip-logo.png',review:'Moves fluidly between complex backend logic and user-facing interfaces, delivering clean code.'},
-      {name:'Mellissa Thomas @ FNN',logo:'./images/company-logos/Logo-FNN-380x310.webp',review:'Self-starter, excellent communicator – a great asset to any team.'},
-      {name:'Dave Gentry @ RedChip Companies Inc',logo:'https://www.redchip.com/assets/images/corporate/redchip-logo.png',review:'David Kozdra is in the top 3.6% of programmers globally'}
-    ];
-    let idx=0;
-    function showReview(i){
-      const r=reviews[i];
-      document.getElementById('review-logo').src=r.logo;
-      document.getElementById('review-text').textContent=`${r.review}`;
-      document.getElementById('review-name').textContent='— '+r.name;
-    }
-    function startCarousel(){
-      showReview(idx);
-      setInterval(()=>{idx=(idx+1)%reviews.length;showReview(idx);},7000);
-    }
+    function updateExp() {
+      const now = new Date();
+      document.querySelectorAll('.skill-icon').forEach(card => {
+        const start = new Date(card.dataset.start);
+        let years = now.getFullYear() - start.getFullYear();
+        let months = now.getMonth() - start.getMonth();
 
-    /* Misc */
-    function clearData(){localStorage.clear();sessionStorage.clear();alert('Local data cleared');}
-
-    window.addEventListener('DOMContentLoaded',()=>{
-      updateExp();
-      startCarousel();
-      const saved=localStorage.getItem('defaultStyleSheet')||'modern';
-      setTheme(saved);
-
-        setTimeout(()=>{
-
-        sendMessage(saved)
-        }, 50)
-
-      //document.querySelector(`input[name="theme"][onclick*="${saved}"]`).checked = true;
-    });
-
-
-    function init() {
-      let defaultStyleSheet = localStorage.getItem('defaultStyleSheet') || 'modern';
-      // Check the radio button for the current stylesheet
-      const radioButtons = document.querySelectorAll('input[type="radio"]');
-      radioButtons.forEach(button => {
-        button.checked = false;
-        if (button.id === defaultStyleSheet) {
-          button.checked = true;
+        if (months < 0) {
+          years--;
+          months += 12;
         }
-      });
 
-      let localStyle = localStorage.getItem('stylesheet');
-      if (localStyle) {
-        console.log(localStyle)
-        let style = document.getElementById(localStyle);
-        style.disabled = false;
+        let txt = '';
+        if (years > 0) txt += `${years} yr${years > 1 ? 's' : ''}`;
+        if (months > 0) txt += `${years > 0 ? ', ' : ''}${months} mo${months > 1 ? 's' : ''}`;
+        if (!txt) txt = '&lt;1 mo';
+
+        const expEl = card.querySelector('.exp');
+        if (expEl) expEl.innerHTML = ' ' + txt;
+      });
+    }
+
+    const reviews = [
+      {
+        name: 'Jonathan Matsumoto @ Bridxe',
+        logo: './images/company-logos/Bridxe.webp',
+        review: 'David mastered AWS, D3, Django and React quickly, communicating clearly and leaving maintainable code.'
+      },
+      {
+        name: 'Michael Jennings @ Redchip',
+        logo: 'https://www.redchip.com/assets/images/corporate/redchip-logo.png',
+        review: 'Moves fluidly between complex backend logic and user-facing interfaces, delivering clean code.'
+      },
+      {
+        name: 'Mellissa Thomas @ FNN',
+        logo: './images/company-logos/Logo-FNN-380x310.webp',
+        review: 'Self-starter, excellent communicator and a strong asset to any team.'
+      },
+      {
+        name: 'Dave Gentry @ RedChip Companies Inc',
+        logo: 'https://www.redchip.com/assets/images/corporate/redchip-logo.png',
+        review: 'In 2024, Dave Gentry, then Owner of RedChip, publicly said there were only about one million programmers better than David Kozdra. Using an estimate of roughly 26 million programmers worldwide, that implies David ranks in roughly the top 4%.'
       }
-      sendMessage(defaultStyleSheet);
+    ];
+
+    let reviewIndex = 0;
+    let reviewInterval = null;
+
+    function renderReviews() {
+      const track = document.getElementById('reviews-track');
+      const dots = document.getElementById('review-dots');
+
+      if (!track || !dots) return;
+
+      track.innerHTML = reviews.map((r, i) => `
+        <article class="review-slide ${i === 0 ? 'active' : ''}" data-index="${i}">
+          <img src="${r.logo}" alt="${r.name} logo">
+          <blockquote>${r.review}</blockquote>
+          <strong>— ${r.name}</strong>
+        </article>
+      `).join('');
+
+      dots.innerHTML = reviews.map((_, i) => `
+        <button
+          class="review-dot ${i === 0 ? 'active' : ''}"
+          type="button"
+          aria-label="Go to review ${i + 1}"
+          data-index="${i}">
+        </button>
+      `).join('');
     }
-       function sendMessage(stylesheetId) {
-      //set local stylesheet to disabled
-      let styles = document.getElementsByClassName("theme");
-      console.log(styles , stylesheetId)
-      Array.from(styles).forEach(style => {
-        console.log(style)
-        if (style.id !== stylesheetId ) {
-            style.disabled = true; // Disable other styles
-        } else {
-            style.disabled = false; // Enable selected style or default
-        }
+
+    function showReview(index) {
+      const slides = document.querySelectorAll('.review-slide');
+      const dots = document.querySelectorAll('.review-dot');
+
+      if (!slides.length || !dots.length) return;
+
+      reviewIndex = (index + reviews.length) % reviews.length;
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === reviewIndex);
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === reviewIndex);
+      });
+    }
+
+    function nextReview() {
+      showReview(reviewIndex + 1);
+    }
+
+    function prevReview() {
+      showReview(reviewIndex - 1);
+    }
+
+    function stopCarousel() {
+      if (reviewInterval) {
+        clearInterval(reviewInterval);
+        reviewInterval = null;
+      }
+    }
+
+    function startCarousel() {
+      stopCarousel();
+      reviewInterval = setInterval(nextReview, 7000);
+    }
+
+    function setupReviewEvents() {
+      const nextBtn = document.querySelector('.review-nav.next');
+      const prevBtn = document.querySelector('.review-nav.prev');
+      const dotsWrap = document.getElementById('review-dots');
+      const carousel = document.getElementById('reviews-carousel');
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          nextReview();
+          startCarousel();
+        });
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          prevReview();
+          startCarousel();
+        });
+      }
+
+      if (dotsWrap) {
+        dotsWrap.addEventListener('click', (e) => {
+          const dot = e.target.closest('.review-dot');
+          if (!dot) return;
+          showReview(Number(dot.dataset.index));
+          startCarousel();
+        });
+      }
+
+      if (carousel) {
+        carousel.addEventListener('mouseenter', stopCarousel);
+        carousel.addEventListener('mouseleave', startCarousel);
+      }
+    }
+
+    function clearData() {
+      localStorage.clear();
+      sessionStorage.clear();
+      alert('Local data cleared');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateExp();
+
+      renderReviews();
+      showReview(0);
+      setupReviewEvents();
+      startCarousel();
+
+      const savedTheme = localStorage.getItem('selectedTheme') || 'modern-theme';
+      setTheme(savedTheme);
     });
-      window.parent.postMessage({ stylesheetId }, '*');
-    }
-    init()
   </script>
 </body>
 </html>
