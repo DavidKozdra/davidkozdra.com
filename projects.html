@@ -777,6 +777,16 @@
                 projectsContainer.textContent = "No projects match the filters.";
                 return;
             }
+
+            // Sort projects by end date (or start date if end date is missing), most recent first
+            projectsToRender.sort((a, b) => {
+                const aDate = getProjectEndDate(a) || getProjectStartDate(a) ||
+                                new Date(0); // Treat projects with no dates as very old    
+                const bDate = getProjectEndDate(b) || getProjectStartDate(b) ||
+                                new Date(0);
+                return bDate - aDate;
+            });
+
             projectsToRender.forEach(project => {
                 const projectDiv = document.createElement('div');
                 projectDiv.classList.add('project');
