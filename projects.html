@@ -608,9 +608,13 @@
             dateTo: null
         };
 
-        let allTechnologies = [...new Set(projects.flatMap(p => p.technologies))];
-        let allTags = [...new Set(projects.map(p => p.tag))];
-        let allTypes = [...new Set(projects.map(p => p.type))];
+        function normalizeProjectArray(value) {
+            return Array.isArray(value) ? value.filter(Boolean) : [];
+        }
+
+        let allTechnologies = [...new Set(projects.flatMap(p => normalizeProjectArray(p.technologies)))];
+        let allTags = [...new Set(projects.map(p => p.tag).filter(Boolean))];
+        let allTypes = [...new Set(projects.map(p => p.type).filter(Boolean))];
 
         const projectsContainer = document.getElementById('projects-container');
         const searchInput = document.getElementById('search-input');
@@ -630,19 +634,60 @@
             return Number.isNaN(parsed.getTime()) ? null : parsed;
         }
 
+        function getProjectStartDateValue(project) {
+            return project.startDate || project.date || null;
+        }
+
+        function getProjectEndDateValue(project) {
+            return project.endDate || null;
+        }
+
         function getProjectStartDate(project) {
-            return parseProjectDate(project.startDate || project.date);
+            return parseProjectDate(getProjectStartDateValue(project));
         }
 
         function getProjectEndDate(project) {
-            return parseProjectDate(project.endDate || project.startDate || project.date);
+            return parseProjectDate(project.endDate || getProjectStartDateValue(project));
         }
 
         function formatProjectDate(value) {
-            const parsed = parseProjectDate(value);
-            return parsed
-                ? parsed.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
-                : 'Never';
+            if (!value) return null;
+
+            if (/^\d{4}-\d{2}$/.test(value)) {
+                const [year, month] = value.split('-').map(Number);
+                const parsed = new Date(year, month - 1, 1);
+                return parsed.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
+            }
+
+            if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                const parsed = parseProjectDate(value);
+                return parsed
+                    ? parsed.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+                    : null;
+            }
+
+            return value;
+        }
+
+        function buildProjectDateText(project) {
+            const startText = formatProjectDate(getProjectStartDateValue(project));
+            const endText = formatProjectDate(getProjectEndDateValue(project));
+
+            if (!project.startDate && !project.endDate && startText) {
+                return `Date: ${startText}`;
+            }
+
+            const parts = [];
+            if (startText) parts.push(`Start: ${startText}`);
+            if (endText) parts.push(`Final: ${endText}`);
+            return parts.join(' • ');
+        }
+
+        function appendProjectParagraph(parent, text) {
+            if (!text) return;
+            const paragraph = document.createElement('p');
+            paragraph.textContent = text;
+            parent.appendChild(paragraph);
         }
 
         function createPill(items, selectedArray, type) {
@@ -752,13 +797,13 @@
                     const searchable = [
                         project.name,
                         project.type,
-                        project.platforms.join(' '),
-                        project.technologies.join(' '),
-                        project.people.join(' ')
+                        normalizeProjectArray(project.platforms).join(' '),
+                        normalizeProjectArray(project.technologies).join(' '),
+                        normalizeProjectArray(project.people).join(' ')
                     ].join(' ');
                     if (!regex.test(searchable)) return false;
                 }
-                if (filters.selectedTechnologies.length && !filters.selectedTechnologies.every(t => project.technologies.includes(t))) return false;
+                if (filters.selectedTechnologies.length && !filters.selectedTechnologies.every(t => normalizeProjectArray(project.technologies).includes(t))) return false;
                 if (filters.selectedTags.length && !filters.selectedTags.includes(project.tag)) return false;
                 if (filters.selectedTypes.length && !filters.selectedTypes.includes(project.type)) return false;
                 const projectStartDate = getProjectStartDate(project);
@@ -791,9 +836,12 @@
                 const projectDiv = document.createElement('div');
                 projectDiv.classList.add('project');
 
-                const image = document.createElement('img');
-                image.src = project.image;
-                projectDiv.appendChild(image);
+                if (project.image) {
+                    const image = document.createElement('img');
+                    image.src = project.image;
+                    image.alt = `${project.name || 'Project'} preview`;
+                    projectDiv.appendChild(image);
+                }
 
                 const content = document.createElement('div');
                 content.classList.add('project-content');
@@ -802,26 +850,13 @@
                 name.textContent = project.name;
                 content.appendChild(name);
 
-                const type = document.createElement('p');
-                type.textContent = project.type;
-                content.appendChild(type);
-
-                const projectDates = document.createElement('p');
-                projectDates.textContent = `Start: ${formatProjectDate(project.startDate || project.date)} • Final: ${formatProjectDate(project.endDate || project.startDate || project.date)}`;
-                content.appendChild(projectDates);
-
-                const platforms = document.createElement('p');
-                platforms.textContent = `Platforms: ${project.platforms.join(', ')}`;
-                content.appendChild(platforms);
-
-                const techs = document.createElement('p');
-                techs.textContent = `Technologies: ${project.technologies.join(', ')}`;
-                content.appendChild(techs);
+                appendProjectParagraph(content, project.type);
+                appendProjectParagraph(content, buildProjectDateText(project));
+                appendProjectParagraph(content, normalizeProjectArray(project.platforms).length ? `Platforms: ${normalizeProjectArray(project.platforms).join(', ')}` : '');
+                appendProjectParagraph(content, normalizeProjectArray(project.technologies).length ? `Technologies: ${normalizeProjectArray(project.technologies).join(', ')}` : '');
 
                 if (project.description) {
-                    const desc = document.createElement('p');
-                    desc.textContent = project.description;
-                    content.appendChild(desc);
+                    appendProjectParagraph(content, project.description);
                 }
 
                 const links = document.createElement('p');
@@ -840,12 +875,16 @@
                     github.target = '_blank';
                     links.appendChild(github);
                 }
-                content.appendChild(links);
+                if (links.childNodes.length) {
+                    content.appendChild(links);
+                }
 
-                const tag = document.createElement('span');
-                tag.className = `tag-badge tag-${project.tag}`;
-                tag.textContent = project.tag.charAt(0).toUpperCase() + project.tag.slice(1);
-                content.appendChild(tag);
+                if (project.tag) {
+                    const tag = document.createElement('span');
+                    tag.className = `tag-badge tag-${project.tag}`;
+                    tag.textContent = project.tag.charAt(0).toUpperCase() + project.tag.slice(1);
+                    content.appendChild(tag);
+                }
 
                 projectDiv.appendChild(content);
                 projectsContainer.appendChild(projectDiv);
