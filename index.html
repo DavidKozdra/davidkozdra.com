@@ -509,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await delay(500);
         document.getElementsByClassName("loader-page")[0].style.display = "none";
         document.getElementById("de").style.display = "block";
+        scheduleDesktopIconGridLayout();
         loading = false;
       } else {
 
@@ -619,13 +620,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         function CreateDesktopIconGrid() {
-      const iconSize = 100; // Adjust this based on the desired icon size
+      const desktopGrid = document.getElementsByClassName("desktop-grid")[0];
+      if (!desktopGrid) {
+        return;
+      }
+
+      const iconSize = desktopIcons[0]?.offsetWidth || 100;
       const margin = 20; // Adjust this based on the desired margin between icons
       const startX = 20; // Starting X position
       const startY = 20; // Starting Y position
 
       // Calculate the number of icons per row dynamically
-      const iconsPerRow = Math.floor((window.innerWidth - startX - margin) / (iconSize + margin));
+      const availableWidth = desktopGrid.clientWidth || window.innerWidth;
+      const iconsPerRow = Math.max(1, Math.floor((availableWidth - startX - margin) / (iconSize + margin)));
       let yPosition = startY;
       let xPosition = startX;
       let currentRow = 0;
@@ -711,8 +718,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    function scheduleDesktopIconGridLayout(attempt = 0) {
+      const desktopGrid = document.getElementsByClassName("desktop-grid")[0];
+      if (!desktopGrid) {
+        return;
+      }
 
-    CreateDesktopIconGrid();
+      const hasSize = desktopGrid.clientWidth > 0 && desktopGrid.clientHeight > 0;
+      if (!hasSize && attempt < 10) {
+        requestAnimationFrame(() => scheduleDesktopIconGridLayout(attempt + 1));
+        return;
+      }
+
+      CreateDesktopIconGrid();
+    }
+
+    scheduleDesktopIconGridLayout();
 
 
     // has to do it this way no event
@@ -841,6 +862,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Calculate new position
         let newTop = elmnt.offsetTop - pos2;
         let newLeft = elmnt.offsetLeft - pos1;
+
+        if (elmnt.classList.contains('desktop-icon')) {
+          const desktopGrid = elmnt.parentElement;
+          const maxTop = Math.max(0, desktopGrid.clientHeight - elmnt.offsetHeight);
+          const maxLeft = Math.max(0, desktopGrid.clientWidth - elmnt.offsetWidth);
+
+          newTop = Math.min(Math.max(0, newTop), maxTop);
+          newLeft = Math.min(Math.max(0, newLeft), maxLeft);
+        }
 
         // Set the element's new position:
         elmnt.style.top = newTop + "px";
@@ -1344,12 +1374,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize drag for desktop icons
     for (let i = 0; i < desktopIcons.length; i++) {
       dragElement(desktopIcons[i], desktopIcons[i]);
-      desktopIcons[i].onmouseup = function () {
-        
-        document.onpointermove = null;
-        closeDragElement();
-      };
-      
     }
 
     function moveElement(event, element) {
@@ -1386,7 +1410,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // applyBoundaries(activeWindows);
 
       }
-      CreateDesktopIconGrid();
+      scheduleDesktopIconGridLayout();
+    });
+
+    window.addEventListener('load', function () {
+      scheduleDesktopIconGridLayout();
     });
 
         // Function to handle messages from the intro iframe
