@@ -7,7 +7,7 @@
 
     <style>
 
-        div:hover {
+       .selectedColor {
             overflow: auto;
             border: 2px solid yellow;
         }
@@ -197,6 +197,13 @@
             colorDiv.style.cursor = 'pointer';
             colorDiv.addEventListener('click', () => {
                 setActiveColor(color);
+
+
+            for (let i = 0; i < colorContainer.children.length; i++) {
+                colorContainer.children[i].classList.remove('selectedColor');
+            }
+
+                colorDiv.classList.add('selectedColor');
             });
             colorContainer.appendChild(colorDiv);
         }
