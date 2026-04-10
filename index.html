@@ -31,10 +31,6 @@
   <noscript><link rel="stylesheet" href="styles/retro.css?v=1.4"></noscript>
   
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://main.d3722xrzul5kke.amplifyapp.com">
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link class="import" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <link rel="icon" type="image/x-icon" href="/images/brand/favicon.webp">
@@ -113,7 +109,10 @@
     
     /* Performance optimization for loader */
     .loader-page {
+      position: fixed;
+      inset: 0;
       content-visibility: auto;
+      contain-intrinsic-size: 100vh;
     }
     
     .loader-page[style*="display: block"] {
@@ -130,6 +129,11 @@
     .window {
       content-visibility: auto;
       contain: layout style paint;
+    }
+
+    .desktop-grid img,
+    .loader-display img {
+      display: block;
     }
   
       #clock-items {
@@ -201,7 +205,7 @@
           <div class="drop-down">
             <button style="padding: 0%;" aria-label="Open menu" aria-expanded="false" aria-haspopup="true"><picture>
                 <source srcset="images/brand/favicon.webp" type="image/webp">
-                <img src="images/brand/favicon.webp" alt="" id="task-bar-icon" width="32" height="32" role="presentation">
+                <img src="images/brand/favicon.webp" alt="" id="task-bar-icon" width="32" height="32" role="presentation" aria-hidden="true">
               </picture></button>
             <div class="drop-down-content">
               <!-- Tools Category -->
@@ -209,19 +213,19 @@
                   <div class="category-btn">Tools</div>
                   <div class="sub-category">
                       <button onclick="desktopIconRouter(event,'files')" aria-label="Open Files application">
-                          <img src="./images/ui-icons/File_System_icon.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Files
+                          <img src="./images/ui-icons/File_System_icon.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Files
                       </button>
                       <button onclick="desktopIconRouter(event,'notes')" aria-label="Open Notes application">
-                          <img src="./images/ui-icons/Notes.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Notes
+                          <img src="./images/ui-icons/Notes.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Notes
                       </button>
                       <button onclick="desktopIconRouter(event,'draw')" aria-label="Open Paint application">
-                          <img src="./images/ui-icons/Pallet.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Paint
+                          <img src="./images/ui-icons/Pallet.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Paint
                       </button>
                       <button onclick="desktopIconRouter(event,'calculator')" aria-label="Open Calculator application">
-                          <img src="./images/ui-icons/Calc.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Calculator
+                          <img src="./images/ui-icons/Calc.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Calculator
                       </button>
                       <button onclick="desktopIconRouter(event,'term')" aria-label="Open Terminal application">
-                          <img src="./images/ui-icons/Term.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Terminal
+                          <img src="./images/ui-icons/Term.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Terminal
                       </button>
                   </div>
               </div>
@@ -231,10 +235,10 @@
                   <div class="category-btn">Games</div>
                   <div class="sub-category">
                       <button onclick="desktopIconRouter(event,'GOL')" aria-label="Open Game of Life application">
-                          <img src="./images/ui-icons/GOL.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> Game of Life
+                          <img src="./images/ui-icons/GOL.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Game of Life
                       </button>
                       <button onclick="desktopIconRouter(event,'dragon_game')" aria-label="Open DBZ Fighter game">
-                          <img src="./images/ui-icons/dragon_fighter.webp" alt="" class="menu-icon" width="20" height="20" role="presentation"> DBZ Fighter
+                          <img src="./images/ui-icons/dragon_fighter.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> DBZ Fighter
                       </button>
                    
                   </div>
@@ -306,7 +310,7 @@
         <div class="desktop-icon" role="button" aria-label="Terminal application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'term')" tabindex="0">
           <picture>
             <source srcset="./images/ui-icons/Term.webp" type="image/webp">
-            <img src="./images/ui-icons/Term.webp" alt="" width="64" height="64" role="presentation">
+            <img src="./images/ui-icons/Term.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <p class="icon-text">Terminal</p>
         </div>
@@ -314,7 +318,7 @@
         <div class="desktop-icon" role="button" aria-label="DBZ Fighter game" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dragon_game')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'dragon_game')" tabindex="0">
           <picture>
             <source srcset="./images/ui-icons/dragon_fighter.webp" type="image/webp">
-            <img src="./images/ui-icons/dragon_fighter.webp" alt="" width="64" height="64" role="presentation">
+            <img src="./images/ui-icons/dragon_fighter.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <p class="icon-text">dbz fighter</p>
         </div>
@@ -322,7 +326,7 @@
         <div class="desktop-icon" role="button" aria-label="Paint application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'draw')" tabindex="0">
           <picture>
             <source srcset="./images/ui-icons/Pallet.webp" type="image/webp">
-            <img src="./images/ui-icons/Pallet.webp" alt="" width="64" height="64" role="presentation">
+            <img src="./images/ui-icons/Pallet.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <p class="icon-text">Draw</p>
         </div>
@@ -330,7 +334,7 @@
         <div class="desktop-icon" role="button" aria-label="Game of Life application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'GOL')" tabindex="0"> 
           <picture>
             <source srcset="./images/ui-icons/GOL.webp" type="image/webp">
-            <img src="./images/ui-icons/GOL.webp" alt="" width="64" height="64" role="presentation">
+            <img src="./images/ui-icons/GOL.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <div class="icon-text">
             <p>Game Of Life</p>
@@ -341,7 +345,7 @@
 <div class="desktop-icon" role="button" aria-label="Calculator application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'calculator')" tabindex="0">
           <picture>
             <source srcset="./images/ui-icons/Calc.webp" type="image/webp">
-            <img src="./images/ui-icons/Calc.webp" alt="" width="64" height="64" role="presentation">
+            <img src="./images/ui-icons/Calc.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <div class="icon-text">
             <p>Calculator</p>
@@ -353,7 +357,7 @@
           style="cursor: pointer;">
           <picture>
             <source srcset="./images/ui-icons/Notes.webp" type="image/webp">
-            <img src="./images/ui-icons/Notes.webp" alt="" width="64" height="64" role="presentation">
+            <img src="./images/ui-icons/Notes.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <div class="icon-text">
             <p>Notes</p>
@@ -362,7 +366,7 @@
 
         <div class="desktop-icon" role="button" aria-label="Files application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'files')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'files')" tabindex="0"
         style="cursor: pointer;">
-        <img src="./images/ui-icons/File_System_icon.webp" alt="" width="64" height="64" role="presentation"></img>
+        <img src="./images/ui-icons/File_System_icon.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
         <div class="icon-text">
           <p>Files</p>
         </div>
