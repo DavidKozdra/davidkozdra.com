@@ -282,11 +282,11 @@
                 author: "0ME9A",
                 description: "A secure password generator and manager for your daily needs.",
                 url: "https://password.ome9a.com/",
-                icon: "./images/brand/favicon.webp",
+                icon: "https://password.ome9a.com/twitter.png",
                 width: 1200,
                 fullscreen: true,
                 external: true,
-                tags: ["tool"]
+                tags: ["tool", "open-source"]
             },
             {
                 id: "lofiplayer",
@@ -294,11 +294,11 @@
                 author: "riccardobertolini",
                 description: "A relaxing Lofi Music Player to help you focus or unwind.",
                 url: "https://lofi-music-eight.vercel.app/",
-                icon: "./images/brand/favicon.webp",
+                icon: "https://lofi-music-eight.vercel.app/img/lofi.jpg",
                 width: 1200,
                 fullscreen: true,
                 external: true,
-                tags: ["tool"]
+                tags: ["tool", "open-source"]
             }
         ];
 
@@ -416,7 +416,7 @@
                     <div class="app-card-top">
                         <div class="app-icon"><img src="${app.favicon}" onerror="this.onerror=null;this.src='./images/brand/favicon.webp';" alt="${app.name} icon"></div>
                         <div class="app-meta">
-                            <div class="app-name">${app.name}${app.external ? '<span class="badge-external">Super cool</span>' : ''}</div>
+                            <div class="app-name">${app.name}${app.external ? '<span class="badge-external">External</span>' : ''}</div>
                             <div class="app-author">${app.author}</div>
                         </div>
 
