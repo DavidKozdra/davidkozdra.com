@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Store</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+        .store-header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            padding: 24px 28px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .store-header h1 { font-size: 1.4rem; font-weight: 600; }
+        .store-header i { font-size: 1.6rem; }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            padding: 24px;
+        }
+        .app-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: box-shadow .15s;
+        }
+        .app-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+        .app-card-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        .app-meta { flex: 1; }
+        .app-name { font-size: 1.05rem; font-weight: 600; }
+        .app-author { font-size: .8rem; color: #666; margin-top: 2px; }
+        .app-desc { font-size: .85rem; color: #555; line-height: 1.45; }
+        .app-actions { display: flex; gap: 8px; margin-top: auto; }
+        .btn-install {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: #fff;
+            font-size: .85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background .15s;
+        }
+        .btn-install:hover { background: #1d4ed8; }
+        .btn-install.installed {
+            background: #d1d5db;
+            color: #555;
+            cursor: default;
+        }
+        .btn-install.installed:hover { background: #d1d5db; }
+        .btn-uninstall {
+            padding: 8px 14px;
+            border: 1px solid #dc2626;
+            border-radius: 8px;
+            background: transparent;
+            color: #dc2626;
+            font-size: .85rem;
+            cursor: pointer;
+            display: none;
+        }
+        .btn-uninstall:hover { background: #fef2f2; }
+    </style>
+</head>
+<body>
+    <div class="store-header">
+        <i class="fas fa-store"></i>
+        <h1>App Store</h1>
+    </div>
+    <div class="app-grid" id="app-grid"></div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        const APPS = [
+            {
+                id: "readyeshua",
+                name: "Read Yeshua",
+                author: "readyeshua.com",
+                description: "Read and study scripture online.",
+                icon: "fas fa-book-bible",
+                url: "https://readyeshua.com/read",
+                width: 1200,
+                fullscreen: true
+            },
+            {
+                id: "redchip",
+                name: "RedChip Stocks",
+                author: "redchip.com",
+                description: "Track and research small-cap stocks and investments.",
+                icon: "fas fa-chart-line",
+                url: "https://redchip.com/stocks",
+                width: 1400,
+                fullscreen: true
+            },
+            {
+                id: "muddygame",
+                name: "Muddy Game",
+                author: "muddygame.net",
+                description: "Play games online in your browser.",
+                icon: "fas fa-gamepad",
+                url: "https://muddygame.net/game/",
+                width: 1000,
+                fullscreen: false
+            }
+        ];
+
+        function getInstalledApps() {
+            try {
+                return JSON.parse(localStorage.getItem("installedApps")) || [];
+            } catch { return []; }
+        }
+
+        function saveInstalledApps(list) {
+            localStorage.setItem("installedApps", JSON.stringify(list));
+        }
+
+        function isInstalled(appId) {
+            return getInstalledApps().includes(appId);
+        }
+
+        function installApp(appId) {
+            const app = APPS.find(a => a.id === appId);
+            if (!app) return;
+            let installed = getInstalledApps();
+            if (!installed.includes(appId)) {
+                installed.push(appId);
+                saveInstalledApps(installed);
+            }
+            // Notify parent DE to add desktop icon
+            window.parent.postMessage({ action: "installApp", app: app }, "*");
+            renderApps();
+        }
+
+        function uninstallApp(appId) {
+            let installed = getInstalledApps();
+            installed = installed.filter(id => id !== appId);
+            saveInstalledApps(installed);
+            // Notify parent DE to remove desktop icon
+            window.parent.postMessage({ action: "uninstallApp", appId: appId }, "*");
+            renderApps();
+        }
+
+        function renderApps() {
+            const grid = document.getElementById("app-grid");
+            grid.innerHTML = "";
+            APPS.forEach(app => {
+                const installed = isInstalled(app.id);
+                const card = document.createElement("div");
+                card.className = "app-card";
+                card.innerHTML = `
+                    <div class="app-card-top">
+                        <div class="app-icon"><i class="${app.icon}"></i></div>
+                        <div class="app-meta">
+                            <div class="app-name">${app.name}</div>
+                            <div class="app-author">${app.author}</div>
+                        </div>
+                    </div>
+                    <div class="app-desc">${app.description}</div>
+                    <div class="app-actions">
+                        <button class="btn-install ${installed ? 'installed' : ''}"
+                            ${installed ? 'disabled' : ''}
+                            data-id="${app.id}">
+                            ${installed ? 'Installed' : 'Install'}
+                        </button>
+                        <button class="btn-uninstall" data-id="${app.id}"
+                            style="display:${installed ? 'inline-block' : 'none'}">
+                            Uninstall
+                        </button>
+                    </div>
+                `;
+                card.querySelector(".btn-install").addEventListener("click", function() {
+                    if (!installed) installApp(app.id);
+                });
+                card.querySelector(".btn-uninstall").addEventListener("click", function() {
+                    uninstallApp(app.id);
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        renderApps();
+    </script>
+</body>
+</html>

@@ -379,6 +379,14 @@
           <p>DK-Boy</p>
         </div>
       </div>
+
+        <div class="desktop-icon" role="button" aria-label="App Store" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'appstore')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'appstore')" tabindex="0"
+        style="cursor: pointer;">
+        <i class="fas fa-store" style="font-size:48px;color:#2563eb;" aria-hidden="true"></i>
+        <div class="icon-text">
+          <p>App Store</p>
+        </div>
+      </div>
       </div>
     </main>
 
@@ -1197,6 +1205,34 @@ document.addEventListener('DOMContentLoaded', () => {
           createWindow("DK-Boy", dkboy, "./images/ui-icons/dk-boy.svg", 1800, true, true);
           break;
 
+        case "appstore":
+          let appstore = document.createElement("iframe");
+          appstore.name = "App Store";
+          appstore.title = "App Store";
+          appstore.src = "./AppStore.html";
+          appstore.loading = "lazy";
+          appstore.style.height = "100%";
+          appstore.style.width = "100%";
+          appstore.style.marginTop = "50px";
+          createWindow("App Store", appstore, null, 900, true);
+          break;
+
+        case "installed-app":
+          if (data && data.url) {
+            let installedApp = document.createElement("iframe");
+            installedApp.name = data.name || "App";
+            installedApp.title = data.name || "App";
+            installedApp.src = data.url;
+            installedApp.loading = "lazy";
+            installedApp.style.height = "100%";
+            installedApp.style.width = "100%";
+            installedApp.style.marginTop = "50px";
+            let appWidth = data.width || 1000;
+            let appFullscreen = data.fullscreen || false;
+            createWindow(data.name || "App", installedApp, null, appWidth, true, appFullscreen);
+          }
+          break;
+
         case "GOL":
           let GOLcontainer = document.createElement("iframe");
           GOLcontainer.name = "Game of Life";
@@ -1475,6 +1511,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Handle app install from App Store
+      if (event.data && event.data.action === 'installApp' && event.data.app) {
+        addInstalledAppIcon(event.data.app);
+        return;
+      }
+
+      // Handle app uninstall from App Store
+      if (event.data && event.data.action === 'uninstallApp' && event.data.appId) {
+        removeInstalledAppIcon(event.data.appId);
+        return;
+      }
+
       // Handle theme changes
       if (event.data && event.data.stylesheetId) {
         // Disable all parent stylesheets
@@ -1490,6 +1538,60 @@ document.addEventListener('DOMContentLoaded', () => {
         target_theme.disabled = false;
       }
     }
+
+    function addInstalledAppIcon(app) {
+      // Don't add duplicate
+      if (document.getElementById('installed-app-' + app.id)) return;
+      let grid = document.querySelector('.desktop-grid');
+      let icon = document.createElement('div');
+      icon.classList.add('desktop-icon');
+      icon.id = 'installed-app-' + app.id;
+      icon.setAttribute('role', 'button');
+      icon.setAttribute('tabindex', '0');
+      icon.setAttribute('aria-label', app.name);
+      icon.style.cursor = 'pointer';
+      icon.onclick = function(){ selectIcon(event); };
+      icon.ondblclick = function(){
+        desktopIconRouter(event, 'installed-app', app.name, app);
+      };
+      icon.onkeypress = function(e){
+        if(e.key === 'Enter') desktopIconRouter(e, 'installed-app', app.name, app);
+      };
+      let iconEl = document.createElement('i');
+      iconEl.className = app.icon;
+      iconEl.style.fontSize = '48px';
+      iconEl.style.color = '#2563eb';
+      iconEl.setAttribute('aria-hidden', 'true');
+      let text = document.createElement('div');
+      text.classList.add('icon-text');
+      text.innerHTML = '<p>' + app.name + '</p>';
+      icon.appendChild(iconEl);
+      icon.appendChild(text);
+      grid.appendChild(icon);
+      dragElement(icon, icon);
+    }
+
+    function removeInstalledAppIcon(appId) {
+      let el = document.getElementById('installed-app-' + appId);
+      if (el) el.remove();
+    }
+
+    // Restore installed app icons on load
+    (function restoreInstalledApps() {
+      try {
+        let installed = JSON.parse(localStorage.getItem('installedApps')) || [];
+        // App registry matching AppStore.html
+        const APP_REGISTRY = [
+          { id: 'readyeshua', name: 'Read Yeshua', icon: 'fas fa-book-bible', url: 'https://readyeshua.com/read', width: 1200, fullscreen: true },
+          { id: 'redchip', name: 'RedChip Stocks', icon: 'fas fa-chart-line', url: 'https://redchip.com/stocks', width: 1400, fullscreen: true },
+          { id: 'muddygame', name: 'Muddy Game', icon: 'fas fa-gamepad', url: 'https://muddygame.net/game/', width: 1000, fullscreen: false }
+        ];
+        installed.forEach(id => {
+          let app = APP_REGISTRY.find(a => a.id === id);
+          if (app) addInstalledAppIcon(app);
+        });
+      } catch(e) {}
+    })();
 
   </script>
 
