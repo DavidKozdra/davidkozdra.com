@@ -1211,31 +1211,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         case "installed-app":
           if (data && data.url) {
-
-            // not our URL
-            if (data.external) {
-              // External sites often deny iframe embedding (X-Frame-Options/CSP), so launch in a tab.
-              const opened = window.open(data.url, "_blank", "noopener,noreferrer");
-              if (!opened) {
-                const blockedMessage = document.createElement("div");
-                blockedMessage.style.padding = "16px";
-                blockedMessage.innerHTML = "<p>Popup blocked by browser. Click to open:</p>";
-
-                const openLink = document.createElement("a");
-                openLink.href = data.url;
-                openLink.target = "_blank";
-                openLink.rel = "noopener noreferrer";
-                openLink.textContent = data.url;
-
-                blockedMessage.appendChild(openLink);
-
-                let appWidth = 620;
-                let appFavicon = data.favicon || getFaviconUrl(data.url);
-                createWindow((data.name || "App") + " (External)", blockedMessage, appFavicon, appWidth, false, false);
-              }
-
-
-            } else {
               let installedApp = document.createElement("iframe");
               installedApp.name = data.name || "App";
               installedApp.title = data.name || "App";
@@ -1248,7 +1223,6 @@ document.addEventListener('DOMContentLoaded', () => {
               let appFullscreen = data.fullscreen || false;
               let appFavicon = data.favicon || getFaviconUrl(data.url);
               createWindow(data.name || "App", installedApp, appFavicon, appWidth, true, appFullscreen);
-            }
           }
           break;
 
@@ -1578,14 +1552,7 @@ document.addEventListener('DOMContentLoaded', () => {
       icon.onclick = function(){ selectIcon(event); };
 
       function launchInstalledAppFromUserGesture(evt) {
-        if (app.external && app.url) {
-          const opened = window.open(app.url, '_blank', 'noopener,noreferrer');
-          if (!opened) {
-            // Fallback UI if popup was blocked by the browser.
-            desktopIconRouter(evt, 'installed-app', app.name, app);
-          }
-          return;
-        }
+ 
         desktopIconRouter(evt, 'installed-app', app.name, app);
       }
 
@@ -1631,7 +1598,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // App registry matching AppStore.html
         const APP_REGISTRY = [
-          { id: 'dkboy', name: 'DK-Boy', url: 'https://dk-boy.davidkozdra.workers.dev/', favicon: './images/ui-icons/dk-boy.svg', width: 1200, fullscreen: true, external: true },
+          { id: 'dkboy', name: 'DK-Boy', url: 'https://dk-boy.davidkozdra.workers.dev/', favicon: './images/ui-icons/dk-boy.svg', width: 1200, fullscreen: true, external: false },
           { id: 'readyeshua', name: 'Read Yeshua', url: 'https://readyeshua.com/read', width: 1200, fullscreen: true, external: true },
           { id: 'bearpenny', name: 'BearPenny', url: './BearPenny/index.html', favicon: './BearPenny/images/logo.svg', width: 1200, fullscreen: true, external: false },
           { id: 'muddygame', name: 'Muddy Game', url: 'https://muddygame.net/game/', width: 1000, fullscreen: false, external: true },

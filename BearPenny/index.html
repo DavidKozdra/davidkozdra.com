@@ -89,6 +89,26 @@
         .bal-portfolio { color: #4ade80; }
         .bal-tax { color: #f87171; }
         .bal-tax.safe { color: #4ade80; }
+        .bal-ray { color: #60a5fa; }
+        .btn-ray {
+            margin-left: auto;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-ray:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+        .btn-ray:not(:disabled):hover {
+            border-color: #60a5fa;
+            color: #60a5fa;
+        }
         /* Prison overlay */
         .prison-overlay {
             position: fixed; inset: 0; z-index: 200;
@@ -286,6 +306,8 @@
                 <div class="bal-item"><span class="bal-label">Gold</span> <span class="bal-val bal-gold" id="bal-gold">0</span></div>
                 <div class="bal-item"><span class="bal-label">Portfolio</span> <span class="bal-val bal-portfolio" id="bal-portfolio">$0</span></div>
                 <div class="bal-item"><span class="bal-label">Next Tax</span> <span class="bal-val bal-tax" id="bal-tax">5:00</span></div>
+                <div class="bal-item"><span class="bal-label">Ray Timer</span> <span class="bal-val bal-ray" id="ray-timer">2:00</span></div>
+                <button class="btn-ray" id="btn-ray" onclick="openRayBossBearMode()" disabled>Collect Pennies (Ray the Boss Bear)</button>
             </div>
             <div class="bp-toolbar">
                 <input type="text" placeholder="Search ticker or company..." id="search-input">
@@ -403,20 +425,65 @@
     </div>
 </div>
 
+<script src="game.js"></script>
 <script>
-    // Determine mode: alternates each open via localStorage counter
-    var openCount = parseInt(localStorage.getItem('bearPennyOpens') || '0');
-    openCount++;
-    localStorage.setItem('bearPennyOpens', openCount);
-    var isGameMode = openCount % 2 === 0;
-
     // Always init finance
     initFinance();
 
-    if (isGameMode) {
-        document.getElementById('game-overlay').classList.remove('hidden');
-        initGame();
+    var RAY_COOLDOWN_SECONDS = 120;
+    var raySecondsLeft = RAY_COOLDOWN_SECONDS;
+    var rayTimerInterval = null;
+    var rayGameInitialized = false;
+
+    function formatRayTimer(totalSeconds) {
+        var m = Math.floor(totalSeconds / 60);
+        var s = totalSeconds % 60;
+        return m + ':' + (s < 10 ? '0' : '') + s;
     }
+
+    function updateRayTimerUI() {
+        var timerEl = document.getElementById('ray-timer');
+        var buttonEl = document.getElementById('btn-ray');
+        var ready = raySecondsLeft <= 0;
+        timerEl.textContent = ready ? 'READY' : formatRayTimer(raySecondsLeft);
+        buttonEl.disabled = !ready;
+    }
+
+    function startRayTimer() {
+        updateRayTimerUI();
+        if (rayTimerInterval) clearInterval(rayTimerInterval);
+        rayTimerInterval = setInterval(function() {
+            if (raySecondsLeft <= 0) {
+                updateRayTimerUI();
+                return;
+            }
+            raySecondsLeft--;
+            updateRayTimerUI();
+        }, 1000);
+    }
+
+    function openRayBossBearMode() {
+        if (raySecondsLeft > 0) return;
+
+        if (!rayGameInitialized && typeof initGame === 'function') {
+            initGame();
+            rayGameInitialized = true;
+        }
+
+        document.getElementById('game-overlay').classList.remove('hidden');
+        document.getElementById('game-start').classList.remove('hidden');
+        document.getElementById('game-over').classList.add('hidden');
+        document.getElementById('game-hud').classList.add('hidden');
+        document.getElementById('game-canvas').classList.add('hidden');
+        if (typeof refreshStartScreen === 'function') {
+            refreshStartScreen();
+        }
+
+        raySecondsLeft = RAY_COOLDOWN_SECONDS;
+        updateRayTimerUI();
+    }
+
+    startRayTimer();
 
     // ==================== FINANCE MODE ====================
     var tickerData = [];
@@ -490,8 +557,13 @@
             fetch('./entities/tickers.json')
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
-                    tickerData = data;
-                    ALL_STOCKS = generate4000Stocks(data);
+                    var seedConfig = decodeSeedConfig(data);
+                    tickerData = seedConfig.seeds;
+                    ALL_STOCKS = generate4000Stocks(seedConfig.seeds, {
+                        seed: seedConfig.seed,
+                        target: seedConfig.target,
+                        sectors: seedConfig.sectors
+                    });
                     filteredStocks = ALL_STOCKS.slice();
                     currentPage = 1;
                     renderCurrentPage();
@@ -499,7 +571,7 @@
                     wireFilters();
                 })
                 .catch(function() {
-                    ALL_STOCKS = generate4000Stocks(generateStocksFallbackSeeds());
+                    ALL_STOCKS = generate4000Stocks(generateStocksFallbackSeeds(), { seed: 42, target: 4000 });
                     filteredStocks = ALL_STOCKS.slice();
                     currentPage = 1;
                     renderCurrentPage();
@@ -520,6 +592,7 @@
 
         // Animate stock prices every 4 seconds
         setInterval(function() {
+            if (!Array.isArray(ALL_STOCKS)) return;
             ALL_STOCKS.forEach(function(s) {
                 s.change = parseFloat(((Math.random() - 0.45) * 6).toFixed(2));
                 s.price = Math.max(0.01, s.price * (1 + s.change / 100));
@@ -609,11 +682,53 @@
         };
     }
 
-    function generate4000Stocks(seeds) {
+    function decodeSeedConfig(payload) {
+        if (Array.isArray(payload)) {
+            return {
+                seed: 42,
+                target: 4000,
+                sectors: SECTORS,
+                seeds: payload
+            };
+        }
+
+        if (payload && payload.format === 'bp-seed-v1' && Array.isArray(payload.rows)) {
+            var parsedSeeds = payload.rows.map(function(row) {
+                var parts = String(row).split('|');
+                return {
+                    ticker: (parts[0] || '').trim().toUpperCase(),
+                    company: (parts[1] || 'Unknown Co').trim(),
+                    sector: (parts[2] || 'Technology').trim(),
+                    price: parseFloat(parts[3]) || 1
+                };
+            }).filter(function(item) {
+                return item.ticker && item.company;
+            });
+
+            return {
+                seed: typeof payload.seed === 'number' ? payload.seed : 42,
+                target: typeof payload.target === 'number' ? payload.target : 4000,
+                sectors: Array.isArray(payload.sectors) && payload.sectors.length ? payload.sectors : SECTORS,
+                seeds: parsedSeeds
+            };
+        }
+
+        return {
+            seed: 42,
+            target: 4000,
+            sectors: SECTORS,
+            seeds: generateStocksFallbackSeeds()
+        };
+    }
+
+    function generate4000Stocks(seeds, options) {
+        options = options || {};
+        if (!Array.isArray(seeds)) seeds = generateStocksFallbackSeeds();
         var stocks = [];
         var usedTickers = {};
-        var rng = mulberry32(42);
+        var rng = mulberry32(typeof options.seed === 'number' ? options.seed : 42);
         var signals = ['buy','sell','hold'];
+        var sectorPool = Array.isArray(options.sectors) && options.sectors.length ? options.sectors : SECTORS;
 
         // Add seed stocks first
         seeds.forEach(function(item) {
@@ -631,7 +746,7 @@
         });
 
         // Generate remaining up to 4000
-        var TARGET = 4000;
+        var TARGET = typeof options.target === 'number' ? options.target : 4000;
         var attempt = 0;
         while (stocks.length < TARGET && attempt < TARGET * 3) {
             attempt++;
@@ -651,7 +766,7 @@
             if (usedTickers[ticker]) continue;
             usedTickers[ticker] = true;
 
-            var sector = SECTORS[Math.floor(rng() * SECTORS.length)];
+            var sector = sectorPool[Math.floor(rng() * sectorPool.length)];
             var price = parseFloat((rng() * 800 + 0.10).toFixed(2));
             var change = parseFloat(((rng() - 0.45) * 8).toFixed(2));
             var volume = Math.floor(rng() * 50000000) + 100000;
@@ -896,8 +1011,6 @@
         startTaxTimer();
         renderCurrentPage();
     }
-
 </script>
-<script src="game.js"></script>
 </body>
 </html>
