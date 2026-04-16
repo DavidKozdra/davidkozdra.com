@@ -208,41 +208,7 @@
                 <img src="images/brand/favicon.webp" alt="" id="task-bar-icon" width="32" height="32" role="presentation" aria-hidden="true">
               </picture></button>
             <div class="drop-down-content">
-              <!-- Tools Category -->
-              <div class="category">
-                  <div class="category-btn">Tools</div>
-                  <div class="sub-category">
-                      <button onclick="desktopIconRouter(event,'files')" aria-label="Open Files application">
-                          <img src="./images/ui-icons/File_System_icon.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Files
-                      </button>
-                      <button onclick="desktopIconRouter(event,'notes')" aria-label="Open Notes application">
-                          <img src="./images/ui-icons/Notes.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Notes
-                      </button>
-                      <button onclick="desktopIconRouter(event,'draw')" aria-label="Open Paint application">
-                          <img src="./images/ui-icons/Pallet.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Paint
-                      </button>
-                      <button onclick="desktopIconRouter(event,'calculator')" aria-label="Open Calculator application">
-                          <img src="./images/ui-icons/Calc.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Calculator
-                      </button>
-                      <button onclick="desktopIconRouter(event,'term')" aria-label="Open Terminal application">
-                          <img src="./images/ui-icons/Term.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Terminal
-                      </button>
-                  </div>
-              </div>
-          
-              <!-- Games Category -->
-              <div class="category">
-                  <div class="category-btn">Games</div>
-                  <div class="sub-category">
-                      <button onclick="desktopIconRouter(event,'GOL')" aria-label="Open Game of Life application">
-                          <img src="./images/ui-icons/GOL.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> Game of Life
-                      </button>
-                      <button onclick="desktopIconRouter(event,'dragon_game')" aria-label="Open DBZ Fighter game">
-                          <img src="./images/ui-icons/dragon_fighter.webp" alt="" class="menu-icon" width="20" height="20" role="presentation" aria-hidden="true"> DBZ Fighter
-                      </button>
-                   
-                  </div>
-              </div>
+              <div id="dropdown-app-sections"></div>
           
               <!-- Settings -->
               <button id="settingsButton" onclick="desktopIconRouter(event,'System')" aria-label="Open System settings">
@@ -461,6 +427,136 @@ document.addEventListener('DOMContentLoaded', () => {
     let winLen = 0;
     let activeWindowCount = 0;
     let loading = true;
+
+    const CORE_MENU_APPS = [
+      { id: 'files', name: 'Files', route: 'files', icon: './images/ui-icons/File_System_icon.webp', tags: ['tool'] },
+      { id: 'notes', name: 'Notes', route: 'notes', icon: './images/ui-icons/Notes.webp', tags: ['tool'] },
+      { id: 'draw', name: 'Paint', route: 'draw', icon: './images/ui-icons/Pallet.webp', tags: ['tool'] },
+      { id: 'calculator', name: 'Calculator', route: 'calculator', icon: './images/ui-icons/Calc.webp', tags: ['tool'] },
+      { id: 'term', name: 'Terminal', route: 'term', icon: './images/ui-icons/Term.webp', tags: ['tool'] },
+      { id: 'appstore', name: 'App Store', route: 'appstore', icon: './images/brand/favicon.webp', tags: ['tool'] },
+      { id: 'GOL', name: 'Game of Life', route: 'GOL', icon: './images/ui-icons/GOL.webp', tags: ['game'] },
+      { id: 'dragon_game', name: 'DBZ Fighter', route: 'dragon_game', icon: './images/ui-icons/dragon_fighter.webp', tags: ['game'] }
+    ];
+
+    const APP_STORE_REGISTRY = [
+      { id: 'dkboy', name: 'DK-Boy', url: 'https://dk-boy.davidkozdra.workers.dev/', favicon: './images/ui-icons/dk-boy.svg', width: 1200, fullscreen: true, external: false, tags: ['game'] },
+      { id: 'readyeshua', name: 'Read Yeshua', url: 'https://readyeshua.com/read', width: 1200, fullscreen: true, external: true, tags: ['tool'] },
+      { id: 'bearpenny', name: 'BearPenny', url: './BearPenny/index.html', favicon: './BearPenny/images/logo.svg', width: 1200, fullscreen: true, external: false, tags: ['game'] },
+      { id: 'muddygame', name: 'Muddy Game', url: 'https://muddygame.net/game/', width: 1000, fullscreen: false, external: true, tags: ['game'] },
+      { id: 'peoplebook', name: 'PeopleBook', url: './Fake-contact-generator-idea.html', favicon: './images/ui-icons/peoplebook.svg', width: 1200, fullscreen: true, external: false, tags: ['tool'] }
+    ];
+
+    function normalizeAppTags(tags) {
+      if (!Array.isArray(tags) || tags.length === 0) {
+        return ['tool'];
+      }
+      return tags.map(tag => String(tag).toLowerCase())
+        .map(tag => tag === 'tools' ? 'tool' : tag)
+        .map(tag => tag === 'games' ? 'game' : tag);
+    }
+
+    function upsertStoreRegistryApp(app) {
+      if (!app || !app.id) return;
+      const normalized = {
+        ...app,
+        tags: normalizeAppTags(app.tags)
+      };
+      const index = APP_STORE_REGISTRY.findIndex(item => item.id === normalized.id);
+      if (index === -1) {
+        APP_STORE_REGISTRY.push(normalized);
+      } else {
+        APP_STORE_REGISTRY[index] = { ...APP_STORE_REGISTRY[index], ...normalized };
+      }
+    }
+
+    function getInstalledAppIds() {
+      try {
+        return JSON.parse(localStorage.getItem('installedApps')) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function createDropDownAppButton(app) {
+      const button = document.createElement('button');
+      button.setAttribute('aria-label', `Open ${app.name} application`);
+
+      const icon = document.createElement('img');
+      icon.src = app.icon || app.favicon || getFaviconUrl(app.url);
+      icon.alt = '';
+      icon.classList.add('menu-icon');
+      icon.width = 20;
+      icon.height = 20;
+      icon.setAttribute('role', 'presentation');
+      icon.setAttribute('aria-hidden', 'true');
+
+      button.appendChild(icon);
+      button.appendChild(document.createTextNode(' ' + app.name));
+
+      button.addEventListener('click', function(evt) {
+        if (app.route === 'installed-app') {
+          desktopIconRouter(evt, 'installed-app', app.name, app.data);
+          return;
+        }
+        desktopIconRouter(evt, app.route);
+      });
+
+      return button;
+    }
+
+    function renderDropDownContent() {
+      const sectionsRoot = document.getElementById('dropdown-app-sections');
+      if (!sectionsRoot) return;
+
+      sectionsRoot.innerHTML = '';
+
+      const installedIds = getInstalledAppIds();
+      const installedApps = installedIds
+        .map(id => APP_STORE_REGISTRY.find(app => app.id === id))
+        .filter(Boolean)
+        .map(app => ({
+          id: app.id,
+          name: app.name,
+          route: 'installed-app',
+          icon: app.favicon || getFaviconUrl(app.url),
+          tags: normalizeAppTags(app.tags),
+          data: app
+        }));
+
+      const allApps = [...CORE_MENU_APPS, ...installedApps];
+      const uniqueApps = allApps.filter((app, index, arr) => arr.findIndex(other => other.id === app.id) === index);
+
+      const menuSections = [
+        { tag: 'tool', label: 'Tools' },
+        { tag: 'game', label: 'Games' }
+      ];
+
+      menuSections.forEach(section => {
+        const sectionApps = uniqueApps.filter(app => normalizeAppTags(app.tags).includes(section.tag));
+        if (sectionApps.length === 0) return;
+
+        sectionApps.sort((a, b) => a.name.localeCompare(b.name));
+
+        const category = document.createElement('div');
+        category.classList.add('category');
+
+        const categoryTitle = document.createElement('div');
+        categoryTitle.classList.add('category-btn');
+        categoryTitle.textContent = section.label;
+
+        const subCategory = document.createElement('div');
+        subCategory.classList.add('sub-category');
+
+        sectionApps.forEach(app => {
+          subCategory.appendChild(createDropDownAppButton(app));
+        });
+
+        category.appendChild(categoryTitle);
+        category.appendChild(subCategory);
+        sectionsRoot.appendChild(category);
+      });
+    }
 
     
     const adjustBoundaries = () => {
@@ -1583,13 +1679,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Handle app install from App Store
       if (event.data && event.data.action === 'installApp' && event.data.app) {
+        upsertStoreRegistryApp(event.data.app);
         addInstalledAppIcon(event.data.app);
+        renderDropDownContent();
         return;
       }
 
       // Handle app uninstall from App Store
       if (event.data && event.data.action === 'uninstallApp' && event.data.appId) {
         removeInstalledAppIcon(event.data.appId);
+        renderDropDownContent();
         return;
       }
 
@@ -1673,18 +1772,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           installed = JSON.parse(storedInstalledApps) || [];
         }
-        // App registry matching AppStore.html
-        const APP_REGISTRY = [
-          { id: 'dkboy', name: 'DK-Boy', url: 'https://dk-boy.davidkozdra.workers.dev/', favicon: './images/ui-icons/dk-boy.svg', width: 1200, fullscreen: true, external: false },
-          { id: 'readyeshua', name: 'Read Yeshua', url: 'https://readyeshua.com/read', width: 1200, fullscreen: true, external: true },
-          { id: 'bearpenny', name: 'BearPenny', url: './BearPenny/index.html', favicon: './BearPenny/images/logo.svg', width: 1200, fullscreen: true, external: false },
-          { id: 'muddygame', name: 'Muddy Game', url: 'https://muddygame.net/game/', width: 1000, fullscreen: false, external: true },
-          { id: 'peoplebook', name: 'PeopleBook', url: './Fake-contact-generator-idea.html', favicon: './images/ui-icons/peoplebook.svg', width: 1200, fullscreen: true, external: false }
-        ];
         installed.forEach(id => {
-          let app = APP_REGISTRY.find(a => a.id === id);
+          let app = APP_STORE_REGISTRY.find(a => a.id === id);
           if (app) addInstalledAppIcon(app);
         });
+        renderDropDownContent();
       } catch(e) {}
     })();
 
