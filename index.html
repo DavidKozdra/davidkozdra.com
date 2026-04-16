@@ -371,6 +371,14 @@
           <p>Files</p>
         </div>
       </div>
+
+        <div class="desktop-icon" role="button" aria-label="DK-Boy emulator" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dk-boy')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'dk-boy')" tabindex="0"
+        style="cursor: pointer;">
+        <img src="./images/ui-icons/dk-boy.svg" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+        <div class="icon-text">
+          <p>DK-Boy</p>
+        </div>
+      </div>
       </div>
     </main>
 
@@ -1175,6 +1183,18 @@ document.addEventListener('DOMContentLoaded', () => {
           draw.style.width = "100%";
           draw.style.marginTop = "50px";
           createWindow("Drawing", draw, "./images/ui-icons/Pallet.webp", 1000, false);
+          break;
+
+        case "dk-boy":
+          let dkboy = document.createElement("iframe");
+          dkboy.name = "DK-Boy";
+          dkboy.title = "DK-Boy";
+          dkboy.src = "https://dk-boy.davidkozdra.workers.dev/";
+          dkboy.loading = "lazy";
+          dkboy.style.height = "100%";
+          dkboy.style.width = "100%";
+          dkboy.style.marginTop = "50px";
+          createWindow("DK-Boy", dkboy, "./images/ui-icons/dk-boy.svg", 1800, true, true);
           break;
 
         case "GOL":
