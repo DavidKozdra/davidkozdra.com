@@ -729,6 +729,82 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    function getDesktopIconTileWidth(icons) {
+      let tileWidth = 96;
+
+      for (let i = 0; i < icons.length; i++) {
+        const label = icons[i]?.querySelector('.icon-text');
+        const labelText = (label?.textContent || '').trim();
+        if (!labelText) {
+          continue;
+        }
+
+        const words = labelText.split(/\s+/);
+        const longestWordLength = words.reduce((max, word) => Math.max(max, word.length), 0);
+        const totalLength = labelText.length;
+
+        if (totalLength > 10 || longestWordLength > 8) {
+          tileWidth = Math.max(tileWidth, 108);
+        }
+        if (totalLength > 16 || longestWordLength > 10) {
+          tileWidth = Math.max(tileWidth, 120);
+        }
+        if (totalLength > 22 || longestWordLength > 13) {
+          tileWidth = Math.max(tileWidth, 132);
+        }
+      }
+
+      return tileWidth;
+    }
+
+    function sizeDesktopIconLabel(icon) {
+      const label = icon?.querySelector('.icon-text');
+      if (!label) {
+        return;
+      }
+
+      const labelText = (label.textContent || '').trim();
+      if (!labelText) {
+        label.style.removeProperty('--icon-label-size');
+        return;
+      }
+
+      const iconWidth = icon.clientWidth || 96;
+      const availableWidth = Math.max(56, iconWidth - 12);
+      const longestWordLength = labelText
+        .split(/\s+/)
+        .reduce((max, word) => Math.max(max, word.length), 0);
+      const totalLength = labelText.length;
+
+      let fontSize = 12;
+      if (totalLength > 16 || longestWordLength > 10) {
+        fontSize = 11;
+      }
+      if (totalLength > 24 || longestWordLength > 13) {
+        fontSize = 10;
+      }
+      if (availableWidth < 96) {
+        fontSize = Math.min(fontSize, 10);
+      }
+      if (availableWidth < 84) {
+        fontSize = Math.min(fontSize, 9);
+      }
+
+      label.style.setProperty('--icon-label-size', fontSize + 'px');
+    }
+
+    function sizeDesktopIconLabels() {
+      const icons = document.getElementsByClassName("desktop-icon");
+      const desktopGrid = document.getElementsByClassName("desktop-grid")[0];
+      if (desktopGrid) {
+        desktopGrid.style.setProperty('--desktop-icon-size', getDesktopIconTileWidth(icons) + 'px');
+      }
+
+      for (let i = 0; i < icons.length; i++) {
+        sizeDesktopIconLabel(icons[i]);
+      }
+    }
+
     function scheduleDesktopIconGridLayout(attempt = 0) {
       const desktopGrid = document.getElementsByClassName("desktop-grid")[0];
       if (!desktopGrid) {
@@ -741,6 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      sizeDesktopIconLabels();
       CreateDesktopIconGrid();
     }
 

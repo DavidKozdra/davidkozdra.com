@@ -1012,6 +1012,18 @@ body {
     "nice","fire","hard agree","mood","literally me","yo same","crazy","ok go off"
   ];
 
+  const statusActions = ["Grinding", "Queueing", "Streaming", "Testing", "Collecting", "Crafting", "Trading", "Editing", "Climbing", "Speedrunning"];
+  const statusContexts = ["ranked", "duos", "arena", "the shop", "daily quests", "the event", "new loadout", "guild chat", "practice mode", "boss run"];
+  const chatOpeners = ["yo", "hey", "ay", "bro", "bestie", "ngl", "fr", "wait", "ok", "nah"];
+  const chatIntents = ["run duos", "trade skins", "queue ranked", "check my new fit", "send invite", "join vc", "farm coins", "do quests", "1v1 now", "rate this build"];
+  const feedLeads = ["daily update:", "hot take:", "small flex:", "ngl", "PSA:", "real talk:", "question:", "patch notes from me:", "status:", "today:"];
+  const feedActions = ["hit a new streak", "pulled rare loot", "finally hit my goal", "found a broken combo", "finished my grind", "unlocked a cosmetic", "made a new squad", "won three in a row", "fixed my build", "maxed another stat"];
+  const feedClosers = ["W day", "im actually cooking", "someone stop me", "this game has me hooked", "lowkey insane", "we move", "back to the grind", "feels good", "huge W", "im happy rn"];
+
+  function maybe(probability) {
+    return Math.random() < probability;
+  }
+
   // --- Cosmetics catalog ---
   const COSMETICS = {
     skin: {
@@ -1187,6 +1199,54 @@ body {
   const giftTimers = {};  // runtime timers per contact id
 
   function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function randomToken(length = 2) {
+    const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+    let out = '';
+    for (let i = 0; i < length; i++) out += chars[Math.floor(Math.random() * chars.length)];
+    return out;
+  }
+
+  function generateName() {
+    const prefix = rand(prefixes);
+    const core = rand(cores);
+    const suffix = rand(suffixes);
+    const style = Math.floor(Math.random() * 6);
+
+    if (style === 0) return prefix + core + suffix;
+    if (style === 1) return core + suffix;
+    if (style === 2) return prefix + core + Math.floor(Math.random() * 900 + 100);
+    if (style === 3) return prefix + '_' + core + randomToken(2).toUpperCase();
+    if (style === 4) return core + '.' + suffix;
+    return prefix + core + '_' + Math.floor(Math.random() * 99);
+  }
+
+  function generateStatus() {
+    if (maybe(0.4)) return rand(statusTexts);
+    const action = rand(statusActions);
+    const context = rand(statusContexts);
+    const ending = maybe(0.35) ? ' rn' : '';
+    return action + ' ' + context + ending;
+  }
+
+  function generateChatMessage() {
+    if (maybe(0.55)) return rand(chatMessages);
+    const opener = rand(chatOpeners);
+    const intent = rand(chatIntents);
+    const tail = maybe(0.35) ? ' ?' : maybe(0.25) ? ' lol' : '';
+    return opener + ' ' + intent + tail;
+  }
+
+  function generateFeedPostText() {
+    if (maybe(0.5)) return rand(feedPosts);
+    return rand(feedLeads) + ' ' + rand(feedActions) + ' - ' + rand(feedClosers);
+  }
+
+  function generateFeedReplyText() {
+    if (maybe(0.6)) return rand(feedReplyTexts);
+    return rand(chatOpeners) + ' ' + rand(["W", "facts", "real", "same", "insane", "fire", "valid"]).toLowerCase();
+  }
+
   function save() { try { localStorage.setItem('contactGameV2', JSON.stringify(state)); } catch {} }
   function load() { try { const s = JSON.parse(localStorage.getItem('contactGameV2')); if (s) state = { ...state, ...s }; } catch {} }
 
@@ -1328,10 +1388,6 @@ body {
   }
 
   // --- Contacts ---
-  function generateName() {
-    return rand(prefixes) + rand(cores) + rand(suffixes);
-  }
-
   function generateContact() {
     let name, tries = 0;
     do { name = generateName(); tries++; } while (state.myContacts.some(c => c.name === name) && tries < 30);
@@ -1340,7 +1396,7 @@ body {
       id: Date.now() + Math.random(),
       name,
       avatar,
-      status: rand(statusTexts)
+      status: generateStatus()
     };
   }
 
@@ -1368,7 +1424,7 @@ body {
       const t = now - span + Math.floor((span / count) * i) + Math.floor(Math.random() * 60000);
       msgs.push({
         contactId: contact.id,
-        text: rand(chatMessages),
+        text: generateChatMessage(),
         sender: Math.random() > 0.5 ? 'me' : 'them',
         timestamp: t
       });
@@ -1654,10 +1710,10 @@ body {
 
     // Simulated reply
     dmTyping.textContent = dmContact.name + ' is typing...';
-    const delay = 600 + Math.floor(Math.random() * 2000);
+      const delay = 600 + Math.floor(Math.random() * 2000);
     setTimeout(async () => {
       if (!dmContact) return;
-      const reply = { contactId: dmContact.id, text: rand(chatMessages), sender: 'them', timestamp: Date.now() };
+      const reply = { contactId: dmContact.id, text: generateChatMessage(), sender: 'them', timestamp: Date.now() };
       await dbSaveMsg(reply);
       dmTyping.textContent = '';
       const updated = await dbGetMessages(dmContact.id);
@@ -1811,7 +1867,7 @@ body {
       if (isFriend) {
         author = rand(state.myContacts);
       } else {
-        const name = rand(prefixes) + rand(cores) + rand(suffixes);
+        const name = generateName();
         const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name + 'feed')}&backgroundColor=5865f2,7c3aed,99aab5&radius=50`;
         author = { name, avatar, id: null };
       }
@@ -1819,14 +1875,14 @@ body {
       const replyCount = Math.floor(Math.random() * 4);
       const replies = [];
       for (let r = 0; r < replyCount; r++) {
-        const rName = rand(prefixes) + rand(cores) + rand(suffixes);
+        const rName = generateName();
         const rAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(rName + 'reply')}&backgroundColor=5865f2,7c3aed,99aab5&radius=50`;
-        replies.push({ name: rName, avatar: rAvatar, text: rand(feedReplyTexts) });
+        replies.push({ name: rName, avatar: rAvatar, text: generateFeedReplyText() });
       }
       posts.push({
         key: 'fp_' + Date.now() + '_' + i + '_' + Math.random(),
         author,
-        text: rand(feedPosts),
+        text: generateFeedPostText(),
         time: minutesAgo,
         likes: Math.floor(Math.random() * 50),
         isFriend: !!author.id,
