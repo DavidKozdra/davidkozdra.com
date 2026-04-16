@@ -98,12 +98,84 @@
             display: inline-block; font-size: .65rem; background: #475569; color: #e2e8f0;
             padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle;
         }
+        .store-filters {
+            background: #fff;
+            padding: 16px 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: .95rem;
+            outline: none;
+            transition: border-color .15s;
+        }
+        .search-box input:focus {
+            border-color: #3b82f6;
+        }
+        .tags-filter {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tag-btn {
+            padding: 6px 14px;
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            color: #374151;
+            border-radius: 20px;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .tag-btn.active {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
     <div class="store-header">
         <i class="fas fa-store"></i>
         <h1>App Store</h1>
+    </div>
+    <div class="store-filters">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search apps...">
+        </div>
+        <div class="tags-filter" id="tagsFilter">
+            <button class="tag-btn active" data-tag="all">All</button>
+            <button class="tag-btn" data-tag="game">Games</button>
+            <button class="tag-btn" data-tag="tool">Tools</button>
+            <button class="tag-btn" data-tag="open-source">Open Source</button>
+        </div>
     </div>
     <div class="app-grid" id="app-grid"></div>
 
@@ -123,7 +195,6 @@
                 author: "davidkozdra.workers.dev",
                 description: "Retro handheld emulator adventure.",
                 url: "https://dk-boy.davidkozdra.workers.dev/",
-                icon: "./images/ui-icons/dk-boy.svg",
                 width: 1200,
                 fullscreen: true,
                 external: false,
@@ -173,7 +244,30 @@
                 width: 1200,
                 fullscreen: true,
                 external: false,
-                tags: ["tool"]
+                tags: ["game"]
+            },
+       
+            {
+                id: "passwordgen",
+                name: "Password Generator",
+                author: "0ME9A",
+                description: "A secure password generator and manager for your daily needs.",
+                url: "https://password.ome9a.com/",
+                width: 1200,
+                fullscreen: true,
+                external: true,
+                tags: ["tool", "open-source"]
+            },
+            {
+                id: "lofiplayer",
+                name: "Lofi Music Player",
+                author: "riccardobertolini",
+                description: "A relaxing Lofi Music Player to help you focus or unwind.",
+                url: "https://lofi-music-eight.vercel.app/",
+                width: 1200,
+                fullscreen: true,
+                external: true,
+                tags: ["tool", "open-source"]
             }
         ];
 
@@ -250,10 +344,39 @@
             renderApps();
         }
 
+        let currentTag = "all";
+        let searchQuery = "";
+
+        document.getElementById("searchInput").addEventListener("input", (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            renderApps();
+        });
+
+        document.querySelectorAll(".tag-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll(".tag-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                currentTag = e.target.getAttribute("data-tag");
+                renderApps();
+            });
+        });
+
         function renderApps() {
             const grid = document.getElementById("app-grid");
             grid.innerHTML = "";
+            let renderedCount = 0;
+
             APPS.forEach(app => {
+                const searchMatch = !searchQuery || 
+                    app.name.toLowerCase().includes(searchQuery) || 
+                    app.description.toLowerCase().includes(searchQuery) ||
+                    app.author.toLowerCase().includes(searchQuery);
+                    
+                const tagMatch = currentTag === "all" || (app.tags && app.tags.includes(currentTag));
+
+                if (!searchMatch || !tagMatch) return;
+
+                renderedCount++;
                 const installed = isInstalled(app.id);
                 const card = document.createElement("div");
                 let totalInstalls = Math.floor(Math.random() * 10000) + 100; // Random install count for demo
@@ -292,6 +415,10 @@
                 });
                 grid.appendChild(card);
             });
+
+            if (renderedCount === 0) {
+                grid.innerHTML = `<div class="no-results">No apps found matching your search.</div>`;
+            }
         }
 
         ensurePreinstalledApps();
