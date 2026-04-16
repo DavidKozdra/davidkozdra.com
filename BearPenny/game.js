@@ -1,19 +1,23 @@
 // ==================== INDEXEDDB (bear-penny) ====================
 var db = null;
-var vaultGold = 0;
+var vaultGold = 1000;
 var vaultStats = { totalRuns: 0, bestWave: 0, bestCombo: 0, totalEarned: 0 };
+var shopUpgrades = {};
 
 function openDB() {
     return new Promise(function(resolve, reject) {
-        var req = indexedDB.open('bear-penny', 3);
+        var req = indexedDB.open('bear-penny', 4);
         req.onupgradeneeded = function(e) {
             var d = e.target.result;
-            // Recreate stores without keyPath for v3
-            if (d.objectStoreNames.contains('wallet')) d.deleteObjectStore('wallet');
-            if (d.objectStoreNames.contains('stats')) d.deleteObjectStore('stats');
-            d.createObjectStore('wallet');
-            d.createObjectStore('stats');
+            if (e.oldVersion < 3) {
+                // Recreate stores without keyPath for v3
+                if (d.objectStoreNames.contains('wallet')) d.deleteObjectStore('wallet');
+                if (d.objectStoreNames.contains('stats')) d.deleteObjectStore('stats');
+                d.createObjectStore('wallet');
+                d.createObjectStore('stats');
+            }
             if (!d.objectStoreNames.contains('portfolio')) d.createObjectStore('portfolio');
+            if (!d.objectStoreNames.contains('upgrades')) d.createObjectStore('upgrades');
         };
         req.onsuccess = function(e) { db = e.target.result; resolve(db); };
         req.onerror = function(e) { reject(e); };
@@ -69,14 +73,43 @@ function saveStats() {
     });
 }
 
+function loadUpgrades() {
+    return new Promise(function(resolve) {
+        if (!db) { resolve(shopUpgrades); return; }
+        var tx = db.transaction('upgrades', 'readonly');
+        var store = tx.objectStore('upgrades');
+        var req = store.get('player');
+        req.onsuccess = function() {
+            if (req.result) {
+                shopUpgrades = req.result;
+            }
+            resolve(shopUpgrades);
+        };
+        req.onerror = function() { resolve(shopUpgrades); };
+    });
+}
+
+function saveUpgrades() {
+    return new Promise(function(resolve) {
+        if (!db) { resolve(); return; }
+        var tx = db.transaction('upgrades', 'readwrite');
+        var store = tx.objectStore('upgrades');
+        store.put(shopUpgrades, 'player');
+        tx.oncomplete = function() { resolve(); };
+        tx.onerror = function() { resolve(); };
+    });
+}
+
 function resetAllData() {
     return new Promise(function(resolve) {
         if (!db) { resolve(); return; }
-        var tx = db.transaction(['wallet', 'stats'], 'readwrite');
+        var tx = db.transaction(['wallet', 'stats', 'upgrades'], 'readwrite');
         tx.objectStore('wallet').clear();
         tx.objectStore('stats').clear();
+        tx.objectStore('upgrades').clear();
         vaultGold = 0;
         vaultStats = { totalRuns: 0, bestWave: 0, bestCombo: 0, totalEarned: 0 };
+        shopUpgrades = {};
         tx.oncomplete = function() { resolve(); };
         tx.onerror = function() { resolve(); };
     });
@@ -114,6 +147,30 @@ var ITEM_TYPES = {
     slow:     { emoji: '🕐', value: 0,  w: 26, h: 26, bad: false, powerup: 'slow' },
 };
 
+// ==================== SHOP UPGRADES ====================
+var SHOP_UPGRADES = {
+    // Game Upgrades
+    coinSize:        { name: 'Bigger Coins',       cat: 'game', icon: '🪙', maxLvl: 5, costs: [100, 250, 500, 1000, 2000],     desc: '+10% coin hitbox size per level' },
+    startingHp:      { name: 'Tough Start',        cat: 'game', icon: '💪', maxLvl: 3, costs: [150, 400, 1000],                 desc: 'Start with +1 HP per level' },
+    maxHpUp:         { name: 'Iron Constitution',   cat: 'game', icon: '🛡️', maxLvl: 3, costs: [200, 600, 1500],                desc: '+1 max HP cap per level' },
+    redPennyRate:    { name: 'Red Penny Rush',     cat: 'game', icon: '🔴', maxLvl: 5, costs: [75, 200, 400, 800, 1600],        desc: '+4% red penny spawn chance per level' },
+    bucketWidth:     { name: 'Wider Bucket',       cat: 'game', icon: '🪣', maxLvl: 5, costs: [100, 250, 500, 1000, 2000],      desc: '+6px bucket width per level' },
+    powerupDuration: { name: 'Lasting Power',      cat: 'game', icon: '⏳', maxLvl: 4, costs: [150, 350, 750, 1500],             desc: '+15% powerup duration per level' },
+    startPowerup:    { name: 'Head Start',         cat: 'game', icon: '🚀', maxLvl: 1, costs: [500],                             desc: 'Start each run with a random powerup' },
+    bearReduction:   { name: 'Bear Repellent',     cat: 'game', icon: '🧴', maxLvl: 4, costs: [200, 500, 1000, 2500],            desc: '-8% enemy spawn rate per level' },
+    comboBonus:      { name: 'Combo Master',       cat: 'game', icon: '🔥', maxLvl: 3, costs: [300, 750, 2000],                  desc: '+1 base combo multiplier per level' },
+    // Portal Upgrades
+    taxReduction:    { name: 'Tax Loophole',       cat: 'portal', icon: '📉', maxLvl: 5, costs: [200, 500, 1000, 2500, 5000],   desc: '-1.5% tax rate per level (10% -> 2.5%)' },
+    taxTimer:        { name: 'Extended Filing',    cat: 'portal', icon: '⏰', maxLvl: 4, costs: [150, 400, 900, 2000],            desc: '+60s between tax collections per level' },
+    tradeFee:        { name: 'Broker License',     cat: 'portal', icon: '🤝', maxLvl: 4, costs: [250, 600, 1200, 3000],           desc: '5% better buy/sell prices per level' },
+    dividends:       { name: 'Dividend Portfolio', cat: 'portal', icon: '💰', maxLvl: 5, costs: [300, 700, 1500, 3000, 6000],    desc: '+2% dividend yield per tax cycle' },
+    flatTaxReduction:{ name: 'Tax Shelter',        cat: 'portal', icon: '🏠', maxLvl: 4, costs: [100, 300, 700, 1500],            desc: '-10g flat tax per level (50g -> 10g)' },
+};
+
+function getUpgradeLevel(id) {
+    return (shopUpgrades && shopUpgrades[id]) || 0;
+}
+
 function loadBearQuotes() {
     fetch('./entities/bear-quotes.json')
         .then(function(r) { return r.json(); })
@@ -134,7 +191,7 @@ function initGame() {
     window.addEventListener('resize', resizeCanvas);
     loadBearQuotes();
     openDB().then(function() {
-        return Promise.all([loadVault(), loadStats()]);
+        return Promise.all([loadVault(), loadStats(), loadUpgrades()]);
     }).then(function(results) {
         vaultGold = results[0];
         refreshSettingsPanel();
@@ -146,6 +203,11 @@ function refreshStartScreen() {
     document.getElementById('start-vault').textContent = vaultGold;
     document.getElementById('start-runs').textContent = vaultStats.totalRuns;
     document.getElementById('start-best-wave').textContent = vaultStats.bestWave;
+    var upgradeCount = 0;
+    var ids = Object.keys(shopUpgrades);
+    for (var i = 0; i < ids.length; i++) upgradeCount += shopUpgrades[ids[i]];
+    var el = document.getElementById('start-upgrades');
+    if (el) el.textContent = upgradeCount;
 }
 
 function resizeCanvas() {
@@ -158,12 +220,18 @@ function resizeCanvas() {
 function closeGame() {
     document.getElementById('game-overlay').classList.add('hidden');
     document.getElementById('settings-panel').classList.add('hidden');
+    document.getElementById('shop-panel').classList.add('hidden');
+    shopOpen = false;
 }
 
 function toggleSettings() {
     var panel = document.getElementById('settings-panel');
     panel.classList.toggle('hidden');
-    if (!panel.classList.contains('hidden')) refreshSettingsPanel();
+    if (!panel.classList.contains('hidden')) {
+        document.getElementById('shop-panel').classList.add('hidden');
+        shopOpen = false;
+        refreshSettingsPanel();
+    }
 }
 
 function refreshSettingsPanel() {
@@ -185,7 +253,7 @@ function confirmResetData() {
 }
 
 function exportData() {
-    var data = { gold: vaultGold, stats: vaultStats };
+    var data = { gold: vaultGold, stats: vaultStats, upgrades: shopUpgrades };
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -207,7 +275,10 @@ function importData(event) {
             }
             vaultGold = data.gold;
             vaultStats = data.stats;
-            saveVault(vaultGold).then(function() { return saveStats(); }).then(function() {
+            if (data.upgrades && typeof data.upgrades === 'object') {
+                shopUpgrades = data.upgrades;
+            }
+            saveVault(vaultGold).then(function() { return saveStats(); }).then(function() { return saveUpgrades(); }).then(function() {
                 refreshSettingsPanel();
                 refreshStartScreen();
                 alert('Data imported!');
@@ -220,15 +291,99 @@ function importData(event) {
     event.target.value = '';
 }
 
+// ==================== SHOP ====================
+var shopOpen = false;
+var shopTab = 'game';
+
+function toggleShop() {
+    var panel = document.getElementById('shop-panel');
+    if (!panel) return;
+    shopOpen = !shopOpen;
+    if (shopOpen) {
+        document.getElementById('settings-panel').classList.add('hidden');
+        panel.classList.remove('hidden');
+        renderShop();
+    } else {
+        panel.classList.add('hidden');
+    }
+}
+
+function switchShopTab(tab) {
+    shopTab = tab;
+    var gameBtn = document.getElementById('shop-tab-game');
+    var portalBtn = document.getElementById('shop-tab-portal');
+    if (gameBtn && portalBtn) {
+        gameBtn.classList.toggle('active', tab === 'game');
+        portalBtn.classList.toggle('active', tab === 'portal');
+    }
+    renderShop();
+}
+
+function renderShop() {
+    var grid = document.getElementById('shop-grid');
+    var goldEl = document.getElementById('shop-gold');
+    if (!grid) return;
+    if (goldEl) goldEl.textContent = vaultGold;
+
+    var html = '';
+    var ids = Object.keys(SHOP_UPGRADES);
+    for (var i = 0; i < ids.length; i++) {
+        var id = ids[i];
+        var up = SHOP_UPGRADES[id];
+        if (up.cat !== shopTab) continue;
+        var lvl = getUpgradeLevel(id);
+        var maxed = lvl >= up.maxLvl;
+        var cost = maxed ? 0 : up.costs[lvl];
+        var canAfford = !maxed && vaultGold >= cost;
+
+        html += '<div class="shop-card' + (maxed ? ' shop-maxed' : '') + '">';
+        html += '<div class="shop-card-header">';
+        html += '<span class="shop-icon">' + up.icon + '</span>';
+        html += '<span class="shop-name">' + up.name + '</span>';
+        html += '</div>';
+        html += '<div class="shop-desc">' + up.desc + '</div>';
+        html += '<div class="shop-level">Lv ' + lvl + ' / ' + up.maxLvl + '</div>';
+        html += '<div class="shop-level-bar"><div class="shop-level-fill" style="width:' + (lvl / up.maxLvl * 100) + '%"></div></div>';
+        if (maxed) {
+            html += '<button class="shop-buy-btn shop-buy-maxed" disabled>MAXED</button>';
+        } else {
+            html += '<button class="shop-buy-btn' + (canAfford ? '' : ' shop-buy-disabled') + '" onclick="purchaseUpgrade(\'' + id + '\')"' + (canAfford ? '' : ' disabled') + '>' + cost + 'g</button>';
+        }
+        html += '</div>';
+    }
+    grid.innerHTML = html;
+}
+
+function purchaseUpgrade(id) {
+    var up = SHOP_UPGRADES[id];
+    if (!up) return;
+    var lvl = getUpgradeLevel(id);
+    if (lvl >= up.maxLvl) return;
+    var cost = up.costs[lvl];
+    if (vaultGold < cost) return;
+
+    vaultGold -= cost;
+    shopUpgrades[id] = lvl + 1;
+    saveVault(vaultGold);
+    saveUpgrades();
+    renderShop();
+    refreshStartScreen();
+    refreshSettingsPanel();
+}
+
 function startGame() {
     document.getElementById('game-start').classList.add('hidden');
     document.getElementById('game-over').classList.add('hidden');
     document.getElementById('settings-panel').classList.add('hidden');
+    document.getElementById('shop-panel').classList.add('hidden');
+    shopOpen = false;
     document.getElementById('game-hud').classList.remove('hidden');
     canvas.classList.remove('hidden');
     resizeCanvas();
 
-    player = { x: canvas.width / 2 - 22, w: 48, h: 18 };
+    // Apply bucket width upgrade
+    var bucketW = 48 + getUpgradeLevel('bucketWidth') * 6;
+    player = { x: canvas.width / 2 - Math.floor(bucketW / 2), w: bucketW, h: 18 };
     player.y = canvas.height - 44;
     fallingItems = [];
     particles = [];
@@ -237,8 +392,10 @@ function startGame() {
     combo = 0;
     maxCombo = 0;
     comboTimer = 0;
-    hp = 3;
-    maxHp = 5;
+    // Apply HP upgrades
+    hp = 3 + getUpgradeLevel('startingHp');
+    maxHp = 5 + getUpgradeLevel('maxHpUp');
+    if (hp > maxHp) hp = maxHp;
     magnetActive = false;
     magnetTimer = 0;
     shieldActive = false;
@@ -259,6 +416,17 @@ function startGame() {
     spawnTimer = 0;
 
     updateHUD();
+
+    // Apply startPowerup upgrade
+    if (getUpgradeLevel('startPowerup') >= 1) {
+        var powerups = ['magnet', 'shield', 'frenzy', 'slow'];
+        var pick = powerups[Math.floor(Math.random() * powerups.length)];
+        var durMult = 1 + getUpgradeLevel('powerupDuration') * 0.15;
+        if (pick === 'magnet') { magnetActive = true; magnetTimer = Math.floor(8 * 60 * durMult); }
+        else if (pick === 'shield') { shieldActive = true; shieldTimer = Math.floor(12 * 60 * durMult); }
+        else if (pick === 'frenzy') { frenzyActive = true; frenzyTimer = Math.floor(6 * 60 * durMult); }
+        else if (pick === 'slow') { slowActive = true; slowTimer = Math.floor(7 * 60 * durMult); }
+    }
 
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
@@ -295,10 +463,11 @@ function tick() {
 function spawnItem() {
     var roll = Math.random();
     var type;
-    var bearChance = Math.min(0.14 + wave * 0.018, 0.32);
-    var bombChance = wave >= 3 ? Math.min(0.04 + wave * 0.012, 0.18) : 0;
-    var skullChance = wave >= 7 ? Math.min(0.02 + (wave - 7) * 0.008, 0.1) : 0;
-    var redpennyChance = 0.18;
+    var bearReduce = 1 - getUpgradeLevel('bearReduction') * 0.08;
+    var bearChance = Math.min(0.14 + wave * 0.018, 0.32) * bearReduce;
+    var bombChance = (wave >= 3 ? Math.min(0.04 + wave * 0.012, 0.18) : 0) * bearReduce;
+    var skullChance = (wave >= 7 ? Math.min(0.02 + (wave - 7) * 0.008, 0.1) : 0) * bearReduce;
+    var redpennyChance = 0.18 + getUpgradeLevel('redPennyRate') * 0.04;
     var silverChance = wave >= 2 ? 0.10 : 0;
     var goldbarChance = wave >= 5 ? 0.05 : 0;
     var diamondChance = wave >= 8 ? 0.02 : 0;
@@ -329,12 +498,21 @@ function spawnItem() {
     if (slowActive) speed *= 0.5;
     if (def.bad) speed *= 1.15;
 
+    // Apply coin size upgrade to collectible items
+    var itemW = def.w;
+    var itemH = def.h;
+    if (!def.bad && def.value > 0) {
+        var sizeScale = 1 + getUpgradeLevel('coinSize') * 0.10;
+        itemW = Math.round(def.w * sizeScale);
+        itemH = Math.round(def.h * sizeScale);
+    }
+
     fallingItems.push({
         type: type,
-        x: Math.random() * (canvas.width - def.w),
-        y: -def.h,
-        w: def.w,
-        h: def.h,
+        x: Math.random() * (canvas.width - itemW),
+        y: -itemH,
+        w: itemW,
+        h: itemH,
         speed: speed,
         wobble: Math.random() * Math.PI * 2,
         wobbleAmp: def.bad ? 1.8 : 0.5,
@@ -440,26 +618,26 @@ function update() {
                 particles.push({ type: 'text', text: '+HP', x: item.x, y: item.y, life: 40, color: '#4ade80', size: 16 });
             } else if (def.powerup === 'magnet') {
                 magnetActive = true;
-                magnetTimer = 8 * 60;
+                magnetTimer = Math.floor(8 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
                 particles.push({ type: 'text', text: 'MAGNET!', x: item.x, y: item.y, life: 50, color: '#34d399', size: 16 });
             } else if (def.powerup === 'shield') {
                 shieldActive = true;
-                shieldTimer = 12 * 60;
+                shieldTimer = Math.floor(12 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
                 particles.push({ type: 'text', text: 'SHIELD!', x: item.x, y: item.y, life: 50, color: '#38bdf8', size: 16 });
             } else if (def.powerup === 'frenzy') {
                 frenzyActive = true;
-                frenzyTimer = 6 * 60;
+                frenzyTimer = Math.floor(6 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
                 particles.push({ type: 'text', text: 'FRENZY!', x: item.x, y: item.y, life: 50, color: '#facc15', size: 18 });
             } else if (def.powerup === 'slow') {
                 slowActive = true;
-                slowTimer = 7 * 60;
+                slowTimer = Math.floor(7 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
                 particles.push({ type: 'text', text: 'SLOW-MO!', x: item.x, y: item.y, life: 50, color: '#a78bfa', size: 16 });
             } else {
                 // Coin collected
                 combo++;
                 comboTimer = 90;
                 if (combo > maxCombo) maxCombo = combo;
-                var multiplier = 1 + Math.floor(combo / 5);
+                var multiplier = 1 + getUpgradeLevel('comboBonus') + Math.floor(combo / 5);
                 if (frenzyActive) multiplier *= 2;
                 var earned = def.value * multiplier;
                 gold += earned;
@@ -676,7 +854,7 @@ function drawPowerupBar() {
 function updateHUD() {
     document.getElementById('hud-gold').textContent = gold;
     document.getElementById('hud-wave').textContent = wave;
-    var mult = 1 + Math.floor(combo / 5);
+    var mult = 1 + getUpgradeLevel('comboBonus') + Math.floor(combo / 5);
     if (frenzyActive) mult *= 2;
     document.getElementById('hud-combo').textContent = 'x' + mult;
     var hearts = '';

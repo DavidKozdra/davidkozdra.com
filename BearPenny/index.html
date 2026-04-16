@@ -230,6 +230,58 @@
         }
         .settings-close:hover { background: #f59e0b; }
 
+        /* ===== SHOP PANEL ===== */
+        .shop-panel {
+            position: fixed; inset: 0; z-index: 135;
+            background: rgba(0,0,0,.9);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .shop-card-wrap {
+            background: #1e293b; border: 1px solid #334155; border-radius: 16px;
+            padding: 24px 28px; width: 520px; max-width: 96vw; max-height: 88vh;
+            display: flex; flex-direction: column;
+        }
+        .shop-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .shop-header h2 { color: #fbbf24; font-size: 1.3rem; display: flex; align-items: center; gap: 8px; }
+        .shop-header .shop-gold-display { color: #fbbf24; font-size: .95rem; font-weight: 600; background: rgba(251,191,36,0.1); padding: 4px 12px; border-radius: 8px; }
+        .shop-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+        .shop-tabs button {
+            flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #334155;
+            background: #0f172a; color: #94a3b8; font-size: .85rem; font-weight: 600; cursor: pointer;
+        }
+        .shop-tabs button.active { background: #334155; color: #fbbf24; border-color: #fbbf24; }
+        .shop-tabs button:hover { border-color: #fbbf24; color: #e2e8f0; }
+        .shop-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            overflow-y: auto; flex: 1; padding-right: 4px;
+        }
+        .shop-card {
+            background: #0f172a; border: 1px solid #334155; border-radius: 10px;
+            padding: 12px; display: flex; flex-direction: column; gap: 4px;
+        }
+        .shop-card.shop-maxed { border-color: #4ade80; }
+        .shop-card-header { display: flex; align-items: center; gap: 6px; }
+        .shop-icon { font-size: 1.2rem; }
+        .shop-name { font-weight: 600; font-size: .82rem; color: #e2e8f0; }
+        .shop-desc { font-size: .7rem; color: #94a3b8; line-height: 1.3; }
+        .shop-level { font-size: .7rem; color: #cbd5e1; font-weight: 600; }
+        .shop-level-bar { height: 4px; background: #334155; border-radius: 2px; overflow: hidden; }
+        .shop-level-fill { height: 100%; background: #fbbf24; border-radius: 2px; transition: width .2s; }
+        .shop-maxed .shop-level-fill { background: #4ade80; }
+        .shop-buy-btn {
+            margin-top: 4px; padding: 6px; border-radius: 6px; border: none;
+            background: #065f46; color: #4ade80; font-size: .78rem; font-weight: 700; cursor: pointer;
+        }
+        .shop-buy-btn:hover { background: #047857; }
+        .shop-buy-disabled { background: #1e293b; color: #475569; cursor: default; }
+        .shop-buy-disabled:hover { background: #1e293b; }
+        .shop-buy-maxed { background: #064e3b; color: #4ade80; cursor: default; }
+        .shop-close {
+            margin-top: 12px; width: 100%; padding: 10px; background: #fbbf24; color: #0f172a;
+            border: none; border-radius: 8px; font-weight: 600; font-size: .95rem; cursor: pointer;
+        }
+        .shop-close:hover { background: #f59e0b; }
+
         .hidden { display: none !important; }
     </style>
 </head>
@@ -307,6 +359,7 @@
                 <div class="bal-item"><span class="bal-label">Portfolio</span> <span class="bal-val bal-portfolio" id="bal-portfolio">$0</span></div>
                 <div class="bal-item"><span class="bal-label">Next Tax</span> <span class="bal-val bal-tax" id="bal-tax">5:00</span></div>
                 <div class="bal-item"><span class="bal-label">Ray Timer</span> <span class="bal-val bal-ray" id="ray-timer">2:00</span></div>
+                <button class="btn-ray" onclick="toggleShop()">🛒 Upgrades</button>
                 <button class="btn-ray" id="btn-ray" onclick="openRayBossBearMode()" disabled>Collect Pennies (Ray the Boss Bear)</button>
             </div>
             <div class="bp-toolbar">
@@ -368,6 +421,7 @@
         <div class="start-stats">
             <div>Runs: <span id="start-runs">0</span></div>
             <div>Best Wave: <span id="start-best-wave">0</span></div>
+            <div>Upgrades: <span id="start-upgrades">0</span></div>
         </div>
         <p>Pennies fall from the sky — move left/right to catch them!<br>
         Avoid 🐻 bears and 💣 bombs. Grab powerups to survive.<br>
@@ -375,6 +429,7 @@
         Gold earned is saved to your vault forever.</p>
         <div class="btn-row">
             <button class="btn-primary" onclick="startGame()">Start Run</button>
+            <button class="btn-secondary" onclick="toggleShop()">🛒 Shop</button>
             <button class="btn-secondary" onclick="toggleSettings()">⚙ Settings</button>
             <button class="btn-secondary" onclick="closeGame()">Back to Stocks</button>
         </div>
@@ -386,7 +441,24 @@
         <div class="detail-line">Wave <span id="final-wave">1</span> · Combo peak: x<span id="final-combo">1</span></div>
         <div class="detail-line">🏦 Vault total: <span id="final-vault">0</span> gold</div>
         <button onclick="startGame()">New Run</button>
+        <button class="btn-back" onclick="toggleShop()">🛒 Shop</button>
         <button class="btn-back" onclick="closeGame()">Back to Stocks</button>
+    </div>
+</div>
+
+<!-- SHOP PANEL -->
+<div class="shop-panel hidden" id="shop-panel">
+    <div class="shop-card-wrap">
+        <div class="shop-header">
+            <h2>🛒 Shop</h2>
+            <span class="shop-gold-display">🏦 <span id="shop-gold">0</span>g</span>
+        </div>
+        <div class="shop-tabs">
+            <button id="shop-tab-game" class="active" onclick="switchShopTab('game')">Game Upgrades</button>
+            <button id="shop-tab-portal" onclick="switchShopTab('portal')">Portal Upgrades</button>
+        </div>
+        <div class="shop-grid" id="shop-grid"></div>
+        <button class="shop-close" onclick="toggleShop()">Close</button>
     </div>
 </div>
 
@@ -499,12 +571,15 @@
     // === IndexedDB helpers (reuse game db) ===
     function openFinanceDB() {
         return new Promise(function(resolve, reject) {
-            var req = indexedDB.open('bear-penny', 3);
+            var req = indexedDB.open('bear-penny', 4);
             req.onupgradeneeded = function(e) {
                 var db = e.target.result;
-                if (!db.objectStoreNames.contains('wallet')) db.createObjectStore('wallet');
-                if (!db.objectStoreNames.contains('stats')) db.createObjectStore('stats');
+                if (e.oldVersion < 3) {
+                    if (!db.objectStoreNames.contains('wallet')) db.createObjectStore('wallet');
+                    if (!db.objectStoreNames.contains('stats')) db.createObjectStore('stats');
+                }
                 if (!db.objectStoreNames.contains('portfolio')) db.createObjectStore('portfolio');
+                if (!db.objectStoreNames.contains('upgrades')) db.createObjectStore('upgrades');
             };
             req.onsuccess = function() { resolve(req.result); };
             req.onerror = function() { reject(req.error); };
@@ -877,7 +952,8 @@
         if (isPrisoned) return;
         var stock = ALL_STOCKS.find(function(s) { return s.ticker === ticker; });
         if (!stock) return;
-        var cost = Math.ceil(stock.price);
+        var tradeFeeLevel = (typeof shopUpgrades !== 'undefined' && shopUpgrades.tradeFee) || 0;
+        var cost = Math.ceil(stock.price * (1 - tradeFeeLevel * 0.05));
 
         loadFinanceVault().then(function(vg) {
             // Also grab game.js vaultGold if available
@@ -906,7 +982,8 @@
         if (!portfolio[ticker] || portfolio[ticker].shares <= 0) return;
         var stock = ALL_STOCKS.find(function(s) { return s.ticker === ticker; });
         if (!stock) return;
-        var proceeds = Math.floor(stock.price);
+        var tradeFeeLevel = (typeof shopUpgrades !== 'undefined' && shopUpgrades.tradeFee) || 0;
+        var proceeds = Math.floor(stock.price * (1 + tradeFeeLevel * 0.05));
 
         loadFinanceVault().then(function(vg) {
             var totalGold = typeof vaultGold !== 'undefined' ? vaultGold : vg;
@@ -940,8 +1017,13 @@
     }
 
     // ==================== TAX SYSTEM ====================
+    function getTaxInterval() {
+        var timerLevel = (typeof shopUpgrades !== 'undefined' && shopUpgrades.taxTimer) || 0;
+        return 300 + timerLevel * 60;
+    }
+
     function startTaxTimer() {
-        taxSecondsLeft = 300;
+        taxSecondsLeft = getTaxInterval();
         updateTaxDisplay();
         if (taxTimerInterval) clearInterval(taxTimerInterval);
         taxTimerInterval = setInterval(function() {
@@ -966,9 +1048,19 @@
         loadFinanceVault().then(function(vg) {
             var totalGold = typeof vaultGold !== 'undefined' ? vaultGold : vg;
             var portfolioVal = getPortfolioValue();
-            // Tax = 10% of portfolio value + flat 50 gold
-            var taxAmount = Math.floor(portfolioVal * 0.10) + 50;
-            if (taxAmount < 50) taxAmount = 50;
+            // Apply tax upgrades
+            var taxReductionLevel = (typeof shopUpgrades !== 'undefined' && shopUpgrades.taxReduction) || 0;
+            var flatTaxLevel = (typeof shopUpgrades !== 'undefined' && shopUpgrades.flatTaxReduction) || 0;
+            var dividendLevel = (typeof shopUpgrades !== 'undefined' && shopUpgrades.dividends) || 0;
+            // Tax rate: 10% reduced by 1.5% per level
+            var taxRate = Math.max(0, 0.10 - taxReductionLevel * 0.015);
+            // Flat tax: 50g reduced by 10g per level
+            var flatTax = Math.max(0, 50 - flatTaxLevel * 10);
+            var taxAmount = Math.floor(portfolioVal * taxRate) + flatTax;
+            if (taxAmount < flatTax) taxAmount = flatTax;
+            // Dividends: +2% of portfolio value per level, applied before tax
+            var dividendPayout = Math.floor(portfolioVal * dividendLevel * 0.02);
+            totalGold += dividendPayout;
 
             if (totalGold >= taxAmount) {
                 // Can pay — deduct and reset timer
@@ -976,7 +1068,7 @@
                 if (typeof vaultGold !== 'undefined') vaultGold = totalGold;
                 saveFinanceVault(totalGold);
                 updateBalanceBar(totalGold);
-                taxSecondsLeft = 300;
+                taxSecondsLeft = getTaxInterval();
                 // Flash green on tax display
                 var el = document.getElementById('bal-tax');
                 el.style.color = '#4ade80';
@@ -1007,7 +1099,7 @@
         // Hide prison, reset tax timer, let them start over
         document.getElementById('prison-overlay').classList.add('hidden');
         isPrisoned = false;
-        taxSecondsLeft = 300;
+        taxSecondsLeft = getTaxInterval();
         startTaxTimer();
         renderCurrentPage();
     }
