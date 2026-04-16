@@ -133,13 +133,13 @@ body {
 }
 .tab {
   flex: 1;
-  padding: 10px 6px;
+  padding: 9px 4px;
   border: none;
   border-radius: 8px;
   background: transparent;
   color: var(--text);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 11px;
   cursor: pointer;
   transition: all .2s;
   display: flex;
@@ -661,6 +661,30 @@ body {
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.levelup { background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-size: 14px; padding: 12px 20px; }
 .toast.achievement { background: linear-gradient(135deg, #57f287, #1abc9c); color: #0f0f12; }
+.toast.gift { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #0f0f12; }
+
+/* Gift indicator on mini avatars */
+.contact-mini { position: relative; }
+.gift-badge {
+  position: absolute;
+  top: -2px;
+  right: 2px;
+  font-size: 16px;
+  animation: giftBounce 1s ease-in-out infinite;
+  z-index: 2;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.4));
+  pointer-events: none;
+}
+@keyframes giftBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.1); }
+}
+/* Gift indicator on chat items */
+.chat-gift {
+  font-size: 18px;
+  flex-shrink: 0;
+  animation: giftBounce 1s ease-in-out infinite;
+}
 
 .coin-fly {
   position: absolute;
@@ -689,6 +713,152 @@ body {
 }
 .streak-banner.show { display: block; }
 
+/* Feed view */
+.feed-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.feed-post {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,.04);
+}
+.feed-post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.feed-post-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--muted);
+  flex-shrink: 0;
+}
+.feed-post-meta { flex: 1; min-width: 0; }
+.feed-post-name { font-weight: 700; font-size: 13px; }
+.feed-post-time { font-size: 10px; opacity: .4; margin-top: 1px; }
+.feed-post-friend {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: white;
+  flex-shrink: 0;
+}
+.feed-post-body {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+.feed-post-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.feed-btn {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--muted);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all .15s;
+}
+.feed-btn:active { transform: scale(.95); }
+.feed-btn.liked { color: var(--red); }
+.feed-btn.reply-locked {
+  opacity: .5;
+  cursor: default;
+}
+.feed-replies {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.feed-reply {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.feed-reply-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.feed-reply-body { flex: 1; min-width: 0; }
+.feed-reply-name { font-size: 11px; font-weight: 700; }
+.feed-reply-text { font-size: 12px; opacity: .8; margin-top: 1px; }
+.feed-reply-input {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.feed-reply-input input {
+  flex: 1;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 14px;
+  background: var(--muted);
+  color: var(--text);
+  font-size: 12px;
+  outline: none;
+  font-family: inherit;
+}
+.feed-reply-input input::placeholder { opacity: .4; }
+.feed-reply-input button {
+  padding: 7px 12px;
+  border: none;
+  border-radius: 14px;
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.feed-reply-input button:active { transform: scale(.95); }
+.feed-empty {
+  text-align: center;
+  padding: 50px 20px;
+  opacity: .4;
+  font-size: 14px;
+}
+.feed-load-more {
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: center;
+  opacity: .7;
+}
+.feed-load-more:active { transform: scale(.97); }
+
 /* Desktop */
 @media (min-width: 768px) {
   .app { max-width: 480px; height: 90vh; max-height: 780px; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,.4); overflow: hidden; }
@@ -715,6 +885,10 @@ body {
     <button class="tab" data-view="chats" id="tabChats">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       Chats
+    </button>
+    <button class="tab" data-view="feed" id="tabFeed">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Feed
     </button>
     <button class="tab" data-view="shop" id="tabShop">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -757,6 +931,11 @@ body {
     <div class="chats-list" id="chatsList">
       <div class="chats-empty">No conversations yet. Add friends and message them!</div>
     </div>
+  </div>
+
+  <!-- Feed View -->
+  <div class="view" id="viewFeed">
+    <div class="feed-view" id="feedList"></div>
   </div>
 
   <!-- Shop View -->
@@ -813,6 +992,24 @@ body {
     "nah im good","fr fr","bet","say less","lowkey fire",
     "im lagging","carry me pls","whats ur rank","sick avatar btw",
     "just got a new hat lol","check my drip","your character looks fire"
+  ];
+
+  const feedPosts = [
+    "just hit level 50 no cap 🔥","anyone wanna squad up rn?","new cosmetic is fire ngl",
+    "why is everyone so sweaty today","finally got the crown 👑","grinding coins all day",
+    "my character looks insane rn","who else is bored","rate my fit 1-10",
+    "just added 20 people lol","this game is actually addicting","ggs to everyone i played today",
+    "need more coins for the cape 😭","lowkey the best game ever","anyone got tips for leveling?",
+    "just got a gift from a stranger?!","the wizard hat is worth it trust","brb gonna go touch grass",
+    "3 day streak lets goooo","who designed these avatars they go hard","finally saved up 500 coins",
+    "the VR glasses are cracked","my collection is insane","vibing in the shop rn",
+    "someone send me a gift pls","just discovered the feed lol","posting from my new account hi",
+    "this is giving club penguin vibes","the armor shirt is so clean","anyone else a tycoon yet?"
+  ];
+  const feedReplyTexts = [
+    "fr fr","so true","W post","L take","based","cope","lets go","same","no way",
+    "lol","big W","ratio","valid","cap","goated","slay","real","me too","facts",
+    "nice","fire","hard agree","mood","literally me","yo same","crazy","ok go off"
   ];
 
   // --- Cosmetics catalog ---
@@ -902,6 +1099,22 @@ body {
     }
   };
 
+  // --- Gifts ---
+  const GIFT_TYPES = [
+    { emoji: "🎁", name: "Mystery Box", coins: 5, xp: 3 },
+    { emoji: "💎", name: "Gem", coins: 15, xp: 5 },
+    { emoji: "🧁", name: "Cupcake", coins: 3, xp: 2 },
+    { emoji: "🎮", name: "Game Key", coins: 10, xp: 4 },
+    { emoji: "🌟", name: "Star Fragment", coins: 8, xp: 6 },
+    { emoji: "🍕", name: "Pizza Slice", coins: 4, xp: 2 },
+    { emoji: "🎵", name: "Mixtape", coins: 6, xp: 3 },
+    { emoji: "🔮", name: "Crystal Ball", coins: 12, xp: 5 },
+    { emoji: "🧸", name: "Teddy Bear", coins: 7, xp: 3 },
+    { emoji: "🏆", name: "Mini Trophy", coins: 20, xp: 8 },
+  ];
+  const GIFT_MIN_MS = 5 * 60 * 1000;   // 5 minutes
+  const GIFT_MAX_MS = 20 * 60 * 1000;  // 20 minutes
+
   const XP_PER_LEVEL = 50;
 
   const ACHIEVEMENTS = [
@@ -921,6 +1134,9 @@ body {
     { id: "shop_10", name: "Dripped Out", desc: "Buy 10 cosmetics", check: s => s.itemsBought >= 10, reward: 150 },
     { id: "streak_3", name: "On a Roll", desc: "3 day streak", check: s => s.streak >= 3, reward: 50 },
     { id: "streak_7", name: "Dedicated", desc: "7 day streak", check: s => s.streak >= 7, reward: 150 },
+    { id: "gift_1", name: "Gift Getter", desc: "Collect your first gift", check: s => s.giftsCollected >= 1, reward: 15 },
+    { id: "gift_10", name: "Gift Hoarder", desc: "Collect 10 gifts", check: s => s.giftsCollected >= 10, reward: 80 },
+    { id: "gift_50", name: "Santa's Helper", desc: "Collect 50 gifts", check: s => s.giftsCollected >= 50, reward: 250 },
   ];
 
   // --- DOM refs ---
@@ -934,11 +1150,14 @@ body {
   const streakBanner = $('streakBanner');
 
   // Views & tabs
-  const views = { people: $('viewPeople'), chats: $('viewChats'), shop: $('viewShop') };
-  const tabs = { people: $('tabPeople'), chats: $('tabChats'), shop: $('tabShop') };
+  const views = { people: $('viewPeople'), chats: $('viewChats'), feed: $('viewFeed'), shop: $('viewShop') };
+  const tabs = { people: $('tabPeople'), chats: $('tabChats'), feed: $('tabFeed'), shop: $('tabShop') };
 
   // Chats
   const chatsList = $('chatsList');
+
+  // Feed
+  const feedList = $('feedList');
 
   // Shop
   const shopCoins = $('shopCoins'), shopSections = $('shopSections'), charPreview = $('charPreview');
@@ -956,11 +1175,16 @@ body {
     ownedItems: ['skin_default','eyes_default','nose_default','hair_default','hat_default','glasses_default','shirt_default'],
     equipped: { skin:'skin_default', eyes:'eyes_default', nose:'nose_default', hair:'hair_default', hat:'hat_default', glasses:'glasses_default', shirt:'shirt_default' },
     unlockedAchievements: [],
-    itemsBought: 0
+    itemsBought: 0,
+    giftsCollected: 0,
+    pendingGifts: {},  // { contactId: { emoji, name, coins, xp } }
+    feedReplyUnlocked: false,
+    feedLikes: {}  // { postKey: true }
   };
   let currentContact = null;
   let dmContact = null;
   let db = null;
+  const giftTimers = {};  // runtime timers per contact id
 
   function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   function save() { try { localStorage.setItem('contactGameV2', JSON.stringify(state)); } catch {} }
@@ -1057,6 +1281,52 @@ body {
     }
   }
 
+  // --- Gift System ---
+  function scheduleGift(contact) {
+    if (giftTimers[contact.id]) return; // already scheduled
+    const delay = GIFT_MIN_MS + Math.floor(Math.random() * (GIFT_MAX_MS - GIFT_MIN_MS));
+    giftTimers[contact.id] = setTimeout(() => {
+      delete giftTimers[contact.id];
+      deliverGift(contact);
+    }, delay);
+  }
+
+  function deliverGift(contact) {
+    if (!state.myContacts.some(c => c.id === contact.id)) return;
+    if (state.pendingGifts[contact.id]) return; // already has uncollected gift
+    const gift = rand(GIFT_TYPES);
+    state.pendingGifts[contact.id] = { ...gift };
+    save();
+    showToast(`🎁 ${contact.name} sent you a gift!`, 'gift');
+    if (navigator.vibrate) navigator.vibrate([10, 15, 10]);
+    updateUI();
+    if (state.currentView === 'chats') renderChatsList();
+  }
+
+  function collectGift(contact) {
+    const gift = state.pendingGifts[contact.id];
+    if (!gift) return null;
+    state.coins += gift.coins;
+    state.totalCoins += gift.coins;
+    state.giftsCollected += 1;
+    addXP(gift.xp);
+    delete state.pendingGifts[contact.id];
+    checkAchievements();
+    save();
+    updateUI();
+    // Schedule next gift for this contact
+    scheduleGift(contact);
+    return gift;
+  }
+
+  function startAllGiftTimers() {
+    for (const c of state.myContacts) {
+      if (!state.pendingGifts[c.id]) {
+        scheduleGift(c);
+      }
+    }
+  }
+
   // --- Contacts ---
   function generateName() {
     return rand(prefixes) + rand(cores) + rand(suffixes);
@@ -1118,17 +1388,28 @@ body {
     if (state.myContacts.length === 0) {
       contactsList.innerHTML = '<div class="empty-contacts">No friends yet</div>';
     } else {
-      contactsList.innerHTML = state.myContacts.map(c => `
-        <div class="contact-mini" data-cid="${c.id}" title="DM ${c.name}">
-          <img class="mini-avatar" src="${c.avatar}" alt="">
-          <div class="mini-name">${escapeHTML(c.name)}</div>
-        </div>
-      `).join('');
+      contactsList.innerHTML = state.myContacts.map(c => {
+        const hasGift = !!state.pendingGifts[c.id];
+        return `
+          <div class="contact-mini" data-cid="${c.id}" title="${hasGift ? 'Collect gift from' : 'DM'} ${c.name}">
+            ${hasGift ? '<span class="gift-badge">🎁</span>' : ''}
+            <img class="mini-avatar" src="${c.avatar}" alt="">
+            <div class="mini-name">${escapeHTML(c.name)}</div>
+          </div>
+        `;
+      }).join('');
       contactsList.querySelectorAll('.contact-mini').forEach(el => {
         el.addEventListener('click', () => {
           const id = parseFloat(el.dataset.cid);
           const c = state.myContacts.find(x => x.id === id);
-          if (c) openDM(c);
+          if (!c) return;
+          const gift = collectGift(c);
+          if (gift) {
+            flyCoin(gift.coins);
+            showToast(`${gift.emoji} ${c.name} sent ${gift.name}! +${gift.coins}🪙 +${gift.xp}XP`, 'gift');
+          } else {
+            openDM(c);
+          }
         });
       });
     }
@@ -1171,6 +1452,7 @@ body {
     checkAchievements();
     updateUI();
     save();
+    scheduleGift(currentContact);
     setTimeout(nextContact, 200);
   }
 
@@ -1197,6 +1479,7 @@ body {
       checkAchievements();
       updateUI();
       save();
+      scheduleGift(currentContact);
       openDM(currentContact);
       setTimeout(nextContact, 200);
     }
@@ -1210,6 +1493,7 @@ body {
       tabs[k].classList.toggle('active', k === view);
     });
     if (view === 'chats') renderChatsList();
+    if (view === 'feed') renderFeed();
     if (view === 'shop') renderShop();
     save();
   }
@@ -1243,6 +1527,7 @@ body {
     chatsList.innerHTML = entries.map(e => {
       const preview = (e.lastMsg.sender === 'me' ? 'You: ' : '') + e.lastMsg.text;
       const time = formatTimeShort(e.lastMsg.timestamp);
+      const hasGift = !!state.pendingGifts[e.contact.id];
       return `
         <div class="chat-item" data-cid="${e.contact.id}">
           <img class="chat-avatar" src="${e.contact.avatar}" alt="">
@@ -1250,6 +1535,7 @@ body {
             <div class="chat-name">${escapeHTML(e.contact.name)}</div>
             <div class="chat-preview">${escapeHTML(preview)}</div>
           </div>
+          ${hasGift ? '<span class="chat-gift">🎁</span>' : ''}
           <div class="chat-time">${time}</div>
         </div>
       `;
@@ -1259,7 +1545,14 @@ body {
       el.addEventListener('click', () => {
         const id = parseFloat(el.dataset.cid);
         const c = state.myContacts.find(x => x.id === id);
-        if (c) openDM(c);
+        if (!c) return;
+        const gift = collectGift(c);
+        if (gift) {
+          flyCoin(gift.coins);
+          showToast(`${gift.emoji} ${c.name} sent ${gift.name}! +${gift.coins}🪙 +${gift.xp}XP`, 'gift');
+          renderChatsList();
+        }
+        openDM(c);
       });
     });
   }
@@ -1435,9 +1728,43 @@ body {
       }
       html += '</div>';
     }
+
+    // --- Upgrades section ---
+    html += '<div class="shop-section-title">Upgrades</div><div class="shop-grid">';
+    const replyOwned = state.feedReplyUnlocked;
+    html += `
+      <div class="shop-item ${replyOwned ? 'owned' : ''}" data-upgrade="feedReply" style="grid-column: span 2;">
+        ${replyOwned ? '<span class="shop-item-check">✓</span>' : ''}
+        <span class="shop-item-preview">💬</span>
+        <div class="shop-item-name">Feed Reply</div>
+        <div class="shop-item-price">${replyOwned ? 'Unlocked' : '🪙 1000'}</div>
+      </div>`;
+    html += '</div>';
+
     shopSections.innerHTML = html;
 
-    shopSections.querySelectorAll('.shop-item').forEach(el => {
+    // Upgrade click handler
+    const upgradeEl = shopSections.querySelector('[data-upgrade="feedReply"]');
+    if (upgradeEl && !state.feedReplyUnlocked) {
+      upgradeEl.addEventListener('click', () => {
+        if (state.coins < 1000) {
+          showToast(`Need ${1000 - state.coins} more coins!`);
+          return;
+        }
+        state.coins -= 1000;
+        state.feedReplyUnlocked = true;
+        state.itemsBought += 1;
+        addXP(20);
+        checkAchievements();
+        showToast('Feed Reply unlocked! 💬');
+        if (navigator.vibrate) navigator.vibrate([15, 25, 15]);
+        save();
+        renderShop();
+        updateUI();
+      });
+    }
+
+    shopSections.querySelectorAll('.shop-item[data-cat]').forEach(el => {
       el.addEventListener('click', () => {
         const cat = el.dataset.cat;
         const id = el.dataset.id;
@@ -1472,6 +1799,164 @@ body {
     });
   }
 
+  // --- Feed ---
+  let feedPostsCache = [];
+
+  function generateFeedPosts(count = 10) {
+    const posts = [];
+    for (let i = 0; i < count; i++) {
+      // Mix of friends and strangers
+      const isFriend = state.myContacts.length > 0 && Math.random() < 0.3;
+      let author;
+      if (isFriend) {
+        author = rand(state.myContacts);
+      } else {
+        const name = rand(prefixes) + rand(cores) + rand(suffixes);
+        const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name + 'feed')}&backgroundColor=5865f2,7c3aed,99aab5&radius=50`;
+        author = { name, avatar, id: null };
+      }
+      const minutesAgo = Math.floor(Math.random() * 120) + 1;
+      const replyCount = Math.floor(Math.random() * 4);
+      const replies = [];
+      for (let r = 0; r < replyCount; r++) {
+        const rName = rand(prefixes) + rand(cores) + rand(suffixes);
+        const rAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(rName + 'reply')}&backgroundColor=5865f2,7c3aed,99aab5&radius=50`;
+        replies.push({ name: rName, avatar: rAvatar, text: rand(feedReplyTexts) });
+      }
+      posts.push({
+        key: 'fp_' + Date.now() + '_' + i + '_' + Math.random(),
+        author,
+        text: rand(feedPosts),
+        time: minutesAgo,
+        likes: Math.floor(Math.random() * 50),
+        isFriend: !!author.id,
+        replies
+      });
+    }
+    posts.sort((a, b) => a.time - b.time);
+    return posts;
+  }
+
+  function renderFeed() {
+    if (feedPostsCache.length === 0) {
+      feedPostsCache = generateFeedPosts(10);
+    }
+
+    let html = '';
+    for (const post of feedPostsCache) {
+      const liked = !!state.feedLikes[post.key];
+      const likeCount = post.likes + (liked ? 1 : 0);
+      const timeLabel = post.time < 60 ? `${post.time}m ago` : `${Math.floor(post.time / 60)}h ago`;
+
+      html += `<div class="feed-post" data-key="${post.key}">
+        <div class="feed-post-header">
+          <img class="feed-post-avatar" src="${post.author.avatar}" alt="">
+          <div class="feed-post-meta">
+            <div class="feed-post-name">${escapeHTML(post.author.name)}</div>
+            <div class="feed-post-time">${timeLabel}</div>
+          </div>
+          ${post.isFriend ? '<span class="feed-post-friend">Friend</span>' : ''}
+        </div>
+        <div class="feed-post-body">${escapeHTML(post.text)}</div>
+        <div class="feed-post-actions">
+          <button class="feed-btn feed-like ${liked ? 'liked' : ''}" data-key="${post.key}">
+            ${liked ? '❤️' : '🤍'} ${likeCount}
+          </button>
+          <button class="feed-btn feed-reply-btn ${state.feedReplyUnlocked ? '' : 'reply-locked'}" data-key="${post.key}">
+            💬 Reply ${state.feedReplyUnlocked ? '' : '🔒'}
+          </button>
+        </div>`;
+
+      // Show existing replies
+      if (post.replies.length > 0) {
+        html += '<div class="feed-replies">';
+        for (const r of post.replies) {
+          html += `<div class="feed-reply">
+            <img class="feed-reply-avatar" src="${r.avatar}" alt="">
+            <div class="feed-reply-body">
+              <div class="feed-reply-name">${escapeHTML(r.name)}</div>
+              <div class="feed-reply-text">${escapeHTML(r.text)}</div>
+            </div>
+          </div>`;
+        }
+        html += '</div>';
+      }
+
+      html += '</div>';
+    }
+
+    html += '<button class="feed-load-more" id="feedLoadMore">Load more posts</button>';
+    feedList.innerHTML = html;
+
+    // Attach handlers
+    feedList.querySelectorAll('.feed-like').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.key;
+        if (state.feedLikes[key]) {
+          delete state.feedLikes[key];
+        } else {
+          state.feedLikes[key] = true;
+          addXP(1);
+        }
+        save();
+        renderFeed();
+      });
+    });
+
+    feedList.querySelectorAll('.feed-reply-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!state.feedReplyUnlocked) {
+          showToast('Unlock Reply in the Shop for 🪙1000');
+          return;
+        }
+        const key = btn.dataset.key;
+        const post = feedPostsCache.find(p => p.key === key);
+        if (!post) return;
+        // Toggle reply input
+        const postEl = btn.closest('.feed-post');
+        if (postEl.querySelector('.feed-reply-input')) return; // already open
+        let repliesDiv = postEl.querySelector('.feed-replies');
+        if (!repliesDiv) {
+          repliesDiv = document.createElement('div');
+          repliesDiv.className = 'feed-replies';
+          postEl.appendChild(repliesDiv);
+        }
+        const inputDiv = document.createElement('div');
+        inputDiv.className = 'feed-reply-input';
+        inputDiv.innerHTML = '<input type="text" placeholder="Write a reply..." maxlength="100" autocomplete="off"><button>Send</button>';
+        repliesDiv.appendChild(inputDiv);
+        const inp = inputDiv.querySelector('input');
+        const sendBtn = inputDiv.querySelector('button');
+        inp.focus();
+        const doSend = () => {
+          const text = inp.value.trim();
+          if (!text) return;
+          post.replies.push({ name: 'You', avatar: '', text });
+          state.coins += 3;
+          state.totalCoins += 3;
+          state.messagesSent += 1;
+          addXP(4);
+          checkAchievements();
+          save();
+          updateUI();
+          renderFeed();
+          showToast('Reply sent! +3🪙');
+        };
+        sendBtn.addEventListener('click', doSend);
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doSend(); } });
+      });
+    });
+
+    const loadMore = document.getElementById('feedLoadMore');
+    if (loadMore) {
+      loadMore.addEventListener('click', () => {
+        feedPostsCache.push(...generateFeedPosts(5));
+        renderFeed();
+        if (navigator.vibrate) navigator.vibrate(5);
+      });
+    }
+  }
+
   // --- Event handlers ---
   btnAdd.addEventListener('click', addContact);
   btnSkip.addEventListener('click', skipContact);
@@ -1498,6 +1983,7 @@ body {
     updateUI();
     nextContact();
     renderCharPreview();
+    startAllGiftTimers();
   }
   init();
 

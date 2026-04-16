@@ -118,6 +118,17 @@
 
         const APPS = [
             {
+                id: "dkboy",
+                name: "DK-Boy",
+                author: "davidkozdra.workers.dev",
+                description: "Retro handheld emulator adventure.",
+                url: "https://dk-boy.davidkozdra.workers.dev/",
+                icon: "./images/ui-icons/dk-boy.svg",
+                width: 1200,
+                fullscreen: true,
+                external: true
+            },
+            {
                 id: "readyeshua",
                 name: "Read Yeshua",
                 author: "readyeshua.com",
@@ -130,8 +141,8 @@
             {
                 id: "bearpenny",
                 name: "BearPenny",
-                author: "BearPenny Capital",
-                description: "Parody finance terminal with stock filters. Every other launch is a penny-collecting mini game!",
+                author: "BearPenny.Capital",
+                description: "Every penny your family has will be the Bears, hes mad he doesnt understand the market or law but he is a bear RARRR",
                 url: "./BearPenny/index.html",
                 icon: "./BearPenny/images/logo.svg",
                 width: 1200,
@@ -142,7 +153,7 @@
                 id: "muddygame",
                 name: "Muddy Game",
                 author: "muddygame.net",
-                description: "Play games online in your browser.",
+                description: "Holes DIGG DIGG DIE ! ",
                 url: "https://muddygame.net/game/",
                 width: 1000,
                 fullscreen: false,
@@ -150,16 +161,18 @@
             },
             {
                 id: "peoplebook",
-                name: "PeopleBook",
+                name: "extenalpb.com",
                 author: "davidkozdra.com",
                 description: "Fake social collector game. Add friends, chat with DMs, earn coins, customize your character in the cosmetics shop.",
                 url: "./Fake-contact-generator-idea.html",
                 icon: "./images/ui-icons/peoplebook.svg",
-                width: 420,
-                fullscreen: false,
+                width: 1200,
+                fullscreen: true,
                 external: false
             }
         ];
+
+        const PREINSTALLED_APP_IDS = ["dkboy"];
 
         // Attach favicon URL to each app
         APPS.forEach(app => {
@@ -182,6 +195,32 @@
 
         function isInstalled(appId) {
             return getInstalledApps().includes(appId);
+        }
+
+        function ensurePreinstalledApps() {
+            if (localStorage.getItem("preinstalledAppsInitialized") === "true") {
+                return;
+            }
+
+            let installed = getInstalledApps();
+            let changed = false;
+
+            PREINSTALLED_APP_IDS.forEach(appId => {
+                if (!installed.includes(appId)) {
+                    installed.push(appId);
+                    changed = true;
+                    const app = APPS.find(a => a.id === appId);
+                    if (app) {
+                        window.parent.postMessage({ action: "installApp", app: app }, "*");
+                    }
+                }
+            });
+
+            if (changed) {
+                saveInstalledApps(installed);
+            }
+
+            localStorage.setItem("preinstalledAppsInitialized", "true");
         }
 
         function installApp(appId) {
@@ -250,6 +289,7 @@
             });
         }
 
+        ensurePreinstalledApps();
         renderApps();
     </script>
 </body>
