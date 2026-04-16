@@ -171,21 +171,49 @@
             <input type="text" id="searchInput" placeholder="Search apps...">
         </div>
         <div class="tags-filter" id="tagsFilter">
-            <button class="tag-btn active" data-tag="all">All</button>
-            <button class="tag-btn" data-tag="game">Games</button>
-            <button class="tag-btn" data-tag="tool">Tools</button>
-            <button class="tag-btn" data-tag="open-source">Open Source</button>
         </div>
     </div>
     <div class="app-grid" id="app-grid"></div>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
+
+        function populateTags(apps) {
+
+            if (!apps || apps.length === 0) return;
+            
+
+            const tagsSet = new Set();
+            apps.forEach(app => {
+                if (app.tags) {
+                    app.tags.forEach(tag => tagsSet.add(tag));
+                }
+            });
+            tagsSet.add("all");
+
+            const tagsFilter = document.getElementById("tagsFilter");
+
+            Array.from(tagsSet).sort().forEach(tag => {
+                const btn = document.createElement("button");
+                btn.className = "tag-btn";
+                btn.setAttribute("data-tag", tag);
+                btn.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
+                btn.addEventListener("click", (e) => {
+                    console.log("Tag filter clicked:", tag);
+                    document.querySelectorAll(".tag-btn").forEach(b => b.classList.remove("active"));
+                    e.target.classList.add("active");
+                    currentTag = e.target.getAttribute("data-tag");
+                    renderApps();
+                });
+                tagsFilter.appendChild(btn);
+            });
+        }
+
         function getFaviconUrl(url) {
             try {
-                let origin = new URL(url).origin;
+                if (!url) return "./images/brand/favicon.webp";
                 return "https://www.google.com/s2/favicons?domain=" + new URL(url).hostname + "&sz=128";
-            } catch { return ""; }
+            } catch { return "./images/brand/favicon.webp"; }
         }
 
         const APPS = [
@@ -193,8 +221,9 @@
                 id: "dkboy",
                 name: "DK-Boy",
                 author: "davidkozdra.workers.dev",
-                description: "Retro handheld emulator adventure.",
+                description: "Retro handheld emulator .",
                 url: "https://dk-boy.davidkozdra.workers.dev/",
+                icon: "./images/ui-icons/dk-boy.svg",
                 width: 1200,
                 fullscreen: true,
                 external: false,
@@ -253,10 +282,11 @@
                 author: "0ME9A",
                 description: "A secure password generator and manager for your daily needs.",
                 url: "https://password.ome9a.com/",
+                icon: "./images/brand/favicon.webp",
                 width: 1200,
                 fullscreen: true,
                 external: true,
-                tags: ["tool", "open-source"]
+                tags: ["tool"]
             },
             {
                 id: "lofiplayer",
@@ -264,10 +294,11 @@
                 author: "riccardobertolini",
                 description: "A relaxing Lofi Music Player to help you focus or unwind.",
                 url: "https://lofi-music-eight.vercel.app/",
+                icon: "./images/brand/favicon.webp",
                 width: 1200,
                 fullscreen: true,
                 external: true,
-                tags: ["tool", "open-source"]
+                tags: ["tool"]
             }
         ];
 
@@ -383,7 +414,7 @@
                 card.className = "app-card";
                 card.innerHTML = `
                     <div class="app-card-top">
-                        <div class="app-icon"><img src="${app.favicon}" alt="${app.name} icon"></div>
+                        <div class="app-icon"><img src="${app.favicon}" onerror="this.onerror=null;this.src='./images/brand/favicon.webp';" alt="${app.name} icon"></div>
                         <div class="app-meta">
                             <div class="app-name">${app.name}${app.external ? '<span class="badge-external">Super cool</span>' : ''}</div>
                             <div class="app-author">${app.author}</div>
@@ -423,6 +454,8 @@
 
         ensurePreinstalledApps();
         renderApps();
+        
+        populateTags(APPS);
     </script>
 </body>
 </html>

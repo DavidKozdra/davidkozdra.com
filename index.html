@@ -446,8 +446,8 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: 'muddygame', name: 'Muddy Game', url: 'https://muddygame.net/game/', width: 1000, fullscreen: false, external: true, tags: ['game'] },
       { id: 'peoplebook', name: 'PeopleBook', url: './Fake-contact-generator-idea.html', favicon: './images/ui-icons/peoplebook.svg', width: 1200, fullscreen: true, external: false, tags: ['tool'] },
       { id: 'gitpulse', name: 'GitPulse', url: 'https://github.com/DavidKozdra/GitPulse', favicon: './images/projects/gitpulseIcon.webp', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] },
-      { id: 'passwordgen', name: 'Password Generator', url: 'https://password.ome9a.com/', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] },
-      { id: 'lofiplayer', name: 'Lofi Music Player', url: 'https://lofi-music-eight.vercel.app/', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] }
+      { id: 'passwordgen', name: 'Password Generator', url: 'https://password.ome9a.com/', favicon: './images/brand/favicon.webp', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] },
+      { id: 'lofiplayer', name: 'Lofi Music Player', url: 'https://lofi-music-eight.vercel.app/', favicon: './images/brand/favicon.webp', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] }
     ];
 
     function normalizeAppTags(tags) {
@@ -493,6 +493,9 @@ document.addEventListener('DOMContentLoaded', () => {
       icon.height = 20;
       icon.setAttribute('role', 'presentation');
       icon.setAttribute('aria-hidden', 'true');
+      icon.onerror = function() {
+        this.src = './images/brand/favicon.webp';
+      };
 
       button.appendChild(icon);
       button.appendChild(document.createTextNode(' ' + app.name));
@@ -697,7 +700,11 @@ document.addEventListener('DOMContentLoaded', () => {
         taskbarButtonIcon.alt = "";
         taskbarButtonIcon.setAttribute("role", "presentation");
         taskbarButtonIcon.classList.add("window-icon");
-        taskbarButtonIcon.src = windows[i].childNodes[0].childNodes[0].src;
+        let src = windows[i].childNodes[0].childNodes[0].src;
+        taskbarButtonIcon.src = (src === 'null' || !src || src.includes('/null')) ? './images/brand/favicon.webp' : src;
+        taskbarButtonIcon.onerror = function() {
+          this.src = './images/brand/favicon.webp';
+        };
         taskbarButton.classList.add("app-bar-button");
         taskbarButton.setAttribute("aria-label", `Toggle ${windows[i].id} window`);
         if (windows[i].classList.contains("minimized")) {
@@ -1382,7 +1389,7 @@ document.addEventListener('DOMContentLoaded', () => {
           appstore.style.height = "100%";
           appstore.style.width = "100%";
           appstore.style.marginTop = "50px";
-          createWindow("App Store", appstore, null, 900, true);
+          createWindow("App Store", appstore, "./images/brand/favicon.webp", 900, true);
           break;
 
         case "installed-app":
@@ -1522,7 +1529,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function createWindowHeaderImage(src) {
       const headerImage = document.createElement("img");
       headerImage.classList.add("window-icon");
-      headerImage.src = src;
+      headerImage.src = src || './images/brand/favicon.webp';
+      headerImage.onerror = function() {
+        this.src = './images/brand/favicon.webp';
+      };
       return headerImage;
     }
 
@@ -1713,8 +1723,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getFaviconUrl(url) {
       try {
+        if (!url) return "./images/brand/favicon.webp";
         return "https://www.google.com/s2/favicons?domain=" + new URL(url).hostname + "&sz=128";
-      } catch { return ""; }
+      } catch { return "./images/brand/favicon.webp"; }
     }
 
     function addInstalledAppIcon(app) {
@@ -1749,6 +1760,9 @@ document.addEventListener('DOMContentLoaded', () => {
       iconEl.setAttribute('aria-hidden', 'true');
       iconEl.width = 64;
       iconEl.height = 64;
+      iconEl.onerror = function() {
+        this.src = './images/brand/favicon.webp';
+      };
       let text = document.createElement('div');
       text.classList.add('icon-text');
       text.innerHTML = '<p>' + app.name + '</p>';
