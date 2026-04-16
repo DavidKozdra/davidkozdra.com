@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Favicon  -->
+<link rel="icon" type="image/png" href="./images/ui-icons/peoplebook.png">
+
+<!-- Playables SDK -->
+<script>// Playables SDK v1.0.0
+// Game lifecycle bridge: rAF-based game-ready detection + event communication
+(function() {
+  'use strict';
+  if (window.playablesSDK) return;
+  var HANDLER_NAME = 'playablesGameEventHandler';
+  var ANDROID_BRIDGE_NAME = '_MetaPlayablesBridge';
+  var RAF_FRAME_THRESHOLD = 3;
+  var gameReadySent = false;
+  var firstInteractionSent = false;
+  var errorSent = false;
+  var frameCount = 0;
+  var originalRAF = window.requestAnimationFrame;
+  function hasIOSBridge() { return !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[HANDLER_NAME]); }
+  function hasAndroidBridge() { return !!(window[ANDROID_BRIDGE_NAME] && typeof window[ANDROID_BRIDGE_NAME].postEvent === 'function'); }
+  function isInIframe() { return !!(window.parent && window.parent !== window); }
+  function sendEvent(eventName, payload) {
+    var message = { type: eventName, payload: payload || {}, timestamp: Date.now() };
+    if (hasIOSBridge()) { try { window.webkit.messageHandlers[HANDLER_NAME].postMessage(message); } catch (e) {} return; }
+    if (hasAndroidBridge()) { try { var p = payload || {}; p.__secureToken = window.__fbAndroidBridgeAuthToken || ''; window[ANDROID_BRIDGE_NAME].postEvent(eventName, JSON.stringify(p)); } catch (e) {} return; }
+    if (isInIframe()) { try { window.parent.postMessage(message, '*'); } catch (e) {} return; }
+  }
+  function onFrame() { if (gameReadySent) return; frameCount++; if (frameCount >= RAF_FRAME_THRESHOLD) { gameReadySent = true; sendEvent('game_ready', { frame_count: frameCount, detected_at: Date.now() }); return; } originalRAF.call(window, onFrame); }
+  if (originalRAF) { window.requestAnimationFrame = function(callback) { if (!gameReadySent) { return originalRAF.call(window, function(timestamp) { frameCount++; if (frameCount >= RAF_FRAME_THRESHOLD && !gameReadySent) { gameReadySent = true; sendEvent('game_ready', { frame_count: frameCount, detected_at: Date.now() }); } callback(timestamp); }); } return originalRAF.call(window, callback); }; }
+  function setupFirstInteractionDetection() { var events = ['touchstart', 'mousedown', 'keydown']; function onFirstInteraction() { if (firstInteractionSent) return; firstInteractionSent = true; sendEvent('user_interaction_start', null); for (var i = 0; i < events.length; i++) document.removeEventListener(events[i], onFirstInteraction, true); } for (var i = 0; i < events.length; i++) document.addEventListener(events[i], onFirstInteraction, true); }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', setupFirstInteractionDetection); } else { setupFirstInteractionDetection(); }
+  window.addEventListener('error', function(event) { if (errorSent) return; errorSent = true; sendEvent('error', { message: event.message || 'Unknown error', source: event.filename || '', lineno: event.lineno || 0, colno: event.colno || 0, auto_captured: true }); });
+  window.addEventListener('unhandledrejection', function(event) { if (errorSent) return; errorSent = true; var reason = event.reason; sendEvent('error', { message: (reason instanceof Error) ? reason.message : String(reason), type: 'unhandled_promise_rejection', auto_captured: true }); });
+  window.playablesSDK = { complete: function(score) { sendEvent('game_ended', { score: score, completed: true }); }, error: function(message) { if (errorSent) return; errorSent = true; sendEvent('error', { message: message || 'Unknown error', auto_captured: false }); }, sendEvent: function(eventName, payload) { if (!eventName || typeof eventName !== 'string') return; sendEvent(eventName, payload); } };
+  if (originalRAF) { originalRAF.call(window, onFrame); }
+})();</script>
+<script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#5865F2">
+
+<title>Contact Connect</title>
+<style>
+:root {
+  --bg: #1e1f22;
+  --bg2: #2b2d31;
+  --card: #313338;
+  --text: #f2f3f5;
+  --muted: #1e1f22;
+  --accent: #5865F2;
+  --accent-glow: rgba(88,101,242,.25);
+  --green: #57f287;
+  --yellow: #fee75c;
+  --red: #ed4245;
+  --orange: #f59e0b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: #0f0f12;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  touch-action: manipulation;
+  color: var(--text);
+}
+.app {
+  width: 100%;
+  max-width: 420px;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top bar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--card);
+  box-shadow: 0 2px 10px rgba(0,0,0,.15);
+  z-index: 10;
+  gap: 6px;
+}
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--muted);
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 13px;
+  min-width: 0;
+  transition: transform .15s;
+}
+.stat.bump { transform: scale(1.08); }
+.stat .icon { font-size: 15px; line-height: 1; }
+.stat .value { white-space: nowrap; }
+.xp-bar-wrap {
+  flex: 1;
+  max-width: 120px;
+  height: 8px;
+  background: var(--muted);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.xp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #7c3aed);
+  border-radius: 4px;
+  transition: width .4s ease;
+  width: 0%;
+}
+
+/* Nav tabs */
+.tabs {
+  display: flex;
+  background: var(--card);
+  padding: 5px;
+  margin: 0;
+  gap: 4px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.tab {
+  flex: 1;
+  padding: 10px 6px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  opacity: .5;
+}
+.tab.active {
+  background: linear-gradient(135deg, #5865F2, #7c3aed);
+  color: white;
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(88,101,242,.3);
+}
+.tab svg { width: 16px; height: 16px; }
+
+/* Views */
+.view { display: none; flex: 1; flex-direction: column; min-height: 0; }
+.view.active { display: flex; }
+
+/* Game / People view */
+.game {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 14px 8px;
+  min-height: 0;
+}
+.card-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.card {
+  background: var(--card);
+  width: 100%;
+  max-width: 310px;
+  border-radius: 24px;
+  padding: 24px 20px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.25);
+  text-align: center;
+  animation: pop .4s cubic-bezier(.175,.885,.32,1.275);
+  border: 1px solid rgba(255,255,255,.05);
+}
+@keyframes pop {
+  0% { transform: scale(.85) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.avatar-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 12px;
+}
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--muted);
+  border: 3px solid var(--accent);
+  object-fit: cover;
+  box-shadow: 0 0 0 5px var(--accent-glow);
+}
+.online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--green);
+  border: 3px solid var(--card);
+}
+.name {
+  font-size: 22px;
+  font-weight: 900;
+  margin: 4px 0;
+  letter-spacing: -.3px;
+}
+.status {
+  font-size: 13px;
+  opacity: .65;
+  margin-bottom: 16px;
+  min-height: 18px;
+  font-weight: 500;
+}
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.btn {
+  padding: 12px 10px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform .08s, filter .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(.96); filter: brightness(.92); }
+.btn-add {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #5865F2, #7c3aed);
+  color: white;
+  box-shadow: 0 6px 16px rgba(124,58,237,.3);
+  font-size: 15px;
+  padding: 14px;
+}
+.btn-skip, .btn-msg {
+  background: var(--muted);
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* Contacts panel */
+.contacts-panel {
+  background: var(--card);
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 10px 12px 8px;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: .5;
+  font-weight: 800;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.contacts-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  min-height: 64px;
+}
+.contacts-list::-webkit-scrollbar { display: none; }
+.contact-mini {
+  flex: 0 0 auto;
+  text-align: center;
+  width: 56px;
+  cursor: pointer;
+  transition: transform .15s;
+}
+.contact-mini:active { transform: scale(.93); }
+.mini-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--muted);
+  background: var(--muted);
+  margin: 0 auto 3px;
+  object-fit: cover;
+}
+.mini-name {
+  font-size: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 56px;
+  font-weight: 600;
+  opacity: .8;
+}
+.empty-contacts {
+  font-size: 12px;
+  opacity: .4;
+  font-style: italic;
+  padding: 16px 0;
+  width: 100%;
+  text-align: center;
+}
+
+/* Chats view */
+.chats-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  scrollbar-width: thin;
+}
+.chat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.chat-item:hover, .chat-item:active { background: var(--card); }
+.chat-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--muted);
+}
+.chat-info { flex: 1; min-width: 0; }
+.chat-name { font-weight: 700; font-size: 14px; }
+.chat-preview { font-size: 12px; opacity: .5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.chat-time { font-size: 10px; opacity: .4; flex-shrink: 0; }
+.chat-unread {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.chats-empty {
+  text-align: center;
+  padding: 60px 20px;
+  opacity: .4;
+  font-size: 14px;
+}
+
+/* Shop view */
+.shop-view {
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+}
+.shop-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.shop-header h2 { font-size: 20px; font-weight: 900; }
+.shop-coins { font-size: 14px; opacity: .7; margin-top: 4px; }
+.shop-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: .5;
+  font-weight: 800;
+  margin: 16px 0 8px;
+}
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.shop-item {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 10px 6px 8px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .15s;
+  position: relative;
+}
+.shop-item:active { transform: scale(.95); }
+.shop-item.owned { border-color: var(--green); }
+.shop-item.equipped { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+.shop-item-preview {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  display: block;
+}
+.shop-item-name {
+  font-size: 9px;
+  font-weight: 700;
+  opacity: .7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shop-item-price {
+  font-size: 10px;
+  font-weight: 800;
+  margin-top: 3px;
+  color: var(--yellow);
+}
+.shop-item.owned .shop-item-price { color: var(--green); }
+.shop-item-check {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 10px;
+}
+
+/* Character preview */
+.char-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.char-canvas {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  position: relative;
+  overflow: hidden;
+}
+.char-layer {
+  position: absolute;
+  font-size: 32px;
+}
+.char-layer.skin { font-size: 56px; z-index: 1; }
+.char-layer.eyes { z-index: 2; top: 28px; }
+.char-layer.nose { z-index: 3; top: 44px; font-size: 20px; }
+.char-layer.hair { z-index: 4; top: 4px; font-size: 28px; }
+.char-layer.hat { z-index: 5; top: -4px; font-size: 30px; }
+.char-layer.glasses { z-index: 6; top: 28px; font-size: 26px; }
+.char-layer.shirt { z-index: 7; bottom: -6px; top: auto; font-size: 36px; }
+.char-label {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: .5;
+  font-weight: 600;
+}
+
+/* DM Modal */
+.dm-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+.dm-overlay.open { opacity: 1; pointer-events: all; }
+.dm-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg2);
+  margin-top: 40px;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: transform .3s cubic-bezier(.175,.885,.32,1.275);
+}
+.dm-overlay.open .dm-panel { transform: translateY(0); }
+.dm-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--card);
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  flex-shrink: 0;
+}
+.dm-header-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+}
+.dm-header-name {
+  font-weight: 800;
+  font-size: 15px;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dm-header-status {
+  font-size: 10px;
+  opacity: .5;
+  font-weight: 600;
+}
+.dm-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: var(--muted);
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dm-close:active { background: var(--accent); color: white; }
+.dm-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+}
+.dm-msg {
+  max-width: 78%;
+  padding: 9px 13px;
+  border-radius: 16px;
+  font-size: 13px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  animation: msgPop .2s ease-out;
+}
+@keyframes msgPop {
+  0% { transform: scale(.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.dm-msg.them {
+  align-self: flex-start;
+  background: var(--card);
+  border-bottom-left-radius: 4px;
+}
+.dm-msg.me {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #5865F2, #7c3aed);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+.dm-msg .dm-time {
+  font-size: 9px;
+  opacity: .45;
+  margin-top: 2px;
+  display: block;
+}
+.dm-date-sep {
+  text-align: center;
+  font-size: 10px;
+  opacity: .35;
+  font-weight: 700;
+  padding: 8px 0 2px;
+}
+.dm-input-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 14px;
+  background: var(--card);
+  flex-shrink: 0;
+}
+.dm-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 20px;
+  background: var(--muted);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+}
+.dm-input::placeholder { opacity: .4; }
+.dm-send {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5865F2, #7c3aed);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform .1s;
+}
+.dm-send:active { transform: scale(.92); }
+.dm-typing {
+  font-size: 11px;
+  opacity: .45;
+  font-style: italic;
+  padding: 0 16px 3px;
+  min-height: 18px;
+  background: var(--card);
+  flex-shrink: 0;
+}
+
+/* Toast */
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 160px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text);
+  color: var(--bg);
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .3s cubic-bezier(.175,.885,.32,1.275);
+  z-index: 100;
+  max-width: 85%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.levelup { background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-size: 14px; padding: 12px 20px; }
+.toast.achievement { background: linear-gradient(135deg, #57f287, #1abc9c); color: #0f0f12; }
+
+.coin-fly {
+  position: absolute;
+  font-weight: 900;
+  color: #fbbf24;
+  font-size: 18px;
+  z-index: 50;
+  pointer-events: none;
+  animation: flyUp 0.8s ease-out forwards;
+  text-shadow: 0 2px 4px rgba(0,0,0,.3);
+}
+@keyframes flyUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-60px) scale(1.2); opacity: 0; }
+}
+
+/* Streak banner */
+.streak-banner {
+  background: linear-gradient(135deg, var(--orange), var(--red));
+  color: white;
+  text-align: center;
+  padding: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  display: none;
+}
+.streak-banner.show { display: block; }
+
+/* Desktop */
+@media (min-width: 768px) {
+  .app { max-width: 480px; height: 90vh; max-height: 780px; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,.4); overflow: hidden; }
+  body { padding: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="streak-banner" id="streakBanner"></div>
+
+  <header class="topbar">
+    <div class="stat" id="statCoins"><span class="icon">🪙</span><span class="value" id="coinsVal">0</span></div>
+    <div class="xp-bar-wrap" title="XP to next level"><div class="xp-bar" id="xpBar"></div></div>
+    <div class="stat" id="statLevel"><span class="icon">⭐</span><span class="value">Lv <span id="levelVal">1</span></span></div>
+    <div class="stat"><span class="icon">👥</span><span class="value" id="contactsVal">0</span></div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="people" id="tabPeople">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      People
+    </button>
+    <button class="tab" data-view="chats" id="tabChats">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chats
+    </button>
+    <button class="tab" data-view="shop" id="tabShop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Shop
+    </button>
+  </nav>
+
+  <!-- People View -->
+  <div class="view active" id="viewPeople">
+    <main class="game">
+      <div class="card-container">
+        <div class="card" id="contactCard">
+          <div class="avatar-wrap">
+            <img class="avatar" id="avatar" src="" alt="avatar">
+            <div class="online-dot"></div>
+          </div>
+          <h2 class="name" id="contactName">Loading...</h2>
+          <p class="status" id="contactStatus">Generating contact</p>
+          <div class="actions">
+            <button class="btn btn-add" id="btnAdd">+ Add Friend (+10)</button>
+            <button class="btn btn-skip" id="btnSkip">Skip</button>
+            <button class="btn btn-msg" id="btnMsg">Message</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <aside class="contacts-panel">
+      <div class="panel-title">
+        <span>Friends</span>
+        <span id="contactCount">0</span>
+      </div>
+      <div class="contacts-list" id="contactsList">
+        <div class="empty-contacts">No friends yet</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Chats View -->
+  <div class="view" id="viewChats">
+    <div class="chats-list" id="chatsList">
+      <div class="chats-empty">No conversations yet. Add friends and message them!</div>
+    </div>
+  </div>
+
+  <!-- Shop View -->
+  <div class="view" id="viewShop">
+    <div class="shop-view">
+      <div class="shop-header">
+        <div class="char-preview">
+          <div class="char-canvas" id="charPreview"></div>
+          <div class="char-label">Your Character</div>
+        </div>
+        <h2>Cosmetics Shop</h2>
+        <div class="shop-coins">🪙 <span id="shopCoins">0</span> coins</div>
+      </div>
+      <div id="shopSections"></div>
+    </div>
+  </div>
+
+  <!-- DM Overlay -->
+  <div class="dm-overlay" id="dmOverlay">
+    <div class="dm-panel">
+      <div class="dm-header">
+        <img class="dm-header-avatar" id="dmAvatar" src="" alt="">
+        <div style="flex:1;min-width:0">
+          <div class="dm-header-name" id="dmName"></div>
+          <div class="dm-header-status" id="dmStatus">Online</div>
+        </div>
+        <button class="dm-close" id="dmClose">&times;</button>
+      </div>
+      <div class="dm-messages" id="dmMessages"></div>
+      <div class="dm-typing" id="dmTyping"></div>
+      <div class="dm-input-bar">
+        <input class="dm-input" id="dmInput" type="text" placeholder="Message..." maxlength="200" autocomplete="off">
+        <button class="dm-send" id="dmSend">&#9654;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+(() => {
+  // --- Data ---
+  const prefixes = ["Cyber","Lunar","Neon","Shadow","Glitch","Pixel","Solar","Void","Frost","Echo","Turbo","Mystic","Cosmic","Aqua","Blaze","Storm","Nova","Zen","Dusk","Arc"];
+  const cores = ["Otter","Phoenix","Nova","Byte","Sage","Echo","Panda","Fox","Dragon","Wolf","Kitten","Shark","Tiger","Ghost","Raven","Cobra","Falcon","Bear","Lynx","Owl"];
+  const suffixes = ["Prime","X","Mage","Core","99","3000","Void","Spark","Blade","Flux","Zero","Nova","Pro","Dash","Wave","Wing","OP","XD","HD","Max"];
+  const statusTexts = ["Wants to trade","Online in Arena","Sent you a gift","Challenged you to duel","Just leveled up","Looking for squad","Streaming now","AFK farming","Has rare loot","Wants to be friends","Hosting event","New avatar unlocked","Playing ranked","In voice chat","Browsing shop"];
+  const chatMessages = [
+    "gg!","wanna trade?","lol brb","add me back!","nice profile","duel later?",
+    "ty for add","yo what's up","let's team!","join my lobby","ez clap",
+    "poggers","brb dinner","u on later?","no way lol","that was sick","ggs",
+    "hold on sec","omw","i got wrecked","nice one!","lmaooo","wait what",
+    "lets goooo","inv me","1v1?","bro chill","haha yeah","send it",
+    "nah im good","fr fr","bet","say less","lowkey fire",
+    "im lagging","carry me pls","whats ur rank","sick avatar btw",
+    "just got a new hat lol","check my drip","your character looks fire"
+  ];
+
+  // --- Cosmetics catalog ---
+  const COSMETICS = {
+    skin: {
+      label: "Skin Color",
+      items: [
+        { id: "skin_default", name: "Default", emoji: "😶", price: 0 },
+        { id: "skin_tan",     name: "Tan",     emoji: "🫠", price: 0 },
+        { id: "skin_pale",    name: "Pale",    emoji: "🤍", price: 0 },
+        { id: "skin_dark",    name: "Dark",    emoji: "🤎", price: 0 },
+        { id: "skin_gold",    name: "Golden",  emoji: "✨",  price: 50 },
+        { id: "skin_alien",   name: "Alien",   emoji: "👽", price: 150 },
+        { id: "skin_robot",   name: "Robot",   emoji: "🤖", price: 200 },
+        { id: "skin_ghost",   name: "Ghost",   emoji: "👻", price: 300 },
+      ]
+    },
+    eyes: {
+      label: "Eyes",
+      items: [
+        { id: "eyes_default", name: "Normal",  emoji: "👀", price: 0 },
+        { id: "eyes_star",    name: "Star",    emoji: "🤩", price: 30 },
+        { id: "eyes_heart",   name: "Heart",   emoji: "😍", price: 40 },
+        { id: "eyes_cool",    name: "Cool",    emoji: "😎", price: 50 },
+        { id: "eyes_angry",   name: "Angry",   emoji: "😠", price: 60 },
+        { id: "eyes_wink",    name: "Wink",    emoji: "😉", price: 70 },
+        { id: "eyes_cry",     name: "Tears",   emoji: "🥹", price: 80 },
+        { id: "eyes_fire",    name: "Fire",    emoji: "🔥", price: 120 },
+      ]
+    },
+    nose: {
+      label: "Nose",
+      items: [
+        { id: "nose_default", name: "None",    emoji: "·",  price: 0 },
+        { id: "nose_clown",   name: "Clown",   emoji: "🔴", price: 40 },
+        { id: "nose_pig",     name: "Pig",     emoji: "🐽", price: 50 },
+        { id: "nose_dog",     name: "Dog",     emoji: "🐶", price: 60 },
+      ]
+    },
+    hair: {
+      label: "Hair",
+      items: [
+        { id: "hair_default", name: "None",    emoji: "·",  price: 0 },
+        { id: "hair_spiky",   name: "Spiky",   emoji: "⚡", price: 30 },
+        { id: "hair_curly",   name: "Curly",   emoji: "🌀", price: 40 },
+        { id: "hair_long",    name: "Long",    emoji: "💇", price: 50 },
+        { id: "hair_flame",   name: "Flame",   emoji: "🔥", price: 100 },
+        { id: "hair_rainbow", name: "Rainbow", emoji: "🌈", price: 200 },
+      ]
+    },
+    hat: {
+      label: "Hat",
+      items: [
+        { id: "hat_default",  name: "None",    emoji: "·",  price: 0 },
+        { id: "hat_cap",      name: "Cap",     emoji: "🧢", price: 30 },
+        { id: "hat_top",      name: "Top Hat", emoji: "🎩", price: 60 },
+        { id: "hat_crown",    name: "Crown",   emoji: "👑", price: 150 },
+        { id: "hat_party",    name: "Party",   emoji: "🎉", price: 80 },
+        { id: "hat_cowboy",   name: "Cowboy",  emoji: "🤠", price: 90 },
+        { id: "hat_wizard",   name: "Wizard",  emoji: "🧙", price: 200 },
+        { id: "hat_halo",     name: "Halo",    emoji: "😇", price: 250 },
+      ]
+    },
+    glasses: {
+      label: "Glasses",
+      items: [
+        { id: "glasses_default", name: "None",     emoji: "·",  price: 0 },
+        { id: "glasses_nerd",    name: "Nerd",     emoji: "🤓", price: 30 },
+        { id: "glasses_sun",     name: "Shades",   emoji: "🕶️", price: 50 },
+        { id: "glasses_monocle", name: "Monocle",  emoji: "🧐", price: 80 },
+        { id: "glasses_3d",      name: "3D",       emoji: "👓", price: 60 },
+        { id: "glasses_vr",      name: "VR",       emoji: "🥽", price: 150 },
+      ]
+    },
+    shirt: {
+      label: "Shirt",
+      items: [
+        { id: "shirt_default", name: "Basic",   emoji: "👕", price: 0 },
+        { id: "shirt_hoodie",  name: "Hoodie",  emoji: "🧥", price: 40 },
+        { id: "shirt_suit",    name: "Suit",    emoji: "🤵", price: 80 },
+        { id: "shirt_armor",   name: "Armor",   emoji: "🛡️", price: 150 },
+        { id: "shirt_tux",     name: "Tuxedo",  emoji: "🎭", price: 120 },
+        { id: "shirt_jersey",  name: "Jersey",  emoji: "🏅", price: 70 },
+        { id: "shirt_cape",    name: "Cape",    emoji: "🦸", price: 200 },
+        { id: "shirt_space",   name: "Space",   emoji: "🚀", price: 300 },
+      ]
+    }
+  };
+
+  const XP_PER_LEVEL = 50;
+
+  const ACHIEVEMENTS = [
+    { id: "first_friend", name: "First Friend", desc: "Add your first contact", check: s => s.contactsAdded >= 1, reward: 20 },
+    { id: "social_5", name: "Social Butterfly", desc: "Add 5 friends", check: s => s.contactsAdded >= 5, reward: 50 },
+    { id: "social_20", name: "Networker", desc: "Add 20 friends", check: s => s.contactsAdded >= 20, reward: 100 },
+    { id: "social_50", name: "Influencer", desc: "Add 50 friends", check: s => s.contactsAdded >= 50, reward: 250 },
+    { id: "chat_1", name: "First Chat", desc: "Send your first message", check: s => s.messagesSent >= 1, reward: 15 },
+    { id: "chat_20", name: "Chatterbox", desc: "Send 20 messages", check: s => s.messagesSent >= 20, reward: 80 },
+    { id: "chat_100", name: "Keyboard Warrior", desc: "Send 100 messages", check: s => s.messagesSent >= 100, reward: 200 },
+    { id: "coins_100", name: "Coin Collector", desc: "Earn 100 coins total", check: s => s.totalCoins >= 100, reward: 30 },
+    { id: "coins_500", name: "Rich Kid", desc: "Earn 500 coins total", check: s => s.totalCoins >= 500, reward: 100 },
+    { id: "coins_2000", name: "Tycoon", desc: "Earn 2000 coins total", check: s => s.totalCoins >= 2000, reward: 300 },
+    { id: "level_5", name: "Rising Star", desc: "Reach level 5", check: s => s.level >= 5, reward: 50 },
+    { id: "level_10", name: "Veteran", desc: "Reach level 10", check: s => s.level >= 10, reward: 150 },
+    { id: "shop_1", name: "Fashionista", desc: "Buy your first cosmetic", check: s => s.itemsBought >= 1, reward: 25 },
+    { id: "shop_10", name: "Dripped Out", desc: "Buy 10 cosmetics", check: s => s.itemsBought >= 10, reward: 150 },
+    { id: "streak_3", name: "On a Roll", desc: "3 day streak", check: s => s.streak >= 3, reward: 50 },
+    { id: "streak_7", name: "Dedicated", desc: "7 day streak", check: s => s.streak >= 7, reward: 150 },
+  ];
+
+  // --- DOM refs ---
+  const $ = id => document.getElementById(id);
+  const app = $('app'), toast = $('toast');
+  const coinsVal = $('coinsVal'), levelVal = $('levelVal'), contactsVal = $('contactsVal'), xpBar = $('xpBar');
+  const avatarEl = $('avatar'), nameEl = $('contactName'), statusEl = $('contactStatus');
+  const cardEl = $('contactCard'), contactsList = $('contactsList'), contactCount = $('contactCount');
+  const btnAdd = $('btnAdd'), btnSkip = $('btnSkip'), btnMsg = $('btnMsg');
+  const statCoins = $('statCoins');
+  const streakBanner = $('streakBanner');
+
+  // Views & tabs
+  const views = { people: $('viewPeople'), chats: $('viewChats'), shop: $('viewShop') };
+  const tabs = { people: $('tabPeople'), chats: $('tabChats'), shop: $('tabShop') };
+
+  // Chats
+  const chatsList = $('chatsList');
+
+  // Shop
+  const shopCoins = $('shopCoins'), shopSections = $('shopSections'), charPreview = $('charPreview');
+
+  // DM
+  const dmOverlay = $('dmOverlay'), dmAvatar = $('dmAvatar'), dmName = $('dmName');
+  const dmStatus = $('dmStatus'), dmClose = $('dmClose'), dmMessages = $('dmMessages');
+  const dmInput = $('dmInput'), dmSend = $('dmSend'), dmTyping = $('dmTyping');
+
+  // --- State ---
+  let state = {
+    coins: 0, totalCoins: 0, contactsAdded: 0, messagesSent: 0,
+    level: 1, xp: 0, streak: 0, lastPlayDate: null,
+    myContacts: [], currentView: 'people',
+    ownedItems: ['skin_default','eyes_default','nose_default','hair_default','hat_default','glasses_default','shirt_default'],
+    equipped: { skin:'skin_default', eyes:'eyes_default', nose:'nose_default', hair:'hair_default', hat:'hat_default', glasses:'glasses_default', shirt:'shirt_default' },
+    unlockedAchievements: [],
+    itemsBought: 0
+  };
+  let currentContact = null;
+  let dmContact = null;
+  let db = null;
+
+  function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function save() { try { localStorage.setItem('contactGameV2', JSON.stringify(state)); } catch {} }
+  function load() { try { const s = JSON.parse(localStorage.getItem('contactGameV2')); if (s) state = { ...state, ...s }; } catch {} }
+
+  // --- IndexedDB ---
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open('ContactGameDMs', 1);
+      req.onupgradeneeded = e => {
+        const d = e.target.result;
+        if (!d.objectStoreNames.contains('messages')) {
+          const store = d.createObjectStore('messages', { keyPath: 'id', autoIncrement: true });
+          store.createIndex('contactId', 'contactId', { unique: false });
+        }
+      };
+      req.onsuccess = e => resolve(e.target.result);
+      req.onerror = e => reject(e.target.error);
+    });
+  }
+
+  function dbSaveMsg(msg) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('messages', 'readwrite');
+      tx.objectStore('messages').add(msg);
+      tx.oncomplete = () => resolve();
+      tx.onerror = e => reject(e.target.error);
+    });
+  }
+
+  function dbGetMessages(contactId) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('messages', 'readonly');
+      const idx = tx.objectStore('messages').index('contactId');
+      const req = idx.getAll(contactId);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = e => reject(e.target.error);
+    });
+  }
+
+  function dbGetLastMessage(contactId) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('messages', 'readonly');
+      const idx = tx.objectStore('messages').index('contactId');
+      const req = idx.openCursor(contactId, 'prev');
+      req.onsuccess = () => resolve(req.result ? req.result.value : null);
+      req.onerror = e => reject(e.target.error);
+    });
+  }
+
+  // --- Streak ---
+  function checkStreak() {
+    const today = new Date().toDateString();
+    if (state.lastPlayDate === today) return;
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (state.lastPlayDate === yesterday) {
+      state.streak += 1;
+      const bonus = Math.min(state.streak * 5, 50);
+      state.coins += bonus;
+      state.totalCoins += bonus;
+      streakBanner.textContent = `🔥 ${state.streak} day streak! +${bonus} bonus coins`;
+      streakBanner.classList.add('show');
+      setTimeout(() => streakBanner.classList.remove('show'), 4000);
+    } else if (state.lastPlayDate !== null) {
+      state.streak = 1;
+    } else {
+      state.streak = 1;
+    }
+    state.lastPlayDate = today;
+    save();
+  }
+
+  // --- XP & Level ---
+  function addXP(amount) {
+    state.xp += amount;
+    while (state.xp >= XP_PER_LEVEL) {
+      state.xp -= XP_PER_LEVEL;
+      state.level += 1;
+      showToast(`⭐ LEVEL UP! Lv ${state.level}`, 'levelup');
+      if (navigator.vibrate) navigator.vibrate([20, 30, 20]);
+    }
+  }
+
+  // --- Achievements ---
+  function checkAchievements() {
+    for (const a of ACHIEVEMENTS) {
+      if (state.unlockedAchievements.includes(a.id)) continue;
+      if (a.check(state)) {
+        state.unlockedAchievements.push(a.id);
+        state.coins += a.reward;
+        state.totalCoins += a.reward;
+        setTimeout(() => showToast(`🏆 ${a.name}! +${a.reward}🪙`, 'achievement'), 500);
+      }
+    }
+  }
+
+  // --- Contacts ---
+  function generateName() {
+    return rand(prefixes) + rand(cores) + rand(suffixes);
+  }
+
+  function generateContact() {
+    let name, tries = 0;
+    do { name = generateName(); tries++; } while (state.myContacts.some(c => c.name === name) && tries < 30);
+    const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}&backgroundColor=5865f2,7c3aed,99aab5&radius=50`;
+    return {
+      id: Date.now() + Math.random(),
+      name,
+      avatar,
+      status: rand(statusTexts)
+    };
+  }
+
+  function renderContactCard(c) {
+    cardEl.style.animation = 'none';
+    void cardEl.offsetWidth;
+    cardEl.style.animation = 'pop .4s cubic-bezier(.175,.885,.32,1.275)';
+    avatarEl.src = c.avatar;
+    nameEl.textContent = c.name;
+    statusEl.textContent = c.status;
+  }
+
+  function nextContact() {
+    currentContact = generateContact();
+    renderContactCard(currentContact);
+  }
+
+  // --- Fake history ---
+  function generateFakeHistory(contact) {
+    const msgs = [];
+    const count = 3 + Math.floor(Math.random() * 8);
+    const now = Date.now();
+    const span = (1 + Math.floor(Math.random() * 5)) * 86400000;
+    for (let i = 0; i < count; i++) {
+      const t = now - span + Math.floor((span / count) * i) + Math.floor(Math.random() * 60000);
+      msgs.push({
+        contactId: contact.id,
+        text: rand(chatMessages),
+        sender: Math.random() > 0.5 ? 'me' : 'them',
+        timestamp: t
+      });
+    }
+    return msgs;
+  }
+
+  // --- UI Updates ---
+  function updateUI() {
+    coinsVal.textContent = state.coins;
+    contactsVal.textContent = state.contactsAdded;
+    levelVal.textContent = state.level;
+    contactCount.textContent = state.myContacts.length;
+    xpBar.style.width = ((state.xp / XP_PER_LEVEL) * 100) + '%';
+    shopCoins.textContent = state.coins;
+
+    if (state.myContacts.length === 0) {
+      contactsList.innerHTML = '<div class="empty-contacts">No friends yet</div>';
+    } else {
+      contactsList.innerHTML = state.myContacts.map(c => `
+        <div class="contact-mini" data-cid="${c.id}" title="DM ${c.name}">
+          <img class="mini-avatar" src="${c.avatar}" alt="">
+          <div class="mini-name">${escapeHTML(c.name)}</div>
+        </div>
+      `).join('');
+      contactsList.querySelectorAll('.contact-mini').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = parseFloat(el.dataset.cid);
+          const c = state.myContacts.find(x => x.id === id);
+          if (c) openDM(c);
+        });
+      });
+    }
+  }
+
+  function showToast(msg, type = '') {
+    toast.textContent = msg;
+    toast.className = 'toast show' + (type ? ' ' + type : '');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  function flyCoin(amount, el) {
+    const fly = document.createElement('div');
+    fly.className = 'coin-fly';
+    fly.textContent = '+' + amount;
+    const rect = (el || btnAdd).getBoundingClientRect();
+    const appRect = app.getBoundingClientRect();
+    fly.style.left = (rect.left - appRect.left + rect.width / 2 - 10) + 'px';
+    fly.style.top = (rect.top - appRect.top) + 'px';
+    app.appendChild(fly);
+    setTimeout(() => fly.remove(), 800);
+  }
+
+  // --- Actions ---
+  function addContact() {
+    if (!currentContact || state.myContacts.some(c => c.id === currentContact.id)) return;
+    if (navigator.vibrate) navigator.vibrate(10);
+
+    state.myContacts.unshift(currentContact);
+    state.coins += 10;
+    state.totalCoins += 10;
+    state.contactsAdded += 1;
+    addXP(10);
+
+    flyCoin(10);
+    statCoins.classList.add('bump');
+    setTimeout(() => statCoins.classList.remove('bump'), 150);
+
+    showToast(`Added ${currentContact.name}!`);
+    checkAchievements();
+    updateUI();
+    save();
+    setTimeout(nextContact, 200);
+  }
+
+  function skipContact() {
+    if (navigator.vibrate) navigator.vibrate(5);
+    addXP(1);
+    save();
+    updateUI();
+    nextContact();
+  }
+
+  function messageContact() {
+    if (!currentContact) return;
+    const existing = state.myContacts.find(c => c.name === currentContact.name);
+    if (existing) {
+      openDM(existing);
+    } else {
+      state.myContacts.unshift(currentContact);
+      state.coins += 10;
+      state.totalCoins += 10;
+      state.contactsAdded += 1;
+      addXP(10);
+      flyCoin(10);
+      checkAchievements();
+      updateUI();
+      save();
+      openDM(currentContact);
+      setTimeout(nextContact, 200);
+    }
+  }
+
+  // --- Tabs ---
+  function switchView(view) {
+    state.currentView = view;
+    Object.keys(views).forEach(k => {
+      views[k].classList.toggle('active', k === view);
+      tabs[k].classList.toggle('active', k === view);
+    });
+    if (view === 'chats') renderChatsList();
+    if (view === 'shop') renderShop();
+    save();
+  }
+
+  Object.keys(tabs).forEach(k => {
+    tabs[k].addEventListener('click', () => switchView(k));
+  });
+
+  // --- Chats View ---
+  async function renderChatsList() {
+    if (state.myContacts.length === 0) {
+      chatsList.innerHTML = '<div class="chats-empty">No conversations yet. Add friends and message them!</div>';
+      return;
+    }
+
+    const entries = [];
+    for (const c of state.myContacts) {
+      const last = await dbGetLastMessage(c.id);
+      if (last) {
+        entries.push({ contact: c, lastMsg: last });
+      }
+    }
+
+    entries.sort((a, b) => b.lastMsg.timestamp - a.lastMsg.timestamp);
+
+    if (entries.length === 0) {
+      chatsList.innerHTML = '<div class="chats-empty">No messages yet. Tap "Message" on a contact to start chatting!</div>';
+      return;
+    }
+
+    chatsList.innerHTML = entries.map(e => {
+      const preview = (e.lastMsg.sender === 'me' ? 'You: ' : '') + e.lastMsg.text;
+      const time = formatTimeShort(e.lastMsg.timestamp);
+      return `
+        <div class="chat-item" data-cid="${e.contact.id}">
+          <img class="chat-avatar" src="${e.contact.avatar}" alt="">
+          <div class="chat-info">
+            <div class="chat-name">${escapeHTML(e.contact.name)}</div>
+            <div class="chat-preview">${escapeHTML(preview)}</div>
+          </div>
+          <div class="chat-time">${time}</div>
+        </div>
+      `;
+    }).join('');
+
+    chatsList.querySelectorAll('.chat-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = parseFloat(el.dataset.cid);
+        const c = state.myContacts.find(x => x.id === id);
+        if (c) openDM(c);
+      });
+    });
+  }
+
+  function formatTimeShort(ts) {
+    const d = new Date(ts);
+    const now = new Date();
+    if (d.toDateString() === now.toDateString()) {
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    const yesterday = new Date(now); yesterday.setDate(yesterday.getDate() - 1);
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  }
+
+  // --- DM ---
+  function formatTime(ts) {
+    return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function formatDate(ts) {
+    const d = new Date(ts), now = new Date();
+    if (d.toDateString() === now.toDateString()) return 'Today';
+    const y = new Date(now); y.setDate(y.getDate() - 1);
+    if (d.toDateString() === y.toDateString()) return 'Yesterday';
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  }
+
+  function escapeHTML(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function renderDMMessages(msgs) {
+    dmMessages.innerHTML = '';
+    let lastDate = '';
+    msgs.forEach(m => {
+      const date = formatDate(m.timestamp);
+      if (date !== lastDate) {
+        lastDate = date;
+        const sep = document.createElement('div');
+        sep.className = 'dm-date-sep';
+        sep.textContent = date;
+        dmMessages.appendChild(sep);
+      }
+      const div = document.createElement('div');
+      div.className = 'dm-msg ' + m.sender;
+      div.innerHTML = escapeHTML(m.text) + '<span class="dm-time">' + formatTime(m.timestamp) + '</span>';
+      dmMessages.appendChild(div);
+    });
+    dmMessages.scrollTop = dmMessages.scrollHeight;
+  }
+
+  async function openDM(contact) {
+    dmContact = contact;
+    dmAvatar.src = contact.avatar;
+    dmName.textContent = contact.name;
+    dmStatus.textContent = contact.status || 'Online';
+    dmTyping.textContent = '';
+    dmInput.value = '';
+
+    let msgs = await dbGetMessages(contact.id);
+    if (msgs.length === 0) {
+      const fakes = generateFakeHistory(contact);
+      for (const m of fakes) await dbSaveMsg(m);
+      msgs = await dbGetMessages(contact.id);
+    }
+
+    renderDMMessages(msgs);
+    dmOverlay.classList.add('open');
+    setTimeout(() => dmInput.focus(), 300);
+  }
+
+  function closeDM() {
+    dmOverlay.classList.remove('open');
+    dmContact = null;
+    if (state.currentView === 'chats') renderChatsList();
+  }
+
+  async function sendDM() {
+    const text = dmInput.value.trim();
+    if (!text || !dmContact) return;
+    dmInput.value = '';
+
+    const msg = { contactId: dmContact.id, text, sender: 'me', timestamp: Date.now() };
+    await dbSaveMsg(msg);
+
+    state.messagesSent += 1;
+    state.coins += 2;
+    state.totalCoins += 2;
+    addXP(3);
+    checkAchievements();
+    updateUI();
+    save();
+
+    const msgs = await dbGetMessages(dmContact.id);
+    renderDMMessages(msgs);
+
+    // Simulated reply
+    dmTyping.textContent = dmContact.name + ' is typing...';
+    const delay = 600 + Math.floor(Math.random() * 2000);
+    setTimeout(async () => {
+      if (!dmContact) return;
+      const reply = { contactId: dmContact.id, text: rand(chatMessages), sender: 'them', timestamp: Date.now() };
+      await dbSaveMsg(reply);
+      dmTyping.textContent = '';
+      const updated = await dbGetMessages(dmContact.id);
+      renderDMMessages(updated);
+      if (navigator.vibrate) navigator.vibrate(5);
+    }, delay);
+  }
+
+  dmClose.addEventListener('click', closeDM);
+  dmOverlay.addEventListener('click', e => { if (e.target === dmOverlay) closeDM(); });
+  dmSend.addEventListener('click', sendDM);
+  dmInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendDM(); } });
+
+  // --- Shop ---
+  function renderCharPreview() {
+    const eq = state.equipped;
+    let html = '';
+    const getEmoji = (cat, id) => {
+      const item = COSMETICS[cat].items.find(i => i.id === id);
+      return item ? item.emoji : '';
+    };
+    const skinE = getEmoji('skin', eq.skin);
+    const eyesE = getEmoji('eyes', eq.eyes);
+    const noseE = getEmoji('nose', eq.nose);
+    const hairE = getEmoji('hair', eq.hair);
+    const hatE = getEmoji('hat', eq.hat);
+    const glassesE = getEmoji('glasses', eq.glasses);
+    const shirtE = getEmoji('shirt', eq.shirt);
+
+    if (skinE && skinE !== '·') html += `<span class="char-layer skin">${skinE}</span>`;
+    if (eyesE && eyesE !== '·') html += `<span class="char-layer eyes">${eyesE}</span>`;
+    if (noseE && noseE !== '·') html += `<span class="char-layer nose">${noseE}</span>`;
+    if (hairE && hairE !== '·') html += `<span class="char-layer hair">${hairE}</span>`;
+    if (hatE && hatE !== '·') html += `<span class="char-layer hat">${hatE}</span>`;
+    if (glassesE && glassesE !== '·') html += `<span class="char-layer glasses">${glassesE}</span>`;
+    if (shirtE && shirtE !== '·') html += `<span class="char-layer shirt">${shirtE}</span>`;
+
+    if (!html) html = '<span class="char-layer skin">😶</span>';
+    charPreview.innerHTML = html;
+  }
+
+  function renderShop() {
+    shopCoins.textContent = state.coins;
+    renderCharPreview();
+
+    let html = '';
+    for (const [cat, data] of Object.entries(COSMETICS)) {
+      html += `<div class="shop-section-title">${data.label}</div><div class="shop-grid">`;
+      for (const item of data.items) {
+        const owned = state.ownedItems.includes(item.id);
+        const equipped = state.equipped[cat] === item.id;
+        let cls = 'shop-item';
+        if (equipped) cls += ' equipped';
+        else if (owned) cls += ' owned';
+
+        let priceLabel = '';
+        if (equipped) priceLabel = 'Equipped';
+        else if (owned) priceLabel = 'Tap to equip';
+        else priceLabel = `🪙 ${item.price}`;
+
+        html += `
+          <div class="${cls}" data-cat="${cat}" data-id="${item.id}" data-price="${item.price}">
+            ${equipped ? '<span class="shop-item-check">✓</span>' : ''}
+            <span class="shop-item-preview">${item.emoji}</span>
+            <div class="shop-item-name">${item.name}</div>
+            <div class="shop-item-price">${priceLabel}</div>
+          </div>`;
+      }
+      html += '</div>';
+    }
+    shopSections.innerHTML = html;
+
+    shopSections.querySelectorAll('.shop-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const cat = el.dataset.cat;
+        const id = el.dataset.id;
+        const price = parseInt(el.dataset.price);
+
+        if (state.equipped[cat] === id) return; // already equipped
+
+        if (state.ownedItems.includes(id)) {
+          // Equip
+          state.equipped[cat] = id;
+          showToast(`Equipped ${COSMETICS[cat].items.find(i => i.id === id).name}!`);
+        } else {
+          // Buy
+          if (state.coins < price) {
+            showToast(`Need ${price - state.coins} more coins!`);
+            return;
+          }
+          state.coins -= price;
+          state.ownedItems.push(id);
+          state.equipped[cat] = id;
+          state.itemsBought += 1;
+          addXP(5);
+          checkAchievements();
+          showToast(`Bought & equipped! -${price}🪙`);
+          if (navigator.vibrate) navigator.vibrate([10, 20, 10]);
+        }
+
+        save();
+        renderShop();
+        updateUI();
+      });
+    });
+  }
+
+  // --- Event handlers ---
+  btnAdd.addEventListener('click', addContact);
+  btnSkip.addEventListener('click', skipContact);
+  btnMsg.addEventListener('click', messageContact);
+
+  // Keyboard
+  window.addEventListener('keydown', e => {
+    if (dmOverlay.classList.contains('open')) {
+      if (e.key === 'Escape') closeDM();
+      return;
+    }
+    if (state.currentView !== 'people') return;
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); addContact(); }
+    if (e.key === 'ArrowRight' || e.key === 's') skipContact();
+    if (e.key === 'm') messageContact();
+  });
+
+  // --- Init ---
+  async function init() {
+    db = await openDB();
+    load();
+    checkStreak();
+    switchView(state.currentView);
+    updateUI();
+    nextContact();
+    renderCharPreview();
+  }
+  init();
+
+  // Prevent pull-to-refresh
+  let lastY = 0;
+  document.addEventListener('touchstart', e => lastY = e.touches[0].clientY, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (e.touches[0].clientY > lastY && window.scrollY === 0) e.preventDefault();
+  }, { passive: false });
+})();
+</script>
+</body>
+</html>

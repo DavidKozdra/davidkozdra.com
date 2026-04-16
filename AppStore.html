@@ -52,8 +52,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
             flex-shrink: 0;
+            overflow: hidden;
+        }
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         .app-meta { flex: 1; }
         .app-name { font-size: 1.05rem; font-weight: 600; }
@@ -89,6 +94,10 @@
             display: none;
         }
         .btn-uninstall:hover { background: #fef2f2; }
+        .badge-external {
+            display: inline-block; font-size: .65rem; background: #475569; color: #e2e8f0;
+            padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -100,38 +109,66 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
+        function getFaviconUrl(url) {
+            try {
+                let origin = new URL(url).origin;
+                return "https://www.google.com/s2/favicons?domain=" + new URL(url).hostname + "&sz=128";
+            } catch { return ""; }
+        }
+
         const APPS = [
             {
                 id: "readyeshua",
                 name: "Read Yeshua",
                 author: "readyeshua.com",
                 description: "Read and study scripture online.",
-                icon: "fas fa-book-bible",
                 url: "https://readyeshua.com/read",
                 width: 1200,
-                fullscreen: true
+                fullscreen: true,
+                external: true
             },
             {
-                id: "redchip",
-                name: "RedChip Stocks",
-                author: "redchip.com",
-                description: "Track and research small-cap stocks and investments.",
-                icon: "fas fa-chart-line",
-                url: "https://redchip.com/stocks",
-                width: 1400,
-                fullscreen: true
+                id: "bearpenny",
+                name: "BearPenny",
+                author: "BearPenny Capital",
+                description: "Parody finance terminal with stock filters. Every other launch is a penny-collecting mini game!",
+                url: "./BearPenny/index.html",
+                icon: "./BearPenny/images/logo.svg",
+                width: 1200,
+                fullscreen: true,
+                external: false
             },
             {
                 id: "muddygame",
                 name: "Muddy Game",
                 author: "muddygame.net",
                 description: "Play games online in your browser.",
-                icon: "fas fa-gamepad",
                 url: "https://muddygame.net/game/",
                 width: 1000,
-                fullscreen: false
+                fullscreen: false,
+                external: true
+            },
+            {
+                id: "peoplebook",
+                name: "PeopleBook",
+                author: "davidkozdra.com",
+                description: "Fake social collector game. Add friends, chat with DMs, earn coins, customize your character in the cosmetics shop.",
+                url: "./Fake-contact-generator-idea.html",
+                icon: "./images/ui-icons/peoplebook.svg",
+                width: 420,
+                fullscreen: false,
+                external: false
             }
         ];
+
+        // Attach favicon URL to each app
+        APPS.forEach(app => {
+            if (app.icon) {
+                app.favicon = app.icon;
+            } else {
+                app.favicon = getFaviconUrl(app.url);
+            }
+        });
 
         function getInstalledApps() {
             try {
@@ -175,13 +212,19 @@
             APPS.forEach(app => {
                 const installed = isInstalled(app.id);
                 const card = document.createElement("div");
+                let totalInstalls = Math.floor(Math.random() * 10000) + 100; // Random install count for demo
                 card.className = "app-card";
                 card.innerHTML = `
                     <div class="app-card-top">
-                        <div class="app-icon"><i class="${app.icon}"></i></div>
+                        <div class="app-icon"><img src="${app.favicon}" alt="${app.name} icon"></div>
                         <div class="app-meta">
-                            <div class="app-name">${app.name}</div>
+                            <div class="app-name">${app.name}${app.external ? '<span class="badge-external">Super cool</span>' : ''}</div>
                             <div class="app-author">${app.author}</div>
+                        </div>
+
+                        <! --       <div install count -->
+                        <div class="app-installs" style="margin-left: auto; font-size: .75rem; color: #888;">
+                            ${totalInstalls} TOTAL installs
                         </div>
                     </div>
                     <div class="app-desc">${app.description}</div>

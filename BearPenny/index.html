@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BearPenny</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
+
+        /* ===== FINANCE MODE ===== */
+        .finance-app { height: 100vh; display: flex; flex-direction: column; }
+        .bp-header {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid #475569;
+        }
+        .bp-logo { display: flex; align-items: center; gap: 10px; }
+        .bp-logo span { font-size: 1.3rem; font-weight: 700; color: #fbbf24; }
+        .bp-logo small { color: #94a3b8; font-size: .75rem; }
+        .bp-market-bar { display: flex; gap: 24px; font-size: .8rem; }
+        .bp-market-bar .up { color: #4ade80; }
+        .bp-market-bar .down { color: #f87171; }
+        .bp-body { display: flex; flex: 1; overflow: hidden; }
+        .bp-sidebar {
+            width: 220px; background: #1e293b; padding: 16px;
+            border-right: 1px solid #334155; overflow-y: auto;
+        }
+        .bp-sidebar h3 { font-size: .85rem; color: #94a3b8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .filter-group { margin-bottom: 16px; }
+        .filter-group label { display: block; font-size: .78rem; color: #cbd5e1; margin-bottom: 4px; }
+        .filter-group select, .filter-group input {
+            width: 100%; padding: 6px 8px; background: #0f172a; border: 1px solid #475569;
+            border-radius: 6px; color: #e2e8f0; font-size: .8rem;
+        }
+        .filter-group input[type="range"] { padding: 0; }
+        .bp-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .bp-toolbar {
+            padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+            background: #1e293b; border-bottom: 1px solid #334155;
+        }
+        .bp-toolbar input {
+            background: #0f172a; border: 1px solid #475569; border-radius: 6px;
+            padding: 6px 12px; color: #e2e8f0; width: 260px; font-size: .82rem;
+        }
+        .bp-toolbar .view-btns button {
+            background: none; border: 1px solid #475569; color: #94a3b8;
+            padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; margin-left: 4px;
+        }
+        .bp-toolbar .view-btns button.active { background: #334155; color: #fbbf24; border-color: #fbbf24; }
+        .stock-table { flex: 1; overflow-y: auto; padding: 0 20px 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+        th { text-align: left; padding: 10px 8px; color: #94a3b8; border-bottom: 1px solid #334155; position: sticky; top: 0; background: #0f172a; cursor: pointer; user-select: none; }
+        th:hover { color: #fbbf24; }
+        td { padding: 10px 8px; border-bottom: 1px solid #1e293b; }
+        tr:hover { background: #1e293b; }
+        .ticker { font-weight: 600; color: #fbbf24; }
+        .pos { color: #4ade80; }
+        .neg { color: #f87171; }
+        .vol { color: #94a3b8; }
+        .chip { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .7rem; font-weight: 500; }
+        .chip-buy { background: #064e3b; color: #4ade80; }
+        .chip-sell { background: #450a0a; color: #f87171; }
+        .chip-hold { background: #1c1917; color: #fbbf24; }
+        .btn-trade { padding: 3px 10px; border-radius: 6px; border: none; font-size: .72rem; font-weight: 600; cursor: pointer; margin: 0 2px; }
+        .btn-buy { background: #065f46; color: #4ade80; }
+        .btn-buy:hover { background: #047857; }
+        .btn-sell-stock { background: #7f1d1d; color: #fca5a5; }
+        .btn-sell-stock:hover { background: #991b1b; }
+        .btn-sell-stock:disabled { opacity: 0.3; cursor: default; }
+        /* Skeleton loading */
+        .skeleton-row td { padding: 12px 8px; }
+        .skeleton-bar { height: 14px; border-radius: 4px; background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        /* Pagination */
+        .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; background: #1e293b; border-top: 1px solid #334155; }
+        .pagination button { background: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: .78rem; }
+        .pagination button:hover { border-color: #fbbf24; color: #fbbf24; }
+        .pagination button.active { background: #334155; color: #fbbf24; border-color: #fbbf24; }
+        .pagination button:disabled { opacity: 0.3; cursor: default; }
+        .pagination .page-info { color: #94a3b8; font-size: .78rem; }
+        /* Balance bar */
+        .balance-bar { display: flex; align-items: center; gap: 16px; padding: 8px 20px; background: #0f172a; border-bottom: 1px solid #334155; font-size: .82rem; }
+        .balance-bar .bal-item { display: flex; align-items: center; gap: 5px; }
+        .balance-bar .bal-label { color: #94a3b8; font-size: .7rem; text-transform: uppercase; }
+        .balance-bar .bal-val { font-weight: 600; }
+        .bal-gold { color: #fbbf24; }
+        .bal-portfolio { color: #4ade80; }
+        .bal-tax { color: #f87171; }
+        .bal-tax.safe { color: #4ade80; }
+        /* Prison overlay */
+        .prison-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,.95);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+        }
+        .prison-overlay h1 { font-size: 3rem; color: #f87171; margin-bottom: 8px; }
+        .prison-overlay .prison-msg { color: #94a3b8; font-size: 1.1rem; margin-bottom: 20px; max-width: 400px; line-height: 1.5; }
+        .prison-overlay .prison-fine { color: #fbbf24; font-size: 1.3rem; margin-bottom: 20px; }
+        .prison-overlay button { padding: 14px 40px; background: #fbbf24; color: #0f172a; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
+        .prison-overlay button:hover { background: #f59e0b; }
+
+        /* ===== GAME OVERLAY ===== */
+        .game-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(10, 10, 26, 0.96);
+        }
+        .game-hud {
+            position: fixed; top: 0; left: 0; right: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 20px;
+            background: linear-gradient(180deg, rgba(15,23,42,.96), rgba(15,23,42,.7));
+            z-index: 110; font-size: .85rem; font-weight: 600;
+        }
+        .hud-left, .hud-center, .hud-right { display: flex; align-items: center; gap: 16px; }
+        .hud-stat { display: flex; align-items: center; gap: 5px; }
+        .hud-stat .label { color: #94a3b8; font-weight: 400; font-size: .7rem; text-transform: uppercase; letter-spacing: .5px; }
+        .hud-stat .val { font-size: .95rem; }
+        .hud-gold .val { color: #fbbf24; }
+        .hud-wave .val { color: #60a5fa; }
+        .hud-hp .val { color: #f87171; }
+        .hud-combo .val { color: #a78bfa; }
+        #game-canvas { border-radius: 0; background: #0a0a1a; display: block; }
+
+        /* ===== GAME START SCREEN ===== */
+        .game-start-screen { text-align: center; max-width: 420px; }
+        .game-start-screen h1 { font-size: 2.2rem; color: #fbbf24; margin-bottom: 2px; }
+        .game-start-screen .subtitle { color: #60a5fa; font-size: .9rem; margin-bottom: 16px; }
+        .game-start-screen .vault-display {
+            color: #fbbf24; font-size: 1.15rem; margin-bottom: 8px;
+            background: rgba(251,191,36,0.08); border-radius: 8px; padding: 10px 16px;
+            display: inline-block;
+        }
+        .game-start-screen .start-stats {
+            display: flex; gap: 20px; justify-content: center; margin: 12px 0 16px;
+            font-size: .8rem; color: #94a3b8;
+        }
+        .game-start-screen .start-stats span { color: #e2e8f0; font-weight: 600; }
+        .game-start-screen p { color: #94a3b8; margin-bottom: 20px; font-size: .82rem; line-height: 1.6; }
+        .game-start-screen .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary {
+            padding: 14px 40px; background: #fbbf24; color: #0f172a; border: none;
+            border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+        }
+        .btn-primary:hover { background: #f59e0b; }
+        .btn-secondary {
+            padding: 10px 20px; background: transparent; color: #94a3b8; border: 1px solid #475569;
+            border-radius: 8px; font-size: .85rem; cursor: pointer;
+        }
+        .btn-secondary:hover { color: #e2e8f0; border-color: #94a3b8; }
+
+        /* ===== GAME OVER ===== */
+        .game-over-screen {
+            position: fixed; inset: 0; background: rgba(0,0,0,.88);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 120; text-align: center;
+        }
+        .game-over-screen h1 { font-size: 2.2rem; color: #f87171; margin-bottom: 4px; }
+        .game-over-screen .score-line { color: #fbbf24; font-size: 1.4rem; margin-bottom: 4px; }
+        .game-over-screen .detail-line { color: #94a3b8; font-size: .95rem; margin-bottom: 16px; }
+        .game-over-screen button {
+            padding: 12px 32px; background: #fbbf24; color: #0f172a; border: none;
+            border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin: 4px;
+        }
+        .game-over-screen button:hover { background: #f59e0b; }
+        .game-over-screen .btn-back {
+            background: transparent; color: #94a3b8; border: 1px solid #475569;
+        }
+        .game-over-screen .btn-back:hover { color: #e2e8f0; border-color: #94a3b8; }
+
+        /* ===== SETTINGS PANEL ===== */
+        .settings-panel {
+            position: fixed; inset: 0; z-index: 130;
+            background: rgba(0,0,0,.85);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .settings-card {
+            background: #1e293b; border: 1px solid #334155; border-radius: 16px;
+            padding: 28px 32px; width: 380px; max-width: 95vw;
+        }
+        .settings-card h2 { color: #fbbf24; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .settings-card .stat-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
+        }
+        .settings-card .stat-box {
+            background: #0f172a; border: 1px solid #334155; border-radius: 10px;
+            padding: 12px; text-align: center;
+        }
+        .stat-box .stat-val { font-size: 1.2rem; font-weight: 700; color: #fbbf24; }
+        .stat-box .stat-label { font-size: .7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+        .settings-card .action-row { display: flex; flex-direction: column; gap: 8px; }
+        .settings-card .action-row button, .settings-card .action-row label {
+            padding: 10px; border-radius: 8px; cursor: pointer; font-size: .85rem; text-align: center;
+            border: 1px solid #334155; background: #0f172a; color: #e2e8f0; display: block;
+        }
+        .settings-card .action-row button:hover, .settings-card .action-row label:hover {
+            border-color: #fbbf24; color: #fbbf24;
+        }
+        .settings-card .action-row .btn-danger {
+            border-color: #dc2626; color: #f87171;
+        }
+        .settings-card .action-row .btn-danger:hover { background: #450a0a; }
+        .settings-card .action-row input[type="file"] { display: none; }
+        .settings-close {
+            margin-top: 14px; width: 100%; padding: 10px; background: #fbbf24; color: #0f172a;
+            border: none; border-radius: 8px; font-weight: 600; font-size: .95rem; cursor: pointer;
+        }
+        .settings-close:hover { background: #f59e0b; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<!-- FINANCE MODE (always rendered) -->
+<div class="finance-app" id="finance-mode">
+    <div class="bp-header">
+        <div class="bp-logo">
+            <span>🐻 BearPenny</span>
+            <small>Capital Markets</small>
+        </div>
+        <div class="bp-market-bar">
+            <span>S&P 500 <span class="up" id="sp500">+0.00%</span></span>
+            <span>NASDAQ <span class="down" id="nasdaq">-0.00%</span></span>
+            <span>DOW <span class="up" id="dow">+0.00%</span></span>
+            <span>BTC <span class="up" id="btc">+0.00%</span></span>
+        </div>
+    </div>
+    <div class="bp-body">
+        <div class="bp-sidebar">
+            <h3>Filters</h3>
+            <div class="filter-group">
+                <label>Sector</label>
+                <select id="filter-sector">
+                    <option value="all">All Sectors</option>
+                    <option>Technology</option>
+                    <option>Finance</option>
+                    <option>Healthcare</option>
+                    <option>Energy</option>
+                    <option>Consumer</option>
+                    <option>Industrial</option>
+                    <option>Meme</option>
+                    <option>Crypto</option>
+                    <option>Real Estate</option>
+                    <option>Utilities</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Market Cap</label>
+                <select id="filter-cap">
+                    <option value="all">Any</option>
+                    <option value="mega">Mega ($200B+)</option>
+                    <option value="large">Large ($10B-200B)</option>
+                    <option value="mid">Mid ($2B-10B)</option>
+                    <option value="small">Small (&lt;$2B)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Min Price: $<span id="price-label">0</span></label>
+                <input type="range" id="filter-price" min="0" max="500" value="0">
+            </div>
+            <div class="filter-group">
+                <label>Signal</label>
+                <select id="filter-signal">
+                    <option value="all">All</option>
+                    <option value="buy">Buy</option>
+                    <option value="sell">Sell</option>
+                    <option value="hold">Hold</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="filter-sort">
+                    <option value="ticker">Ticker</option>
+                    <option value="price">Price</option>
+                    <option value="change">% Change</option>
+                    <option value="volume">Volume</option>
+                </select>
+            </div>
+        </div>
+        <div class="bp-main">
+            <div class="balance-bar" id="balance-bar">
+                <div class="bal-item"><span class="bal-label">Gold</span> <span class="bal-val bal-gold" id="bal-gold">0</span></div>
+                <div class="bal-item"><span class="bal-label">Portfolio</span> <span class="bal-val bal-portfolio" id="bal-portfolio">$0</span></div>
+                <div class="bal-item"><span class="bal-label">Next Tax</span> <span class="bal-val bal-tax" id="bal-tax">5:00</span></div>
+            </div>
+            <div class="bp-toolbar">
+                <input type="text" placeholder="Search ticker or company..." id="search-input">
+                <div class="view-btns">
+                    <button class="active">Table</button>
+                </div>
+            </div>
+            <div class="stock-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Company</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                            <th>Mkt Cap</th>
+                            <th>Sector</th>
+                            <th>Signal</th>
+                            <th>Owned</th>
+                            <th>Trade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stock-body"></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+</div>
+
+<!-- PRISON OVERLAY -->
+<div class="prison-overlay hidden" id="prison-overlay">
+    <h1>🚔 PRISON 🚔</h1>
+    <div class="prison-msg">You couldn't pay your taxes.<br>The BearPenny IRS has confiscated everything.<br>Your vault has been emptied. All positions liquidated.</div>
+    <div class="prison-fine">Tax owed: <span id="prison-tax">0</span> gold · Vault: 0 gold</div>
+    <button onclick="acceptPrison()">Accept Fate</button>
+</div>
+
+<!-- GAME OVERLAY -->
+<div class="game-overlay hidden" id="game-overlay">
+    <div class="game-hud hidden" id="game-hud">
+        <div class="hud-left">
+            <div class="hud-stat hud-gold"><span class="label">Gold</span> <span class="val" id="hud-gold">0</span></div>
+            <div class="hud-stat hud-combo"><span class="label">Combo</span> <span class="val" id="hud-combo">x1</span></div>
+        </div>
+        <div class="hud-center">
+            <div class="hud-stat hud-wave"><span class="label">Wave</span> <span class="val" id="hud-wave">1</span></div>
+        </div>
+        <div class="hud-right">
+            <div class="hud-stat hud-hp"><span class="label">HP</span> <span class="val" id="hud-hp">♥♥♥</span></div>
+        </div>
+    </div>
+    <div class="game-start-screen" id="game-start">
+        <h1>🐻 Penny Rush!</h1>
+        <div class="subtitle">Roguelike Coin Collector</div>
+        <div class="vault-display">🏦 Vault: <span id="start-vault">0</span> gold</div>
+        <div class="start-stats">
+            <div>Runs: <span id="start-runs">0</span></div>
+            <div>Best Wave: <span id="start-best-wave">0</span></div>
+        </div>
+        <p>Pennies fall from the sky — move left/right to catch them!<br>
+        Avoid 🐻 bears and 💣 bombs. Grab powerups to survive.<br>
+        🧲 Magnet · 🛡️ Shield · ⚡ Frenzy · 🕐 Slow-Mo · 💎 Diamonds<br>
+        Gold earned is saved to your vault forever.</p>
+        <div class="btn-row">
+            <button class="btn-primary" onclick="startGame()">Start Run</button>
+            <button class="btn-secondary" onclick="toggleSettings()">⚙ Settings</button>
+            <button class="btn-secondary" onclick="closeGame()">Back to Stocks</button>
+        </div>
+    </div>
+    <canvas id="game-canvas" class="hidden"></canvas>
+    <div class="game-over-screen hidden" id="game-over">
+        <h1>Run Over!</h1>
+        <div class="score-line">+<span id="final-gold">0</span> gold earned</div>
+        <div class="detail-line">Wave <span id="final-wave">1</span> · Combo peak: x<span id="final-combo">1</span></div>
+        <div class="detail-line">🏦 Vault total: <span id="final-vault">0</span> gold</div>
+        <button onclick="startGame()">New Run</button>
+        <button class="btn-back" onclick="closeGame()">Back to Stocks</button>
+    </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-panel hidden" id="settings-panel">
+    <div class="settings-card">
+        <h2>⚙ Settings & Data</h2>
+        <div class="stat-grid">
+            <div class="stat-box">
+                <div class="stat-val" id="set-vault">0</div>
+                <div class="stat-label">Vault Gold</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="set-runs">0</div>
+                <div class="stat-label">Total Runs</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="set-best-wave">0</div>
+                <div class="stat-label">Best Wave</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="set-best-combo">0</div>
+                <div class="stat-label">Best Combo</div>
+            </div>
+            <div class="stat-box" style="grid-column: span 2;">
+                <div class="stat-val" id="set-total-earned">0</div>
+                <div class="stat-label">Lifetime Gold Earned</div>
+            </div>
+        </div>
+        <div class="action-row">
+            <button onclick="exportData()">📥 Export Save Data</button>
+            <label>📤 Import Save Data<input type="file" accept=".json" onchange="importData(event)"></label>
+            <button class="btn-danger" onclick="confirmResetData()">🗑 Reset All Data</button>
+        </div>
+        <button class="settings-close" onclick="toggleSettings()">Close</button>
+    </div>
+</div>
+
+<script>
+    // Determine mode: alternates each open via localStorage counter
+    var openCount = parseInt(localStorage.getItem('bearPennyOpens') || '0');
+    openCount++;
+    localStorage.setItem('bearPennyOpens', openCount);
+    var isGameMode = openCount % 2 === 0;
+
+    // Always init finance
+    initFinance();
+
+    if (isGameMode) {
+        document.getElementById('game-overlay').classList.remove('hidden');
+        initGame();
+    }
+
+    // ==================== FINANCE MODE ====================
+    var tickerData = [];
+    var ALL_STOCKS = [];
+    var filteredStocks = [];
+    var currentPage = 1;
+    var PAGE_SIZE = 50;
+    var portfolio = {};  // { ticker: { shares: n, avgCost: n } }
+    var taxTimerInterval = null;
+    var taxSecondsLeft = 300; // 5 minutes
+    var isPrisoned = false;
+
+    // === IndexedDB helpers (reuse game db) ===
+    function openFinanceDB() {
+        return new Promise(function(resolve, reject) {
+            var req = indexedDB.open('bear-penny', 3);
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                if (!db.objectStoreNames.contains('wallet')) db.createObjectStore('wallet');
+                if (!db.objectStoreNames.contains('stats')) db.createObjectStore('stats');
+                if (!db.objectStoreNames.contains('portfolio')) db.createObjectStore('portfolio');
+            };
+            req.onsuccess = function() { resolve(req.result); };
+            req.onerror = function() { reject(req.error); };
+        });
+    }
+
+    function loadPortfolio() {
+        return openFinanceDB().then(function(db) {
+            return new Promise(function(resolve) {
+                var tx = db.transaction('portfolio', 'readonly');
+                var req = tx.objectStore('portfolio').get('holdings');
+                req.onsuccess = function() { portfolio = req.result || {}; resolve(); };
+                req.onerror = function() { resolve(); };
+            });
+        });
+    }
+
+    function savePortfolio() {
+        return openFinanceDB().then(function(db) {
+            var tx = db.transaction('portfolio', 'readwrite');
+            tx.objectStore('portfolio').put(portfolio, 'holdings');
+        });
+    }
+
+    function loadFinanceVault() {
+        return openFinanceDB().then(function(db) {
+            return new Promise(function(resolve) {
+                var tx = db.transaction('wallet', 'readonly');
+                var req = tx.objectStore('wallet').get('gold');
+                req.onsuccess = function() { resolve(req.result || 0); };
+                req.onerror = function() { resolve(0); };
+            });
+        });
+    }
+
+    function saveFinanceVault(amount) {
+        return openFinanceDB().then(function(db) {
+            var tx = db.transaction('wallet', 'readwrite');
+            tx.objectStore('wallet').put(amount, 'gold');
+        });
+    }
+
+    function initFinance() {
+        showSkeletonLoading();
+
+        Promise.all([loadPortfolio(), loadFinanceVault()]).then(function(results) {
+            var vaultGoldAmount = results[1];
+            updateBalanceBar(vaultGoldAmount);
+
+            fetch('./entities/tickers.json')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    tickerData = data;
+                    ALL_STOCKS = generate4000Stocks(data);
+                    filteredStocks = ALL_STOCKS.slice();
+                    currentPage = 1;
+                    renderCurrentPage();
+                    renderPagination();
+                    wireFilters();
+                })
+                .catch(function() {
+                    ALL_STOCKS = generate4000Stocks(generateStocksFallbackSeeds());
+                    filteredStocks = ALL_STOCKS.slice();
+                    currentPage = 1;
+                    renderCurrentPage();
+                    renderPagination();
+                    wireFilters();
+                });
+
+            startTaxTimer();
+        });
+
+        // Animate market bar
+        setInterval(function() {
+            animateIndex('sp500', 4200, 0.3);
+            animateIndex('nasdaq', 13800, 0.4);
+            animateIndex('dow', 34500, 0.25);
+            animateIndex('btc', 62000, 0.8);
+        }, 3000);
+
+        // Animate stock prices every 4 seconds
+        setInterval(function() {
+            ALL_STOCKS.forEach(function(s) {
+                s.change = parseFloat(((Math.random() - 0.45) * 6).toFixed(2));
+                s.price = Math.max(0.01, s.price * (1 + s.change / 100));
+                s.volume = Math.floor(Math.random() * 50000000) + 100000;
+            });
+            applyFiltersAndRender();
+            loadFinanceVault().then(function(g) { updateBalanceBar(g); });
+        }, 4000);
+    }
+
+    function showSkeletonLoading() {
+        var tbody = document.getElementById('stock-body');
+        var rows = '';
+        for (var i = 0; i < PAGE_SIZE; i++) {
+            rows += '<tr class="skeleton-row">';
+            for (var j = 0; j < 10; j++) {
+                var w = 30 + Math.random() * 50;
+                rows += '<td><div class="skeleton-bar" style="width:' + w + '%"></div></td>';
+            }
+            rows += '</tr>';
+        }
+        tbody.innerHTML = rows;
+        document.getElementById('pagination').innerHTML = '';
+    }
+
+    function wireFilters() {
+        document.getElementById('filter-sector').addEventListener('change', function() { currentPage = 1; applyFiltersAndRender(); });
+        document.getElementById('filter-cap').addEventListener('change', function() { currentPage = 1; applyFiltersAndRender(); });
+        document.getElementById('filter-signal').addEventListener('change', function() { currentPage = 1; applyFiltersAndRender(); });
+        document.getElementById('filter-sort').addEventListener('change', function() { applyFiltersAndRender(); });
+        document.getElementById('filter-price').addEventListener('input', function(e) {
+            document.getElementById('price-label').textContent = e.target.value;
+            currentPage = 1;
+            applyFiltersAndRender();
+        });
+        document.getElementById('search-input').addEventListener('input', function() { currentPage = 1; applyFiltersAndRender(); });
+    }
+
+    function applyFiltersAndRender() {
+        filteredStocks = filterStocks(ALL_STOCKS);
+        renderCurrentPage();
+        renderPagination();
+    }
+
+    function filterStocks(stocks) {
+        var filtered = stocks.slice();
+        var sector = document.getElementById('filter-sector').value;
+        var cap = document.getElementById('filter-cap').value;
+        var signal = document.getElementById('filter-signal').value;
+        var minPrice = parseFloat(document.getElementById('filter-price').value);
+        var search = document.getElementById('search-input').value.toLowerCase();
+        var sort = document.getElementById('filter-sort').value;
+
+        if (sector !== 'all') filtered = filtered.filter(function(s) { return s.sector === sector; });
+        if (cap !== 'all') filtered = filtered.filter(function(s) { return capLabel(s.cap) === cap; });
+        if (signal !== 'all') filtered = filtered.filter(function(s) { return s.signal === signal; });
+        if (minPrice > 0) filtered = filtered.filter(function(s) { return s.price >= minPrice; });
+        if (search) filtered = filtered.filter(function(s) { return s.ticker.toLowerCase().indexOf(search) !== -1 || s.company.toLowerCase().indexOf(search) !== -1; });
+
+        filtered.sort(function(a, b) {
+            if (sort === 'price') return b.price - a.price;
+            if (sort === 'change') return b.change - a.change;
+            if (sort === 'volume') return b.volume - a.volume;
+            return a.ticker.localeCompare(b.ticker);
+        });
+        return filtered;
+    }
+
+    function animateIndex(id, base, volatility) {
+        var pct = ((Math.random() - 0.48) * volatility).toFixed(2);
+        var el = document.getElementById(id);
+        el.textContent = (pct >= 0 ? '+' : '') + pct + '%';
+        el.className = pct >= 0 ? 'up' : 'down';
+    }
+
+    // ==================== STOCK GENERATION ====================
+    var PREFIXES = ['Bear','Penny','Grizzly','Timber','Frost','Crypto','Lunar','Solar','Titan','Neo','Apex','Flux','Dark','Volt','Iron','Blaze','Storm','Echo','Zero','Nova','Viper','Eagle','Cobalt','Onyx','Ruby','Prism','Helix','Nexus','Pulse','Quark','Rift','Surge','Terra','Ultra','Wave','Xeno','Atlas','Bolt','Cipher','Delta','Forge','Glyph','Haze','Ion','Jade','Kelp','Lumen','Mist','Orbit','Pike'];
+    var SUFFIXES = ['Tech','Corp','Labs','Systems','Holdings','Industries','Capital','Health','Pharma','AI','Bio','Energy','Games','Finance','Media','Auto','Retail','Mining','Security','Dynamics','Robotics','Cloud','Quantum','Digital','Foods','Group','Ventures','Partners','Data','Logic','Net','Pay','Trade','Crypto','Space','Gen','Coin','Bit','Link','Works','Plus','Hub','Edge','Core','Forge','Grid','Stream','Signal','DAO','Motors'];
+    var SECTORS = ['Technology','Finance','Healthcare','Energy','Consumer','Industrial','Meme','Crypto','Real Estate','Utilities'];
+
+    function mulberry32(a) {
+        return function() {
+            a |= 0; a = a + 0x6D2B79F5 | 0;
+            var t = Math.imul(a ^ a >>> 15, 1 | a);
+            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
+
+    function generate4000Stocks(seeds) {
+        var stocks = [];
+        var usedTickers = {};
+        var rng = mulberry32(42);
+        var signals = ['buy','sell','hold'];
+
+        // Add seed stocks first
+        seeds.forEach(function(item) {
+            var ticker = item.ticker || item[0];
+            var company = item.company || item[1];
+            var sector = item.sector || item[2];
+            var price = item.price || item[3];
+            if (usedTickers[ticker]) return;
+            usedTickers[ticker] = true;
+            var change = parseFloat(((rng() - 0.45) * 8).toFixed(2));
+            var volume = Math.floor(rng() * 50000000) + 100000;
+            var cap = price * (rng() * 800 + 10) * 1000000;
+            var signal = signals[Math.floor(rng() * 3)];
+            stocks.push({ ticker: ticker, company: company, sector: sector, price: price, change: change, volume: volume, cap: cap, signal: signal });
+        });
+
+        // Generate remaining up to 4000
+        var TARGET = 4000;
+        var attempt = 0;
+        while (stocks.length < TARGET && attempt < TARGET * 3) {
+            attempt++;
+            var prefix = PREFIXES[Math.floor(rng() * PREFIXES.length)];
+            var suffix = SUFFIXES[Math.floor(rng() * SUFFIXES.length)];
+            var company = prefix + suffix;
+
+            // Generate 3-5 char ticker
+            var tLen = 3 + Math.floor(rng() * 3);
+            var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var ticker = '';
+            // Try to use company initials + random
+            ticker = prefix.substring(0, 2).toUpperCase();
+            for (var k = ticker.length; k < tLen; k++) {
+                ticker += letters[Math.floor(rng() * 26)];
+            }
+            if (usedTickers[ticker]) continue;
+            usedTickers[ticker] = true;
+
+            var sector = SECTORS[Math.floor(rng() * SECTORS.length)];
+            var price = parseFloat((rng() * 800 + 0.10).toFixed(2));
+            var change = parseFloat(((rng() - 0.45) * 8).toFixed(2));
+            var volume = Math.floor(rng() * 50000000) + 100000;
+            var cap = price * (rng() * 800 + 10) * 1000000;
+            var signal = signals[Math.floor(rng() * 3)];
+            stocks.push({ ticker: ticker, company: company, sector: sector, price: price, change: change, volume: volume, cap: cap, signal: signal });
+        }
+        return stocks;
+    }
+
+    function generateStocksFallbackSeeds() {
+        return [
+            { ticker: 'BEAR', company: 'BearPenny Holdings', sector: 'Finance', price: 342.18 },
+            { ticker: 'PNNY', company: 'PennyWise Tech', sector: 'Technology', price: 12.47 },
+            { ticker: 'GRWL', company: 'GrowlCloud Inc', sector: 'Technology', price: 287.93 },
+            { ticker: 'HYBR', company: 'Hibernate Energy', sector: 'Energy', price: 54.32 },
+            { ticker: 'CLWR', company: 'ClawReturns Corp', sector: 'Finance', price: 178.66 },
+            { ticker: 'HNYP', company: 'HoneyPot Pharma', sector: 'Healthcare', price: 93.21 },
+            { ticker: 'DNRM', company: 'DenRoom Retail', sector: 'Consumer', price: 29.88 },
+            { ticker: 'FSHC', company: 'FishCatch AI', sector: 'Technology', price: 445.10 },
+            { ticker: 'MNTV', company: 'MountainView Bio', sector: 'Healthcare', price: 67.54 },
+            { ticker: 'TMBR', company: 'TimberTrail Ltd', sector: 'Industrial', price: 41.23 },
+            { ticker: 'SLMN', company: 'SalmonRun Games', sector: 'Technology', price: 156.78 },
+            { ticker: 'CWBY', company: 'Cowboy Crypto', sector: 'Finance', price: 8.91 },
+        ];
+    }
+
+    function capLabel(cap) {
+        if (cap >= 200e9) return 'mega';
+        if (cap >= 10e9) return 'large';
+        if (cap >= 2e9) return 'mid';
+        return 'small';
+    }
+
+    function fmtCap(cap) {
+        if (cap >= 1e12) return '$' + (cap/1e12).toFixed(1) + 'T';
+        if (cap >= 1e9) return '$' + (cap/1e9).toFixed(1) + 'B';
+        if (cap >= 1e6) return '$' + (cap/1e6).toFixed(0) + 'M';
+        return '$' + cap.toFixed(0);
+    }
+
+    function fmtVol(v) {
+        if (v >= 1e6) return (v/1e6).toFixed(1) + 'M';
+        if (v >= 1e3) return (v/1e3).toFixed(0) + 'K';
+        return v;
+    }
+
+    // ==================== PAGINATION & RENDERING ====================
+    function renderCurrentPage() {
+        var start = (currentPage - 1) * PAGE_SIZE;
+        var pageStocks = filteredStocks.slice(start, start + PAGE_SIZE);
+        var tbody = document.getElementById('stock-body');
+
+        tbody.innerHTML = pageStocks.map(function(s) {
+            var owned = portfolio[s.ticker] ? portfolio[s.ticker].shares : 0;
+            return '<tr>' +
+                '<td class="ticker">' + s.ticker + '</td>' +
+                '<td>' + s.company + '</td>' +
+                '<td>$' + s.price.toFixed(2) + '</td>' +
+                '<td class="' + (s.change >= 0 ? 'pos' : 'neg') + '">' + (s.change >= 0 ? '+' : '') + s.change + '%</td>' +
+                '<td class="vol">' + fmtVol(s.volume) + '</td>' +
+                '<td>' + fmtCap(s.cap) + '</td>' +
+                '<td>' + s.sector + '</td>' +
+                '<td><span class="chip chip-' + s.signal + '">' + s.signal.toUpperCase() + '</span></td>' +
+                '<td>' + (owned > 0 ? owned : '-') + '</td>' +
+                '<td>' +
+                    '<button class="btn-trade btn-buy" onclick="buyStock(\'' + s.ticker + '\')">Buy</button>' +
+                    '<button class="btn-trade btn-sell-stock" onclick="sellStock(\'' + s.ticker + '\')"' + (owned > 0 ? '' : ' disabled') + '>Sell</button>' +
+                '</td>' +
+            '</tr>';
+        }).join('');
+    }
+
+    function renderPagination() {
+        var totalPages = Math.ceil(filteredStocks.length / PAGE_SIZE);
+        var pag = document.getElementById('pagination');
+        if (totalPages <= 1) { pag.innerHTML = '<span class="page-info">' + filteredStocks.length + ' stocks</span>'; return; }
+
+        var html = '';
+        html += '<button ' + (currentPage <= 1 ? 'disabled' : '') + ' onclick="goPage(1)">&laquo;</button>';
+        html += '<button ' + (currentPage <= 1 ? 'disabled' : '') + ' onclick="goPage(' + (currentPage - 1) + ')">&lsaquo;</button>';
+
+        // Show up to 7 page buttons centered around current
+        var startP = Math.max(1, currentPage - 3);
+        var endP = Math.min(totalPages, startP + 6);
+        if (endP - startP < 6) startP = Math.max(1, endP - 6);
+
+        for (var p = startP; p <= endP; p++) {
+            html += '<button class="' + (p === currentPage ? 'active' : '') + '" onclick="goPage(' + p + ')">' + p + '</button>';
+        }
+
+        html += '<button ' + (currentPage >= totalPages ? 'disabled' : '') + ' onclick="goPage(' + (currentPage + 1) + ')">&rsaquo;</button>';
+        html += '<button ' + (currentPage >= totalPages ? 'disabled' : '') + ' onclick="goPage(' + totalPages + ')">&raquo;</button>';
+        html += '<span class="page-info">' + filteredStocks.length + ' stocks · page ' + currentPage + '/' + totalPages + '</span>';
+        pag.innerHTML = html;
+    }
+
+    function goPage(p) {
+        var totalPages = Math.ceil(filteredStocks.length / PAGE_SIZE);
+        currentPage = Math.max(1, Math.min(p, totalPages));
+        renderCurrentPage();
+        renderPagination();
+        document.querySelector('.stock-table').scrollTop = 0;
+    }
+
+    // ==================== TRADING ====================
+    function buyStock(ticker) {
+        if (isPrisoned) return;
+        var stock = ALL_STOCKS.find(function(s) { return s.ticker === ticker; });
+        if (!stock) return;
+        var cost = Math.ceil(stock.price);
+
+        loadFinanceVault().then(function(vg) {
+            // Also grab game.js vaultGold if available
+            var totalGold = typeof vaultGold !== 'undefined' ? vaultGold : vg;
+            if (totalGold < cost) {
+                alert('Not enough gold! Need ' + cost + 'g, have ' + totalGold + 'g');
+                return;
+            }
+            totalGold -= cost;
+            if (typeof vaultGold !== 'undefined') vaultGold = totalGold;
+            saveFinanceVault(totalGold);
+
+            if (!portfolio[ticker]) portfolio[ticker] = { shares: 0, avgCost: 0 };
+            var p = portfolio[ticker];
+            p.avgCost = ((p.avgCost * p.shares) + cost) / (p.shares + 1);
+            p.shares++;
+            savePortfolio();
+
+            updateBalanceBar(totalGold);
+            renderCurrentPage();
+        });
+    }
+
+    function sellStock(ticker) {
+        if (isPrisoned) return;
+        if (!portfolio[ticker] || portfolio[ticker].shares <= 0) return;
+        var stock = ALL_STOCKS.find(function(s) { return s.ticker === ticker; });
+        if (!stock) return;
+        var proceeds = Math.floor(stock.price);
+
+        loadFinanceVault().then(function(vg) {
+            var totalGold = typeof vaultGold !== 'undefined' ? vaultGold : vg;
+            totalGold += proceeds;
+            if (typeof vaultGold !== 'undefined') vaultGold = totalGold;
+            saveFinanceVault(totalGold);
+
+            portfolio[ticker].shares--;
+            if (portfolio[ticker].shares <= 0) delete portfolio[ticker];
+            savePortfolio();
+
+            updateBalanceBar(totalGold);
+            renderCurrentPage();
+        });
+    }
+
+    function getPortfolioValue() {
+        var total = 0;
+        Object.keys(portfolio).forEach(function(ticker) {
+            var stock = ALL_STOCKS.find(function(s) { return s.ticker === ticker; });
+            if (stock && portfolio[ticker]) {
+                total += stock.price * portfolio[ticker].shares;
+            }
+        });
+        return Math.floor(total);
+    }
+
+    function updateBalanceBar(goldAmount) {
+        document.getElementById('bal-gold').textContent = goldAmount + 'g';
+        document.getElementById('bal-portfolio').textContent = '$' + getPortfolioValue();
+    }
+
+    // ==================== TAX SYSTEM ====================
+    function startTaxTimer() {
+        taxSecondsLeft = 300;
+        updateTaxDisplay();
+        if (taxTimerInterval) clearInterval(taxTimerInterval);
+        taxTimerInterval = setInterval(function() {
+            if (isPrisoned) return;
+            taxSecondsLeft--;
+            updateTaxDisplay();
+            if (taxSecondsLeft <= 0) {
+                collectTax();
+            }
+        }, 1000);
+    }
+
+    function updateTaxDisplay() {
+        var el = document.getElementById('bal-tax');
+        var m = Math.floor(taxSecondsLeft / 60);
+        var s = taxSecondsLeft % 60;
+        el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+        el.classList.toggle('safe', taxSecondsLeft > 60);
+    }
+
+    function collectTax() {
+        loadFinanceVault().then(function(vg) {
+            var totalGold = typeof vaultGold !== 'undefined' ? vaultGold : vg;
+            var portfolioVal = getPortfolioValue();
+            // Tax = 10% of portfolio value + flat 50 gold
+            var taxAmount = Math.floor(portfolioVal * 0.10) + 50;
+            if (taxAmount < 50) taxAmount = 50;
+
+            if (totalGold >= taxAmount) {
+                // Can pay — deduct and reset timer
+                totalGold -= taxAmount;
+                if (typeof vaultGold !== 'undefined') vaultGold = totalGold;
+                saveFinanceVault(totalGold);
+                updateBalanceBar(totalGold);
+                taxSecondsLeft = 300;
+                // Flash green on tax display
+                var el = document.getElementById('bal-tax');
+                el.style.color = '#4ade80';
+                setTimeout(function() { el.style.color = ''; }, 1500);
+            } else {
+                // Can't pay — PRISON
+                triggerPrison(taxAmount, totalGold);
+            }
+        });
+    }
+
+    function triggerPrison(taxOwed, hadGold) {
+        isPrisoned = true;
+        clearInterval(taxTimerInterval);
+        document.getElementById('prison-tax').textContent = taxOwed;
+
+        // Wipe everything
+        if (typeof vaultGold !== 'undefined') vaultGold = 0;
+        saveFinanceVault(0);
+        portfolio = {};
+        savePortfolio();
+        updateBalanceBar(0);
+
+        document.getElementById('prison-overlay').classList.remove('hidden');
+    }
+
+    function acceptPrison() {
+        // Hide prison, reset tax timer, let them start over
+        document.getElementById('prison-overlay').classList.add('hidden');
+        isPrisoned = false;
+        taxSecondsLeft = 300;
+        startTaxTimer();
+        renderCurrentPage();
+    }
+
+</script>
+<script src="game.js"></script>
+</body>
+</html>

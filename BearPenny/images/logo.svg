@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="ball" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#ff4444"/>
+      <stop offset="70%" stop-color="#cc0000"/>
+      <stop offset="100%" stop-color="#880000"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="60" fill="url(#ball)" stroke="#660000" stroke-width="3"/>
+  <ellipse cx="48" cy="40" rx="18" ry="10" fill="rgba(255,255,255,0.18)" transform="rotate(-25 48 40)"/>
+  <text x="64" y="78" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="44" fill="#fff" stroke="#660000" stroke-width="1.5">BP</text>
+</svg>
