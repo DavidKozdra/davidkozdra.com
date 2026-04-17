@@ -1,6 +1,6 @@
 // ==================== INDEXEDDB (bear-penny) ====================
 var db = null;
-var vaultGold = 1000;
+var vaultGold = 0;
 var vaultStats = { totalRuns: 0, bestWave: 0, bestCombo: 0, totalEarned: 0 };
 var shopUpgrades = {};
 
@@ -103,10 +103,11 @@ function saveUpgrades() {
 function resetAllData() {
     return new Promise(function(resolve) {
         if (!db) { resolve(); return; }
-        var tx = db.transaction(['wallet', 'stats', 'upgrades'], 'readwrite');
+        var tx = db.transaction(['wallet', 'stats', 'upgrades', 'portfolio'], 'readwrite');
         tx.objectStore('wallet').clear();
         tx.objectStore('stats').clear();
         tx.objectStore('upgrades').clear();
+        tx.objectStore('portfolio').clear();
         vaultGold = 0;
         vaultStats = { totalRuns: 0, bestWave: 0, bestCombo: 0, totalEarned: 0 };
         shopUpgrades = {};
@@ -129,6 +130,56 @@ var difficultyScale;
 var bearQuotes = [];
 var activeBearQuote = '';
 var bearQuoteTimer = 0;
+var activeBearMood = 'idle';
+var lastBearEvent = 'idle';
+
+var BEAR_TAUNTS = {
+    start: [
+        'Fresh run. Fresh losses.',
+        'All your pennies is MINE.',
+        'I can already smell the panic.'
+    ],
+    hit: [
+        'Goddamn it, goddamn it.',
+        'All your pennies is MINE.',
+        'That bucket is leaking confidence.'
+    ],
+    block: [
+        'Lucky block. Won\'t save you twice.',
+        'Cute shield. I still own the market.',
+        'You delayed the inevitable.'
+    ],
+    wave: [
+        'New wave. Same suffering.',
+        'The cave gets meaner from here.',
+        'I brought friends.'
+    ],
+    combo: [
+        'Too many pennies. Hand them over.',
+        'Greedy little collector, aren\'t you?',
+        'Stack them up. I\'ll take them later.'
+    ],
+    miss: [
+        'Dropped one. It\'s mine now.',
+        'Pennies on the floor belong to the bear.',
+        'Keep fumbling. I\'m profiting.'
+    ],
+    powerup: [
+        'Temporary edge. Permanent doom.',
+        'Powerups won\'t fix your fundamentals.',
+        'You juiced the run. I noticed.'
+    ],
+    gameOver: [
+        'Run over. Treasury transferred.',
+        'I told you those pennies were mine.',
+        'Back to the cave with your empty bucket.'
+    ],
+    idle: [
+        'I\'m watching every penny.',
+        'The bear is visible. Your hope is not.',
+        'Keep playing. I need the entertainment.'
+    ]
+};
 
 // Item types
 var ITEM_TYPES = {
@@ -178,10 +229,14 @@ function loadBearQuotes() {
         .catch(function() { bearQuotes = ['Grr...']; });
 }
 
-function showBearQuote() {
-    if (bearQuotes.length === 0) return;
-    activeBearQuote = bearQuotes[Math.floor(Math.random() * bearQuotes.length)];
-    bearQuoteTimer = 180; // 3 seconds at 60fps
+function showBearQuote(eventType, customText) {
+    var pool = customText ? [customText] : (BEAR_TAUNTS[eventType] || bearQuotes || []);
+    if (!pool || pool.length === 0) pool = bearQuotes;
+    if (!pool || pool.length === 0) return;
+    activeBearQuote = pool[Math.floor(Math.random() * pool.length)];
+    bearQuoteTimer = 240;
+    activeBearMood = eventType || 'idle';
+    lastBearEvent = eventType || 'idle';
 }
 
 function initGame() {
@@ -218,6 +273,20 @@ function resizeCanvas() {
 }
 
 function closeGame() {
+    if (gameRunning) {
+        gameRunning = false;
+        if (gameLoop) cancelAnimationFrame(gameLoop);
+        document.removeEventListener('keydown', onKeyDown);
+        document.removeEventListener('keyup', onKeyUp);
+        if (canvas) {
+            canvas.removeEventListener('touchmove', onTouch);
+            canvas.removeEventListener('mousemove', onMouse);
+            canvas.classList.add('hidden');
+        }
+    }
+    document.getElementById('game-start').classList.remove('hidden');
+    document.getElementById('game-over').classList.add('hidden');
+    document.getElementById('game-hud').classList.add('hidden');
     document.getElementById('game-overlay').classList.add('hidden');
     document.getElementById('settings-panel').classList.add('hidden');
     document.getElementById('shop-panel').classList.add('hidden');
@@ -245,21 +314,42 @@ function refreshSettingsPanel() {
 function confirmResetData() {
     if (confirm('Reset ALL BearPenny data? This deletes your vault gold, stats, and everything. Cannot be undone.')) {
         resetAllData().then(function() {
+            if (typeof portfolio !== 'undefined') {
+                portfolio = {};
+            }
             refreshSettingsPanel();
             refreshStartScreen();
+            if (typeof updateBalanceBar === 'function') updateBalanceBar(vaultGold);
+            if (typeof renderCurrentPage === 'function') renderCurrentPage();
             alert('All data wiped.');
         });
     }
 }
 
 function exportData() {
-    var data = { gold: vaultGold, stats: vaultStats, upgrades: shopUpgrades };
-    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'bearpenny-save.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
+    openDB().then(function() {
+        var tx = db.transaction('portfolio', 'readonly');
+        var req = tx.objectStore('portfolio').get('holdings');
+        req.onsuccess = function() {
+            var data = {
+                gold: vaultGold,
+                stats: vaultStats,
+                upgrades: shopUpgrades,
+                portfolio: req.result || {}
+            };
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'bearpenny-save.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        };
+        req.onerror = function() {
+            alert('Could not export save data.');
+        };
+    }).catch(function() {
+        alert('Could not export save data.');
+    });
 }
 
 function importData(event) {
@@ -278,9 +368,18 @@ function importData(event) {
             if (data.upgrades && typeof data.upgrades === 'object') {
                 shopUpgrades = data.upgrades;
             }
+            if (typeof portfolio !== 'undefined') {
+                portfolio = data.portfolio && typeof data.portfolio === 'object' ? data.portfolio : {};
+            }
             saveVault(vaultGold).then(function() { return saveStats(); }).then(function() { return saveUpgrades(); }).then(function() {
+                if (typeof savePortfolio === 'function') {
+                    return savePortfolio();
+                }
+            }).then(function() {
                 refreshSettingsPanel();
                 refreshStartScreen();
+                if (typeof updateBalanceBar === 'function') updateBalanceBar(vaultGold);
+                if (typeof renderCurrentPage === 'function') renderCurrentPage();
                 alert('Data imported!');
             });
         } catch (err) {
@@ -369,6 +468,7 @@ function purchaseUpgrade(id) {
     renderShop();
     refreshStartScreen();
     refreshSettingsPanel();
+    if (typeof updateBalanceBar === 'function') updateBalanceBar(vaultGold);
 }
 
 function startGame() {
@@ -427,6 +527,8 @@ function startGame() {
         else if (pick === 'frenzy') { frenzyActive = true; frenzyTimer = Math.floor(6 * 60 * durMult); }
         else if (pick === 'slow') { slowActive = true; slowTimer = Math.floor(7 * 60 * durMult); }
     }
+
+    showBearQuote('start');
 
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
@@ -573,6 +675,7 @@ function update() {
         spawnInterval = Math.max(10, 40 - wave * 2.5);
         difficultyScale = 1 + wave * 0.07;
         particles.push({ type: 'text', text: 'WAVE ' + wave, x: canvas.width / 2, y: canvas.height / 2, life: 90, color: '#60a5fa', size: 34 });
+        showBearQuote('wave');
     }
 
     // Update falling items
@@ -601,12 +704,13 @@ function update() {
                     // Shield absorbs
                     shieldActive = false;
                     shieldTimer = 0;
+                    showBearQuote('block');
                     particles.push({ type: 'text', text: 'BLOCKED!', x: item.x, y: item.y, life: 50, color: '#38bdf8', size: 18 });
                 } else {
                     hp -= def.damage;
                     combo = 0;
                     comboTimer = 0;
-                    showBearQuote();
+                    showBearQuote('hit');
                     particles.push({ type: 'text', text: '-' + def.damage + ' HP', x: item.x, y: item.y, life: 45, color: '#f87171', size: 18 });
                     for (var s = 0; s < 8; s++) {
                         particles.push({ type: 'spark', x: item.x + item.w/2, y: item.y, vx: (Math.random()-.5)*5, vy: -Math.random()*4, life: 24, color: '#f87171' });
@@ -619,18 +723,22 @@ function update() {
             } else if (def.powerup === 'magnet') {
                 magnetActive = true;
                 magnetTimer = Math.floor(8 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
+                showBearQuote('powerup');
                 particles.push({ type: 'text', text: 'MAGNET!', x: item.x, y: item.y, life: 50, color: '#34d399', size: 16 });
             } else if (def.powerup === 'shield') {
                 shieldActive = true;
                 shieldTimer = Math.floor(12 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
+                showBearQuote('powerup');
                 particles.push({ type: 'text', text: 'SHIELD!', x: item.x, y: item.y, life: 50, color: '#38bdf8', size: 16 });
             } else if (def.powerup === 'frenzy') {
                 frenzyActive = true;
                 frenzyTimer = Math.floor(6 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
+                showBearQuote('powerup');
                 particles.push({ type: 'text', text: 'FRENZY!', x: item.x, y: item.y, life: 50, color: '#facc15', size: 18 });
             } else if (def.powerup === 'slow') {
                 slowActive = true;
                 slowTimer = Math.floor(7 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
+                showBearQuote('powerup');
                 particles.push({ type: 'text', text: 'SLOW-MO!', x: item.x, y: item.y, life: 50, color: '#a78bfa', size: 16 });
             } else {
                 // Coin collected
@@ -641,6 +749,7 @@ function update() {
                 if (frenzyActive) multiplier *= 2;
                 var earned = def.value * multiplier;
                 gold += earned;
+                if (combo > 0 && combo % 12 === 0) showBearQuote('combo');
                 particles.push({ type: 'text', text: '+' + earned, x: item.x, y: item.y, life: 35, color: '#fbbf24', size: 14 + Math.min(earned / 10, 10) });
                 for (var s = 0; s < 4; s++) {
                     particles.push({ type: 'spark', x: item.x + item.w/2, y: item.y, vx: (Math.random()-.5)*3, vy: -Math.random()*2.5-1, life: 20, color: def.value >= 25 ? '#fde68a' : '#fbbf24' });
@@ -655,6 +764,7 @@ function update() {
             if (!ITEM_TYPES[item.type].bad && ITEM_TYPES[item.type].value > 0) {
                 combo = 0;
                 comboTimer = 0;
+                if (Math.random() < 0.3) showBearQuote('miss');
             }
             fallingItems.splice(i, 1);
         }
@@ -792,31 +902,91 @@ function draw() {
         ctx.fillRect(barX, canvas.height - 12, comboFill, 8);
     }
 
-    // Bear quote speech bubble
-    if (bearQuoteTimer > 0 && activeBearQuote) {
-        var bAlpha = Math.min(1, bearQuoteTimer / 30);
-        ctx.save();
-        ctx.globalAlpha = bAlpha * 0.9;
-        ctx.fillStyle = '#1e293b';
-        ctx.strokeStyle = '#f87171';
-        ctx.lineWidth = 2;
-        var qW = Math.min(320, canvas.width - 40);
-        var qX = (canvas.width - qW) / 2;
-        var qY = 60;
-        ctx.beginPath();
-        ctx.roundRect(qX, qY, qW, 44, 8);
-        ctx.fill();
-        ctx.stroke();
-        ctx.globalAlpha = bAlpha;
-        ctx.fillStyle = '#f87171';
-        ctx.font = 'bold 13px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('🐻 ' + activeBearQuote, canvas.width/2, qY + 24);
-        ctx.restore();
-    }
+    drawBearPresenter();
 
     // Active powerup indicators at bottom-left
     drawPowerupBar();
+}
+
+function drawBearPresenter() {
+    var panelW = Math.min(320, canvas.width - 24);
+    var panelH = 96;
+    var panelX = canvas.width - panelW - 16;
+    var panelY = 16;
+    var faceX = panelX + 54;
+    var faceY = panelY + 48;
+    var quote = activeBearQuote || BEAR_TAUNTS.idle[0];
+    var alpha = bearQuoteTimer > 0 ? Math.min(1, 0.65 + (bearQuoteTimer / 240) * 0.35) : 0.8;
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'rgba(15,23,42,0.9)';
+    ctx.strokeStyle = activeBearMood === 'hit' ? '#f87171' : '#fbbf24';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(panelX, panelY, panelW, panelH, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    // Bear face
+    ctx.fillStyle = '#8b5a2b';
+    ctx.beginPath();
+    ctx.arc(faceX, faceY, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(faceX - 18, faceY - 20, 10, 0, Math.PI * 2);
+    ctx.arc(faceX + 18, faceY - 20, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#c08457';
+    ctx.beginPath();
+    ctx.arc(faceX, faceY + 6, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#111827';
+    ctx.beginPath();
+    ctx.arc(faceX - 8, faceY - 4, 3, 0, Math.PI * 2);
+    ctx.arc(faceX + 8, faceY - 4, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(faceX, faceY + 2);
+    ctx.lineTo(faceX - 4, faceY + 10);
+    ctx.lineTo(faceX + 4, faceY + 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = activeBearMood === 'combo' ? '#fbbf24' : '#7f1d1d';
+    ctx.beginPath();
+    ctx.arc(faceX, faceY + 10, 8, 0.1, Math.PI - 0.1, activeBearMood === 'combo');
+    ctx.stroke();
+
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('BOSS BEAR', panelX + 100, panelY + 24);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(lastBearEvent.toUpperCase(), panelX + 100, panelY + 40);
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = 'bold 13px sans-serif';
+    wrapBearText(quote, panelX + 100, panelY + 58, panelW - 116, 16);
+    ctx.restore();
+}
+
+function wrapBearText(text, x, y, maxWidth, lineHeight) {
+    var words = String(text).split(' ');
+    var line = '';
+    var lines = [];
+    for (var i = 0; i < words.length; i++) {
+        var testLine = line ? line + ' ' + words[i] : words[i];
+        if (ctx.measureText(testLine).width > maxWidth && line) {
+            lines.push(line);
+            line = words[i];
+        } else {
+            line = testLine;
+        }
+    }
+    if (line) lines.push(line);
+    for (var j = 0; j < Math.min(lines.length, 2); j++) {
+        ctx.fillText(lines[j], x, y + j * lineHeight);
+    }
 }
 
 function drawPowerupBar() {
@@ -883,6 +1053,9 @@ function endGame() {
     document.getElementById('final-wave').textContent = wave;
     document.getElementById('final-combo').textContent = maxCombo;
     document.getElementById('final-vault').textContent = vaultGold;
+    showBearQuote('gameOver');
     document.getElementById('game-over').classList.remove('hidden');
     canvas.classList.add('hidden');
+    if (typeof updateBalanceBar === 'function') updateBalanceBar(vaultGold);
+    if (typeof renderCurrentPage === 'function') renderCurrentPage();
 }
