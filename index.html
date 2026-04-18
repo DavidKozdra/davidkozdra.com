@@ -340,7 +340,7 @@
 
         <div class="desktop-icon" role="button" aria-label="App Store" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'appstore')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'appstore')" tabindex="0"
         style="cursor: pointer;">
-        <i class="fas fa-store" style="font-size:48px;color:#2563eb;" aria-hidden="true"></i>
+        <img src="./images/ui-icons/shop.png" alt="" width="64" height="64" role="presentation" aria-hidden="true">
         <div class="icon-text">
           <p>App Store</p>
         </div>
@@ -434,21 +434,21 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: 'draw', name: 'Paint', route: 'draw', icon: './images/ui-icons/Pallet.webp', tags: ['tool'] },
       { id: 'calculator', name: 'Calculator', route: 'calculator', icon: './images/ui-icons/Calc.webp', tags: ['tool'] },
       { id: 'term', name: 'Terminal', route: 'term', icon: './images/ui-icons/Term.webp', tags: ['tool'] },
-      { id: 'appstore', name: 'App Store', route: 'appstore', icon: './images/brand/favicon.webp', tags: ['tool'] },
+      { id: 'appstore', name: 'App Store', route: 'appstore', icon: './images/ui-icons/shop.png', tags: ['tool'] },
       { id: 'GOL', name: 'Game of Life', route: 'GOL', icon: './images/ui-icons/GOL.webp', tags: ['game'] },
       { id: 'dragon_game', name: 'DBZ Fighter', route: 'dragon_game', icon: './images/ui-icons/dragon_fighter.webp', tags: ['game'] }
     ];
 
-    const APP_STORE_REGISTRY = [
-      { id: 'dkboy', name: 'DK-Boy', url: 'https://dk-boy.davidkozdra.workers.dev/', favicon: './images/ui-icons/dk-boy.svg', width: 1200, fullscreen: true, external: false, tags: ['game'] },
+    const APP_STORE_REGISTRY = [                
+      { id: 'dkboy', name: 'DK-Boy', url: 'https://dk-boy.davidkozdra.workers.dev/', favicon: 'https://dk-boy.davidkozdra.workers.dev/favicon.png', width: 1200, fullscreen: true, external: false, tags: ['game'] },
       { id: 'readyeshua', name: 'Read Yeshua', url: 'https://readyeshua.com/read', width: 1200, fullscreen: true, external: true, tags: ['tool'] },
       { id: 'bearpenny', name: 'BearPenny', url: './BearPenny/index.html', favicon: './BearPenny/images/logo.svg', width: 1200, fullscreen: true, external: false, tags: ['game'] },
       { id: 'muddygame', name: 'Muddy Game', url: 'https://muddygame.net/game/', width: 1000, fullscreen: false, external: true, tags: ['game'] },
-      { id: 'peoplebook', name: 'PeopleBook', url: './Fake-contact-generator-idea.html', favicon: './images/ui-icons/peoplebook.svg', width: 1200, fullscreen: true, external: false, tags: ['tool'] },
+      { id: 'peoplebook', name: 'People Book', url: './Fake-contact-generator-idea.html', favicon: './images/ui-icons/peoplebook.svg', width: 1200, fullscreen: true, external: false, tags: ['game'] },
       { id: 'gitpulse', name: 'GitPulse', url: 'https://github.com/DavidKozdra/GitPulse', favicon: './images/projects/gitpulseIcon.webp', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] },
       { id: 'passwordgen', name: 'Password Generator', url: 'https://password.ome9a.com/', favicon: 'https://password.ome9a.com/twitter.png', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] },
       { id: 'lofiplayer', name: 'Lofi Music Player', url: 'https://lofi-music-eight.vercel.app/', favicon: 'https://lofi-music-eight.vercel.app/img/lofi.jpg', width: 1200, fullscreen: true, external: true, tags: ['tool', 'open-source'] }
-    ];
+    ];        
 
     function normalizeAppTags(tags) {
       if (!Array.isArray(tags) || tags.length === 0) {
@@ -1377,7 +1377,9 @@ document.addEventListener('DOMContentLoaded', () => {
           dkboy.style.height = "100%";
           dkboy.style.width = "100%";
           dkboy.style.marginTop = "50px";
-          createWindow("DK-Boy", dkboy, "./images/ui-icons/dk-boy.svg", 1800, true, true);
+          
+              let appFavicon = data.favicon || getFaviconUrl(data.url);
+          createWindow("DK-Boy", dkboy, appFavicon, 1800, true, true);
           break;
 
         case "appstore":
@@ -1389,7 +1391,7 @@ document.addEventListener('DOMContentLoaded', () => {
           appstore.style.height = "100%";
           appstore.style.width = "100%";
           appstore.style.marginTop = "50px";
-          createWindow("App Store", appstore, "./images/brand/favicon.webp", 900, true);
+          createWindow("App Store", appstore, "./images/ui-icons/shop.png", 900, true);
           break;
 
         case "installed-app":
