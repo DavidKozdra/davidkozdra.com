@@ -6,105 +6,196 @@
     <title>Canvas</title>
 
     <style>
-
-       .selectedColor {
-            overflow: auto;
-            border: 2px solid yellow;
-            transform: scale(1.1);
+        :root {
+            --bg: #0f1115;
+            --surface: #1a1d25;
+            --surface-2: #242833;
+            --border: #2e3340;
+            --text: #e6e8ee;
+            --text-muted: #9aa0ae;
+            --accent: #6366f1;
+            --accent-hover: #7c7ff5;
+            --danger: #ef4444;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --shadow: 0 4px 16px rgba(0,0,0,0.25);
+            --transition: 150ms ease;
         }
-        canvas {
-            border: 2px solid black;
 
-            overflow: hidden;
-             display: block;
-             touch-action: none;
-             max-width: 100%;
-             height: auto;
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 24px;
+        }
+
+        .selectedColor {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            transform: scale(1.15);
+        }
+
+        canvas {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            background: #fff;
+            display: block;
+            touch-action: none;
+            max-width: 100%;
+            height: auto;
         }
 
         #controls {
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            margin-left: 100px;
-            min-width: 260px;
+            margin-left: 32px;
+            min-width: 280px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
 
         .tab-bar {
             display: flex;
-            border-bottom: 2px solid #ccc;
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border);
         }
 
         .tab-bar button {
             flex: 1;
             margin: 0;
-            padding: 10px;
-            border-bottom: 2px solid transparent;
-            background: #f1f1f1;
+            padding: 12px 10px;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: color var(--transition), background var(--transition);
+            position: relative;
+        }
+
+        .tab-bar button:hover {
+            color: var(--text);
+            background: rgba(255,255,255,0.03);
         }
 
         .tab-bar button.active {
-            background: #fff;
-            border-bottom: 2px solid #333;
-            font-weight: bold;
+            color: var(--text);
+        }
+
+        .tab-bar button.active::after {
+            content: "";
+            position: absolute;
+            left: 20%;
+            right: 20%;
+            bottom: 0;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px 2px 0 0;
         }
 
         .tab-panel {
             display: none;
-            padding: 12px;
+            padding: 16px;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
+            gap: 12px;
+            min-height: 140px;
         }
 
-        .tab-panel.active {
-            display: flex;
+        .tab-panel.active { display: flex; }
+
+        #pen-size-display {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface-2);
+            padding: 2px;
+            cursor: pointer;
         }
 
         .tab-actions {
             display: flex;
-            justify-content: center;
-            border-top: 1px solid #eee;
-            padding-top: 8px;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            background: var(--surface-2);
         }
+
+        .tab-actions button { flex: 1; }
 
         .content {
             display: flex;
             flex-direction: row;
-            align-items: center;
-            overflow: hidden;
+            align-items: flex-start;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .colors-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-
-            overflow: hidden;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
         }
 
         #button-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-        }   
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
 
         button {
-            padding: 10px;
-            margin: 10px;
-            border: none;
-            background-color: #f1f1f1;
+            padding: 8px 14px;
+            margin: 0;
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--text);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
+            transition: background var(--transition), border-color var(--transition), transform var(--transition);
         }
 
         button:hover {
-            background-color: #ddd;
+            background: #2d313d;
+            border-color: var(--accent);
         }
 
-        button.selected{
-            background-color: #ccc;
+        button:active { transform: translateY(1px); }
+
+        button.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
         }
+
+        .layer-button { padding: 8px 0; }
 
         /*
         If you are reading this you are a nerd
-        
         */
     </style>
 </head>
