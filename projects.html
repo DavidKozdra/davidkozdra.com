@@ -127,8 +127,28 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
             padding: 16px 24px;
             background: #ffffff;
+        }
+
+        .filters-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filters-status {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #filter-summary {
+            margin: 0;
+            font-size: 13px;
+            color: #6c757d;
         }
 
         #filters {
@@ -278,22 +298,31 @@
         }
 
         #toggle-button {
-            background: transparent;
-            border: none;
-            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: transform 0.3s ease;
             color: #6c757d;
-            padding: 8px;
+            padding: 10px 14px;
         }
 
         #toggle-button:hover {
             color: #495057;
-            background: #f8f9fa;
-            border-radius: 4px;
+            background: #eef2f6;
         }
 
-        #toggle-button.collapsed {
+        #toggle-button-icon {
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        #toggle-button.collapsed #toggle-button-icon {
             transform: rotate(180deg);
         }
 
@@ -331,12 +360,24 @@
             .project {
                 flex-direction: column;
             }
+
+            .project img {
+                width: 100%;
+            }
+
             #filters-controls {
-                padding: 15px 20px;
+                padding: 12px 16px;
+                align-items: flex-start;
             }
 
             #filters {
                 padding: 0 20px 20px 20px;
+            }
+
+            .filters-toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
             }
 
             #search-input {
@@ -355,19 +396,22 @@
             }
 
             #reset-button {
-                padding: 10px 18px;
+                padding: 8px 14px;
                 font-size: 13px;
-                margin-right: 12px;
+                margin-right: 0;
             }
 
             #toggle-button {
-                width: 38px;
-                height: 38px;
-                font-size: 18px;
+                font-size: 13px;
+                padding: 9px 12px;
             }
 
             #count-label-text {
                 font-size: 14px;
+            }
+
+            #filter-summary {
+                font-size: 12px;
             }
 
             #filters input[type="date"] {
@@ -403,9 +447,7 @@
             }
 
             #toggle-button {
-                width: 34px;
-                height: 34px;
-                font-size: 16px;
+                padding: 8px 11px;
             }
         }
 
@@ -423,13 +465,19 @@
 <body>
     <div id="filters-container">
         <div id="filters-controls">
-            <div style="display: flex; align-items: center;">
+            <div class="filters-toolbar">
                 <button id="reset-button" onclick="resetFilters()">Reset Filters</button>
-                <p id="count-label-text">
-                    <span id="count-label">0</span> projects found
-                </p>
+                <div class="filters-status">
+                    <p id="count-label-text">
+                        <span id="count-label">0</span> projects found
+                    </p>
+                    <p id="filter-summary">Filters off</p>
+                </div>
             </div>
-            <button id="toggle-button" onclick="toggleDropDown()">&#9650;</button>
+            <button id="toggle-button" type="button" onclick="toggleDropDown()" aria-expanded="true" aria-controls="filters">
+                <span id="toggle-button-label">Hide Filters</span>
+                <span id="toggle-button-icon">&#9650;</span>
+            </button>
         </div>
         <div id="filters" class="expanded">
             <input type="text" id="search-input" placeholder="🔍 Search projects...">
@@ -627,8 +675,59 @@
         const dateToInput = document.getElementById('date-to');
         const countLabel = document.getElementById("count-label");
         const toggleButton = document.getElementById("toggle-button");
+        const toggleButtonLabel = document.getElementById("toggle-button-label");
         const filtersDiv = document.getElementById("filters");
         const activeFiltersDiv = document.getElementById('active-filters');
+        const filterSummary = document.getElementById('filter-summary');
+
+        function isMobileView() {
+            return window.innerWidth <= 768;
+        }
+
+        function getActiveFilterCount() {
+            let total = 0;
+            total += filters.selectedTechnologies.length;
+            total += filters.selectedTags.length;
+            total += filters.selectedTypes.length;
+            if (filters.dateFrom) total += 1;
+            if (filters.dateTo) total += 1;
+            if (filters.searchText.trim()) total += 1;
+            return total;
+        }
+
+        function updateFilterSummary() {
+            const activeCount = getActiveFilterCount();
+            if (!activeCount) {
+                filterSummary.textContent = isMobileView() ? 'Filters hidden by default on mobile' : 'Filters off';
+                return;
+            }
+
+            filterSummary.textContent = `${activeCount} filter${activeCount === 1 ? '' : 's'} active`;
+        }
+
+        function setFiltersOpen(nextOpen) {
+            isFiltersOpen = nextOpen;
+
+            if (isFiltersOpen) {
+                filtersDiv.classList.remove('collapsed');
+                filtersDiv.classList.add('expanded');
+                toggleButton.classList.remove('collapsed');
+                toggleButtonLabel.textContent = 'Hide Filters';
+                toggleButton.setAttribute('aria-expanded', 'true');
+            } else {
+                filtersDiv.classList.remove('expanded');
+                filtersDiv.classList.add('collapsed');
+                toggleButton.classList.add('collapsed');
+                toggleButtonLabel.textContent = 'Show Filters';
+                toggleButton.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function collapseFiltersOnMobile() {
+            if (isMobileView()) {
+                setFiltersOpen(false);
+            }
+        }
 
         function parseProjectDate(value) {
             if (!value) return null;
@@ -726,6 +825,7 @@
             updatePillStates();
             updateActiveFilters();
             applyFilters();
+            collapseFiltersOnMobile();
         }
 
         function updatePillStates() {
@@ -761,6 +861,8 @@
                 `;
                 activeFiltersDiv.appendChild(pill);
             });
+
+            updateFilterSummary();
         }
 
         function removeFilter(value, type) {
@@ -771,6 +873,7 @@
             updatePillStates();
             updateActiveFilters();
             applyFilters();
+            collapseFiltersOnMobile();
         }
 
         createPill(allTechnologies, filters.selectedTechnologies, 'tech');
@@ -779,17 +882,28 @@
 
         searchInput.addEventListener('input', () => {
             filters.searchText = searchInput.value;
+            updateFilterSummary();
             applyFilters();
+        });
+
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                collapseFiltersOnMobile();
+            }
         });
 
         dateFromInput.addEventListener('change', () => {
             filters.dateFrom = parseProjectDate(dateFromInput.value);
+            updateFilterSummary();
             applyFilters();
+            collapseFiltersOnMobile();
         });
 
         dateToInput.addEventListener('change', () => {
             filters.dateTo = parseProjectDate(dateToInput.value);
+            updateFilterSummary();
             applyFilters();
+            collapseFiltersOnMobile();
         });
 
         function applyFilters() {
@@ -908,30 +1022,17 @@
             updatePillStates();
             updateActiveFilters();
             applyFilters();
+            collapseFiltersOnMobile();
         }
 
-        let isFiltersOpen = true;
+        let isFiltersOpen = !isMobileView();
 
         function toggleDropDown() {
-            const isOpen = isFiltersOpen;
-            const filtersDiv = document.getElementById('filters');
-            const toggleButton = document.getElementById('toggle-button');
-
-            if (isOpen) {
-                filtersDiv.classList.remove('expanded');
-                filtersDiv.classList.add('collapsed');
-                toggleButton.innerHTML = '&#9660;';
-                toggleButton.classList.add('collapsed');
-            } else {
-                filtersDiv.classList.remove('collapsed');
-                filtersDiv.classList.add('expanded');
-                toggleButton.innerHTML = '&#9650;';
-                toggleButton.classList.remove('collapsed');
-            }
-            isFiltersOpen = !isOpen;
+            setFiltersOpen(!isFiltersOpen);
         }
 
-
+        setFiltersOpen(isFiltersOpen);
+        updateFilterSummary();
         applyFilters();
     </script>
 </body>
