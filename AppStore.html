@@ -417,6 +417,8 @@
                     <div class="app-card-top">
                         <div class="app-icon"><img src="${app.favicon}" onerror="this.onerror=null;this.src='./images/brand/favicon.webp';" alt="${app.name} icon"></div>
                         <div class="app-meta">
+
+                            <div class="app-name">${app.name}</div>
                              <div class="app-tags" style="margin-top: 6px;">
                                 ${app.tags ? app.tags.map(tag => `<span class="badge-external">${tag.toUpperCase()}</span>`).join('') : ''}
                             </div>
