@@ -14,9 +14,57 @@
         }
         canvas {
             border: 2px solid black;
-            
+
             overflow: hidden;
              display: block;
+             touch-action: none;
+             max-width: 100%;
+             height: auto;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            margin-left: 100px;
+            min-width: 260px;
+        }
+
+        .tab-bar {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+        }
+
+        .tab-bar button {
+            flex: 1;
+            margin: 0;
+            padding: 10px;
+            border-bottom: 2px solid transparent;
+            background: #f1f1f1;
+        }
+
+        .tab-bar button.active {
+            background: #fff;
+            border-bottom: 2px solid #333;
+            font-weight: bold;
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 12px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tab-panel.active {
+            display: flex;
+        }
+
+        .tab-actions {
+            display: flex;
+            justify-content: center;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
         }
 
         .content {
@@ -63,30 +111,45 @@
 <body>
     <div class="content">
 
-        <canvas id="drawing" onmousedown="startdraw(event)" onmouseup="stopdraw()" width="500px" height="400px">
+        <canvas id="drawing" onpointerdown="startdraw(event)" onpointerup="stopdraw()" onpointercancel="stopdraw()" onpointerleave="stopdraw()"
+         width="500px" height="400px">
         </canvas>
 
         <div >
 
-            <div> <label for=""> Pen Size</label> 
-
-            <button onclick="clearDisplay()"> Clear </button>
-                <input type="text" onchange="updatePen()" placeholder="5">  </input>
+            <div> 
+  
+              
             </div>
 
-            <div>
-                <input type="color" name="" id="" onchange="updateColor()"> <button onclick="saveColor()"> +</button>
-                
-                <div class="colors-container"> 
-                    
+            <div id="controls">
+                <div class="tab-bar">
+                    <button data-tab="brush" class="active" onclick="selectTab('brush')">Brush</button>
+                    <button data-tab="colors" onclick="selectTab('colors')">Colors</button>
+                    <button data-tab="layers" onclick="selectTab('layers')">Layers</button>
                 </div>
 
-                <h1>Layers</h1>
+                <div id="tab-brush" class="tab-panel active">
+                    <div id="pen-size-display">Pen Size: 5</div>
+                    <input type="range" min="1" max="50" value="5" onchange="updatePen()" oninput="updatePen()">
+                </div>
 
-                <div id="button-grid"></div>
+                <div id="tab-colors" class="tab-panel">
+                    <div>
+                        <input type="color" onchange="updateColor()">
+                        <button onclick="saveColor()">+</button>
+                    </div>
+                    <div class="colors-container"></div>
+                </div>
 
+                <div id="tab-layers" class="tab-panel">
+                    <div id="button-grid"></div>
+                </div>
 
-                <button onclick="saveCanvas()"> Save </button>
+                <div class="tab-actions">
+                    <button onclick="clearDisplay()">Clear</button>
+                    <button onclick="saveCanvas()">Save</button>
+                </div>
             </div>
         </div>
     </div>
@@ -218,7 +281,17 @@
         }    
 
         function updatePen() {
-            penSize = document.querySelector('input').value;
+            penSize = document.querySelector('input[type="range"]').value;
+            document.getElementById('pen-size-display').innerText = `Pen Size: ${penSize}`;
+        }
+
+        function selectTab(name) {
+            document.querySelectorAll('.tab-bar button').forEach(b => {
+                b.classList.toggle('active', b.dataset.tab === name);
+            });
+            document.querySelectorAll('.tab-panel').forEach(p => {
+                p.classList.toggle('active', p.id === 'tab-' + name);
+            });
         }
 
         function clearDisplay() {
@@ -234,11 +307,23 @@
 
         ctx.fillRect(0, 0, canvas.width, canvas.height);    
 
+        function getCanvasPos(event) {
+            let rect = canvas.getBoundingClientRect();
+            let scaleX = canvas.width / rect.width;
+            let scaleY = canvas.height / rect.height;
+            return {
+                x: (event.clientX - rect.left) * scaleX,
+                y: (event.clientY - rect.top) * scaleY
+            };
+        }
+
         function startdraw(event) {
+            event.preventDefault();
             drawing = true;
-            let x = event.clientX - canvas.offsetLeft;
-            let y = event.clientY - canvas.offsetTop;
-            let pixel = {x: x, y: y, color: activeColor, penSize: penSize};
+            let pos = getCanvasPos(event);
+            mouseX = pos.x;
+            mouseY = pos.y;
+            let pixel = {x: pos.x, y: pos.y, color: activeColor, penSize: penSize};
             stack.push(pixel);
             layers[currentLayer].push(pixel);
         }
@@ -247,9 +332,11 @@
             drawing = false;
         }
 
-        document.addEventListener('mousemove', (event) => {
-            mouseX  = event.clientX - canvas.offsetLeft;
-            mouseY  = event.clientY - canvas.offsetTop;
+        canvas.addEventListener('pointermove', (event) => {
+            event.preventDefault();
+            let pos = getCanvasPos(event);
+            mouseX = pos.x;
+            mouseY = pos.y;
         });
 
         document.addEventListener('keydown', (event) => {

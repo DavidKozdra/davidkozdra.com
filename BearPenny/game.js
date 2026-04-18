@@ -6,7 +6,7 @@ var shopUpgrades = {};
 
 function openDB() {
     return new Promise(function(resolve, reject) {
-        var req = indexedDB.open('bear-penny', 4);
+        var req = indexedDB.open('bear-penny', 5);
         req.onupgradeneeded = function(e) {
             var d = e.target.result;
             if (e.oldVersion < 3) {
@@ -18,6 +18,7 @@ function openDB() {
             }
             if (!d.objectStoreNames.contains('portfolio')) d.createObjectStore('portfolio');
             if (!d.objectStoreNames.contains('upgrades')) d.createObjectStore('upgrades');
+            if (!d.objectStoreNames.contains('news')) d.createObjectStore('news');
         };
         req.onsuccess = function(e) { db = e.target.result; resolve(db); };
         req.onerror = function(e) { reject(e); };
@@ -103,11 +104,12 @@ function saveUpgrades() {
 function resetAllData() {
     return new Promise(function(resolve) {
         if (!db) { resolve(); return; }
-        var tx = db.transaction(['wallet', 'stats', 'upgrades', 'portfolio'], 'readwrite');
+        var tx = db.transaction(['wallet', 'stats', 'upgrades', 'portfolio', 'news'], 'readwrite');
         tx.objectStore('wallet').clear();
         tx.objectStore('stats').clear();
         tx.objectStore('upgrades').clear();
         tx.objectStore('portfolio').clear();
+        tx.objectStore('news').clear();
         vaultGold = 0;
         vaultStats = { totalRuns: 0, bestWave: 0, bestCombo: 0, totalEarned: 0 };
         shopUpgrades = {};
@@ -216,6 +218,7 @@ var SHOP_UPGRADES = {
     tradeFee:        { name: 'Broker License',     cat: 'portal', icon: '🤝', maxLvl: 4, costs: [250, 600, 1200, 3000],           desc: '5% better buy/sell prices per level' },
     dividends:       { name: 'Dividend Portfolio', cat: 'portal', icon: '💰', maxLvl: 5, costs: [300, 700, 1500, 3000, 6000],    desc: '+2% dividend yield per tax cycle' },
     flatTaxReduction:{ name: 'Tax Shelter',        cat: 'portal', icon: '🏠', maxLvl: 4, costs: [100, 300, 700, 1500],            desc: '-10g flat tax per level (50g -> 10g)' },
+    newsDesk:        { name: 'News Desk',          cat: 'portal', icon: '📰', maxLvl: 1, costs: [450],                             desc: 'Unlock the News tab with market gossip and mover headlines' },
 };
 
 function getUpgradeLevel(id) {
@@ -317,10 +320,15 @@ function confirmResetData() {
             if (typeof portfolio !== 'undefined') {
                 portfolio = {};
             }
+            if (typeof newsFeed !== 'undefined') {
+                newsFeed = [];
+            }
             refreshSettingsPanel();
             refreshStartScreen();
             if (typeof updateBalanceBar === 'function') updateBalanceBar(vaultGold);
             if (typeof renderCurrentPage === 'function') renderCurrentPage();
+            if (typeof syncNewsTabState === 'function') syncNewsTabState();
+            if (typeof renderNews === 'function') renderNews();
             alert('All data wiped.');
         });
     }
@@ -328,14 +336,16 @@ function confirmResetData() {
 
 function exportData() {
     openDB().then(function() {
-        var tx = db.transaction('portfolio', 'readonly');
-        var req = tx.objectStore('portfolio').get('holdings');
-        req.onsuccess = function() {
+        var tx = db.transaction(['portfolio', 'news'], 'readonly');
+        var portfolioReq = tx.objectStore('portfolio').get('holdings');
+        var newsReq = tx.objectStore('news').get('feed');
+        tx.oncomplete = function() {
             var data = {
                 gold: vaultGold,
                 stats: vaultStats,
                 upgrades: shopUpgrades,
-                portfolio: req.result || {}
+                portfolio: portfolioReq.result || {},
+                news: newsReq.result || []
             };
             var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             var a = document.createElement('a');
@@ -344,7 +354,7 @@ function exportData() {
             a.click();
             URL.revokeObjectURL(a.href);
         };
-        req.onerror = function() {
+        tx.onerror = function() {
             alert('Could not export save data.');
         };
     }).catch(function() {
@@ -371,15 +381,24 @@ function importData(event) {
             if (typeof portfolio !== 'undefined') {
                 portfolio = data.portfolio && typeof data.portfolio === 'object' ? data.portfolio : {};
             }
+            if (typeof newsFeed !== 'undefined') {
+                newsFeed = Array.isArray(data.news) ? data.news : [];
+            }
             saveVault(vaultGold).then(function() { return saveStats(); }).then(function() { return saveUpgrades(); }).then(function() {
                 if (typeof savePortfolio === 'function') {
                     return savePortfolio();
+                }
+            }).then(function() {
+                if (typeof saveNewsFeed === 'function') {
+                    return saveNewsFeed();
                 }
             }).then(function() {
                 refreshSettingsPanel();
                 refreshStartScreen();
                 if (typeof updateBalanceBar === 'function') updateBalanceBar(vaultGold);
                 if (typeof renderCurrentPage === 'function') renderCurrentPage();
+                if (typeof syncNewsTabState === 'function') syncNewsTabState();
+                if (typeof renderNews === 'function') renderNews();
                 alert('Data imported!');
             });
         } catch (err) {
@@ -469,6 +488,8 @@ function purchaseUpgrade(id) {
     refreshStartScreen();
     refreshSettingsPanel();
     if (typeof updateBalanceBar === 'function') updateBalanceBar(vaultGold);
+    if (typeof syncNewsTabState === 'function') syncNewsTabState();
+    if (typeof renderNews === 'function') renderNews();
 }
 
 function startGame() {

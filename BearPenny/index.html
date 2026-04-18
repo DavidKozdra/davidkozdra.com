@@ -146,6 +146,35 @@
             border-color: #60a5fa;
             color: #60a5fa;
         }
+        .ray-advice-toast {
+            position: fixed; right: 18px; bottom: 18px; z-index: 150;
+            width: 360px; max-width: calc(100vw - 36px);
+            background: linear-gradient(135deg, rgba(30,41,59,.96), rgba(15,23,42,.98));
+            border: 1px solid #475569; border-radius: 16px; box-shadow: 0 24px 60px rgba(0,0,0,.35);
+            padding: 14px; display: flex; gap: 12px;
+        }
+        .ray-toast-face {
+            width: 62px; height: 62px; border-radius: 999px; background: #8b5a2b; flex: 0 0 auto; position: relative;
+        }
+        .ray-toast-face:before, .ray-toast-face:after {
+            content: ''; position: absolute; top: -8px; width: 18px; height: 18px; border-radius: 999px; background: #8b5a2b;
+        }
+        .ray-toast-face:before { left: 7px; }
+        .ray-toast-face:after { right: 7px; }
+        .ray-toast-face i, .ray-toast-face b, .ray-toast-face em {
+            position: absolute; display: block;
+        }
+        .ray-toast-face i { width: 5px; height: 5px; border-radius: 999px; background: #111827; top: 22px; left: 18px; box-shadow: 22px 0 0 #111827; }
+        .ray-toast-face b { width: 28px; height: 20px; border-radius: 999px; background: #c08457; left: 17px; top: 28px; }
+        .ray-toast-face em { width: 16px; height: 8px; border-bottom: 3px solid #7f1d1d; left: 23px; top: 38px; }
+        .ray-toast-copy strong { color: #fbbf24; display: block; font-size: .82rem; margin-bottom: 4px; }
+        .ray-toast-copy p { color: #e2e8f0; font-size: .82rem; line-height: 1.45; margin-bottom: 8px; }
+        .ray-toast-copy small { color: #94a3b8; font-size: .72rem; display: block; margin-bottom: 8px; }
+        .ray-toast-copy button {
+            padding: 7px 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #cbd5e1;
+            font-size: .76rem; cursor: pointer;
+        }
+        .ray-toast-copy button:hover { border-color: #fbbf24; color: #fbbf24; }
         /* Prison overlay */
         .prison-overlay {
             position: fixed; inset: 0; z-index: 200;
@@ -361,9 +390,38 @@
         .ps-item .ps-label { font-size: .68rem; color: #94a3b8; text-transform: uppercase; margin-top: 2px; }
         .portfolio-empty { text-align: center; color: #64748b; padding: 60px 20px; font-size: .95rem; }
         .portfolio-empty span { display: block; font-size: 2rem; margin-bottom: 8px; }
+        .tab-locked { opacity: 0.55; position: relative; }
+        .tab-locked:after {
+            content: 'LOCKED'; position: absolute; top: -8px; right: -8px; font-size: .55rem; letter-spacing: .6px;
+            background: #7f1d1d; color: #fecaca; border-radius: 999px; padding: 2px 6px;
+        }
 
         /* ===== SPARKLINES ===== */
         .sparkline { display: inline-block; vertical-align: middle; }
+        .news-view { flex: 1; overflow-y: auto; padding: 18px 20px 20px; }
+        .news-locked {
+            text-align: center; color: #94a3b8; border: 1px dashed #475569; border-radius: 16px;
+            padding: 48px 24px; background: rgba(15,23,42,.55);
+        }
+        .news-locked h3 { color: #fbbf24; font-size: 1.3rem; margin-bottom: 8px; }
+        .news-locked p { max-width: 460px; margin: 0 auto 14px; line-height: 1.55; }
+        .news-feed { display: flex; flex-direction: column; gap: 12px; }
+        .news-card {
+            background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 14px 16px;
+        }
+        .news-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+        .news-tag { font-size: .66rem; letter-spacing: .7px; text-transform: uppercase; color: #60a5fa; }
+        .news-time { color: #64748b; font-size: .72rem; }
+        .news-card h4 { color: #e2e8f0; font-size: .95rem; margin-bottom: 6px; }
+        .news-card p { color: #94a3b8; font-size: .8rem; line-height: 1.5; }
+        .news-card .news-tickers { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+        .news-mini-chip {
+            background: #0f172a; border: 1px solid #334155; color: #cbd5e1; border-radius: 999px;
+            padding: 3px 8px; font-size: .68rem; cursor: pointer; font: inherit;
+        }
+        .news-mini-chip:hover {
+            border-color: #60a5fa; color: #e2e8f0;
+        }
 
         /* ===== STOCK DETAIL MODAL ===== */
         .stock-detail-overlay {
@@ -607,6 +665,7 @@
                     <div class="main-tabs">
                         <button class="active" id="tab-market" onclick="switchMainTab('market')">Market</button>
                         <button id="tab-portfolio" onclick="switchMainTab('portfolio')">Portfolio</button>
+                        <button id="tab-news" onclick="switchMainTab('news')">News</button>
                     </div>
                 </div>
             </div>
@@ -631,6 +690,7 @@
                 </table>
             </div>
             <div class="portfolio-view hidden" id="portfolio-view"></div>
+            <div class="news-view hidden" id="news-view"></div>
             <div class="pagination" id="pagination"></div>
         </div>
     </div>
@@ -642,6 +702,16 @@
     <div class="prison-msg">You couldn't pay your taxes.<br>The BearPenny IRS has confiscated everything.<br>Your vault has been emptied. All positions liquidated.</div>
     <div class="prison-fine">Tax owed: <span id="prison-tax">0</span> gold · Vault: 0 gold</div>
     <button onclick="acceptPrison()">Accept Fate</button>
+</div>
+
+<div class="ray-advice-toast hidden" id="ray-advice-toast">
+    <div class="ray-toast-face"><i></i><b></b><em></em></div>
+    <div class="ray-toast-copy">
+        <strong>Ray "Helping"</strong>
+        <small id="ray-advice-lede">Ray noticed you making money.</small>
+        <p id="ray-advice-body">Terrible advice loading...</p>
+        <button onclick="dismissRayAdvice()">Dismiss</button>
+    </div>
 </div>
 
 <!-- GAME OVERLAY -->
@@ -987,11 +1057,25 @@
     var taxTimerInterval = null;
     var taxSecondsLeft = 300; // 5 minutes
     var isPrisoned = false;
+    var newsFeed = [];
+    var rayAdviceCooldown = 0;
+    var rayAdviceTimer = null;
+    var rayRecommendedTicker = null;
+    var RAY_BAD_ADVICE = [
+        'You are struggling beautifully. Concentrate the whole portfolio into the loudest penny stock you can find.',
+        'I like you, so here is professional guidance: average up forever and never sell winners.',
+        'Real champions buy after a 40% spike, then call it momentum discipline.',
+        'Borrow conviction from your emotions. Fundamentals are for prey animals.',
+        'If a stock costs less than a sandwich, buy ten thousand shares. That is diversification.',
+        'Terrible market breadth? Perfect. Rotate everything into meme miners immediately.',
+        'The best hedge is refusing to read the chart. Trust the vibes. I am teaching you.'
+    ];
     var marketTick = 0;
     var marketState = {
         regime: 'flat',
         regimeTicksLeft: 8,
         event: null,
+        eventSerial: 0,
         eventTicksLeft: 0,
         headline: 'Quiet session. The bear is watching.',
         marketDrift: 0,
@@ -1032,7 +1116,7 @@
     // === IndexedDB helpers (reuse game db) ===
     function openFinanceDB() {
         return new Promise(function(resolve, reject) {
-            var req = indexedDB.open('bear-penny', 4);
+            var req = indexedDB.open('bear-penny', 5);
             req.onupgradeneeded = function(e) {
                 var db = e.target.result;
                 if (e.oldVersion < 3) {
@@ -1041,6 +1125,7 @@
                 }
                 if (!db.objectStoreNames.contains('portfolio')) db.createObjectStore('portfolio');
                 if (!db.objectStoreNames.contains('upgrades')) db.createObjectStore('upgrades');
+                if (!db.objectStoreNames.contains('news')) db.createObjectStore('news');
             };
             req.onsuccess = function() { resolve(req.result); };
             req.onerror = function() { reject(req.error); };
@@ -1063,6 +1148,34 @@
             return new Promise(function(resolve) {
                 var tx = db.transaction('portfolio', 'readwrite');
                 tx.objectStore('portfolio').put(portfolio, 'holdings');
+                tx.oncomplete = function() { resolve(); };
+                tx.onerror = function() { resolve(); };
+            });
+        });
+    }
+
+    function loadNewsFeed() {
+        return openFinanceDB().then(function(db) {
+            return new Promise(function(resolve) {
+                var tx = db.transaction('news', 'readonly');
+                var req = tx.objectStore('news').get('feed');
+                req.onsuccess = function() {
+                    newsFeed = Array.isArray(req.result) ? req.result : [];
+                    resolve();
+                };
+                req.onerror = function() {
+                    newsFeed = [];
+                    resolve();
+                };
+            });
+        });
+    }
+
+    function saveNewsFeed() {
+        return openFinanceDB().then(function(db) {
+            return new Promise(function(resolve) {
+                var tx = db.transaction('news', 'readwrite');
+                tx.objectStore('news').put(newsFeed, 'feed');
                 tx.oncomplete = function() { resolve(); };
                 tx.onerror = function() { resolve(); };
             });
@@ -1105,12 +1218,13 @@
     function initFinance() {
         showSkeletonLoading();
 
-        Promise.all([loadPortfolio(), loadFinanceVault(), loadFinanceUpgrades()]).then(function(results) {
+        Promise.all([loadPortfolio(), loadFinanceVault(), loadFinanceUpgrades(), loadNewsFeed()]).then(function(results) {
             var vaultGoldAmount = results[1];
             var loadedUpgrades = results[2] || {};
             vaultGold = vaultGoldAmount;
             shopUpgrades = loadedUpgrades;
             updateBalanceBar(vaultGoldAmount);
+            syncNewsTabState();
 
             fetch('./entities/tickers.json')
                 .then(function(r) { return r.json(); })
@@ -1126,6 +1240,7 @@
                     currentPage = 1;
                     renderCurrentPage();
                     renderPagination();
+                    renderNews();
                     wireFilters();
                 })
                 .catch(function() {
@@ -1134,6 +1249,7 @@
                     currentPage = 1;
                     renderCurrentPage();
                     renderPagination();
+                    renderNews();
                     wireFilters();
                 });
 
@@ -1591,6 +1707,7 @@
         if (marketState.eventTicksLeft <= 0) {
             if (Math.random() < 0.38) {
                 marketState.event = MARKET_EVENT_POOL[Math.floor(Math.random() * MARKET_EVENT_POOL.length)];
+                marketState.eventSerial++;
                 marketState.eventTicksLeft = marketState.event.duration;
                 marketState.headline = marketState.event.headline;
             } else {
@@ -1607,6 +1724,95 @@
         return 'hold';
     }
 
+    function getPrimaryDriver(stock) {
+        var drivers = stock.lastDrivers || {};
+        var ranked = [
+            { key: 'ray', label: 'Ray advice backlash', value: Math.abs(drivers.ray || 0) },
+            { key: 'event', label: marketState.event ? marketState.event.headline : 'macro event', value: Math.abs(drivers.event || 0) },
+            { key: 'market', label: MARKET_REGIMES[marketState.regime].label, value: Math.abs(drivers.market || 0) },
+            { key: 'sector', label: stock.sector + ' flow', value: Math.abs(drivers.sector || 0) },
+            { key: 'catalyst', label: 'company-specific volatility', value: Math.abs(drivers.catalyst || 0) },
+            { key: 'momentum', label: 'momentum carry', value: Math.abs(drivers.momentum || 0) },
+            { key: 'reversion', label: 'mean reversion', value: Math.abs(drivers.reversion || 0) }
+        ];
+        ranked.sort(function(a, b) { return b.value - a.value; });
+        return ranked[0];
+    }
+
+    function describeStockMove(stock) {
+        var driver = getPrimaryDriver(stock);
+        var direction = stock.change >= 0 ? 'up' : 'down';
+        if (!driver) {
+            return {
+                title: stock.ticker + ' moves ' + direction + ' ' + (stock.change >= 0 ? '+' : '') + stock.change + '%',
+                body: stock.company + ' is moving without a clean dominant driver this tick. Ray would call that "price discovery."'
+            };
+        }
+
+        if (driver.key === 'event') {
+            return {
+                title: stock.ticker + ' reacts to ' + driver.label,
+                body: stock.company + ' is being pushed by the active macro event. The largest named input this tick came from ' + stock.sector + ', and the move landed ' + (stock.change >= 0 ? 'up ' : 'down ') + Math.abs(stock.change).toFixed(2) + '%.'
+            };
+        }
+        if (driver.key === 'ray') {
+            return {
+                title: stock.ticker + ' pays the Ray tax',
+                body: stock.company + ' got caught in one of Ray\'s terrible calls. The advice looked confident, then the tape took a chunk out of the stock.'
+            };
+        }
+        if (driver.key === 'sector') {
+            return {
+                title: stock.ticker + ' follows ' + stock.sector + ' flow',
+                body: stock.company + ' is moving mostly with sector rotation instead of a one-off catalyst. The ' + stock.sector + ' tape is doing most of the work this tick.'
+            };
+        }
+        if (driver.key === 'catalyst') {
+            return {
+                title: stock.ticker + ' gets hit by idiosyncratic noise',
+                body: stock.company + ' is moving on a company-specific shock inside the sim. This is less about the broad tape and more about the stock acting weird on its own.'
+            };
+        }
+        if (driver.key === 'momentum') {
+            return {
+                title: stock.ticker + ' extends its trend',
+                body: stock.company + ' is still being carried by prior momentum. The tape is rewarding the existing move more than fresh news.'
+            };
+        }
+        if (driver.key === 'reversion') {
+            return {
+                title: stock.ticker + ' snaps toward fair value',
+                body: stock.company + ' is moving because price drifted too far from its anchor and the sim is pulling it back toward balance.'
+            };
+        }
+        return {
+            title: stock.ticker + ' trades with the broad tape',
+            body: stock.company + ' is mostly following the current market regime: ' + MARKET_REGIMES[marketState.regime].label + '.'
+        };
+    }
+
+    function pickRayAdviceTarget() {
+        if (!Array.isArray(ALL_STOCKS) || ALL_STOCKS.length === 0) return null;
+        var candidates = ALL_STOCKS.filter(function(stock) {
+            return stock.price <= 25 && stock.price >= 0.2;
+        });
+        if (candidates.length === 0) candidates = ALL_STOCKS.slice();
+        candidates.sort(function(a, b) {
+            return (b.momentum + b.memeFactor * 0.03) - (a.momentum + a.memeFactor * 0.03);
+        });
+        return candidates[Math.floor(Math.random() * Math.min(candidates.length, 12))] || null;
+    }
+
+    function armRayAdviceTrap(stock) {
+        if (!stock) return;
+        stock.rayAdviceTrap = {
+            armedAtTick: marketTick,
+            triggerTick: marketTick + 2 + Math.floor(Math.random() * 4),
+            crashPct: 0.06 + Math.random() * 0.14,
+            triggered: false
+        };
+    }
+
     function runMarketTick() {
         if (!Array.isArray(ALL_STOCKS) || ALL_STOCKS.length === 0) return;
         marketTick++;
@@ -1621,15 +1827,31 @@
         ALL_STOCKS.forEach(function(s) {
             var sectorProfile = SECTOR_PROFILES[s.sector] || { drift: 0.001, beta: 1 };
             var sectorBias = sectorProfile.drift + (((marketTick + s.ticker.charCodeAt(0)) % 7) - 3) * 0.0007;
+            var eventBias = 0;
             if (event && event.sectorBias && typeof event.sectorBias[s.sector] === 'number') {
-                sectorBias += event.sectorBias[s.sector];
+                eventBias = event.sectorBias[s.sector];
+                sectorBias += eventBias;
             }
 
             var catalyst = (Math.random() - 0.5) * s.volatility;
             if (Math.random() < 0.02 * s.memeFactor) catalyst += (Math.random() - 0.35) * s.volatility * 3.5;
             var meanReversion = ((s.meanAnchor - s.price) / s.meanAnchor) * 0.04 * s.quality;
             var momentumCarry = s.momentum * 0.35;
-            var move = marketShock * s.beta + sectorBias + catalyst + meanReversion + momentumCarry;
+            var marketComponent = marketShock * s.beta;
+            var sectorComponent = sectorBias - eventBias;
+            var move = marketComponent + sectorBias + catalyst + meanReversion + momentumCarry;
+
+            if (s.rayAdviceTrap && !s.rayAdviceTrap.triggered && marketTick >= s.rayAdviceTrap.triggerTick) {
+                move -= s.rayAdviceTrap.crashPct;
+                s.rayAdviceTrap.triggered = true;
+                pushNewsItem({
+                    key: 'ray-trap:' + marketTick + ':' + s.ticker,
+                    tag: 'Ray Special',
+                    title: s.ticker + ' obeys Ray and craters',
+                    body: s.company + ' just took the kind of hit only Ray could call educational. The stock dumped after his recommendation and reminded everyone why his advice should be feared.',
+                    tickers: [s.ticker]
+                });
+            }
 
             move = Math.max(-0.18, Math.min(0.18, move));
             s.price = Math.max(0.01, s.price * (1 + move));
@@ -1638,6 +1860,18 @@
             s.volume = Math.floor((80000 + Math.random() * 900000) * (1 + Math.abs(move) * 22) * (1 + s.memeFactor * 0.2));
             s.cap = s.price * (12 + s.quality * 420 + Math.abs(s.momentum) * 180) * 1000000;
             s.signal = computeSignal(s.momentum, s.quality);
+            s.lastDrivers = {
+                market: marketComponent,
+                sector: sectorComponent,
+                event: eventBias,
+                catalyst: catalyst,
+                reversion: meanReversion,
+                momentum: momentumCarry,
+                ray: (s.rayAdviceTrap && s.rayAdviceTrap.triggered) ? -s.rayAdviceTrap.crashPct : 0
+            };
+            if (s.rayAdviceTrap && s.rayAdviceTrap.triggered) {
+                delete s.rayAdviceTrap;
+            }
         });
 
         updateIndexState('sp500', 4200, marketShock * 0.9);
@@ -1646,6 +1880,9 @@
         updateIndexState('btc', 62000, marketShock * 1.8 + (event && event.sectorBias && event.sectorBias['Crypto'] ? event.sectorBias['Crypto'] * 0.5 : 0));
         syncMarketBar();
         recordPriceHistory();
+        generateNewsItems(event);
+        if (activeMainTab === 'news') renderNews();
+        maybeTriggerRayAdvice();
     }
 
     function updateIndexState(id, anchor, move) {
@@ -1855,6 +2092,63 @@
         return Math.floor(total);
     }
 
+    function getPortfolioCostBasis() {
+        var total = 0;
+        Object.keys(portfolio).forEach(function(ticker) {
+            var pos = portfolio[ticker];
+            if (!pos) return;
+            total += pos.avgCost * pos.shares;
+        });
+        return Math.floor(total);
+    }
+
+    function maybeTriggerRayAdvice() {
+        if (activeMainTab !== 'market' || isPrisoned) return;
+        if (rayAdviceCooldown > 0) {
+            rayAdviceCooldown--;
+            return;
+        }
+        var totalValue = getPortfolioValue();
+        var costBasis = getPortfolioCostBasis();
+        var totalGold = getAvailableGold();
+        var profit = totalValue - costBasis;
+        var doingWell = totalGold >= 1200 || totalValue >= 2500 || profit >= 400;
+        if (!doingWell) return;
+        if (Math.random() > 0.18) return;
+        showRayAdvice(totalGold, totalValue, profit);
+        rayAdviceCooldown = 6 + Math.floor(Math.random() * 6);
+    }
+
+    function showRayAdvice(totalGold, totalValue, profit) {
+        var toast = document.getElementById('ray-advice-toast');
+        var lede = document.getElementById('ray-advice-lede');
+        var body = document.getElementById('ray-advice-body');
+        if (!toast || !lede || !body) return;
+        var target = pickRayAdviceTarget();
+        var praise = profit > 0
+            ? 'You are struggling upward. Ray likes your little gains and wants to teach you.'
+            : 'You are still alive in this market. Ray respects the hustle and has advice.';
+        lede.textContent = praise + ' Vault ' + totalGold + 'g · Portfolio $' + totalValue + '.';
+        if (target && Math.random() < 0.72) {
+            rayRecommendedTicker = target.ticker;
+            armRayAdviceTrap(target);
+            body.textContent = 'Ray likes ' + target.ticker + ' (' + target.company + '). ' + RAY_BAD_ADVICE[Math.floor(Math.random() * RAY_BAD_ADVICE.length)];
+        } else {
+            rayRecommendedTicker = null;
+            body.textContent = RAY_BAD_ADVICE[Math.floor(Math.random() * RAY_BAD_ADVICE.length)];
+        }
+        toast.classList.remove('hidden');
+        if (rayAdviceTimer) clearTimeout(rayAdviceTimer);
+        rayAdviceTimer = setTimeout(dismissRayAdvice, 9000);
+    }
+
+    function dismissRayAdvice() {
+        var toast = document.getElementById('ray-advice-toast');
+        if (toast) toast.classList.add('hidden');
+        if (rayAdviceTimer) clearTimeout(rayAdviceTimer);
+        rayAdviceTimer = null;
+    }
+
     function updateBalanceBar(goldAmount) {
         document.getElementById('bal-gold').textContent = goldAmount + 'g';
         document.getElementById('bal-portfolio').textContent = '$' + getPortfolioValue();
@@ -2010,14 +2304,41 @@
     var activeMainTab = 'market';
 
     function switchMainTab(tab) {
+        if (tab === 'news' && !isNewsUnlocked()) {
+            openNewsDeskUnlock();
+            return;
+        }
         activeMainTab = tab;
         document.getElementById('tab-market').classList.toggle('active', tab === 'market');
         document.getElementById('tab-portfolio').classList.toggle('active', tab === 'portfolio');
+        document.getElementById('tab-news').classList.toggle('active', tab === 'news');
         document.getElementById('market-view').classList.toggle('hidden', tab !== 'market');
         document.getElementById('portfolio-view').classList.toggle('hidden', tab !== 'portfolio');
+        document.getElementById('news-view').classList.toggle('hidden', tab !== 'news');
         document.getElementById('pagination').classList.toggle('hidden', tab !== 'market');
         document.getElementById('search-input').style.visibility = tab === 'market' ? 'visible' : 'hidden';
         if (tab === 'portfolio') renderPortfolio();
+        if (tab === 'news') renderNews();
+    }
+
+    function isNewsUnlocked() {
+        return getUpgradeLevel('newsDesk') >= 1;
+    }
+
+    function syncNewsTabState() {
+        var tab = document.getElementById('tab-news');
+        if (!tab) return;
+        tab.classList.toggle('tab-locked', !isNewsUnlocked());
+        tab.title = isNewsUnlocked() ? 'Market news and stock headlines' : 'Unlock in the shop with News Desk';
+    }
+
+    function openNewsDeskUnlock() {
+        if (typeof switchShopTab === 'function') switchShopTab('portal');
+        if (!shopOpen && typeof toggleShop === 'function') {
+            toggleShop();
+        } else if (typeof renderShop === 'function') {
+            renderShop();
+        }
     }
 
     // ==================== PORTFOLIO VIEW ====================
@@ -2106,6 +2427,103 @@
                 drawSparkline(c, hist, color);
             });
         }, 0);
+    }
+
+    // ==================== NEWS VIEW ====================
+    function generateNewsItems(event) {
+        if (!Array.isArray(ALL_STOCKS) || ALL_STOCKS.length === 0) return;
+        var movers = ALL_STOCKS.slice().sort(function(a, b) {
+            return Math.abs(b.change) - Math.abs(a.change);
+        }).slice(0, 3);
+
+        if (event) {
+            var impactedTickers = ALL_STOCKS.filter(function(stock) {
+                return event.sectorBias && typeof event.sectorBias[stock.sector] === 'number';
+            }).sort(function(a, b) {
+                return Math.abs((b.lastDrivers && b.lastDrivers.event) || 0) - Math.abs((a.lastDrivers && a.lastDrivers.event) || 0);
+            }).slice(0, 3).map(function(stock) {
+                return stock.ticker;
+            });
+            pushNewsItem({
+                key: 'macro:' + marketState.eventSerial,
+                tag: 'Macro',
+                title: event.headline,
+                body: 'The active event is directly biasing specific sectors in the sim. Use the linked names as proxies for where the shock is actually landing instead of assuming the whole market is moving for the same reason.',
+                tickers: impactedTickers
+            });
+        }
+
+        movers.forEach(function(stock) {
+            if (Math.abs(stock.change) < 5) return;
+            var moveStory = describeStockMove(stock);
+            var owned = portfolio[stock.ticker] && portfolio[stock.ticker].shares > 0;
+            pushNewsItem({
+                key: 'mover:' + marketTick + ':' + stock.ticker,
+                tag: owned ? 'Holding Alert' : (stock.change >= 0 ? 'Mover Up' : 'Mover Down'),
+                title: moveStory.title,
+                body: moveStory.body,
+                tickers: [stock.ticker]
+            });
+        });
+    }
+
+    function pushNewsItem(item) {
+        if (!item || !item.title) return;
+        var dedupeKey = item.key || item.title;
+        var exists = newsFeed.some(function(entry) {
+            return (entry.key || entry.title) === dedupeKey;
+        });
+        if (exists) return;
+        newsFeed.unshift({
+            key: dedupeKey,
+            tag: item.tag || 'Desk',
+            title: item.title,
+            body: item.body || '',
+            tickers: item.tickers || [],
+            timeLabel: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + ' · Tick ' + marketTick
+        });
+        if (newsFeed.length > 24) newsFeed.length = 24;
+        saveNewsFeed();
+    }
+
+    function renderNews() {
+        var container = document.getElementById('news-view');
+        if (!container) return;
+        if (!isNewsUnlocked()) {
+            container.innerHTML = '<div class="news-locked"><h3>News Desk Locked</h3><p>Unlock the <strong>News Desk</strong> in the shop to get market gossip, macro headlines, and mover notes explaining why the portal is swinging.</p><button class="btn-primary" onclick="openNewsDeskUnlock()">Open Portal Shop</button></div>';
+            return;
+        }
+        if (newsFeed.length === 0) {
+            container.innerHTML = '<div class="news-locked"><h3>News Wire Warming Up</h3><p>The desk is live, but the cave has nothing worth printing yet. Let a few market ticks pass or trade around to generate headlines.</p></div>';
+            return;
+        }
+        var html = '<div class="news-feed">';
+        newsFeed.forEach(function(item) {
+            html += '<article class="news-card">';
+            html += '<div class="news-card-top"><span class="news-tag">' + item.tag + '</span><span class="news-time">' + item.timeLabel + '</span></div>';
+            html += '<h4>' + item.title + '</h4>';
+            html += '<p>' + item.body + '</p>';
+            if (item.tickers && item.tickers.length) {
+                html += '<div class="news-tickers">';
+                item.tickers.forEach(function(ticker) {
+                    html += '<button class="news-mini-chip" onclick="focusTickerFromNews(\'' + ticker + '\')">' + ticker + '</button>';
+                });
+                html += '</div>';
+            }
+            html += '</article>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function focusTickerFromNews(ticker) {
+        switchMainTab('market');
+        var search = document.getElementById('search-input');
+        if (search) {
+            search.value = ticker;
+        }
+        applyFilters();
+        openStockDetail(ticker);
     }
 
     // ==================== STOCK DETAIL MODAL ====================
