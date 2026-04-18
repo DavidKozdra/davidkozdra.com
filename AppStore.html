@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Store</title>
+    <link rel="icon" type="image/webp" href="/images/brand/favicon.webp">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -286,7 +287,7 @@
                 width: 1200,
                 fullscreen: true,
                 external: true,
-                tags: ["tool", "open-source"]
+                tags: ["tool"]
             },
             {
                 id: "lofiplayer",
@@ -298,7 +299,7 @@
                 width: 1200,
                 fullscreen: true,
                 external: true,
-                tags: ["tool", "open-source"]
+                tags: ["tool"]
             }
         ];
 
@@ -416,8 +417,11 @@
                     <div class="app-card-top">
                         <div class="app-icon"><img src="${app.favicon}" onerror="this.onerror=null;this.src='./images/brand/favicon.webp';" alt="${app.name} icon"></div>
                         <div class="app-meta">
-                            <div class="app-name">${app.name}${app.external ? '<span class="badge-external">External</span>' : ''}</div>
+                             <div class="app-tags" style="margin-top: 6px;">
+                                ${app.tags ? app.tags.map(tag => `<span class="badge-external">${tag.toUpperCase()}</span>`).join('') : ''}
+                            </div>
                             <div class="app-author">${app.author}</div>
+                           
                         </div>
 
                         <! --       <div install count -->

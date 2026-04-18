@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BearPenny</title>
+       <link rel="icon" href="./images/logo.svg" type="image/svg+xml">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Roboto', sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
@@ -197,18 +198,51 @@
         .game-hud {
             position: fixed; top: 0; left: 0; right: 0;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 20px;
+            padding: 14px 22px 12px;
             background: linear-gradient(180deg, rgba(15,23,42,.96), rgba(15,23,42,.7));
-            z-index: 110; font-size: .85rem; font-weight: 600;
+            border-bottom: 1px solid rgba(251,191,36,.16);
+            box-shadow: 0 10px 28px rgba(0,0,0,.18);
+            z-index: 110; font-size: 1rem; font-weight: 700;
         }
-        .hud-left, .hud-center, .hud-right { display: flex; align-items: center; gap: 16px; }
-        .hud-stat { display: flex; align-items: center; gap: 5px; }
-        .hud-stat .label { color: #94a3b8; font-weight: 400; font-size: .7rem; text-transform: uppercase; letter-spacing: .5px; }
-        .hud-stat .val { font-size: .95rem; }
+        .hud-left, .hud-center, .hud-right { display: flex; align-items: center; gap: 18px; }
+        .hud-stat {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 14px;
+            background: rgba(15,23,42,.5);
+            border: 1px solid rgba(148,163,184,.14);
+            border-radius: 12px;
+        }
+        .hud-stat .label { color: #94a3b8; font-weight: 500; font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; }
+        .hud-stat .val { font-size: 1.22rem; line-height: 1; }
         .hud-gold .val { color: #fbbf24; }
         .hud-wave .val { color: #60a5fa; }
         .hud-hp .val { color: #f87171; }
         .hud-combo .val { color: #a78bfa; }
+        .hud-action-btn {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(96,165,250,.35);
+            background: rgba(30,41,59,.8);
+            color: #cbd5e1;
+            font-size: .82rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .hud-action-btn:hover { border-color: #60a5fa; color: #e2e8f0; }
+        @media (max-width: 680px) {
+            .game-hud {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+            .hud-left, .hud-center, .hud-right { gap: 8px; }
+            .hud-stat {
+                gap: 6px;
+                padding: 8px 10px;
+            }
+            .hud-stat .label { font-size: .7rem; }
+            .hud-stat .val { font-size: 1rem; }
+            .hud-action-btn { padding: 7px 10px; font-size: .76rem; }
+        }
         #game-canvas { border-radius: 0; background: #0a0a1a; display: block; }
 
         /* ===== GAME START SCREEN ===== */
@@ -237,6 +271,251 @@
             border-radius: 8px; font-size: .85rem; cursor: pointer;
         }
         .btn-secondary:hover { color: #e2e8f0; border-color: #94a3b8; }
+
+        /* ===== RUN MAP / EVENTS ===== */
+        .run-map-screen, .event-screen {
+            position: fixed; inset: 0; z-index: 118;
+            background: rgba(6, 11, 24, 0.92);
+            display: flex; align-items: center; justify-content: center;
+            padding: 88px 20px 28px;
+        }
+        .run-map-card, .event-card, .run-broker-card {
+            width: min(1120px, 96vw);
+            max-height: calc(100vh - 128px);
+            overflow-y: auto;
+            background: linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.92));
+            border: 1px solid rgba(71,85,105,.85);
+            border-radius: 22px;
+            box-shadow: 0 28px 80px rgba(0,0,0,.38);
+            padding: 24px 26px;
+        }
+        .run-map-header, .event-card-header, .run-broker-header {
+            display: flex; align-items: flex-start; justify-content: space-between; gap: 18px;
+            margin-bottom: 18px;
+        }
+        .run-map-kicker, .event-kicker, .run-broker-kicker {
+            color: #60a5fa; font-size: .76rem; text-transform: uppercase; letter-spacing: .14em; margin-bottom: 6px;
+        }
+        .run-map-header h2, .event-card h2, .run-broker-card h2 {
+            color: #fbbf24; font-size: 1.9rem; line-height: 1.05; margin-bottom: 6px;
+        }
+        .run-map-header p, .event-body, .run-broker-copy {
+            color: #94a3b8; font-size: .92rem; line-height: 1.6;
+        }
+        .run-map-stats {
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;
+        }
+        .run-map-pill {
+            padding: 10px 14px;
+            background: rgba(15,23,42,.7);
+            border: 1px solid rgba(148,163,184,.18);
+            border-radius: 12px;
+            color: #cbd5e1;
+            font-size: .82rem;
+            font-weight: 700;
+        }
+        .run-map-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(132px, 1fr));
+            gap: 12px;
+            align-items: start;
+        }
+        .run-map-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .run-map-column-label {
+            color: #64748b;
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            padding-left: 2px;
+        }
+        .run-node {
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid #334155;
+            background: rgba(15,23,42,.9);
+            text-align: left;
+            color: #e2e8f0;
+            min-height: 112px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease, opacity .12s ease;
+        }
+        button.run-node { cursor: pointer; }
+        .run-node.available {
+            border-color: rgba(96,165,250,.75);
+            box-shadow: 0 0 0 1px rgba(96,165,250,.2), 0 10px 28px rgba(37,99,235,.12);
+        }
+        .run-node.available:hover {
+            transform: translateY(-2px);
+            border-color: #93c5fd;
+        }
+        .run-node.locked {
+            opacity: .34;
+            cursor: default;
+        }
+        .run-node.cleared {
+            border-color: rgba(74,222,128,.65);
+            background: rgba(6,78,59,.18);
+        }
+        .run-node.current {
+            box-shadow: 0 0 0 1px rgba(251,191,36,.25);
+        }
+        .run-node.node-boss {
+            border-color: rgba(248,113,113,.65);
+            background: rgba(69,10,10,.22);
+        }
+        .run-node-top {
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            font-size: .76rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+        .run-node-name {
+            color: #f8fafc;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .run-node-copy {
+            color: #94a3b8;
+            font-size: .78rem;
+            line-height: 1.45;
+        }
+        .run-map-actions, .event-actions, .run-broker-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+        .event-card {
+            width: min(760px, 94vw);
+        }
+        .event-body {
+            background: rgba(15,23,42,.64);
+            border: 1px solid rgba(71,85,105,.55);
+            border-radius: 16px;
+            padding: 16px 18px;
+        }
+        .event-choices {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .event-choice {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(71,85,105,.75);
+            background: rgba(15,23,42,.9);
+            color: #e2e8f0;
+            text-align: left;
+            cursor: pointer;
+        }
+        .event-choice:hover {
+            border-color: #60a5fa;
+            background: rgba(30,41,59,.95);
+        }
+        .event-choice:disabled {
+            opacity: .42;
+            cursor: default;
+            border-color: #334155;
+            background: rgba(15,23,42,.75);
+        }
+        .event-choice strong {
+            display: block;
+            color: #f8fafc;
+            margin-bottom: 4px;
+            font-size: .95rem;
+        }
+        .event-choice span {
+            display: block;
+            color: #94a3b8;
+            font-size: .82rem;
+            line-height: 1.45;
+        }
+        .event-result {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(96,165,250,.28);
+            background: rgba(15,23,42,.84);
+            color: #cbd5e1;
+            line-height: 1.55;
+        }
+
+        /* ===== RUN BROKER ===== */
+        .run-broker-panel {
+            position: fixed; inset: 0; z-index: 136;
+            background: rgba(0,0,0,.88);
+            display: flex; align-items: center; justify-content: center;
+            padding: 18px;
+        }
+        .run-broker-card {
+            width: min(880px, 96vw);
+        }
+        .run-broker-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .run-broker-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .run-broker-item.maxed { border-color: rgba(74,222,128,.6); }
+        .run-broker-item-top {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        }
+        .run-broker-item-name {
+            color: #f8fafc;
+            font-weight: 700;
+            font-size: .96rem;
+        }
+        .run-broker-item-meta {
+            color: #94a3b8;
+            font-size: .76rem;
+            line-height: 1.45;
+        }
+        .run-broker-item button {
+            margin-top: auto;
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            background: #065f46;
+            color: #86efac;
+        }
+        .run-broker-item button:disabled {
+            background: #1e293b;
+            color: #64748b;
+            cursor: default;
+        }
+        .run-broker-item button.maxed {
+            background: #064e3b;
+            color: #86efac;
+        }
+        @media (max-width: 900px) {
+            .run-map-grid { grid-template-columns: repeat(3, minmax(140px, 1fr)); }
+        }
+        @media (max-width: 680px) {
+            .run-map-screen, .event-screen { padding: 72px 12px 18px; }
+            .run-map-card, .event-card, .run-broker-card { padding: 18px 16px; max-height: calc(100vh - 92px); }
+            .run-map-header, .event-card-header, .run-broker-header { flex-direction: column; }
+            .run-map-grid, .run-broker-grid { grid-template-columns: 1fr; }
+        }
         .ray-intro-overlay {
             position: fixed; inset: 0; z-index: 125;
             background: radial-gradient(circle at top, rgba(251,191,36,0.12), rgba(0,0,0,0) 35%), rgba(0,0,0,.88);
@@ -661,7 +940,6 @@
                     </div>
                 </div>
                 <div class="toolbar-right">
-                    <button class="btn-ray" onclick="openAdvancedFilters()">Advanced</button>
                     <div class="main-tabs">
                         <button class="active" id="tab-market" onclick="switchMainTab('market')">Market</button>
                         <button id="tab-portfolio" onclick="switchMainTab('portfolio')">Portfolio</button>
@@ -719,13 +997,14 @@
     <div class="game-hud hidden" id="game-hud">
         <div class="hud-left">
             <div class="hud-stat hud-gold"><span class="label">Gold</span> <span class="val" id="hud-gold">0</span></div>
-            <div class="hud-stat hud-combo"><span class="label">Combo</span> <span class="val" id="hud-combo">x1</span></div>
+            <div class="hud-stat hud-wave"><span class="label">Floor</span> <span class="val" id="hud-wave">1 / 6</span></div>
         </div>
         <div class="hud-center">
-            <div class="hud-stat hud-wave"><span class="label">Wave</span> <span class="val" id="hud-wave">1</span></div>
+            <div class="hud-stat hud-combo"><span class="label">Mode</span> <span class="val" id="hud-combo">DROP</span></div>
         </div>
         <div class="hud-right">
             <div class="hud-stat hud-hp"><span class="label">HP</span> <span class="val" id="hud-hp">♥♥♥</span></div>
+            <button class="hud-action-btn" id="hud-broker-btn" onclick="toggleRunBroker()">Broker</button>
         </div>
     </div>
     <div class="game-start-screen" id="game-start">
@@ -738,14 +1017,52 @@
             <div>Upgrades: <span id="start-upgrades">0</span></div>
         </div>
         <p><strong>Ray the Bear:</strong> I'm a genus bear super star and I know everything you need to make a million pennies so I can take them all... or I will SUE YOU. GRRRR.<br>
-        Pennies fall from the sky, so move left and right to catch them.<br>
-        Avoid 🐻 bears and 💣 bombs. Grab 🧲 Magnet, 🛡️ Shield, ⚡ Frenzy, 🕐 Slow-Mo, and 💎 Diamonds to survive.<br>
+        Pick a route through drop fights, maze dives, random cave events, and a final boss gauntlet.<br>
+        Gold and damage carry across the run, and your broker stays available while the cave is trying to kill you.<br>
         Gold earned is saved to your vault forever, until Ray decides it belongs to him.</p>
         <div class="btn-row">
             <button class="btn-primary" onclick="startGame()">Start Run</button>
             <button class="btn-secondary" onclick="toggleShop()">🛒 Shop</button>
             <button class="btn-secondary" onclick="toggleSettings()">⚙ Settings</button>
             <button class="btn-secondary" onclick="closeGame()">Back to Stocks</button>
+        </div>
+    </div>
+    <div class="run-map-screen hidden" id="run-map">
+        <div class="run-map-card">
+            <div class="run-map-header">
+                <div>
+                    <div class="run-map-kicker" id="run-map-kicker">Route Planning</div>
+                    <h2 id="run-map-title">Penny Path</h2>
+                    <p id="run-map-copy">Choose the next node on Ray's route.</p>
+                </div>
+                <div class="run-map-stats">
+                    <div class="run-map-pill">Floor <span id="run-map-floor">1 / 6</span></div>
+                    <div class="run-map-pill">Run Gold <span id="run-map-gold">0g</span></div>
+                    <div class="run-map-pill">HP <span id="run-map-hp">3 / 5</span></div>
+                </div>
+            </div>
+            <div class="run-map-grid" id="run-map-grid"></div>
+            <div class="run-map-actions">
+                <button class="btn-secondary" onclick="toggleRunBroker()">⚖ Broker</button>
+                <button class="btn-secondary" onclick="retireRun()">Cash Out & Leave</button>
+            </div>
+        </div>
+    </div>
+    <div class="event-screen hidden" id="event-screen">
+        <div class="event-card">
+            <div class="event-card-header">
+                <div>
+                    <div class="event-kicker" id="event-kicker">Random Event</div>
+                    <h2 id="event-title">Ray Has An Idea</h2>
+                </div>
+            </div>
+            <div class="event-body" id="event-body">Something strange is happening in the cave.</div>
+            <div class="event-choices" id="event-choices"></div>
+            <div class="event-result hidden" id="event-result"></div>
+            <div class="event-actions">
+                <button class="btn-secondary" onclick="toggleRunBroker()">⚖ Broker</button>
+                <button class="btn-secondary hidden" id="event-continue" onclick="continueFromEvent()">Continue</button>
+            </div>
         </div>
     </div>
     <div class="ray-intro-overlay hidden" id="ray-intro-overlay">
@@ -776,13 +1093,31 @@
     </div>
     <canvas id="game-canvas" class="hidden"></canvas>
     <div class="game-over-screen hidden" id="game-over">
-        <h1>Run Over!</h1>
+        <h1 id="final-title">Run Over!</h1>
         <div class="score-line">+<span id="final-gold">0</span> gold earned</div>
-        <div class="detail-line">Wave <span id="final-wave">1</span> · Combo peak: x<span id="final-combo">1</span></div>
+        <div class="detail-line" id="final-progress-line">Nodes cleared: 0 / 0</div>
+        <div class="detail-line" id="final-stats-line">Best combo: x1 · Highest wave: 1</div>
         <div class="detail-line">🏦 Vault total: <span id="final-vault">0</span> gold</div>
         <button onclick="startGame()">New Run</button>
         <button class="btn-back" onclick="toggleShop()">🛒 Shop</button>
         <button class="btn-back" onclick="closeGame()">Back to Stocks</button>
+    </div>
+</div>
+
+<div class="run-broker-panel hidden" id="run-broker-panel">
+    <div class="run-broker-card">
+        <div class="run-broker-header">
+            <div>
+                <div class="run-broker-kicker">Run Broker</div>
+                <h2>⚖ Cave Broker</h2>
+                <div class="run-broker-copy">Spend run gold on temporary upgrades and emergency patchwork. These bonuses vanish when the run ends.</div>
+            </div>
+            <div class="run-map-pill">Run Gold <span id="run-broker-gold">0g</span></div>
+        </div>
+        <div class="run-broker-grid" id="run-broker-grid"></div>
+        <div class="run-broker-actions">
+            <button class="btn-secondary" onclick="toggleRunBroker()">Close Broker</button>
+        </div>
     </div>
 </div>
 
@@ -964,10 +1299,13 @@
 
         document.getElementById('game-overlay').classList.remove('hidden');
         document.getElementById('game-start').classList.remove('hidden');
+        document.getElementById('run-map').classList.add('hidden');
+        document.getElementById('event-screen').classList.add('hidden');
         document.getElementById('game-over').classList.add('hidden');
         document.getElementById('game-hud').classList.add('hidden');
         document.getElementById('game-canvas').classList.add('hidden');
         document.getElementById('ray-intro-overlay').classList.add('hidden');
+        document.getElementById('run-broker-panel').classList.add('hidden');
         if (typeof refreshStartScreen === 'function') {
             refreshStartScreen();
         }
@@ -1025,9 +1363,12 @@
         }
         document.getElementById('game-overlay').classList.remove('hidden');
         document.getElementById('game-start').classList.remove('hidden');
+        document.getElementById('run-map').classList.add('hidden');
+        document.getElementById('event-screen').classList.add('hidden');
         document.getElementById('game-over').classList.add('hidden');
         document.getElementById('game-hud').classList.add('hidden');
         document.getElementById('game-canvas').classList.add('hidden');
+        document.getElementById('run-broker-panel').classList.add('hidden');
         if (typeof refreshStartScreen === 'function') {
             refreshStartScreen();
         }
