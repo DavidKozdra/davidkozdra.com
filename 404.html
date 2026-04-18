@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="404 Error - Page not found">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://http.cat;">
+    <title>404 Not Found | David Kozdra</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+    :root {
+        --bg-color: #0f172a;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --text-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --muted-color: #94a3b8;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-image: radial-gradient(circle at top right, #1e293b, transparent 40%), radial-gradient(circle at bottom left, #0f172a, transparent 40%);
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        padding: 2.5rem;
+        max-width: 900px;
+        width: 100%;
+        box-sizing: border-box;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .error-container {
+        text-align: center;
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 2.5rem;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .error-code {
+        font-size: 6rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1;
+        background: linear-gradient(135deg, var(--accent-color), #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 4px 20px rgba(56, 189, 248, 0.3);
+    }
+
+    .error-msg {
+        font-size: 1.5rem;
+        margin: 0.5rem 0 1rem 0;
+        font-weight: 400;
+    }
+
+    .joke-text {
+        font-size: 1.15rem;
+        color: var(--muted-color);
+        font-style: italic;
+        margin-bottom: 2rem;
+    }
+
+    .btn-home {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: transparent;
+        color: var(--accent-color);
+        border: 2px solid var(--accent-color);
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+    }
+
+    .btn-home:hover, .btn-home:focus {
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+        outline: none;
+    }
+
+    .binary-text {
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: var(--muted-color);
+        opacity: 0.6;
+        word-break: break-all;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 6px;
+        margin: 0;
+    }
+
+    .cat-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .cat-wrapper:hover {
+        transform: translateY(-5px);
+    }
+
+    .cat {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        main { animation: none; }
+        .cat-wrapper:hover { transform: none; }
+    }
+
+    @media (min-width: 768px) {
+        main {
+            flex-direction: row;
+            justify-content: center;
+            gap: 3rem;
+            padding: 3rem;
+        }
+        .error-container {
+            text-align: left;
+            flex: 1;
+        }
+    }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="error-container" aria-labelledby="error-title">
+            <h1 id="error-title" class="error-code">404</h1>
+            <p class="error-msg">Page Not Found</p>
+            <p lang="es" class="joke-text">esta es no foundo ? Donde ?</p>
+            <p class="error-msg">$)$</p>
+
+            <a href="/" class="btn-home">Return Home</a>
+            <p class="binary-text" aria-hidden="true" title="404 Not Found in binary">00110100 00110000 00110100 00100000 01001110 01101111 01110100 00100000 01000110 01101111 01110101 01101110 01100100</p>
+        </section>
+
+        <section class="cat-wrapper">  
+            <img src="images/cat.jpg" alt="A cat expressing confusion over a 404 page error." class="cat" fetchpriority="high" loading="eager">
+        </section>
+    </main>
+</body>
+</html>

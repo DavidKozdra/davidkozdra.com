@@ -144,10 +144,10 @@ var mazeState = null;
 var runBrokerOpen = false;
 
 var RUN_NODE_TYPES = {
-    battle: { label: 'Drop', icon: '🪙', desc: 'Survive the cave drop and keep the haul.' },
-    maze:   { label: 'Maze', icon: '🧭', desc: 'Grab what you can and escape the tunnels.' },
-    event:  { label: 'Event', icon: '🎲', desc: 'Make a choice and live with the tradeoff.' },
-    boss:   { label: 'Boss', icon: '🐻', desc: 'Ray turns the whole cave against you.' }
+    battle: { label: 'Drop',  icon: '🪙', sprite: 'coin',          desc: 'Survive the cave drop and keep the haul.' },
+    maze:   { label: 'Maze',  icon: '🧭', sprite: 'chestClosed',   desc: 'Grab what you can and escape the tunnels.' },
+    event:  { label: 'Event', icon: '🎲', sprite: 'notebook',      desc: 'Make a choice and live with the tradeoff.' },
+    boss:   { label: 'Boss',  icon: '🐻', sprite: 'bearFaceFurious', desc: 'Ray turns the whole cave against you.' }
 };
 
 var RUN_EVENT_POOL = [
@@ -204,11 +204,11 @@ var RUN_EVENT_POOL = [
 ];
 
 var RUN_BROKER_ITEMS = {
-    bucket:   { name: 'Bucket Rig',      icon: '🪣', maxLvl: 4, costs: [35, 70, 120, 190],          desc: '+10px bucket width per rank' },
-    leverage: { name: 'Bull Thesis',     icon: '📈', maxLvl: 4, costs: [45, 90, 155, 235],          desc: '+15% drop and maze payout per rank' },
-    magnet:   { name: 'Magnet Desk',     icon: '🧲', maxLvl: 4, costs: [40, 85, 145, 220],          desc: '+20% magnet pull and duration per rank' },
-    footwork: { name: 'Floor Tape',      icon: '👟', maxLvl: 4, costs: [30, 65, 110, 170],          desc: 'Move faster in drops and mazes' },
-    medkit:   { name: 'Patch Kit',       icon: '🩹', maxLvl: 6, costs: [40, 65, 95, 130, 170, 215], desc: 'Heal 2 HP immediately' }
+    bucket:   { name: 'Bucket Rig',  icon: '🪣', sprite: 'chestOpen',  maxLvl: 4, costs: [35, 70, 120, 190],          desc: '+10px bucket width per rank' },
+    leverage: { name: 'Bull Thesis', icon: '📈', sprite: 'moneyStack', maxLvl: 4, costs: [45, 90, 155, 235],          desc: '+15% drop and maze payout per rank' },
+    magnet:   { name: 'Magnet Desk', icon: '🧲', sprite: null,         maxLvl: 4, costs: [40, 85, 145, 220],          desc: '+20% magnet pull and duration per rank' },
+    footwork: { name: 'Floor Tape',  icon: '👟', sprite: null,         maxLvl: 4, costs: [30, 65, 110, 170],          desc: 'Move faster in drops and mazes' },
+    medkit:   { name: 'Patch Kit',   icon: '🩹', sprite: null,         maxLvl: 6, costs: [40, 65, 95, 130, 170, 215], desc: 'Heal 2 HP immediately' }
 };
 
 var BEAR_TAUNTS = {
@@ -259,44 +259,44 @@ var BEAR_TAUNTS = {
     ]
 };
 
-// Item types
+// Item types — sprite key maps to SPRITES in imagePreload.js (null = use emoji fallback)
 var ITEM_TYPES = {
-    penny:    { emoji: '🪙', value: 1,  w: 22, h: 22, bad: false },
-    redpenny: { emoji: '🔴', value: 2,  w: 22, h: 22, bad: false, red: true },
-    silver:   { emoji: '🥈', value: 5,  w: 24, h: 24, bad: false },
-    goldbar:  { emoji: '🥇', value: 25, w: 28, h: 28, bad: false },
-    diamond:  { emoji: '💎', value: 100, w: 26, h: 26, bad: false },
-    bear:     { emoji: '🐻', value: 0,  w: 30, h: 30, bad: true, damage: 1 },
-    bomb:     { emoji: '💣', value: 0,  w: 26, h: 26, bad: true, damage: 1 },
-    skull:    { emoji: '💀', value: 0,  w: 28, h: 28, bad: true, damage: 2 },
-    heart:    { emoji: '❤️', value: 0,  w: 24, h: 24, bad: false, heal: 1 },
-    magnet:   { emoji: '🧲', value: 0,  w: 26, h: 26, bad: false, powerup: 'magnet' },
-    shield:   { emoji: '🛡️', value: 0, w: 26, h: 26, bad: false, powerup: 'shield' },
-    frenzy:   { emoji: '⚡', value: 0,  w: 26, h: 26, bad: false, powerup: 'frenzy' },
+    penny:    { emoji: '🪙', sprite: 'coin',      value: 1,   w: 28, h: 28, bad: false },
+    redpenny: { emoji: '🔴', sprite: null,         value: 2,   w: 22, h: 22, bad: false, red: true },
+    silver:   { emoji: '🥈', sprite: 'medal',      value: 5,   w: 28, h: 28, bad: false },
+    goldbar:  { emoji: '🥇', sprite: 'crown',      value: 25,  w: 32, h: 32, bad: false },
+    diamond:  { emoji: '💎', sprite: 'diamond',    value: 100, w: 30, h: 30, bad: false },
+    bear:     { emoji: '🐻', sprite: 'bearFaceFurious', value: 0, w: 36, h: 36, bad: true, damage: 1 },
+    bomb:     { emoji: '💣', sprite: null,         value: 0,   w: 26, h: 26, bad: true, damage: 1 },
+    skull:    { emoji: '💀', sprite: null,         value: 0,   w: 28, h: 28, bad: true, damage: 2 },
+    heart:    { emoji: '❤️', sprite: null,         value: 0,   w: 24, h: 24, bad: false, heal: 1 },
+    magnet:   { emoji: '🧲', sprite: null,         value: 0,   w: 26, h: 26, bad: false, powerup: 'magnet' },
+    shield:   { emoji: '🛡️', sprite: null,        value: 0,   w: 26, h: 26, bad: false, powerup: 'shield' },
+    frenzy:   { emoji: '⚡', sprite: null,         value: 0,   w: 26, h: 26, bad: false, powerup: 'frenzy' },
 };
 
 // ==================== SHOP UPGRADES ====================
 var SHOP_UPGRADES = {
-    // Game Upgrades
-    coinSize:        { name: 'Bigger Coins',       cat: 'game', icon: '🪙', maxLvl: 5, costs: [100, 250, 500, 1000, 2000],     desc: '+10% coin hitbox size per level' },
-    startingHp:      { name: 'Tough Start',        cat: 'game', icon: '💪', maxLvl: 3, costs: [150, 400, 1000],                 desc: 'Start with +1 HP per level' },
-    maxHpUp:         { name: 'Iron Constitution',   cat: 'game', icon: '🛡️', maxLvl: 3, costs: [200, 600, 1500],                desc: '+1 max HP cap per level' },
-    heartHealing:    { name: 'Better Bandages',    cat: 'game', icon: '❤️', maxLvl: 3, costs: [125, 325, 850],                  desc: 'Hearts heal +1 HP per level' },
-    heartDropRate:   { name: 'Lucky Hearts',       cat: 'game', icon: '💖', maxLvl: 4, costs: [100, 250, 600, 1400],            desc: '+2% heart spawn chance per level' },
-    redPennyRate:    { name: 'Red Penny Rush',     cat: 'game', icon: '🔴', maxLvl: 5, costs: [75, 200, 400, 800, 1600],        desc: '+4% red penny spawn chance per level' },
-    bucketWidth:     { name: 'Wider Bucket',       cat: 'game', icon: '🪣', maxLvl: 5, costs: [100, 250, 500, 1000, 2000],      desc: '+6px bucket width per level' },
-    powerupDuration: { name: 'Lasting Power',      cat: 'game', icon: '⏳', maxLvl: 4, costs: [150, 350, 750, 1500],             desc: '+15% powerup duration per level' },
-    magnetDuration:  { name: 'Polar Pull',         cat: 'game', icon: '🧲', maxLvl: 4, costs: [125, 300, 700, 1400],            desc: '+25% Magnet duration per level' },
-    startPowerup:    { name: 'Head Start',         cat: 'game', icon: '🚀', maxLvl: 1, costs: [500],                             desc: 'Start each run with a random powerup' },
-    bearReduction:   { name: 'Bear Repellent',     cat: 'game', icon: '🧴', maxLvl: 4, costs: [200, 500, 1000, 2500],            desc: '-8% enemy spawn rate per level' },
-    comboBonus:      { name: 'Combo Master',       cat: 'game', icon: '🔥', maxLvl: 3, costs: [300, 750, 2000],                  desc: '+1 base combo multiplier per level' },
+    // Game Upgrades  (sprite: atlas key, or null to fall back to icon emoji)
+    coinSize:        { name: 'Bigger Coins',       cat: 'game', icon: '🪙', sprite: 'coin',        maxLvl: 5, costs: [100, 250, 500, 1000, 2000],     desc: '+10% coin hitbox size per level' },
+    startingHp:      { name: 'Tough Start',        cat: 'game', icon: '💪', sprite: null,           maxLvl: 3, costs: [150, 400, 1000],                 desc: 'Start with +1 HP per level' },
+    maxHpUp:         { name: 'Iron Constitution',  cat: 'game', icon: '🛡️', sprite: null,           maxLvl: 3, costs: [200, 600, 1500],                 desc: '+1 max HP cap per level' },
+    heartHealing:    { name: 'Better Bandages',    cat: 'game', icon: '❤️', sprite: null,           maxLvl: 3, costs: [125, 325, 850],                  desc: 'Hearts heal +1 HP per level' },
+    heartDropRate:   { name: 'Lucky Hearts',       cat: 'game', icon: '💖', sprite: null,           maxLvl: 4, costs: [100, 250, 600, 1400],            desc: '+2% heart spawn chance per level' },
+    redPennyRate:    { name: 'Red Penny Rush',     cat: 'game', icon: '🔴', sprite: null,           maxLvl: 5, costs: [75, 200, 400, 800, 1600],        desc: '+4% red penny spawn chance per level' },
+    bucketWidth:     { name: 'Wider Bucket',       cat: 'game', icon: '🪣', sprite: null,           maxLvl: 5, costs: [100, 250, 500, 1000, 2000],      desc: '+6px bucket width per level' },
+    powerupDuration: { name: 'Lasting Power',      cat: 'game', icon: '⏳', sprite: null,           maxLvl: 4, costs: [150, 350, 750, 1500],            desc: '+15% powerup duration per level' },
+    magnetDuration:  { name: 'Polar Pull',         cat: 'game', icon: '🧲', sprite: null,           maxLvl: 4, costs: [125, 300, 700, 1400],            desc: '+25% Magnet duration per level' },
+    startPowerup:    { name: 'Head Start',         cat: 'game', icon: '🚀', sprite: 'star',         maxLvl: 1, costs: [500],                            desc: 'Start each run with a random powerup' },
+    bearReduction:   { name: 'Bear Repellent',     cat: 'game', icon: '🧴', sprite: null,           maxLvl: 4, costs: [200, 500, 1000, 2500],           desc: '-8% enemy spawn rate per level' },
+    comboBonus:      { name: 'Combo Master',       cat: 'game', icon: '🔥', sprite: 'target',       maxLvl: 3, costs: [300, 750, 2000],                 desc: '+1 base combo multiplier per level' },
     // Portal Upgrades
-    taxReduction:    { name: 'Tax Loophole',       cat: 'portal', icon: '📉', maxLvl: 5, costs: [200, 500, 1000, 2500, 5000],   desc: '-1.5% tax rate per level (10% -> 2.5%)' },
-    taxTimer:        { name: 'Extended Filing',    cat: 'portal', icon: '⏰', maxLvl: 4, costs: [150, 400, 900, 2000],            desc: '+60s between tax collections per level' },
-    tradeFee:        { name: 'Broker License',     cat: 'portal', icon: '🤝', maxLvl: 4, costs: [250, 600, 1200, 3000],           desc: '5% better buy/sell prices per level' },
-    dividends:       { name: 'Dividend Portfolio', cat: 'portal', icon: '💰', maxLvl: 5, costs: [300, 700, 1500, 3000, 6000],    desc: '+2% dividend yield per tax cycle' },
-    flatTaxReduction:{ name: 'Tax Shelter',        cat: 'portal', icon: '🏠', maxLvl: 4, costs: [100, 300, 700, 1500],            desc: '-10g flat tax per level (50g -> 10g)' },
-    newsDesk:        { name: 'News Desk',          cat: 'portal', icon: '📰', maxLvl: 1, costs: [450],                             desc: 'Unlock the News tab with market gossip and mover headlines' },
+    taxReduction:    { name: 'Tax Loophole',       cat: 'portal', icon: '📉', sprite: 'calculator', maxLvl: 5, costs: [200, 500, 1000, 2500, 5000],    desc: '-1.5% tax rate per level (10% -> 2.5%)' },
+    taxTimer:        { name: 'Extended Filing',    cat: 'portal', icon: '⏰', sprite: 'clipboard',  maxLvl: 4, costs: [150, 400, 900, 2000],            desc: '+60s between tax collections per level' },
+    tradeFee:        { name: 'Broker License',     cat: 'portal', icon: '🤝', sprite: 'moneyBag',   maxLvl: 4, costs: [250, 600, 1200, 3000],          desc: '5% better buy/sell prices per level' },
+    dividends:       { name: 'Dividend Portfolio', cat: 'portal', icon: '💰', sprite: 'crown',      maxLvl: 5, costs: [300, 700, 1500, 3000, 6000],    desc: '+2% dividend yield per tax cycle' },
+    flatTaxReduction:{ name: 'Tax Shelter',        cat: 'portal', icon: '🏠', sprite: 'chestClosed',maxLvl: 4, costs: [100, 300, 700, 1500],            desc: '-10g flat tax per level (50g -> 10g)' },
+    newsDesk:        { name: 'News Desk',          cat: 'portal', icon: '📰', sprite: 'notebook',   maxLvl: 1, costs: [450],                            desc: 'Unlock the News tab with market gossip and mover headlines' },
 };
 
 function getUpgradeLevel(id) {
@@ -472,6 +472,7 @@ function createRunState() {
             healBonus: 0
         },
         map: createRunMap(),
+        path: [],
         bestCombo: 0,
         bestWave: 0,
         nodesCleared: 0,
@@ -556,41 +557,133 @@ function isNodeAvailable(node) {
 function renderRunMap() {
     if (!runState) return;
     var grid = document.getElementById('run-map-grid');
-    if (!grid) return;
+    var board = document.getElementById('run-map-board');
+    var lines = document.getElementById('run-map-lines');
+    if (!grid || !board || !lines) return;
+
+    var tierCount = runState.map.length;
+    var xStart = 150;
+    var xGap = 260;
+    var nodeWidth = 184;
+    var nodeHeight = 132;
+    var boardWidth = 280 + (tierCount - 1) * xGap + 220;
+    var boardHeight = 620;
+    var laneBase = [126, 300, 474];
+    var laneOffsetsA = [8, -10, 12];
+    var laneOffsetsB = [-10, 14, -8];
     var html = '';
+    var lineHtml = '';
+    var positions = {};
+    var traversedPairs = {};
+    var lastPathId = runState.path.length ? runState.path[runState.path.length - 1] : null;
+    var availableCount = 0;
+
+    for (var pairIndex = 1; pairIndex < runState.path.length; pairIndex++) {
+        traversedPairs[runState.path[pairIndex - 1] + '->' + runState.path[pairIndex]] = true;
+    }
+
+    board.style.width = boardWidth + 'px';
+    board.style.height = boardHeight + 'px';
+    grid.style.width = boardWidth + 'px';
+    grid.style.height = boardHeight + 'px';
+
     for (var t = 0; t < runState.map.length; t++) {
         var tier = runState.map[t];
-        html += '<div class="run-map-column">';
-        html += '<div class="run-map-column-label">Floor ' + (t + 1) + '</div>';
+        var tierX = xStart + t * xGap;
+        html += '<div class="run-map-tier" style="left:' + tierX + 'px">Floor ' + (t + 1) + '</div>';
+        if (t === runState.tier) {
+            html += '<div class="run-map-current-band" style="left:' + tierX + 'px"></div>';
+            board.dataset.focusX = String(tierX);
+        }
         for (var i = 0; i < tier.length; i++) {
             var node = tier[i];
             var def = RUN_NODE_TYPES[node.type];
             var available = isNodeAvailable(node);
+            var y = tier.length === 1
+                ? Math.round(boardHeight / 2 - nodeHeight / 2)
+                : laneBase[node.lane] - Math.round(nodeHeight / 2) + (t % 2 === 0 ? laneOffsetsA[node.lane] : laneOffsetsB[node.lane]);
             var stateText = node.cleared ? 'CLEARED' : (available ? 'READY' : (t < runState.tier ? 'DONE' : 'LOCKED'));
             var classes = 'run-node';
+            if (lastPathId === node.id) classes += ' anchor';
             if (node.cleared) classes += ' cleared';
-            if (available) classes += ' available current';
+            if (available) { classes += ' available current'; availableCount++; }
             if (!node.cleared && !available && t >= runState.tier) classes += ' locked';
             if (node.type === 'boss') classes += ' node-boss';
+            positions[node.id] = {
+                centerX: tierX,
+                topY: y,
+                centerY: y + Math.round(nodeHeight / 2)
+            };
             if (available) {
-                html += '<button class="' + classes + '" onclick="chooseRunNode(\'' + node.id + '\')">';
+                html += '<button class="' + classes + '" style="left:' + Math.round(tierX - nodeWidth / 2) + 'px; top:' + y + 'px" onclick="chooseRunNode(\'' + node.id + '\')">';
             } else {
-                html += '<div class="' + classes + '">';
+                html += '<div class="' + classes + '" style="left:' + Math.round(tierX - nodeWidth / 2) + 'px; top:' + y + 'px">';
             }
-            html += '<div class="run-node-top"><span>' + def.icon + ' ' + def.label + '</span><span>' + stateText + '</span></div>';
+            var nodeIconHtml = def.sprite
+                ? '<canvas data-sprite="' + def.sprite + '" width="16" height="16" style="border-radius:3px;vertical-align:middle;margin-right:5px;"></canvas>'
+                : def.icon + ' ';
+            html += '<div class="run-node-top"><span class="run-node-tag">' + nodeIconHtml + def.label + '</span><span class="run-node-state">' + stateText + '</span></div>';
             html += '<div class="run-node-name">' + node.title + '</div>';
             html += '<div class="run-node-copy">' + node.copy + '</div>';
             html += available ? '</button>' : '</div>';
         }
-        html += '</div>';
     }
+
+    for (var tierIndex = 0; tierIndex < runState.map.length - 1; tierIndex++) {
+        var fromTier = runState.map[tierIndex];
+        var toTier = runState.map[tierIndex + 1];
+        for (var fromIndex = 0; fromIndex < fromTier.length; fromIndex++) {
+            var fromNode = fromTier[fromIndex];
+            for (var toIndex = 0; toIndex < toTier.length; toIndex++) {
+                var toNode = toTier[toIndex];
+                if (toTier.length !== 1 && Math.abs(toNode.lane - fromNode.lane) > 1) continue;
+                var fromPos = positions[fromNode.id];
+                var toPos = positions[toNode.id];
+                if (!fromPos || !toPos) continue;
+
+                var startX = fromPos.centerX + Math.round(nodeWidth / 2) - 10;
+                var startY = fromPos.centerY;
+                var endX = toPos.centerX - Math.round(nodeWidth / 2) + 10;
+                var endY = toPos.centerY;
+                var curve = Math.max(42, Math.round((endX - startX) * 0.4));
+                var lineClass = 'muted';
+                if (traversedPairs[fromNode.id + '->' + toNode.id]) lineClass = 'cleared';
+                else if (fromNode.id === lastPathId && isNodeAvailable(toNode)) lineClass = 'available';
+                else if (fromNode.cleared) lineClass = 'scanned';
+
+                lineHtml += '<path class="run-line ' + lineClass + '" d="M ' + startX + ' ' + startY + ' C ' + (startX + curve) + ' ' + startY + ', ' + (endX - curve) + ' ' + endY + ', ' + endX + ' ' + endY + '"></path>';
+            }
+        }
+    }
+
     grid.innerHTML = html;
+    lines.setAttribute('viewBox', '0 0 ' + boardWidth + ' ' + boardHeight);
+    lines.setAttribute('width', boardWidth);
+    lines.setAttribute('height', boardHeight);
+    lines.innerHTML = lineHtml;
     document.getElementById('run-map-kicker').textContent = runState.tier >= runState.map.length - 1 ? 'Boss Route' : 'Route Planning';
     document.getElementById('run-map-title').textContent = runState.tier >= runState.map.length - 1 ? 'Final Descent' : 'Penny Path';
     document.getElementById('run-map-floor').textContent = (runState.tier + 1) + ' / ' + runState.map.length;
     document.getElementById('run-map-gold').textContent = runState.gold + 'g';
     document.getElementById('run-map-hp').textContent = runState.hp + ' / ' + runState.maxHp;
     document.getElementById('run-map-copy').textContent = runState.lastSummary;
+    document.getElementById('run-map-side-title').textContent = runState.tier >= runState.map.length - 1 ? 'Boss Approach' : 'Floor ' + (runState.tier + 1) + ' Reach';
+    document.getElementById('run-map-side-copy').textContent = (runState.tier === 0
+        ? 'Three opening branches are live. Pick the line you want to build around.'
+        : (availableCount === 1 ? 'One branch is live from your current route.' : availableCount + ' branches are live from your current route.')) + ' ' + runState.lastSummary;
+    if (typeof paintAtlasSprites === 'function') paintAtlasSprites();
+}
+
+function focusRunMapCurrent(immediate) {
+    var viewport = document.getElementById('run-map-viewport');
+    var board = document.getElementById('run-map-board');
+    if (!viewport || !board || !board.dataset.focusX) return;
+    var target = Math.max(0, parseFloat(board.dataset.focusX) - viewport.clientWidth * 0.4);
+    if (typeof viewport.scrollTo === 'function') {
+        viewport.scrollTo({ left: target, behavior: immediate ? 'auto' : 'smooth' });
+    } else {
+        viewport.scrollLeft = target;
+    }
 }
 
 function showRunMap() {
@@ -603,6 +696,7 @@ function showRunMap() {
     document.getElementById('run-broker-panel').classList.add('hidden');
     setGameView('map');
     renderRunMap();
+    focusRunMapCurrent(runState.tier === 0);
 }
 
 function getEncounterWaveGoal(node) {
@@ -776,7 +870,10 @@ function renderRunBroker() {
         var cost = maxed ? 0 : item.costs[lvl];
         var canAfford = !maxed && runState.gold >= cost;
         html += '<div class="run-broker-item' + (maxed ? ' maxed' : '') + '">';
-        html += '<div class="run-broker-item-top"><div class="run-broker-item-name">' + item.icon + ' ' + item.name + '</div><div>Lv ' + lvl + ' / ' + item.maxLvl + '</div></div>';
+        var brokerIconHtml = item.sprite
+            ? '<canvas data-sprite="' + item.sprite + '" width="20" height="20" style="border-radius:3px;vertical-align:middle;margin-right:5px;"></canvas>'
+            : item.icon + ' ';
+        html += '<div class="run-broker-item-top"><div class="run-broker-item-name">' + brokerIconHtml + item.name + '</div><div>Lv ' + lvl + ' / ' + item.maxLvl + '</div></div>';
         html += '<div class="run-broker-item-meta">' + item.desc + '</div>';
         if (maxed) {
             html += '<button class="maxed" disabled>MAXED</button>';
@@ -786,6 +883,7 @@ function renderRunBroker() {
         html += '</div>';
     }
     grid.innerHTML = html;
+    if (typeof paintAtlasSprites === 'function') paintAtlasSprites();
 }
 
 function purchaseRunBrokerUpgrade(id) {
@@ -929,6 +1027,7 @@ function finishCurrentNode(summary) {
     stopEncounterLoop();
     if (!runState || !currentNode) return;
     currentNode.cleared = true;
+    runState.path.push(currentNode.id);
     runState.nodesCleared++;
     runState.tier = currentNode.tier + 1;
     runState.lane = currentNode.lane;
@@ -1174,7 +1273,11 @@ function renderShop() {
 
         html += '<div class="shop-card' + (maxed ? ' shop-maxed' : '') + '">';
         html += '<div class="shop-card-header">';
-        html += '<span class="shop-icon">' + up.icon + '</span>';
+        if (up.sprite) {
+            html += '<canvas class="shop-icon" data-sprite="' + up.sprite + '" width="22" height="22" style="border-radius:4px;vertical-align:middle;"></canvas>';
+        } else {
+            html += '<span class="shop-icon">' + up.icon + '</span>';
+        }
         html += '<span class="shop-name">' + up.name + '</span>';
         html += '</div>';
         html += '<div class="shop-desc">' + up.desc + '</div>';
@@ -1188,6 +1291,7 @@ function renderShop() {
         html += '</div>';
     }
     grid.innerHTML = html;
+    if (typeof paintAtlasSprites === 'function') paintAtlasSprites();
 }
 
 function purchaseUpgrade(id) {
@@ -1577,17 +1681,24 @@ function drawMazeEncounter() {
 
     for (var i = 0; i < mazeState.coins.length; i++) {
         var coin = mazeState.coins[i];
-        var cx = offsetX + coin.x * cell + cell / 2;
-        var cy = offsetY + coin.y * cell + cell / 2;
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath();
-        ctx.arc(cx, cy, Math.max(7, cell * 0.2), 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'bold ' + Math.max(11, Math.floor(cell * 0.34)) + 'px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('$', cx, cy + 1);
+        var coinSize = Math.max(14, Math.floor(cell * 0.6));
+        var coinDx = offsetX + coin.x * cell + (cell - coinSize) / 2;
+        var coinDy = offsetY + coin.y * cell + (cell - coinSize) / 2;
+        if (typeof SPRITES !== 'undefined' && SPRITES.coin) {
+            drawSprite(ctx, SPRITES.coin, coinDx, coinDy, coinSize, coinSize);
+        } else {
+            var cx = offsetX + coin.x * cell + cell / 2;
+            var cy = offsetY + coin.y * cell + cell / 2;
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(cx, cy, Math.max(7, cell * 0.2), 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold ' + Math.max(11, Math.floor(cell * 0.34)) + 'px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('$', cx, cy + 1);
+        }
     }
 
     for (var j = 0; j < mazeState.traps.length; j++) {
@@ -1605,22 +1716,30 @@ function drawMazeEncounter() {
 
     var exitX = offsetX + mazeState.exit.x * cell;
     var exitY = offsetY + mazeState.exit.y * cell;
-    ctx.fillStyle = '#10b981';
-    ctx.fillRect(exitX + 5, exitY + 5, cell - 12, cell - 12);
-    ctx.fillStyle = '#ecfdf5';
-    ctx.font = 'bold ' + Math.max(10, Math.floor(cell * 0.28)) + 'px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('EXIT', exitX + cell / 2, exitY + cell / 2 + 1);
+    if (typeof SPRITES !== 'undefined' && SPRITES.chestClosed) {
+        drawSprite(ctx, SPRITES.chestClosed, exitX + 2, exitY + 2, cell - 4, cell - 4);
+    } else {
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(exitX + 5, exitY + 5, cell - 12, cell - 12);
+        ctx.fillStyle = '#ecfdf5';
+        ctx.font = 'bold ' + Math.max(10, Math.floor(cell * 0.28)) + 'px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('EXIT', exitX + cell / 2, exitY + cell / 2 + 1);
+    }
 
     var playerX = offsetX + mazeState.player.x * cell;
     var playerY = offsetY + mazeState.player.y * cell;
-    ctx.fillStyle = '#fbbf24';
-    ctx.beginPath();
-    ctx.roundRect(playerX + 4, playerY + 7, cell - 10, Math.max(14, cell - 18), 6);
-    ctx.fill();
-    ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold ' + Math.max(11, Math.floor(cell * 0.34)) + 'px sans-serif';
-    ctx.fillText('$', playerX + cell / 2, playerY + cell / 2 + 2);
+    if (typeof SPRITES !== 'undefined' && SPRITES.chestOpen) {
+        drawSprite(ctx, SPRITES.chestOpen, playerX + 2, playerY + 2, cell - 4, cell - 4);
+    } else {
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.roundRect(playerX + 4, playerY + 7, cell - 10, Math.max(14, cell - 18), 6);
+        ctx.fill();
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold ' + Math.max(11, Math.floor(cell * 0.34)) + 'px sans-serif';
+        ctx.fillText('$', playerX + cell / 2, playerY + cell / 2 + 2);
+    }
 
     ctx.fillStyle = '#e2e8f0';
     ctx.font = 'bold 16px sans-serif';
@@ -1682,20 +1801,31 @@ function draw() {
     ctx.textBaseline = 'middle';
     fallingItems.forEach(function(item) {
         var def = ITEM_TYPES[item.type];
-        // Red pennies: draw a red circle with ¢
+        // Red pennies: atlas coin with red multiply tint
         if (def.red) {
             ctx.save();
-            ctx.beginPath();
-            ctx.arc(item.x + item.w/2, item.y + item.h/2, item.w/2, 0, Math.PI * 2);
-            ctx.fillStyle = '#dc2626';
-            ctx.fill();
-            ctx.strokeStyle = '#991b1b';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.fillStyle = '#fef2f2';
-            ctx.font = 'bold ' + Math.round(item.w * 0.6) + 'px sans-serif';
-            ctx.fillText('¢', item.x + item.w/2, item.y + item.h/2 + 1);
+            if (typeof SPRITES !== 'undefined' && SPRITES.coin) {
+                drawSprite(ctx, SPRITES.coin, item.x, item.y, item.w, item.h);
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.fillStyle = '#ff4444';
+                ctx.beginPath();
+                ctx.arc(item.x + item.w/2, item.y + item.h/2, item.w/2, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.beginPath();
+                ctx.arc(item.x + item.w/2, item.y + item.h/2, item.w/2, 0, Math.PI * 2);
+                ctx.fillStyle = '#dc2626';
+                ctx.fill();
+                ctx.strokeStyle = '#991b1b';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = '#fef2f2';
+                ctx.font = 'bold ' + Math.round(item.w * 0.6) + 'px sans-serif';
+                ctx.fillText('¢', item.x + item.w/2, item.y + item.h/2 + 1);
+            }
             ctx.restore();
+        } else if (def.sprite && typeof SPRITES !== 'undefined' && SPRITES[def.sprite]) {
+            drawSprite(ctx, SPRITES[def.sprite], item.x, item.y, item.w, item.h);
         } else {
             ctx.font = item.w + 'px serif';
             ctx.fillText(def.emoji, item.x + item.w/2, item.y + item.h/2);
@@ -1796,34 +1926,10 @@ function drawBearPresenter() {
     ctx.fill();
     ctx.stroke();
 
-    // Bear face
-    ctx.fillStyle = '#8b5a2b';
-    ctx.beginPath();
-    ctx.arc(faceX, faceY, 26, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(faceX - 18, faceY - 20, 10, 0, Math.PI * 2);
-    ctx.arc(faceX + 18, faceY - 20, 10, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#c08457';
-    ctx.beginPath();
-    ctx.arc(faceX, faceY + 6, 14, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#111827';
-    ctx.beginPath();
-    ctx.arc(faceX - 8, faceY - 4, 3, 0, Math.PI * 2);
-    ctx.arc(faceX + 8, faceY - 4, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(faceX, faceY + 2);
-    ctx.lineTo(faceX - 4, faceY + 10);
-    ctx.lineTo(faceX + 4, faceY + 10);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = activeBearMood === 'combo' ? '#fbbf24' : '#7f1d1d';
-    ctx.beginPath();
-    ctx.arc(faceX, faceY + 10, 8, 0.1, Math.PI - 0.1, activeBearMood === 'combo');
-    ctx.stroke();
+    // Bear face — atlas sprite
+    var faceSprite = bearFaceForMood(activeBearMood);
+    var faceSize = panelH - 8;
+    drawSprite(ctx, faceSprite, panelX + 4, panelY + 4, faceSize, faceSize);
 
     ctx.fillStyle = '#fbbf24';
     ctx.font = 'bold 12px sans-serif';
@@ -1860,31 +1966,32 @@ function wrapBearText(text, x, y, maxWidth, lineHeight) {
 function drawPowerupBar() {
     if (gameMode !== 'battle') return;
     var indicators = [];
-    if (magnetActive) indicators.push({ emoji: '🧲', t: magnetTimer, color: '#34d399' });
-    if (shieldActive) indicators.push({ emoji: '🛡️', t: shieldTimer, color: '#38bdf8' });
-    if (frenzyActive) indicators.push({ emoji: '⚡', t: frenzyTimer, color: '#facc15' });
+    if (magnetActive) indicators.push({ sprite: 'medal',   t: magnetTimer, color: '#34d399' });
+    if (shieldActive) indicators.push({ sprite: 'diamond', t: shieldTimer, color: '#38bdf8' });
+    if (frenzyActive) indicators.push({ sprite: 'star',    t: frenzyTimer, color: '#facc15' });
     if (indicators.length === 0) return;
 
     ctx.save();
     var startX = 12;
     var startY = canvas.height - 36;
     indicators.forEach(function(ind, idx) {
-        var x = startX + idx * 56;
+        var x = startX + idx * 60;
         ctx.globalAlpha = 0.85;
         ctx.fillStyle = '#0f172a';
         ctx.beginPath();
-        ctx.roundRect(x, startY, 50, 24, 6);
+        ctx.roundRect(x, startY, 54, 24, 6);
         ctx.fill();
         ctx.strokeStyle = ind.color;
         ctx.lineWidth = 1.5;
         ctx.stroke();
         ctx.globalAlpha = 1;
-        ctx.font = '14px serif';
-        ctx.textAlign = 'left';
-        ctx.fillText(ind.emoji, x + 4, startY + 17);
+        if (SPRITES[ind.sprite]) {
+            drawSprite(ctx, SPRITES[ind.sprite], x + 3, startY + 2, 20, 20);
+        }
         ctx.fillStyle = ind.color;
         ctx.font = 'bold 11px sans-serif';
-        ctx.fillText(Math.ceil(ind.t / 60) + 's', x + 24, startY + 17);
+        ctx.textAlign = 'left';
+        ctx.fillText(Math.ceil(ind.t / 60) + 's', x + 26, startY + 15);
     });
     ctx.restore();
 }

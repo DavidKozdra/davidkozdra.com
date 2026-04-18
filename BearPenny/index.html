@@ -155,19 +155,9 @@
             padding: 14px; display: flex; gap: 12px;
         }
         .ray-toast-face {
-            width: 62px; height: 62px; border-radius: 999px; background: #8b5a2b; flex: 0 0 auto; position: relative;
+            width: 62px; height: 62px; border-radius: 12px; flex: 0 0 auto;
+            object-fit: cover; background: transparent;
         }
-        .ray-toast-face:before, .ray-toast-face:after {
-            content: ''; position: absolute; top: -8px; width: 18px; height: 18px; border-radius: 999px; background: #8b5a2b;
-        }
-        .ray-toast-face:before { left: 7px; }
-        .ray-toast-face:after { right: 7px; }
-        .ray-toast-face i, .ray-toast-face b, .ray-toast-face em {
-            position: absolute; display: block;
-        }
-        .ray-toast-face i { width: 5px; height: 5px; border-radius: 999px; background: #111827; top: 22px; left: 18px; box-shadow: 22px 0 0 #111827; }
-        .ray-toast-face b { width: 28px; height: 20px; border-radius: 999px; background: #c08457; left: 17px; top: 28px; }
-        .ray-toast-face em { width: 16px; height: 8px; border-bottom: 3px solid #7f1d1d; left: 23px; top: 38px; }
         .ray-toast-copy strong { color: #fbbf24; display: block; font-size: .82rem; margin-bottom: 4px; }
         .ray-toast-copy p { color: #e2e8f0; font-size: .82rem; line-height: 1.45; margin-bottom: 8px; }
         .ray-toast-copy small { color: #94a3b8; font-size: .72rem; display: block; margin-bottom: 8px; }
@@ -314,61 +304,145 @@
             font-size: .82rem;
             font-weight: 700;
         }
-        .run-map-grid {
+        .run-map-layout {
             display: grid;
-            grid-template-columns: repeat(6, minmax(132px, 1fr));
-            gap: 12px;
+            grid-template-columns: minmax(0, 1fr) 280px;
+            gap: 18px;
             align-items: start;
         }
-        .run-map-column {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .run-map-stage {
+            min-height: 600px;
+            border-radius: 20px;
+            border: 1px solid rgba(71,85,105,.68);
+            background:
+                radial-gradient(circle at 20% 0%, rgba(96,165,250,.14), transparent 30%),
+                radial-gradient(circle at 80% 100%, rgba(251,191,36,.1), transparent 24%),
+                linear-gradient(180deg, rgba(2,6,23,.86), rgba(15,23,42,.96));
+            padding: 14px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
         }
-        .run-map-column-label {
-            color: #64748b;
-            font-size: .72rem;
+        .run-map-stage-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .run-map-stage-label {
+            color: #94a3b8;
+            font-size: .74rem;
             font-weight: 700;
+            letter-spacing: .14em;
             text-transform: uppercase;
+        }
+        .run-map-viewport {
+            position: relative;
+            height: 540px;
+            overflow: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(71,85,105,.55);
+            background:
+                linear-gradient(rgba(148,163,184,.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148,163,184,.045) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(15,23,42,.82), rgba(2,6,23,.96));
+            background-size: 64px 64px, 64px 64px, auto;
+            scroll-behavior: smooth;
+            box-shadow: inset 0 0 0 1px rgba(15,23,42,.4);
+        }
+        .run-map-board {
+            position: relative;
+            min-height: 540px;
+        }
+        .run-map-grid {
+            position: relative;
+            min-height: inherit;
+        }
+        .run-map-lines {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+        .run-line {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+            opacity: .24;
+        }
+        .run-line.muted { stroke: rgba(71,85,105,.85); }
+        .run-line.scanned { stroke: rgba(96,165,250,.35); opacity: .28; }
+        .run-line.cleared { stroke: #4ade80; opacity: .78; }
+        .run-line.available { stroke: #93c5fd; opacity: .95; filter: drop-shadow(0 0 8px rgba(96,165,250,.45)); }
+        .run-map-tier {
+            position: absolute;
+            top: 22px;
+            transform: translateX(-50%);
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(15,23,42,.82);
+            border: 1px solid rgba(71,85,105,.8);
+            color: #94a3b8;
+            font-size: .71rem;
+            font-weight: 700;
             letter-spacing: .12em;
-            padding-left: 2px;
+            text-transform: uppercase;
+        }
+        .run-map-current-band {
+            position: absolute;
+            top: 72px;
+            bottom: 36px;
+            width: 216px;
+            transform: translateX(-50%);
+            border-radius: 26px;
+            background: linear-gradient(180deg, rgba(96,165,250,.12), rgba(96,165,250,.04));
+            border: 1px solid rgba(96,165,250,.2);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
         }
         .run-node {
+            position: absolute;
+            width: 184px;
             padding: 12px;
-            border-radius: 14px;
-            border: 1px solid #334155;
-            background: rgba(15,23,42,.9);
+            border-radius: 18px;
+            border: 1px solid rgba(71,85,105,.86);
+            background: linear-gradient(180deg, rgba(15,23,42,.96), rgba(15,23,42,.84));
             text-align: left;
             color: #e2e8f0;
-            min-height: 112px;
+            min-height: 132px;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease, opacity .12s ease;
+            box-shadow: 0 20px 30px rgba(0,0,0,.18);
+            transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease, opacity .12s ease, background .12s ease;
         }
         button.run-node { cursor: pointer; }
         .run-node.available {
-            border-color: rgba(96,165,250,.75);
-            box-shadow: 0 0 0 1px rgba(96,165,250,.2), 0 10px 28px rgba(37,99,235,.12);
+            border-color: rgba(96,165,250,.88);
+            box-shadow: 0 0 0 1px rgba(96,165,250,.22), 0 18px 36px rgba(37,99,235,.18);
+            background: linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.9));
         }
         .run-node.available:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.01);
             border-color: #93c5fd;
         }
         .run-node.locked {
-            opacity: .34;
+            opacity: .3;
             cursor: default;
         }
         .run-node.cleared {
             border-color: rgba(74,222,128,.65);
-            background: rgba(6,78,59,.18);
+            background: linear-gradient(180deg, rgba(6,78,59,.26), rgba(6,78,59,.14));
         }
         .run-node.current {
-            box-shadow: 0 0 0 1px rgba(251,191,36,.25);
+            box-shadow: 0 0 0 1px rgba(251,191,36,.28), 0 20px 36px rgba(0,0,0,.22);
+        }
+        .run-node.anchor {
+            border-color: rgba(251,191,36,.62);
         }
         .run-node.node-boss {
             border-color: rgba(248,113,113,.65);
-            background: rgba(69,10,10,.22);
+            background: linear-gradient(180deg, rgba(69,10,10,.38), rgba(30,41,59,.92));
         }
         .run-node-top {
             display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -376,6 +450,24 @@
             color: #94a3b8;
             text-transform: uppercase;
             letter-spacing: .08em;
+        }
+        .run-node-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: rgba(30,41,59,.86);
+            border: 1px solid rgba(71,85,105,.7);
+            color: #cbd5e1;
+            font-size: .71rem;
+            font-weight: 700;
+        }
+        .run-node-state {
+            color: #64748b;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .12em;
         }
         .run-node-name {
             color: #f8fafc;
@@ -387,12 +479,72 @@
             font-size: .78rem;
             line-height: 1.45;
         }
+        .run-map-side {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .run-map-panel {
+            padding: 16px 16px 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(71,85,105,.78);
+            background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(15,23,42,.84));
+        }
+        .run-map-side-label {
+            color: #60a5fa;
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            margin-bottom: 8px;
+        }
+        .run-map-panel h3 {
+            color: #f8fafc;
+            font-size: 1.2rem;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        .run-map-panel p {
+            color: #94a3b8;
+            font-size: .84rem;
+            line-height: 1.55;
+        }
+        .run-map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .run-legend {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: .74rem;
+            font-weight: 700;
+            border: 1px solid rgba(71,85,105,.7);
+            color: #cbd5e1;
+            background: rgba(15,23,42,.7);
+        }
+        .run-legend:before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: currentColor;
+            box-shadow: 0 0 10px currentColor;
+        }
+        .run-legend.available { color: #93c5fd; }
+        .run-legend.cleared { color: #4ade80; }
+        .run-legend.locked { color: #64748b; }
         .run-map-actions, .event-actions, .run-broker-actions {
             display: flex;
             gap: 10px;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin-top: 18px;
+        }
+        .run-map-actions {
+            margin-top: auto;
         }
         .event-card {
             width: min(760px, 94vw);
@@ -507,14 +659,18 @@
             background: #064e3b;
             color: #86efac;
         }
-        @media (max-width: 900px) {
-            .run-map-grid { grid-template-columns: repeat(3, minmax(140px, 1fr)); }
+        @media (max-width: 1024px) {
+            .run-map-layout { grid-template-columns: 1fr; }
+            .run-map-stage { min-height: 0; }
+            .run-map-viewport { height: 470px; }
         }
         @media (max-width: 680px) {
             .run-map-screen, .event-screen { padding: 72px 12px 18px; }
             .run-map-card, .event-card, .run-broker-card { padding: 18px 16px; max-height: calc(100vh - 92px); }
             .run-map-header, .event-card-header, .run-broker-header { flex-direction: column; }
-            .run-map-grid, .run-broker-grid { grid-template-columns: 1fr; }
+            .run-map-stage-top { flex-direction: column; align-items: flex-start; }
+            .run-map-viewport { height: 420px; }
+            .run-broker-grid { grid-template-columns: 1fr; }
         }
         .ray-intro-overlay {
             position: fixed; inset: 0; z-index: 125;
@@ -533,32 +689,8 @@
             display: flex; align-items: center; justify-content: center; position: relative;
             min-height: 360px;
         }
-        .ray-intro-bear {
-            width: 148px; height: 148px; border-radius: 999px; background: #8b5a2b; position: relative;
-            box-shadow: 0 0 0 6px rgba(251,191,36,0.14);
-        }
-        .ray-intro-bear:before, .ray-intro-bear:after {
-            content: ''; position: absolute; top: -18px; width: 42px; height: 42px; border-radius: 999px; background: #8b5a2b;
-        }
-        .ray-intro-bear:before { left: 12px; }
-        .ray-intro-bear:after { right: 12px; }
-        .ray-intro-face {
-            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-        }
-        .ray-intro-face span {
-            position: absolute; display: block;
-        }
-        .ray-eye { width: 10px; height: 10px; border-radius: 999px; background: #111827; top: 54px; }
-        .ray-eye.left { left: 46px; }
-        .ray-eye.right { right: 46px; }
-        .ray-snout {
-            width: 70px; height: 54px; border-radius: 999px; background: #c08457; top: 66px;
-        }
-        .ray-nose {
-            width: 16px; height: 12px; background: #111827; clip-path: polygon(50% 0, 0 100%, 100% 100%); top: 78px;
-        }
-        .ray-mouth {
-            width: 44px; height: 22px; border-bottom: 4px solid #7f1d1d; border-radius: 0 0 999px 999px; top: 94px;
+        .ray-intro-portrait canvas {
+            box-shadow: 0 0 0 4px rgba(251,191,36,0.18), 0 8px 32px rgba(0,0,0,0.4);
         }
         .ray-intro-stamp {
             position: absolute; bottom: 22px; left: 20px; right: 20px; text-align: center;
@@ -829,7 +961,7 @@
 <div class="finance-app" id="finance-mode">
     <div class="bp-header">
         <div class="bp-logo">
-            <span>🐻 BearPenny</span>
+            <canvas data-sprite="bearFaceIdle" width="28" height="28" style="border-radius:6px;vertical-align:middle;margin-right:4px;"></canvas><span>BearPenny</span>
             <small>Capital Markets</small>
         </div>
         <div class="bp-market-bar">
@@ -928,7 +1060,7 @@
                 <div class="bal-item"><span class="bal-label">Portfolio</span> <span class="bal-val bal-portfolio" id="bal-portfolio">$0</span></div>
                 <div class="bal-item"><span class="bal-label">Next Tax</span> <span class="bal-val bal-tax" id="bal-tax">5:00</span></div>
                 <div class="bal-item"><span class="bal-label">Ray Timer</span> <span class="bal-val bal-ray" id="ray-timer">2:00</span></div>
-                <button class="btn-ray" onclick="toggleShop()">🛒 Upgrades</button>
+                <button class="btn-ray" onclick="toggleShop()"><canvas data-sprite="chestClosed" width="16" height="16" style="vertical-align:middle;margin-right:5px;border-radius:3px;"></canvas>Upgrades</button>
                 <button class="btn-ray" id="btn-ray" onclick="openRayBossBearMode()" disabled>Collect Pennies (Ray the Boss Bear)</button>
             </div>
             <div class="bp-toolbar">
@@ -976,14 +1108,14 @@
 
 <!-- PRISON OVERLAY -->
 <div class="prison-overlay hidden" id="prison-overlay">
-    <h1>🚔 PRISON 🚔</h1>
+    <h1>PRISON</h1>
     <div class="prison-msg">You couldn't pay your taxes.<br>The BearPenny IRS has confiscated everything.<br>Your vault has been emptied. All positions liquidated.</div>
     <div class="prison-fine">Tax owed: <span id="prison-tax">0</span> gold · Vault: 0 gold</div>
     <button onclick="acceptPrison()">Accept Fate</button>
 </div>
 
 <div class="ray-advice-toast hidden" id="ray-advice-toast">
-    <div class="ray-toast-face"><i></i><b></b><em></em></div>
+    <canvas class="ray-toast-face" id="ray-toast-face-canvas" data-sprite="bearFaceIdle" width="62" height="62"></canvas>
     <div class="ray-toast-copy">
         <strong>Ray "Helping"</strong>
         <small id="ray-advice-lede">Ray noticed you making money.</small>
@@ -1008,9 +1140,10 @@
         </div>
     </div>
     <div class="game-start-screen" id="game-start">
-        <h1>🐻 Penny Rush!</h1>
+        <canvas data-sprite="bearFaceIdle" width="72" height="72" style="border-radius:14px;margin-bottom:8px;display:block;margin-left:auto;margin-right:auto;box-shadow:0 0 0 3px rgba(251,191,36,0.22);"></canvas>
+        <h1>Penny Rush!</h1>
         <div class="subtitle">Ray The Bear Welcomes You To The Cave</div>
-        <div class="vault-display">🏦 Vault: <span id="start-vault">0</span> gold</div>
+        <div class="vault-display"><canvas data-sprite="chestOpen" width="20" height="20" style="vertical-align:middle;margin-right:4px;border-radius:3px;"></canvas>Vault: <span id="start-vault">0</span> gold</div>
         <div class="start-stats">
             <div>Runs: <span id="start-runs">0</span></div>
             <div>Best Wave: <span id="start-best-wave">0</span></div>
@@ -1022,7 +1155,7 @@
         Gold earned is saved to your vault forever, until Ray decides it belongs to him.</p>
         <div class="btn-row">
             <button class="btn-primary" onclick="startGame()">Start Run</button>
-            <button class="btn-secondary" onclick="toggleShop()">🛒 Shop</button>
+            <button class="btn-secondary" onclick="toggleShop()"><canvas data-sprite="chestClosed" width="14" height="14" style="vertical-align:middle;margin-right:4px;border-radius:2px;"></canvas>Shop</button>
             <button class="btn-secondary" onclick="toggleSettings()">⚙ Settings</button>
             <button class="btn-secondary" onclick="closeGame()">Back to Stocks</button>
         </div>
@@ -1041,10 +1174,38 @@
                     <div class="run-map-pill">HP <span id="run-map-hp">3 / 5</span></div>
                 </div>
             </div>
-            <div class="run-map-grid" id="run-map-grid"></div>
-            <div class="run-map-actions">
-                <button class="btn-secondary" onclick="toggleRunBroker()">⚖ Broker</button>
-                <button class="btn-secondary" onclick="retireRun()">Cash Out & Leave</button>
+            <div class="run-map-layout">
+                <div class="run-map-stage">
+                    <div class="run-map-stage-top">
+                        <div class="run-map-stage-label">Cave Route Board</div>
+                        <button class="btn-secondary" onclick="focusRunMapCurrent()">Center Current Floor</button>
+                    </div>
+                    <div class="run-map-viewport" id="run-map-viewport">
+                        <div class="run-map-board" id="run-map-board">
+                            <svg class="run-map-lines" id="run-map-lines"></svg>
+                            <div class="run-map-grid" id="run-map-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="run-map-side">
+                    <div class="run-map-panel">
+                        <div class="run-map-side-label">Current Reach</div>
+                        <h3 id="run-map-side-title">Floor 1</h3>
+                        <p id="run-map-side-copy">Pick a branch and commit. Damage, gold, and bad decisions carry forward.</p>
+                    </div>
+                    <div class="run-map-panel">
+                        <div class="run-map-side-label">Legend</div>
+                        <div class="run-map-legend">
+                            <span class="run-legend available">Reachable</span>
+                            <span class="run-legend cleared">Cleared</span>
+                            <span class="run-legend locked">Locked</span>
+                        </div>
+                    </div>
+                    <div class="run-map-actions">
+                        <button class="btn-secondary" onclick="toggleRunBroker()"><canvas data-sprite="moneyBag" width="14" height="14" style="vertical-align:middle;margin-right:4px;border-radius:2px;"></canvas>Broker</button>
+                        <button class="btn-secondary" onclick="retireRun()"><canvas data-sprite="chestOpen" width="14" height="14" style="vertical-align:middle;margin-right:4px;border-radius:2px;"></canvas>Cash Out</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1060,7 +1221,7 @@
             <div class="event-choices" id="event-choices"></div>
             <div class="event-result hidden" id="event-result"></div>
             <div class="event-actions">
-                <button class="btn-secondary" onclick="toggleRunBroker()">⚖ Broker</button>
+                <button class="btn-secondary" onclick="toggleRunBroker()"><canvas data-sprite="moneyBag" width="14" height="14" style="vertical-align:middle;margin-right:4px;border-radius:2px;"></canvas>Broker</button>
                 <button class="btn-secondary hidden" id="event-continue" onclick="continueFromEvent()">Continue</button>
             </div>
         </div>
@@ -1068,15 +1229,7 @@
     <div class="ray-intro-overlay hidden" id="ray-intro-overlay">
         <div class="ray-intro-card">
             <div class="ray-intro-portrait">
-                <div class="ray-intro-bear">
-                    <div class="ray-intro-face">
-                        <span class="ray-eye left"></span>
-                        <span class="ray-eye right"></span>
-                        <span class="ray-snout"></span>
-                        <span class="ray-nose"></span>
-                        <span class="ray-mouth"></span>
-                    </div>
-                </div>
+                <canvas data-sprite="bearBody" width="180" height="212" style="display:block;margin:auto;border-radius:16px;"></canvas>
                 <div class="ray-intro-stamp">Ray The Boss Bear · Market Genius · Penny Litigator</div>
             </div>
             <div class="ray-intro-copy">
@@ -1097,9 +1250,9 @@
         <div class="score-line">+<span id="final-gold">0</span> gold earned</div>
         <div class="detail-line" id="final-progress-line">Nodes cleared: 0 / 0</div>
         <div class="detail-line" id="final-stats-line">Best combo: x1 · Highest wave: 1</div>
-        <div class="detail-line">🏦 Vault total: <span id="final-vault">0</span> gold</div>
+        <div class="detail-line"><canvas data-sprite="chestOpen" width="16" height="16" style="vertical-align:middle;margin-right:4px;border-radius:3px;"></canvas>Vault total: <span id="final-vault">0</span> gold</div>
         <button onclick="startGame()">New Run</button>
-        <button class="btn-back" onclick="toggleShop()">🛒 Shop</button>
+        <button class="btn-back" onclick="toggleShop()"><canvas data-sprite="chestClosed" width="14" height="14" style="vertical-align:middle;margin-right:4px;border-radius:2px;"></canvas>Shop</button>
         <button class="btn-back" onclick="closeGame()">Back to Stocks</button>
     </div>
 </div>
@@ -1109,7 +1262,7 @@
         <div class="run-broker-header">
             <div>
                 <div class="run-broker-kicker">Run Broker</div>
-                <h2>⚖ Cave Broker</h2>
+                <h2><canvas data-sprite="moneyBag" width="22" height="22" style="vertical-align:middle;margin-right:6px;border-radius:4px;"></canvas>Cave Broker</h2>
                 <div class="run-broker-copy">Spend run gold on temporary upgrades and emergency patchwork. These bonuses vanish when the run ends.</div>
             </div>
             <div class="run-map-pill">Run Gold <span id="run-broker-gold">0g</span></div>
@@ -1205,8 +1358,8 @@
 <div class="shop-panel hidden" id="shop-panel">
     <div class="shop-card-wrap">
         <div class="shop-header">
-            <h2>🛒 Shop</h2>
-            <span class="shop-gold-display">🏦 <span id="shop-gold">0</span>g</span>
+            <h2><canvas data-sprite="chestOpen" width="22" height="22" style="vertical-align:middle;margin-right:6px;border-radius:4px;"></canvas>Shop</h2>
+            <span class="shop-gold-display"><canvas data-sprite="coin" width="16" height="16" style="vertical-align:middle;margin-right:4px;border-radius:3px;"></canvas><span id="shop-gold">0</span>g</span>
         </div>
         <div class="shop-tabs">
             <button id="shop-tab-game" class="active" onclick="switchShopTab('game')">Game Upgrades</button>
@@ -1252,6 +1405,7 @@
     </div>
 </div>
 
+<script src="imagePreload.js"></script>
 <script src="game.js"></script>
 <script>
     var RAY_COOLDOWN_SECONDS = 120;
@@ -2933,6 +3087,11 @@
 
     // Record initial snapshot after stocks load
     setTimeout(function() { recordPriceHistory(); }, 2000);
+
+    // Paint static atlas canvases once DOM is ready (covers canvases loaded before atlas)
+    if (typeof ATLAS !== 'undefined') {
+        ATLAS.ready.then(function(img) { if (img && typeof paintAtlasSprites === 'function') paintAtlasSprites(); });
+    }
 </script>
 </body>
 </html>
