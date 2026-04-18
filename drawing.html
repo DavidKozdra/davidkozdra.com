@@ -220,6 +220,13 @@
             document.getElementById('button-grid').appendChild(add_layer_button);
 
 
+                let savedColors = JSON.parse(localStorage.getItem('colors'));
+                if (savedColors) {
+                    savedColors.forEach(color => {
+                        setActiveColor(color);
+                        saveColor();
+                    });
+                }
 
         });
 
@@ -270,6 +277,7 @@
                 colorDiv.classList.add('selectedColor');
             });
             colorContainer.appendChild(colorDiv);
+            localStorage.setItem('colors', JSON.stringify(colors));
         }
     
         function updateColor() {
