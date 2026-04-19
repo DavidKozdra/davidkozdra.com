@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Ledger — Independent Journalism</title>
+  <meta name="color-scheme" content="light dark" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; text-rendering: optimizeLegibility; }
+    .font-headline { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .animate-marquee { animation: marquee 45s linear infinite; }
+    @media (prefers-reduced-motion: reduce) { .animate-marquee { animation: none; } }
+    /* Custom scrollbar for webkit */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    .dark ::-webkit-scrollbar-thumb { background: #374151; }
+  </style>
+</head>
+<body class="bg-[#fcfcfc] text-[#111827] dark:bg-[#0a0a0a] dark:text-[#e5e7eb] antialiased transition-colors duration-300">
+  <!-- Breaking News Ticker -->
+  <div class="relative z-50 bg-[#111827] dark:bg-black text-white border-b border-black/10">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3 py-2 text-[13px]">
+        <span class="inline-flex items-center gap-1.5 bg-[#2563eb] text-white px-2.5 py-1 rounded-sm font-semibold tracking-wider uppercase text-[10px] shrink-0">
+          <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+          Breaking
+        </span>
+        <div class="relative flex-1 overflow-hidden">
+          <div class="flex gap-10 whitespace-nowrap animate-marquee hover:[animation-play-state:paused]">
+            <div class="flex items-center gap-10">
+              <span>Fed holds rates steady as inflation cools to 2.4% year-over-year</span>
+              <span class="text-white/40">•</span>
+              <span>EU Parliament passes sweeping AI Liability Directive after marathon vote</span>
+              <span class="text-white/40">•</span>
+              <span>NASA's Europa Clipper sends first close-up images of icy surface</span>
+              <span class="text-white/40">•</span>
+              <span>Tesla Energy division surpasses auto revenue for first time in Q1</span>
+            </div>
+            <div class="flex items-center gap-10" aria-hidden="true">
+              <span>Fed holds rates steady as inflation cools to 2.4% year-over-year</span>
+              <span class="text-white/40">•</span>
+              <span>EU Parliament passes sweeping AI Liability Directive after marathon vote</span>
+              <span class="text-white/40">•</span>
+              <span>NASA's Europa Clipper sends first close-up images of icy surface</span>
+              <span class="text-white/40">•</span>
+              <span>Tesla Energy division surpasses auto revenue for first time in Q1</span>
+            </div>
+          </div>
+        </div>
+        <span class="hidden sm:block text-white/60 text-xs shrink-0">Updated 9:41 AM ET</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-[68px] gap-4">
+        <!-- Logo -->
+        <div class="flex items-center gap-5 min-w-0">
+          <button id="menu-btn" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Open menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <a href="#" class="font-headline text-[30px] sm:text-[34px] leading-none font-black tracking-tight">
+            The <span class="text-[#2563eb]">Daily</span> Ledger
+          </a>
+          <span class="hidden xl:block text-[11px] leading-tight text-gray-500 dark:text-gray-400 border-l border-gray-300 dark:border-gray-700 pl-5">
+            FRIDAY, APRIL 18, 2026<br/>Independent Journalism Since 1892
+          </span>
+        </div>
+
+        <!-- Nav -->
+        <nav class="hidden lg:flex items-center gap-6 text-[15px] font-medium">
+          <button data-filter="all" class="nav-link text-[#2563eb] border-b-2 border-[#2563eb] pb-1">Home</button>
+          <button data-filter="world" class="nav-link hover:text-[#2563eb] transition-colors pb-1 border-b-2 border-transparent">World</button>
+          <button data-filter="politics" class="nav-link hover:text-[#2563eb] transition-colors pb-1 border-b-2 border-transparent">Politics</button>
+          <button data-filter="business" class="nav-link hover:text-[#2563eb] transition-colors pb-1 border-b-2 border-transparent">Business</button>
+          <button data-filter="technology" class="nav-link hover:text-[#2563eb] transition-colors pb-1 border-b-2 border-transparent">Technology</button>
+          <button data-filter="science" class="nav-link hover:text-[#2563eb] transition-colors pb-1 border-b-2 border-transparent">Science</button>
+          <button data-filter="culture" class="nav-link hover:text-[#2563eb] transition-colors pb-1 border-b-2 border-transparent">Culture</button>
+          <button data-filter="opinion" class="nav-link hover:text-[#2563eb] transition-colors pb-1 border-b-2 border-transparent">Opinion</button>
+        </nav>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="relative hidden md:block">
+            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input id="search" class="search-input w-[180px] xl:w-[220px] pl-8 pr-3 py-2 rounded-full bg-gray-100 dark:bg-[#171717] border border-transparent focus:border-[#2563eb] focus:bg-white dark:focus:bg-black focus:outline-none text-sm transition-all" placeholder="Search..." type="search" />
+          </div>
+          <button id="theme-toggle" aria-label="Toggle theme" class="p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+          <a href="#" class="hidden sm:inline-flex items-center px-4 py-2 bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-sm font-semibold rounded-full transition-colors shadow-sm shadow-blue-600/20">
+            Subscribe
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="lg:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0a0a0a]">
+      <div class="px-4 py-3 space-y-3">
+        <div class="relative">
+          <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="search-mobile" class="search-input w-full pl-8 pr-3 py-2 rounded-lg bg-gray-100 dark:bg-[#171717] border border-transparent focus:border-[#2563eb] focus:outline-none text-sm" placeholder="Search articles..." type="search" />
+        </div>
+        <nav class="grid grid-cols-2 gap-2 text-[15px] font-medium">
+          <button data-filter="world" class="nav-link text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">World</button>
+          <button data-filter="politics" class="nav-link text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Politics</button>
+          <button data-filter="business" class="nav-link text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Business</button>
+          <button data-filter="technology" class="nav-link text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Technology</button>
+          <button data-filter="science" class="nav-link text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Science</button>
+          <button data-filter="culture" class="nav-link text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Culture</button>
+          <button data-filter="opinion" class="nav-link text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 col-span-2">Opinion</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Hero -->
+    <section class="grid lg:grid-cols-12 gap-8 pb-10 border-b border-gray-200 dark:border-gray-800">
+      <div class="lg:col-span-7 xl:col-span-8">
+        <article class="group flex flex-col h-full gap-5 sm:gap-6">
+          <div class="relative overflow-hidden rounded-2xl w-full">
+            <span class="absolute top-4 left-4 z-10 px-2.5 py-1 bg-[#2563eb] shadow-sm text-white text-[11px] font-bold uppercase tracking-wider rounded">Politics</span>
+            <img src="image.png" alt="Donald Trump" class="w-full h-[300px] sm:h-[380px] lg:h-[440px] object-cover transition-transform duration-700 group-hover:scale-[1.02]" />
+          </div>
+          <div class="flex flex-col flex-1 pl-1">
+            <div class="flex items-center gap-2 mb-2.5">
+              <span class="text-[#2563eb] text-[12px] font-bold uppercase tracking-widest">Featured Report</span>
+            </div>
+            <h1 class="font-headline text-gray-900 dark:text-white text-[32px] sm:text-[40px] lg:text-[46px] font-bold leading-[1.08] tracking-tight mb-4 group-hover:text-[#2563eb] dark:group-hover:text-blue-400 transition-colors">
+              Trump Advisors Urge President to Stop Doing Things the Antichrist Would Do
+            </h1>
+            <p class="text-gray-600 dark:text-gray-300 text-[16px] sm:text-[18px] leading-relaxed max-w-3xl line-clamp-3">
+              Insiders report growing concerns among the former President's spiritual advisors over recent actions and rhetoric, citing troubling parallels to biblical prophecies in the Book of Revelation and Daniel.
+            </p>
+            <div class="flex items-center gap-3 mt-auto pt-6 text-sm text-gray-500 dark:text-gray-400">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" class="w-8 h-8 rounded-full object-cover" alt="Sarah Chen"/>
+              <span><strong class="text-gray-900 dark:text-white font-medium">Sarah Chen</strong> • Senior Political Correspondent</span>
+              <span class="hidden sm:inline">•</span>
+              <time class="hidden sm:inline">April 18, 2026 • 8:14 AM ET</time>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="lg:col-span-5 xl:col-span-4">
+        <div class="h-full flex flex-col">
+          <h2 class="font-headline text-xl font-bold mb-4 flex items-center gap-2">
+            <span class="w-1 h-5 bg-[#2563eb] rounded"></span>
+            Top Stories
+          </h2>
+          <div class="space-y-5 divide-y divide-gray-200 dark:divide-gray-800">
+            <article class="pt-0">
+              <div class="flex gap-4">
+                <div class="flex-1 min-w-0">
+                  <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">World</span>
+                  <h3 class="font-headline text-[20px] font-bold leading-tight mt-1 hover:text-[#2563eb] cursor-pointer transition-colors">EU Parliament Passes Landmark AI Liability Law After 14-Hour Debate</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2">New rules hold developers accountable for "high-risk" systems, setting global precedent for regulation.</p>
+                  <div class="text-xs text-gray-500 mt-2">Marcus Weber • 2h ago</div>
+                </div>
+                <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=300&q=80" class="w-24 h-24 rounded-lg object-cover shrink-0" alt="EU Parliament"/>
+              </div>
+            </article>
+            <article class="pt-5">
+              <div class="flex gap-4">
+                <div class="flex-1 min-w-0">
+                  <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Technology</span>
+                  <h3 class="font-headline text-[20px] font-bold leading-tight mt-1 hover:text-[#2563eb] cursor-pointer transition-colors">OpenAI Announces Altman V2</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2">New capabilities feature advanced reasoning designed specifically to trick you into liking AI again.</p>
+                  <div class="text-xs text-gray-500 mt-2">Priya Desai • 4h ago</div>
+                </div>
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=300&q=80" class="w-24 h-24 rounded-lg object-cover shrink-0" alt="AI chip"/>
+              </div>
+            </article>
+            <article class="pt-5">
+              <div class="flex gap-4">
+                <div class="flex-1 min-w-0">
+                  <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Politics</span>
+                  <h3 class="font-headline text-[20px] font-bold leading-tight mt-1 hover:text-[#2563eb] cursor-pointer transition-colors">White House Unveils $500B "Grid Modernization 2.0" Plan</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2">Proposal focuses on AI-managed power distribution and battery storage across 30 states.</p>
+                  <div class="text-xs text-gray-500 mt-2">David Park • 6h ago</div>
+                </div>
+                <img src="https://images.unsplash.com/photo-1494522358652-f30e61a60313?w=300&q=80" class="w-24 h-24 rounded-lg object-cover shrink-0" alt="Power lines"/>
+              </div>
+            </article>
+          </div>
+          <a href="#" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[#2563eb] hover:gap-2 transition-all">View all top stories <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid lg:grid-cols-12 gap-10 mt-12">
+      <!-- Main Content -->
+      <div class="lg:col-span-8 xl:col-span-9">
+        <!-- Latest -->
+        <section id="latest" class="mb-14">
+          <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3 mb-6">
+            <h2 class="font-headline text-[26px] font-bold">Latest</h2>
+            <div class="text-sm text-gray-500">Showing recent coverage</div>
+          </div>
+          <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6" id="articles-grid">
+            <!-- Card 1 -->
+            <article class="article-card group bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-title="Global Chipmakers Announce $40 Billion Alliance" data-summary="TSMC, Intel, Samsung form consortium" data-category="business">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Semiconductor" class="w-full h-48 object-cover" />
+                <span class="absolute top-3 left-3 px-2 py-1 bg-black/70 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider rounded">Business</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-headline text-[19px] font-bold leading-snug group-hover:text-[#2563eb] transition-colors">Global Chipmakers Announce $40 Billion Alliance to Secure Supply Chains</h3>
+                <p class="mt-2 text-[14px] text-gray-600 dark:text-gray-400 line-clamp-2">TSMC, Intel, and Samsung form unprecedented consortium to build fabs in Arizona, Germany, and Japan.</p>
+                <div class="flex items-center gap-2 mt-4 text-xs text-gray-500">
+                  <span>Jennifer Wu</span><span>•</span><time>Apr 18</time>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="article-card group bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-title="NASA Europa Clipper Sends First Close-Up Images" data-summary="Icy moon surface details" data-category="science">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd8aae?w=800&q=80" alt="Space" class="w-full h-48 object-cover" />
+                <span class="absolute top-3 left-3 px-2 py-1 bg-black/70 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider rounded">Science</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-headline text-[19px] font-bold leading-snug group-hover:text-[#2563eb] transition-colors">NASA's Europa Clipper Sends First Close-Up Images of Icy Surface</h3>
+                <p class="mt-2 text-[14px] text-gray-600 dark:text-gray-400 line-clamp-2">Mission reveals chaotic terrain and possible plume activity, boosting hopes for subsurface ocean.</p>
+                <div class="flex items-center gap-2 mt-4 text-xs text-gray-500">
+                  <span>Dr. Alan Torres</span><span>•</span><time>Apr 18</time>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="article-card group bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-title="Apple Prepares September Launch for First Foldable iPhone" data-summary="Foldable phone leaks" data-category="technology">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&q=80" alt="Phone" class="w-full h-48 object-cover" />
+                <span class="absolute top-3 left-3 px-2 py-1 bg-black/70 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider rounded">Technology</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-headline text-[19px] font-bold leading-snug group-hover:text-[#2563eb] transition-colors">Apple Prepares September Launch for First Foldable iPhone</h3>
+                <p class="mt-2 text-[14px] text-gray-600 dark:text-gray-400 line-clamp-2">Sources say "iPhone Fold" features crease-free display co-developed with LG, priced at $1,799.</p>
+                <div class="flex items-center gap-2 mt-4 text-xs text-gray-500">
+                  <span>Michael Ito</span><span>•</span><time>Apr 17</time>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4 -->
+            <article class="article-card group bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-title="Venice Biennale Opens With Focus on Climate Displacement" data-summary="Art exhibition" data-category="culture">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=800&q=80" alt="Venice" class="w-full h-48 object-cover" />
+                <span class="absolute top-3 left-3 px-2 py-1 bg-black/70 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider rounded">Culture</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-headline text-[19px] font-bold leading-snug group-hover:text-[#2563eb] transition-colors">Venice Biennale Opens With Focus on Climate Displacement Art</h3>
+                <p class="mt-2 text-[14px] text-gray-600 dark:text-gray-400 line-clamp-2">65 countries present installations on rising seas, with Tuvalu pavilion submerged in AR.</p>
+                <div class="flex items-center gap-2 mt-4 text-xs text-gray-500">
+                  <span>Elena Rossi</span><span>•</span><time>Apr 17</time>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 5 -->
+            <article class="article-card group bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-title="Tesla Energy Surpasses Auto Revenue" data-summary="Q1 earnings beat" data-category="business">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1620712944903-b8498e462c54?w=800&q=80" alt="Battery" class="w-full h-48 object-cover" />
+                <span class="absolute top-3 left-3 px-2 py-1 bg-black/70 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider rounded">Business</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-headline text-[19px] font-bold leading-snug group-hover:text-[#2563eb] transition-colors">Tesla's Energy Division Surpasses Auto Revenue for First Quarter</h3>
+                <p class="mt-2 text-[14px] text-gray-600 dark:text-gray-400 line-clamp-2">Megapack deployments triple as utilities rush to stabilize grids amid AI data center boom.</p>
+                <div class="flex items-center gap-2 mt-4 text-xs text-gray-500">
+                  <span>Rebecca Hart</span><span>•</span><time>Apr 17</time>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 6 -->
+            <article class="article-card group bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-title="The Quiet Reshoring of American Manufacturing" data-summary="Opinion essay" data-category="opinion">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="Factory" class="w-full h-48 object-cover" />
+                <span class="absolute top-3 left-3 px-2 py-1 bg-[#2563eb] text-white text-[10px] font-bold uppercase tracking-wider rounded">Opinion</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-headline text-[19px] font-bold leading-snug group-hover:text-[#2563eb] transition-colors">The Quiet Reshoring of American Manufacturing</h3>
+                <p class="mt-2 text-[14px] text-gray-600 dark:text-gray-400 line-clamp-2">Tax credits and automation, not tariffs, are bringing factories home. We need workforce training to match.</p>
+                <div class="flex items-center gap-2 mt-4 text-xs text-gray-500">
+                  <span>Editorial Board</span><span>•</span><time>Apr 16</time>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- In Depth -->
+        <section id="in-depth" class="mb-14">
+          <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3 mb-6">
+            <h2 class="font-headline text-[26px] font-bold">In Depth</h2>
+          </div>
+          <div class="grid md:grid-cols-2 gap-6">
+            <article class="article-card group relative bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300" data-title="Inside the Lithium Triangle" data-summary="South America" data-category="world">
+              <img src="https://images.unsplash.com/photo-1508789454626-3274440ea89b?w=1200&q=80" alt="Desert" class="w-full h-56 object-cover" />
+              <div class="p-6">
+                <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">World • 5 min read</span>
+                <h3 class="font-headline text-[24px] font-bold mt-2 leading-tight group-hover:text-[#2563eb]">Inside the Lithium Triangle: The Race for White Gold</h3>
+                <p class="mt-3 text-gray-600 dark:text-gray-400">A six-month investigation from Chile to Bolivia reveals water conflicts, indigenous rights battles, and China's quiet dominance.</p>
+                <div class="mt-4 text-xs text-gray-500">By Sofia Mendez • April 15, 2026</div>
+              </div>
+            </article>
+            <article class="article-card group relative bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300" data-title="Hospitals Deploy AI Triage" data-summary="Healthcare" data-category="science">
+              <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80" alt="Hospital" class="w-full h-56 object-cover" />
+              <div class="p-6">
+                <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Science • 4 min read</span>
+                <h3 class="font-headline text-[24px] font-bold mt-2 leading-tight group-hover:text-[#2563eb]">How 300 U.S. Hospitals Quietly Deployed AI Triage Nurses</h3>
+                <p class="mt-3 text-gray-600 dark:text-gray-400">We analyzed 2 million visits. Wait times fell 18%, but bias audits raise new questions about emergency care.</p>
+                <div class="mt-4 text-xs text-gray-500">By Dr. James Liu • April 14, 2026</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Technology -->
+        <section id="technology">
+          <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3 mb-6">
+            <h2 class="font-headline text-[26px] font-bold">Technology</h2>
+            <a href="#" class="text-sm font-medium text-[#2563eb] hover:underline">See all</a>
+          </div>
+          <div class="space-y-6">
+            <article class="article-card group flex gap-5 pb-6 border-b border-gray-100 dark:border-gray-800 last:border-0" data-title="Microsoft Unveils Phi-3 Mini" data-summary="small language model" data-category="technology">
+              <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&q=80" class="w-[140px] h-[100px] sm:w-[180px] sm:h-[120px] object-cover rounded-lg shrink-0" alt="Data center" />
+              <div class="min-w-0">
+                <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Technology</span>
+                <h3 class="font-headline text-[21px] font-bold leading-tight mt-1 group-hover:text-[#2563eb]">Microsoft Unveils Phi-3.5: A Small Model That Runs on Your Phone, Offline</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2">New 3.8B parameter model matches GPT-4 on coding tasks, privacy advocates cheer on-device processing.</p>
+                <div class="text-xs text-gray-500 mt-2">Priya Desai • Apr 16</div>
+              </div>
+            </article>
+            <article class="article-card group flex gap-5 pb-6 border-b border-gray-100 dark:border-gray-800 last:border-0" data-title="Cyberattack Hits European Ports" data-summary="logistics disruption" data-category="technology">
+              <img src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=400&q=80" alt="Port" class="w-[140px] h-[100px] sm:w-[180px] sm:h-[120px] object-cover rounded-lg shrink-0" />
+              <div class="min-w-0">
+                <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Technology</span>
+                <h3 class="font-headline text-[21px] font-bold leading-tight mt-1 group-hover:text-[#2563eb]">Major Cyberattack Disrupts Rotterdam and Hamburg Port Operations</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2">Ransomware group claims responsibility, shipping delays expected to ripple through global supply chains.</p>
+                <div class="text-xs text-gray-500 mt-2">Marcus Weber • Apr 15</div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-4 xl:col-span-3">
+        <div class="sticky top-[84px] space-y-8">
+          <!-- Trending -->
+          <div class="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
+            <h3 class="font-headline text-[22px] font-bold mb-5">Trending Now</h3>
+            <ol class="space-y-5">
+              <li class="flex gap-4">
+                <span class="font-headline text-[28px] leading-none text-gray-300 dark:text-gray-700 font-bold">1</span>
+                <div>
+                  <a href="#" class="font-medium leading-snug hover:text-[#2563eb]">Supreme Court to Hear Social Media Algorithm Case in Fall Term</a>
+                  <div class="text-xs text-gray-500 mt-1">12.4k readers</div>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="font-headline text-[28px] leading-none text-gray-300 dark:text-gray-700 font-bold">2</span>
+                <div>
+                  <a href="#" class="font-medium leading-snug hover:text-[#2563eb]">Gold Hits $2,650 as Central Banks Accelerate Buying</a>
+                  <div class="text-xs text-gray-500 mt-1">9.8k readers</div>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="font-headline text-[28px] leading-none text-gray-300 dark:text-gray-700 font-bold">3</span>
+                <div>
+                  <a href="#" class="font-medium leading-snug hover:text-[#2563eb]">Japan's Population Falls Below 120 Million for First Time</a>
+                  <div class="text-xs text-gray-500 mt-1">8.2k readers</div>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="font-headline text-[28px] leading-none text-gray-300 dark:text-gray-700 font-bold">4</span>
+                <div>
+                  <a href="#" class="font-medium leading-snug hover:text-[#2563eb]">How Weight-Loss Drugs Are Reshaping the Food Industry</a>
+                  <div class="text-xs text-gray-500 mt-1">7.1k readers</div>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="font-headline text-[28px] leading-none text-gray-300 dark:text-gray-700 font-bold">5</span>
+                <div>
+                  <a href="#" class="font-medium leading-snug hover:text-[#2563eb]">Arctic Permafrost Thaw Releasing Ancient Mercury</a>
+                  <div class="text-xs text-gray-500 mt-1">6.5k readers</div>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Market Snapshot -->
+          <div class="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-headline text-[20px] font-bold">Market Snapshot</h3>
+              <span class="text-[11px] px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">Live</span>
+            </div>
+            <div class="space-y-3 text-sm">
+              <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                <div><div class="font-semibold">S&P 500</div><div class="text-xs text-gray-500">SPX</div></div>
+                <div class="text-right"><div class="font-medium">5,421.12</div><div class="text-green-600 text-xs">+0.42%</div></div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                <div><div class="font-semibold">Nasdaq</div><div class="text-xs text-gray-500">IXIC</div></div>
+                <div class="text-right"><div class="font-medium">17,245.83</div><div class="text-green-600 text-xs">+0.71%</div></div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                <div><div class="font-semibold">Dow Jones</div><div class="text-xs text-gray-500">DJI</div></div>
+                <div class="text-right"><div class="font-medium">39,112.44</div><div class="text-red-600 text-xs">-0.11%</div></div>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                <div><div class="font-semibold">10-Yr Treasury</div><div class="text-xs text-gray-500">Yield</div></div>
+                <div class="text-right"><div class="font-medium">4.18%</div><div class="text-red-600 text-xs">-0.03</div></div>
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <div><div class="font-semibold">Bitcoin</div><div class="text-xs text-gray-500">BTC</div></div>
+                <div class="text-right"><div class="font-medium">$72,441</div><div class="text-green-600 text-xs">+2.14%</div></div>
+              </div>
+            </div>
+            <p class="text-[11px] text-gray-500 mt-4">Data delayed 15 min. Source: Ledger Markets</p>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="bg-[#111827] dark:bg-[#0f172a] text-white rounded-2xl p-6 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-[#2563eb]/30 rounded-full blur-2xl"></div>
+            <h3 class="font-headline text-[22px] font-bold relative">Morning Briefing</h3>
+            <p class="text-sm text-gray-300 mt-2 relative">Get the day's top stories in your inbox at 7 AM ET. Free.</p>
+            <form id="newsletter-form" class="mt-4 relative space-y-3">
+              <input type="email" required placeholder="Your email address" class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 placeholder:text-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-[#2563eb] text-sm" />
+              <button type="submit" class="w-full py-2.5 bg-[#2563eb] hover:bg-[#1d4ed8] rounded-lg font-semibold text-sm transition-colors">Subscribe</button>
+              <p id="newsletter-msg" class="text-xs text-gray-400 hidden">Thanks! Check your inbox to confirm.</p>
+            </form>
+            <p class="text-[11px] text-gray-500 mt-3">By subscribing, you agree to our Terms. Unsubscribe anytime.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 border-t border-gray-200 dark:border-gray-800 bg-[#fafafa] dark:bg-[#0c0c0c]">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+        <div class="col-span-2 md:col-span-1">
+          <div class="font-headline text-2xl font-black mb-3">The Daily Ledger</div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-xs">Independent, fact-based journalism for a complex world. Founded 1892 in New York.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-3">Sections</h4>
+          <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li><a href="#" class="hover:text-[#2563eb]">World</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Politics</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Business</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Technology</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Science</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-3">Company</h4>
+          <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li><a href="#" class="hover:text-[#2563eb]">About Us</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Careers</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Contact</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Ethics Policy</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Corrections</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-3">Follow Us</h4>
+          <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li><a href="#" class="hover:text-[#2563eb]">X (Twitter)</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">LinkedIn</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Instagram</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">YouTube</a></li>
+            <li><a href="#" class="hover:text-[#2563eb]">Threads</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+        <p>© 2026 The Daily Ledger Company. All rights reserved.</p>
+        <div class="flex items-center gap-5">
+          <a href="#" class="hover:text-[#2563eb]">Privacy</a>
+          <a href="#" class="hover:text-[#2563eb]">Terms</a>
+          <a href="#" class="hover:text-[#2563eb]">Cookie Preferences</a>
+          <a href="#" class="hover:text-[#2563eb]">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle with persistence
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        html.classList.add('dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        html.classList.remove('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+    themeToggle.addEventListener('click', () => {
+      applyTheme(!html.classList.contains('dark'));
+    });
+
+    // Mobile menu
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Search filtering
+    const searchInputs = document.querySelectorAll('.search-input');
+    const cards = document.querySelectorAll('.article-card');
+
+    function filterArticles(query) {
+      const q = query.toLowerCase().trim();
+      cards.forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        const summary = card.dataset.summary.toLowerCase();
+        const match = !q || title.includes(q) || summary.includes(q);
+        card.style.display = match ? '' : 'none';
+      });
+    }
+
+    searchInputs.forEach(input => {
+      input.addEventListener('input', (e) => filterArticles(e.target.value));
+    });
+
+    // Category filtering
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        
+        // Update active state
+        navLinks.forEach(b => {
+          b.classList.remove('text-[#2563eb]', 'border-[#2563eb]');
+          b.classList.add('border-transparent');
+        });
+        btn.classList.add('text-[#2563eb]', 'border-[#2563eb]');
+        btn.classList.remove('border-transparent');
+
+        // Filter cards
+        cards.forEach(card => {
+          const cat = card.dataset.category;
+          const show = filter === 'all' || cat === filter;
+          card.style.display = show ? '' : 'none';
+        });
+
+        // Close mobile menu
+        if (!mobileMenu.classList.contains('hidden')) {
+          mobileMenu.classList.add('hidden');
+        }
+
+        // Scroll to content
+        document.getElementById('latest').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Newsletter
+    const newsletterForm = document.getElementById('newsletter-form');
+    const newsletterMsg = document.getElementById('newsletter-msg');
+    newsletterForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = newsletterForm.querySelector('input[type="email"]').value;
+      if (email) {
+        newsletterMsg.classList.remove('hidden');
+        newsletterForm.reset();
+        setTimeout(() => newsletterMsg.classList.add('hidden'), 4000);
+      }
+    });
+  </script>
+</body>
+</html>
