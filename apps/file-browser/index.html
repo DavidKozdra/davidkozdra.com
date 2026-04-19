@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>File Browser</title>
-    <link rel="icon" type="image/webp" href="/images/ui-icons/File_System_icon.webp">
+    <link rel="icon" type="image/webp" href="/assets/images/ui-icons/File_System_icon.webp">
     <style>
         body {
             font-family: Arial, sans-serif; /* Set a clean font for the browser */
@@ -222,7 +222,7 @@
                 fileElement.className = file.dir ? 'folder' : 'file';
 
                 let fileElementImage = document.createElement('img');
-                fileElementImage.src = file.dir ? 'images/File_System_icon.webp' : 'images/Notes.webp';
+                fileElementImage.src = file.dir ? '/assets/images/ui-icons/File_System_icon.webp' : '/assets/images/ui-icons/Notes.webp';
 
                 let fileElementTitle = document.createElement('p');
                 fileElementTitle.textContent = file.name;

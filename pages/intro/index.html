@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DK OS</title>
-  <link rel="icon" type="image/webp" href="/images/brand/icon-512.webp">
+  <link rel="icon" type="image/webp" href="/assets/images/brand/icon-512.webp">
 
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
@@ -535,7 +535,7 @@
 
     <div class="tab active" id="welcome">
       <div id="hero">
-        <img src="./images/profile/ME.webp" class="me" alt="David Kozdra" />
+        <img src="/assets/images/profile/ME.webp" class="me" alt="David Kozdra" />
 
         <div>
           <h1>David Kozdra</h1>
@@ -560,8 +560,8 @@
 
           <div class="skill-icon" data-start="2020-09-01">
             <div class="icon">
-              <img class="front" src="./images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
-              <img class="back" src="./images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
+              <img class="front" src="/assets/images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
+              <img class="back" src="/assets/images/projects/mysql-small.webp" alt="SQL logo" width="80" height="53"/>
             </div>
             <div class="skill-label">SQL<span class="exp"></span></div>
           </div>
@@ -637,7 +637,7 @@
     </div>
 
     <p style="text-align:center;margin-top:50px">
-      Curious about my older site?&nbsp;<a href="./old_site.html" target="_blank">Take a look</a>.
+      Curious about my older site?&nbsp;<a href="/archive/old-site.html" target="_blank">Take a look</a>.
     </p>
   </div>
 
@@ -650,19 +650,23 @@
     }
 
     function setTheme(themeId) {
-      document.querySelectorAll('.theme').forEach(style => {
-        style.disabled = style.id !== themeId;
+      const themes = Array.from(document.querySelectorAll('.theme'));
+      const selectedTheme = themes.find(style => style.id === themeId);
+      const activeThemeId = selectedTheme ? themeId : 'modern-theme';
+
+      themes.forEach(style => {
+        style.disabled = style.id !== activeThemeId;
       });
 
-      localStorage.setItem('selectedTheme', themeId);
+      localStorage.setItem('selectedTheme', activeThemeId);
 
       const modernRadio = document.getElementById('modern-radio');
       const retroRadio = document.getElementById('retro-radio');
 
-      if (modernRadio) modernRadio.checked = themeId === 'modern-theme';
-      if (retroRadio) retroRadio.checked = themeId === 'retro-theme';
+      if (modernRadio) modernRadio.checked = activeThemeId === 'modern-theme';
+      if (retroRadio) retroRadio.checked = activeThemeId === 'retro-theme';
 
-      window.parent.postMessage({ stylesheetId: themeId }, '*');
+      window.parent.postMessage({ stylesheetId: activeThemeId }, '*');
     }
 
     function updateExp() {
@@ -690,7 +694,7 @@
     const reviews = [
       {
         name: 'Jonathan Matsumoto @ Bridxe',
-        logo: './images/company-logos/Bridxe.webp',
+        logo: '/assets/images/company-logos/Bridxe.webp',
         review: 'David mastered AWS, D3, Django and React quickly, communicating clearly and leaving maintainable code.'
       },
       {
@@ -700,7 +704,7 @@
       },
       {
         name: 'Mellissa Thomas @ FNN',
-        logo: './images/company-logos/Logo-FNN-380x310.webp',
+        logo: '/assets/images/company-logos/Logo-FNN-380x310.webp',
         review: 'Self-starter, excellent communicator and a strong asset to any team.'
       },
       {

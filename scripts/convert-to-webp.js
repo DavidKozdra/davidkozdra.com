@@ -6,16 +6,18 @@ const path = require('path');
 
 const files = [
   'index.html',
-  'about.html',
-  'intro.html',
-  'old_site.html',
-  'old_site_post.html',
-  'wintestPrivacyPolicy.html',
+  'pages/about/index.html',
+  'archive/intro.html',
+  'archive/old-site.html',
+  'archive/old-site-post.html',
+  'legal/wintest-privacy-policy/index.html',
   'gitPulsePrivacyPolicy.html'
 ];
 
+const repoRoot = path.resolve(__dirname, '..');
+
 files.forEach(file => {
-  const filePath = path.join(__dirname, file);
+  const filePath = path.join(repoRoot, file);
   if (!fs.existsSync(filePath)) {
     console.log(`Skipping ${file} - not found`);
     return;
@@ -26,14 +28,14 @@ files.forEach(file => {
   
   // Replace img tags with picture elements
   content = content.replace(
-    /<img\s+([^>]*src=["']\.?\/?images\/(brand|profile|projects|company-logos|ui-icons)\/([^"']+)\.(png|jpg|jpeg|ico)["'][^>]*)>/gi,
+    /<img\s+([^>]*src=["'](?:\.{0,2}\/)?(?:assets\/)?images\/(brand|profile|projects|company-logos|ui-icons)\/([^"']+)\.(png|jpg|jpeg|ico)["'][^>]*)>/gi,
     (match, attrs, folder, filename, ext) => {
       if (attrs.includes('</picture>') || attrs.includes('<picture>')) {
         return match; // Already wrapped
       }
       modified = true;
-      const webpPath = `images/${folder}/${filename}.webp`;
-      const fallbackPath = `images/${folder}/${filename}.${ext}`;
+      const webpPath = `/assets/images/${folder}/${filename}.webp`;
+      const fallbackPath = `/assets/images/${folder}/${filename}.${ext}`;
       
       // Extract other attributes
       const altMatch = attrs.match(/alt=["']([^"']*)["']/i);
@@ -56,8 +58,8 @@ files.forEach(file => {
       if (fetchpriorityMatch) imgAttrs += ` fetchpriority="${fetchpriorityMatch[1]}"`;
       
       return `<picture>
-        <source srcset="./${webpPath}" type="image/webp">
-        <img src="./${fallbackPath}"${imgAttrs}>
+        <source srcset="${webpPath}" type="image/webp">
+        <img src="${fallbackPath}"${imgAttrs}>
       </picture>`;
     }
   );

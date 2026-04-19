@@ -1,43 +1,78 @@
-const CACHE_NAME = 'pwa-cache-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css', // add all other static resources here
-  '/scripts.js',
-  'images/logo.png',
+const CACHE_NAME = "pwa-cache-v3";
+const PRECACHE_URLS = [
+  "/",
+  "/index.html",
+  "/manifest.json",
+  "/assets/css/DE_styles.css?v=1.1",
+  "/assets/css/modern.css?v=1.16",
+  "/assets/css/retro.css?v=1.4",
+  "/assets/js/Games.js?v=1.0",
+  "/assets/js/index.js",
+  "/assets/js/apps.js",
+  "/assets/images/brand/favicon.webp",
+  "/assets/images/brand/icon-192.png",
+  "/assets/images/brand/icon-512.png",
 ];
 
-// Install service worker and cache necessary files
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('Opened cache');
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
   );
+  self.skipWaiting();
 });
 
-// Activate the service worker
-self.addEventListener('activate', (event) => {
-  const cacheWhitelist = [CACHE_NAME];
+self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
         cacheNames.map((cacheName) => {
-          if (!cacheWhitelist.includes(cacheName)) {
+          if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
+          return undefined;
         })
-      );
-    })
+      )
+    )
   );
+  self.clients.claim();
 });
 
-// Fetch event to serve files from the cache or fetch from the network
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") {
+    return;
+  }
+
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.origin !== self.location.origin) {
+    return;
+  }
+
+  const isDocument = event.request.mode === "navigate";
+
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      if (isDocument) {
+        try {
+          const networkResponse = await fetch(event.request);
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        } catch {
+          return (await cache.match(event.request)) || (await cache.match("/index.html"));
+        }
+      }
+
+      const cachedResponse = await cache.match(event.request, { ignoreSearch: true });
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      const networkResponse = await fetch(event.request);
+      if (networkResponse.ok) {
+        cache.put(event.request, networkResponse.clone());
+      }
+      return networkResponse;
+    })()
   );
 });

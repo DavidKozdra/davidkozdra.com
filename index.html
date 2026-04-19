@@ -10,7 +10,7 @@
 
 <meta property="og:title" content="David Kozdra - Software Developer Specializing in MERN Stack">
 <meta property="og:description" content="Full-stack software developer specializing in web applications using MongoDB, Express.js, React.js, and Node.js.">
-<meta property="og:image" content="https://davidkozdra.com/images/favicon.webp">
+<meta property="og:image" content="https://davidkozdra.com/assets/images/brand/favicon.webp">
 <meta property="og:url" content="https://davidkozdra.com">
 <meta property="og:type" content="website">
 
@@ -21,19 +21,19 @@
   <link rel="canonical" href="https://davidkozdra.com/">
 
   <title>David Kozdra</title>
-  <link rel="stylesheet" href="styles/DE_styles.css?v=1.1" id="default" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="styles/DE_styles.css?v=1.1"></noscript>
+  <link rel="stylesheet" href="assets/css/DE_styles.css?v=1.1" id="default" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/DE_styles.css?v=1.1"></noscript>
 
   <link rel="manifest" href="/manifest.json" />
-  <link rel="stylesheet" id="modern-theme" class="theme" href="styles/modern.css?v=1.16" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="styles/modern.css?v=1.16"></noscript>
-  <link rel="stylesheet" id="retro-theme" class="theme" href="styles/retro.css?v=1.4" disabled="true" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="styles/retro.css?v=1.4"></noscript>
+  <link rel="stylesheet" id="modern-theme" class="theme" href="assets/css/modern.css?v=1.16" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/modern.css?v=1.16"></noscript>
+  <link rel="stylesheet" id="retro-theme" class="theme" href="assets/css/retro.css?v=1.4" disabled="true" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/retro.css?v=1.4"></noscript>
   
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link class="import" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-  <link rel="icon" type="image/x-icon" href="/images/brand/favicon.webp">
+  <link rel="icon" type="image/x-icon" href="/assets/images/brand/favicon.webp">
   <style>
     @font-face {
       font-display: swap;
@@ -57,9 +57,9 @@
   }
   </script>
 
-  <script src="Games.js?v=1.0" defer></script>
+  <script src="assets/js/Games.js?v=1.0" defer></script>
 
-  <script src="index.js" defer></script>
+  <script src="assets/js/index.js" defer></script>
   <style>
     .skip-link {
       position: absolute;
@@ -175,6 +175,7 @@
     }
   }
   </style>
+  <script src="/assets/js/apps.js"></script>
 </head>
 
 <body>
@@ -183,8 +184,8 @@
   <div class="loader-page">
     <div class="loader-display">
       <picture>
-        <source srcset="./images/brand/favicon.webp" type="image/webp">
-        <img class="loader-icon" src="./images/brand/favicon.webp" alt="DK logo white and blue gradient background" width="100" height="100" fetchpriority="high">
+        <source srcset="/assets/images/brand/favicon.webp" type="image/webp">
+        <img class="loader-icon" src="/assets/images/brand/favicon.webp" alt="DK logo white and blue gradient background" width="100" height="100" fetchpriority="high">
       </picture>
 
       <p class="typewriter">
@@ -204,8 +205,8 @@
         <nav class="navigation" aria-label="Main navigation">
           <div class="drop-down">
             <button style="padding: 0%;" aria-label="Open menu" aria-expanded="false" aria-haspopup="true"><picture>
-                <source srcset="images/brand/favicon.webp" type="image/webp">
-                <img src="images/brand/favicon.webp" alt="" id="task-bar-icon" width="32" height="32" role="presentation" aria-hidden="true">
+                <source srcset="/assets/images/brand/favicon.webp" type="image/webp">
+                <img src="/assets/images/brand/favicon.webp" alt="" id="task-bar-icon" width="32" height="32" role="presentation" aria-hidden="true">
               </picture></button>
             <div class="drop-down-content">
               <div id="dropdown-app-sections"></div>
@@ -275,32 +276,32 @@
         
         <div class="desktop-icon" role="button" aria-label="Terminal application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'term')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'term')" tabindex="0">
           <picture>
-            <source srcset="./images/ui-icons/Term.webp" type="image/webp">
-            <img src="./images/ui-icons/Term.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+            <source srcset="/assets/images/ui-icons/Term.webp" type="image/webp">
+            <img src="/assets/images/ui-icons/Term.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <p class="icon-text">Terminal</p>
         </div>
 
         <div class="desktop-icon" role="button" aria-label="DBZ Fighter game" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'dragon_game')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'dragon_game')" tabindex="0">
           <picture>
-            <source srcset="./images/ui-icons/dragon_fighter.webp" type="image/webp">
-            <img src="./images/ui-icons/dragon_fighter.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+            <source srcset="/assets/images/ui-icons/dragon_fighter.webp" type="image/webp">
+            <img src="/assets/images/ui-icons/dragon_fighter.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <p class="icon-text">dbz fighter</p>
         </div>
 
         <div class="desktop-icon" role="button" aria-label="Paint application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'draw')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'draw')" tabindex="0">
           <picture>
-            <source srcset="./images/ui-icons/Pallet.webp" type="image/webp">
-            <img src="./images/ui-icons/Pallet.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+            <source srcset="/assets/images/ui-icons/Pallet.webp" type="image/webp">
+            <img src="/assets/images/ui-icons/Pallet.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <p class="icon-text">Draw</p>
         </div>
 
         <div class="desktop-icon" role="button" aria-label="Game of Life application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'GOL')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'GOL')" tabindex="0"> 
           <picture>
-            <source srcset="./images/ui-icons/GOL.webp" type="image/webp">
-            <img src="./images/ui-icons/GOL.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+            <source srcset="/assets/images/ui-icons/GOL.webp" type="image/webp">
+            <img src="/assets/images/ui-icons/GOL.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <div class="icon-text">
             <p>Game Of Life</p>
@@ -310,8 +311,8 @@
 
 <div class="desktop-icon" role="button" aria-label="Calculator application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'calculator')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'calculator')" tabindex="0">
           <picture>
-            <source srcset="./images/ui-icons/Calc.webp" type="image/webp">
-            <img src="./images/ui-icons/Calc.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+            <source srcset="/assets/images/ui-icons/Calc.webp" type="image/webp">
+            <img src="/assets/images/ui-icons/Calc.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <div class="icon-text">
             <p>Calculator</p>
@@ -322,8 +323,8 @@
         <div class="desktop-icon" role="button" aria-label="Notes application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'notes')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'notes')" tabindex="0"
           style="cursor: pointer;">
           <picture>
-            <source srcset="./images/ui-icons/Notes.webp" type="image/webp">
-            <img src="./images/ui-icons/Notes.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+            <source srcset="/assets/images/ui-icons/Notes.webp" type="image/webp">
+            <img src="/assets/images/ui-icons/Notes.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
           </picture>
           <div class="icon-text">
             <p>Notes</p>
@@ -332,7 +333,7 @@
 
         <div class="desktop-icon" role="button" aria-label="Files application" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'files')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'files')" tabindex="0"
         style="cursor: pointer;">
-        <img src="./images/ui-icons/File_System_icon.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+        <img src="/assets/images/ui-icons/File_System_icon.webp" alt="" width="64" height="64" role="presentation" aria-hidden="true">
         <div class="icon-text">
           <p>Files</p>
         </div>
@@ -340,7 +341,7 @@
 
         <div class="desktop-icon" role="button" aria-label="App Store" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'appstore')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'appstore')" tabindex="0"
         style="cursor: pointer;">
-        <img src="./images/ui-icons/shop.png" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+        <img src="/assets/images/ui-icons/shop.png" alt="" width="64" height="64" role="presentation" aria-hidden="true">
         <div class="icon-text">
           <p>App Store</p>
         </div>
@@ -398,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
       let img = document.createElement("img");
-      img.src = "./images/ui-icons/Notes.webp";
+      img.src = "/assets/images/ui-icons/Notes.webp";
       img.setAttribute("alt", "");
       img.setAttribute("role", "presentation");
       img.setAttribute("width", "64");
@@ -429,25 +430,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let loading = true;
 
     const CORE_MENU_APPS = [
-      { id: 'files', name: 'Files', route: 'files', icon: './images/ui-icons/File_System_icon.webp', tags: ['tool'] },
-      { id: 'notes', name: 'Notes', route: 'notes', icon: './images/ui-icons/Notes.webp', tags: ['tool'] },
-      { id: 'draw', name: 'Paint', route: 'draw', icon: './images/ui-icons/Pallet.webp', tags: ['tool'] },
-      { id: 'calculator', name: 'Calculator', route: 'calculator', icon: './images/ui-icons/Calc.webp', tags: ['tool'] },
-      { id: 'term', name: 'Terminal', route: 'term', icon: './images/ui-icons/Term.webp', tags: ['tool'] },
-      { id: 'appstore', name: 'App Store', route: 'appstore', icon: './images/ui-icons/shop.png', tags: ['tool'] },
-      { id: 'GOL', name: 'Game of Life', route: 'GOL', icon: './images/ui-icons/GOL.webp', tags: ['game'] },
-      { id: 'dragon_game', name: 'DBZ Fighter', route: 'dragon_game', icon: './images/ui-icons/dragon_fighter.webp', tags: ['game'] }
+      { id: 'files', name: 'Files', route: 'files', icon: '/assets/images/ui-icons/File_System_icon.webp', tags: ['tool'] },
+      { id: 'notes', name: 'Notes', route: 'notes', icon: '/assets/images/ui-icons/Notes.webp', tags: ['tool'] },
+      { id: 'draw', name: 'Paint', route: 'draw', icon: '/assets/images/ui-icons/Pallet.webp', tags: ['tool'] },
+      { id: 'calculator', name: 'Calculator', route: 'calculator', icon: '/assets/images/ui-icons/Calc.webp', tags: ['tool'] },
+      { id: 'term', name: 'Terminal', route: 'term', icon: '/assets/images/ui-icons/Term.webp', tags: ['tool'] },
+      { id: 'appstore', name: 'App Store', route: 'appstore', icon: '/assets/images/ui-icons/shop.png', tags: ['tool'] },
+      { id: 'GOL', name: 'Game of Life', route: 'GOL', icon: '/assets/images/ui-icons/GOL.webp', tags: ['game'] },
+      { id: 'dragon_game', name: 'DBZ Fighter', route: 'dragon_game', icon: '/assets/images/ui-icons/dragon_fighter.webp', tags: ['game'] }
     ];
 
-    const APP_STORE_REGISTRY = [                
-      { id: 'dkboy', name: 'DK-Boy', url: 'https://dk-boy.davidkozdra.workers.dev/', favicon: 'https://dk-boy.davidkozdra.workers.dev/favicon.png', width: 1200, fullscreen: true, external: false, tags: ['game'] },
-      { id: 'readyeshua', name: 'Read Yeshua', url: 'https://readyeshua.com/read', width: 1200, fullscreen: true, external: true, tags: ['tool'] },
-      { id: 'bearpenny', name: 'BearPenny', url: './BearPenny/index.html', favicon: './BearPenny/images/logo.svg', width: 1200, fullscreen: true, external: false, tags: ['game'] },
-      { id: 'muddygame', name: 'Muddy Game', url: 'https://muddygame.net/game/', width: 1000, fullscreen: false, external: true, tags: ['game'] },
-      { id: 'peoplebook', name: 'People Book', url: './Fake-contact-generator-idea.html', favicon: './images/ui-icons/peoplebook.svg', width: 1200, fullscreen: true, external: false, tags: ['game'] },
-      { id: 'passwordgen', name: 'Password Generator', url: 'https://password.ome9a.com/', favicon: 'https://password.ome9a.com/twitter.png', width: 1200, fullscreen: true, external: true, tags: ['tool'] },
-      { id: 'lofiplayer', name: 'Lofi Music Player', url: 'https://lofi-music-eight.vercel.app/', favicon: 'https://lofi-music-eight.vercel.app/img/lofi.jpg', width: 1200, fullscreen: true, external: true, tags: ['tool'] }
-    ];        
+    const STORE_REGISTRY = (typeof APP_STORE_REGISTRY !== 'undefined' && Array.isArray(APP_STORE_REGISTRY))
+      ? APP_STORE_REGISTRY
+      : [];
 
     function normalizeAppTags(tags) {
       if (!Array.isArray(tags) || tags.length === 0) {
@@ -464,11 +459,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ...app,
         tags: normalizeAppTags(app.tags)
       };
-      const index = APP_STORE_REGISTRY.findIndex(item => item.id === normalized.id);
+      const index = STORE_REGISTRY.findIndex(item => item.id === normalized.id);
       if (index === -1) {
-        APP_STORE_REGISTRY.push(normalized);
+        STORE_REGISTRY.push(normalized);
       } else {
-        APP_STORE_REGISTRY[index] = { ...APP_STORE_REGISTRY[index], ...normalized };
+        STORE_REGISTRY[index] = { ...STORE_REGISTRY[index], ...normalized };
       }
     }
 
@@ -493,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
       icon.setAttribute('role', 'presentation');
       icon.setAttribute('aria-hidden', 'true');
       icon.onerror = function() {
-        this.src = './images/brand/favicon.webp';
+        this.src = '/assets/images/brand/favicon.webp';
       };
 
       button.appendChild(icon);
@@ -518,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const installedIds = getInstalledAppIds();
       const installedApps = installedIds
-        .map(id => APP_STORE_REGISTRY.find(app => app.id === id))
+        .map(id => STORE_REGISTRY.find(app => app.id === id))
         .filter(Boolean)
         .map(app => ({
           id: app.id,
@@ -700,9 +695,9 @@ document.addEventListener('DOMContentLoaded', () => {
         taskbarButtonIcon.setAttribute("role", "presentation");
         taskbarButtonIcon.classList.add("window-icon");
         let src = windows[i].childNodes[0].childNodes[0].src;
-        taskbarButtonIcon.src = (src === 'null' || !src || src.includes('/null')) ? './images/brand/favicon.webp' : src;
+        taskbarButtonIcon.src = (src === 'null' || !src || src.includes('/null')) ? '/assets/images/brand/favicon.webp' : src;
         taskbarButtonIcon.onerror = function() {
-          this.src = './images/brand/favicon.webp';
+          this.src = '/assets/images/brand/favicon.webp';
         };
         taskbarButton.classList.add("app-bar-button");
         taskbarButton.setAttribute("aria-label", `Toggle ${windows[i].id} window`);
@@ -1126,34 +1121,34 @@ document.addEventListener('DOMContentLoaded', () => {
       // Now the delay is complete, proceed to open the window
       switch (newWindowHeaderTitle) {
         case "test":
-          createWindow("Test", "This is a test window", "./images/projects/blocks.webp", false);
+          createWindow("Test", "This is a test window", "/assets/images/projects/blocks.webp", false);
           break;
           case "empty": 
-          createWindow("empty", null, "./images/ui-icons/Term.webp", 800);
+          createWindow("empty", null, "/assets/images/ui-icons/Term.webp", 800);
           break;
         case "term": 
           let term = document.createElement("iframe");
           term.name = "terminal";
           term.title = "terminal";
           term.style.marginTop = "50px";
-          term.src = "./CMD.html";
+          term.src = "/apps/cmd/";
           term.loading = "lazy";
           term.style.height = "100%";
           term.style.width = "100%";
-          createWindow("Terminal", term, "./images/ui-icons/Term.webp", 800);
+          createWindow("Terminal", term, "/assets/images/ui-icons/Term.webp", 800);
           break;
         case "resume":
           let resume = document.createElement("iframe");
           resume.name = "resume";
           resume.title = "resume";
-          resume.src = "./resume.html";
+          resume.src = "/pages/resume/";
           resume.loading = "lazy";
           resume.style.height = "90%";
           resume.style.marginTop = "50px";
           resume.style.width = "100%";
           resume.frameborder = "0";
 
-          createWindow("Resume", resume, "./images/projects/Resume.webp", 800);
+          createWindow("Resume", resume, "/assets/images/projects/Resume.webp", 800);
 
 
           break;
@@ -1162,10 +1157,10 @@ document.addEventListener('DOMContentLoaded', () => {
           let intro = document.createElement("iframe");
           intro.name = "Intro Panel";
           intro.title = "Intro Panel";
-          intro.src = "./intro.html";
+          intro.src = "/pages/intro/";
           intro.style.height = "100%";
           intro.style.width = "100%";
-          createWindow("Welcome", intro, "./images/brand/favicon.webp", 1200, true);
+          createWindow("Welcome", intro, "/assets/images/brand/favicon.webp", 1200, true);
           break;
 
 
@@ -1173,11 +1168,11 @@ document.addEventListener('DOMContentLoaded', () => {
           let calculator = document.createElement("iframe");
           calculator.name = "calculator";
           calculator.title = "calculator";
-          calculator.src = "./calculator.html";
+          calculator.src = "/apps/calculator/";
           calculator.loading = "lazy";
           calculator.style.height = "100%";
           calculator.style.width = "100%";
-          createWindow("Calculator", calculator, "./images/ui-icons/Calc.webp", 400, false);
+          createWindow("Calculator", calculator, "/assets/images/ui-icons/Calc.webp", 400, false);
           break;
         case "dragon_game":
           let game = document.createElement("iframe");
@@ -1188,7 +1183,7 @@ document.addEventListener('DOMContentLoaded', () => {
           game.style.height = "100%";
           game.style.width = "100%";
           game.style.overflowY = "hidden";
-          createWindow("dragon fighter conquest", game, "./images/ui-icons/dragon_fighter.webp", 800, false);
+          createWindow("dragon fighter conquest", game, "/assets/images/ui-icons/dragon_fighter.webp", 800, false);
           break;
  
                     case "notes":
@@ -1305,7 +1300,7 @@ document.addEventListener('DOMContentLoaded', () => {
           notes.appendChild(label);
           notes.appendChild(textArea);
 
-          createWindow(newTitle ? newTitle : "Notes", notes, "./images/ui-icons/Notes.webp", 500);
+          createWindow(newTitle ? newTitle : "Notes", notes, "/assets/images/ui-icons/Notes.webp", 500);
     break;
 
 
@@ -1313,58 +1308,58 @@ document.addEventListener('DOMContentLoaded', () => {
           let about = document.createElement("iframe");
           about.name = "about David Kozdra";
           about.title = "about David Kozdra";
-          about.src = "./about.html";
+          about.src = "/pages/about/";
           about.loading = "lazy";
           about.style.height = "100%";
           about.style.width = "100%";
-          createWindow("Work", about, "./images/profile/ME.webp", 1800,true,true);
+          createWindow("Work", about, "/assets/images/profile/ME.webp", 1800,true,true);
           break;
         case "projects":
           let Projects = document.createElement("iframe");
           Projects.name = "about David Kozdra";
           Projects.title = "about David Kozdra";
-          Projects.src = "./projects.html";
+          Projects.src = "/pages/projects/";
           Projects.loading = "lazy";
           Projects.style.height = "100%";
           Projects.style.width = "100%";
-          createWindow("projects", Projects, "./images/profile/ME.webp", 1800,true,true);
+          createWindow("projects", Projects, "/assets/images/profile/ME.webp", 1800,true,true);
           break;
         case "files":
           let files = document.createElement("iframe");
           files.name = "files";
           files.title = "files";
-          files.src = "./file_browser.html";
+          files.src = "/apps/file-browser/";
           files.loading = "lazy";
           files.style.height = "100%";
           files.style.width = "100%";
-          createWindow("files", files, "./images/ui-icons/File_System_icon.webp", 800);
+          createWindow("files", files, "/assets/images/ui-icons/File_System_icon.webp", 800);
           break;
 
         case "old":
           let iframe = document.createElement("iframe");
           iframe.name = "old website";
           iframe.title = "old website";
-          iframe.src = "./old_site.html";
+          iframe.src = "/archive/old-site.html";
           iframe.loading = "lazy";
           iframe.style.height = "700px";
           iframe.style.width = "100%";
-          createWindow("Old Website", iframe, "./images/brand/favicon.webp", 800);
+          createWindow("Old Website", iframe, "/assets/images/brand/favicon.webp", 800);
           break;
 
 
         case "error":
-          createWindow("Error", "This is a test window", "./images/ui-icons/Pallet.webp", 200);
+          createWindow("Error", "This is a test window", "/assets/images/ui-icons/Pallet.webp", 200);
 
         case "draw":
           let draw = document.createElement("iframe");
           draw.name = "drawing";
           draw.title = "drawing";
-          draw.src = "./drawing.html";
+          draw.src = "/apps/drawing/";
           draw.loading = "lazy";
           draw.style.height = "100%";
           draw.style.width = "100%";
           draw.style.marginTop = "50px";
-          createWindow("Drawing", draw, "./images/ui-icons/Pallet.webp", 1000, false);
+          createWindow("Drawing", draw, "/assets/images/ui-icons/Pallet.webp", 1000, false);
           break;
 
         case "dk-boy":
@@ -1385,12 +1380,12 @@ document.addEventListener('DOMContentLoaded', () => {
           let appstore = document.createElement("iframe");
           appstore.name = "App Store";
           appstore.title = "App Store";
-          appstore.src = "./AppStore.html";
+          appstore.src = "/apps/app-store/";
           appstore.loading = "lazy";
           appstore.style.height = "100%";
           appstore.style.width = "100%";
           appstore.style.marginTop = "50px";
-          createWindow("App Store", appstore, "./images/ui-icons/shop.png", 900, true);
+          createWindow("App Store", appstore, "/assets/images/ui-icons/shop.png", 900, true);
           break;
 
         case "installed-app":
@@ -1414,12 +1409,12 @@ document.addEventListener('DOMContentLoaded', () => {
           let GOLcontainer = document.createElement("iframe");
           GOLcontainer.name = "Game of Life";
           GOLcontainer.title = "Game of Life";
-          GOLcontainer.src = "./GOL.html";
+          GOLcontainer.src = "/apps/game-of-life/";
           GOLcontainer.loading = "lazy";
           GOLcontainer.style.height = "100%";
           GOLcontainer.style.width = "100%";
 
-          createWindow("Game of Life", GOLcontainer, "./images/ui-icons/GOL.webp", 500, false);
+          createWindow("Game of Life", GOLcontainer, "/assets/images/ui-icons/GOL.webp", 500, false);
           currentSlide = -1;
           init()
           break;
@@ -1530,9 +1525,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function createWindowHeaderImage(src) {
       const headerImage = document.createElement("img");
       headerImage.classList.add("window-icon");
-      headerImage.src = src || './images/brand/favicon.webp';
+      headerImage.src = src || '/assets/images/brand/favicon.webp';
       headerImage.onerror = function() {
-        this.src = './images/brand/favicon.webp';
+        this.src = '/assets/images/brand/favicon.webp';
       };
       return headerImage;
     }
@@ -1724,9 +1719,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getFaviconUrl(url) {
       try {
-        if (!url) return "./images/brand/favicon.webp";
+        if (!url) return "/assets/images/brand/favicon.webp";
         return "https://www.google.com/s2/favicons?domain=" + new URL(url).hostname + "&sz=128";
-      } catch { return "./images/brand/favicon.webp"; }
+      } catch { return "/assets/images/brand/favicon.webp"; }
     }
 
     function addInstalledAppIcon(app) {
@@ -1762,7 +1757,7 @@ document.addEventListener('DOMContentLoaded', () => {
       iconEl.width = 64;
       iconEl.height = 64;
       iconEl.onerror = function() {
-        this.src = './images/brand/favicon.webp';
+        this.src = '/assets/images/brand/favicon.webp';
       };
       let text = document.createElement('div');
       text.classList.add('icon-text');
@@ -1791,7 +1786,7 @@ document.addEventListener('DOMContentLoaded', () => {
           installed = JSON.parse(storedInstalledApps) || [];
         }
         installed.forEach(id => {
-          let app = APP_STORE_REGISTRY.find(a => a.id === id);
+          let app = STORE_REGISTRY.find(a => a.id === id);
           if (app) addInstalledAppIcon(app);
         });
         renderDropDownContent();

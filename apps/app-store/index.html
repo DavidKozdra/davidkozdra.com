@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Store</title>
-    <link rel="icon" type="image/webp" href="/images/ui-icons/shop.png">
+    <link rel="icon" type="image/webp" href="/assets/images/ui-icons/shop.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -177,6 +177,10 @@
     <div class="app-grid" id="app-grid"></div>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Load apps dynamically from central source -->
+    <script src="/assets/js/apps.js"></script>
+
     <script>
 
         function populateTags(apps) {
@@ -212,104 +216,17 @@
 
         function getFaviconUrl(url) {
             try {
-                if (!url) return "./images/brand/favicon.webp";
+                if (!url) return "/assets/images/brand/favicon.webp";
 
                 return "https://www.google.com/s2/favicons?domain=" + new URL(url).hostname + "&sz=128";
-            } catch { return "./images/brand/favicon.webp"; }
+            } catch { return "/assets/images/brand/favicon.webp"; }
         }
-
-        const APPS = [
-            {
-                id: "dkboy",
-                name: "DK-Boy",
-                author: "davidkozdra.workers.dev",
-                description: "Retro handheld emulator .",
-                url: "https://dk-boy.davidkozdra.workers.dev/",
-                icon: "https://dk-boy.davidkozdra.workers.dev/favicon.png",
-                width: 1200,
-                fullscreen: true,
-                external: false,
-                tags: ["game"]
-            },
-            {
-                id: "readyeshua",
-                name: "Read Yeshua",
-                author: "readyeshua.com",
-                description: "Read and study scripture online.",
-                url: "https://readyeshua.com/read",
-                width: 1200,
-                fullscreen: true,
-                external: true,
-                tags: ["tool"]
-            },
-            {
-                id: "bearpenny",
-                name: "BearPenny",
-                author: "BearPenny.Capital",
-                description: "Every penny your family has will be the Bears, hes mad he doesnt understand the market or law but he is a bear RARRR",
-                url: "./BearPenny/index.html",
-                icon: "./BearPenny/images/logo.svg",
-                width: 1200,
-                fullscreen: true,
-                external: false,
-                tags: ["game"]
-            },
-            {
-                id: "muddygame",
-                name: "Muddy Game",
-                author: "muddygame.net",
-                description: "Holes DIGG DIGG DIE ! ",
-                url: "https://muddygame.net/game/",
-                width: 1000,
-                fullscreen: false,
-                external: true,
-                tags: ["game"]
-            },
-            {
-                id: "peoplebook",
-                name: "People Book",
-                author: "extenalpb.com",
-                description: "Fake social collector game. Add friends, chat with DMs, earn coins, customize your character in the cosmetics shop.",
-                url: "./Fake-contact-generator-idea.html",
-                icon: "./images/ui-icons/peoplebook.svg",
-                width: 1200,
-                fullscreen: true,
-                external: false,
-                tags: ["game"]
-            },
-            {
-                id: "passwordgen",
-                name: "Password Generator",
-                author: "0ME9A",
-                description: "A secure password generator and manager for your daily needs.",
-                url: "https://password.ome9a.com/",
-                icon: "https://password.ome9a.com/twitter.png",
-                width: 1200,
-                fullscreen: true,
-                external: true,
-                tags: ["tool"]
-            },
-            {
-                id: "lofiplayer",
-                name: "Lofi Music Player",
-                author: "riccardobertolini",
-                description: "A relaxing Lofi Music Player to help you focus or unwind.",
-                url: "https://lofi-music-eight.vercel.app/",
-                icon: "https://lofi-music-eight.vercel.app/img/lofi.jpg",
-                width: 1200,
-                fullscreen: true,
-                external: true,
-                tags: ["tool"]
-            }
-        ];
 
         const PREINSTALLED_APP_IDS = ["dkboy"];
 
-        // Attach favicon URL to each app
+        // Attach favicon URL to each app (if not already set in apps.js)
         APPS.forEach(app => {
-            if (app.icon) {
-                app.favicon = app.icon;
-            } else {
+            if (!app.favicon) {
                 app.favicon = getFaviconUrl(app.url);
             }
         });
@@ -415,7 +332,7 @@
                 card.className = "app-card";
                 card.innerHTML = `
                     <div class="app-card-top">
-                        <div class="app-icon"><img src="${app.favicon}" onerror="this.onerror=null;this.src='./images/brand/favicon.webp';" alt="${app.name} icon"></div>
+                        <div class="app-icon"><img src="${app.favicon}" onerror="this.onerror=null;this.src='/assets/images/brand/favicon.webp';" alt="${app.name} icon"></div>
                         <div class="app-meta">
 
                             <div class="app-name">${app.name}</div>
