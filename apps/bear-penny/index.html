@@ -10,7 +10,7 @@
         body { font-family: 'Roboto', sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
 
         /* ===== FINANCE MODE ===== */
-        .finance-app { height: 100vh; display: flex; flex-direction: column; }
+        .finance-app { min-height: 100vh; min-height: 100dvh; height: 100dvh; display: flex; flex-direction: column; }
         .bp-header {
             background: linear-gradient(135deg, #1e293b, #334155);
             padding: 16px 24px;
@@ -56,7 +56,7 @@
             background: #334155; border-color: #fbbf24; color: #fbbf24;
         }
         .filter-actions { display: flex; flex-direction: column; gap: 8px; }
-        .bp-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .bp-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; min-height: 0; }
         .bp-toolbar {
             padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
             background: #1e293b; border-bottom: 1px solid #334155;
@@ -76,8 +76,8 @@
             padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: .75rem; margin-left: 4px;
         }
         .bp-toolbar .view-btns button.active { background: #334155; color: #fbbf24; border-color: #fbbf24; }
-        .stock-table { flex: 1; overflow-y: auto; padding: 0 20px 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+        .stock-table { flex: 1; overflow: auto; padding: 0 20px 20px; }
+        table { width: 100%; min-width: 1080px; border-collapse: collapse; font-size: .82rem; }
         th { text-align: left; padding: 10px 8px; color: #94a3b8; border-bottom: 1px solid #334155; position: sticky; top: 0; background: #0f172a; cursor: pointer; user-select: none; }
         th:hover { color: #fbbf24; }
         td { padding: 10px 8px; border-bottom: 1px solid #1e293b; }
@@ -779,7 +779,7 @@
         .settings-close:hover { background: #f59e0b; }
 
         /* ===== MAIN VIEW TABS ===== */
-        .main-tabs { display: flex; gap: 0; }
+        .main-tabs { display: flex; gap: 0; min-width: 0; }
         .main-tabs button {
             padding: 4px 14px; border: 1px solid #475569; background: none; color: #94a3b8;
             font-size: .78rem; font-weight: 600; cursor: pointer; border-radius: 0;
@@ -953,6 +953,190 @@
         .shop-close:hover { background: #f59e0b; }
 
         .hidden { display: none !important; }
+
+        @media (max-width: 960px) {
+            body { overflow: auto; }
+            .finance-app { height: auto; }
+            .bp-header {
+                padding: 14px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .bp-market-bar {
+                width: 100%;
+                gap: 10px 16px;
+                flex-wrap: wrap;
+            }
+            .bp-body {
+                flex-direction: column;
+                overflow: visible;
+            }
+            .bp-sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #334155;
+                overflow: visible;
+            }
+            .balance-bar {
+                flex-wrap: wrap;
+                gap: 10px 12px;
+                padding: 10px 16px;
+            }
+            .balance-bar .bal-item {
+                min-width: calc(50% - 6px);
+            }
+            .btn-ray {
+                margin-left: 0;
+            }
+            .bp-toolbar {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar-left, .toolbar-right {
+                width: 100%;
+            }
+            .bp-toolbar input {
+                width: 100%;
+            }
+            .toolbar-left {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .toolbar-meta {
+                min-width: 0;
+            }
+            .toolbar-right {
+                justify-content: stretch;
+            }
+            .main-tabs {
+                width: 100%;
+            }
+            .main-tabs button {
+                flex: 1 1 0;
+                min-width: 0;
+                padding: 8px 10px;
+            }
+            .stock-table, .portfolio-view, .news-view {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            .pagination {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+            .portfolio-summary {
+                flex-wrap: wrap;
+            }
+            .portfolio-summary .ps-item {
+                min-width: calc(50% - 8px);
+            }
+            .news-card-top, .sd-header, .shop-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+            .ray-intro-card {
+                grid-template-columns: 1fr;
+            }
+            .ray-intro-portrait {
+                min-height: 220px;
+                padding: 24px 16px 56px;
+            }
+            .ray-intro-copy {
+                padding: 22px 20px;
+            }
+            .advanced-grid, .advanced-checks, .shop-grid, .sd-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body { overflow: auto; }
+            .bp-header {
+                padding: 12px;
+            }
+            .bp-logo {
+                flex-wrap: wrap;
+            }
+            .bp-market-bar {
+                font-size: .74rem;
+            }
+            .bp-sidebar {
+                padding: 12px;
+            }
+            .filter-grid, .quick-filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .balance-bar .bal-item {
+                min-width: 100%;
+            }
+            .balance-bar .btn-ray {
+                width: 100%;
+                text-align: center;
+            }
+            .bp-toolbar {
+                padding: 12px;
+            }
+            .stock-table, .portfolio-view, .news-view {
+                padding: 0 12px 16px;
+            }
+            table {
+                min-width: 0;
+                font-size: .76rem;
+            }
+            th, td {
+                padding: 9px 6px;
+            }
+            th:nth-child(4), td:nth-child(4),
+            th:nth-child(6), td:nth-child(6),
+            th:nth-child(7), td:nth-child(7),
+            th:nth-child(8), td:nth-child(8) {
+                display: none;
+            }
+            .trade-actions {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+            }
+            .btn-trade {
+                width: 100%;
+                margin: 0;
+            }
+            .portfolio-summary .ps-item {
+                min-width: 100%;
+            }
+            .settings-card,
+            .stock-detail-card,
+            .filter-modal-card,
+            .shop-card-wrap {
+                padding: 18px 16px;
+            }
+            .advanced-grid, .advanced-checks, .shop-grid, .sd-stats {
+                grid-template-columns: 1fr;
+            }
+            .filter-modal-actions,
+            .ray-intro-actions {
+                flex-direction: column;
+            }
+            .filter-modal-actions button,
+            .ray-intro-actions button {
+                width: 100%;
+            }
+            .ray-advice-toast {
+                right: 12px;
+                left: 12px;
+                bottom: 12px;
+                width: auto;
+                max-width: none;
+                padding: 12px;
+            }
+            .ray-toast-face {
+                width: 52px;
+                height: 52px;
+            }
+        }
     </style>
 </head>
 <body>
