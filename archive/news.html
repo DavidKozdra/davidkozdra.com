@@ -13,13 +13,59 @@
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; text-rendering: optimizeLegibility; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      text-rendering: optimizeLegibility;
+      margin: 0;
+      overflow-x: hidden;
+    }
     .font-headline { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; }
-    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .line-clamp-2 {
+      display: -webkit-box;
+      line-clamp: 2;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .line-clamp-3 {
+      display: -webkit-box;
+      line-clamp: 3;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    img { display: block; }
+    h1, h2, h3, p, a, span {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .hero-headline {
+      font-size: 2.2rem;
+      line-height: 1.15;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      max-width: 100%;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 1024px) {
+      .hero-headline {
+        font-size: 1.7rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero-headline {
+        font-size: 1.2rem;
+        line-height: 1.18;
+      }
+    }
+    main { overflow-x: clip; }
     @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     .animate-marquee { animation: marquee 45s linear infinite; }
     @media (prefers-reduced-motion: reduce) { .animate-marquee { animation: none; } }
+    @media (max-width: 640px) {
+      .animate-marquee { animation-duration: 60s; }
+    }
     /* Custom scrollbar for webkit */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
@@ -141,11 +187,11 @@
             <div class="flex items-center gap-2 mb-2.5">
               <span class="text-[#2563eb] text-[12px] font-bold uppercase tracking-widest">Featured Report</span>
             </div>
-            <h1 class="font-headline text-gray-900 dark:text-white text-[32px] sm:text-[40px] lg:text-[46px] font-bold leading-[1.08] tracking-tight mb-4 group-hover:text-[#2563eb] dark:group-hover:text-blue-400 transition-colors">
-              Trump Advisors Urge President to Stop Doing Things the Antichrist Would Do
+            <h1 class="font-headline hero-headline text-gray-900 dark:text-white font-bold group-hover:text-[#2563eb] dark:group-hover:text-blue-400 transition-colors">
+              Trump Shitting Himself As consept of a plan soon to be explained
             </h1>
             <p class="text-gray-600 dark:text-gray-300 text-[16px] sm:text-[18px] leading-relaxed max-w-3xl line-clamp-3">
-              Insiders report growing concerns among the former President's spiritual advisors over recent actions and rhetoric, citing troubling parallels to biblical prophecies in the Book of Revelation and Daniel.
+              Well Known for his potty mouth, Donald Trump's diet of macdonalds and fox and friends has caused him to shoot it everywhere, including his face. The former president is expected to address the issue in an upcoming press conference, where he will likely blame the media and his political opponents for the incident.
             </p>
             <div class="flex items-center gap-3 mt-auto pt-6 text-sm text-gray-500 dark:text-gray-400">
               <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" class="w-8 h-8 rounded-full object-cover" alt="Sarah Chen"/>
@@ -167,11 +213,11 @@
               <div class="flex gap-4">
                 <div class="flex-1 min-w-0">
                   <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">World</span>
-                  <h3 class="font-headline text-[20px] font-bold leading-tight mt-1 hover:text-[#2563eb] cursor-pointer transition-colors">EU Parliament Passes Landmark AI Liability Law After 14-Hour Debate</h3>
+                  <h3 class="font-headline text-[20px] font-bold leading-tight mt-1 hover:text-[#2563eb] cursor-pointer transition-colors">Jesus Reincarnated in Iran and bombed in Hospital </h3>
                   <p class="text-sm text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2">New rules hold developers accountable for "high-risk" systems, setting global precedent for regulation.</p>
                   <div class="text-xs text-gray-500 mt-2">Marcus Weber • 2h ago</div>
                 </div>
-                <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=300&q=80" class="w-24 h-24 rounded-lg object-cover shrink-0" alt="EU Parliament"/>
+                <img src="/archive/jesus.png" class="w-24 h-24 rounded-lg object-cover shrink-0" alt="EU Parliament"/>
               </div>
             </article>
             <article class="pt-5">
@@ -189,11 +235,11 @@
               <div class="flex gap-4">
                 <div class="flex-1 min-w-0">
                   <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Politics</span>
-                  <h3 class="font-headline text-[20px] font-bold leading-tight mt-1 hover:text-[#2563eb] cursor-pointer transition-colors">White House Unveils $500B "Grid Modernization 2.0" Plan</h3>
+                  <h3 class="font-headline text-[20px] font-bold leading-tight mt-1 hover:text-[#2563eb] cursor-pointer transition-colors"> Where is Kushner ? His only fan is curious</h3>
                   <p class="text-sm text-gray-600 dark:text-gray-400 mt-1.5 line-clamp-2">Proposal focuses on AI-managed power distribution and battery storage across 30 states.</p>
                   <div class="text-xs text-gray-500 mt-2">David Park • 6h ago</div>
                 </div>
-                <img src="https://images.unsplash.com/photo-1494522358652-f30e61a60313?w=300&q=80" class="w-24 h-24 rounded-lg object-cover shrink-0" alt="Power lines"/>
+                <img src="/archive/Jared.png" class="w-24 h-24 rounded-lg object-cover shrink-0" alt="Power lines"/>
               </div>
             </article>
           </div>
@@ -300,6 +346,34 @@
                   <span>Editorial Board</span><span>•</span><time>Apr 16</time>
                 </div>
               </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Regional Briefs -->
+        <section id="regional-briefs" class="mb-14">
+          <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3 mb-6">
+            <h2 class="font-headline text-[26px] font-bold">Regional Briefs</h2>
+            <div class="text-sm text-gray-500">Fast updates from politics and world desks</div>
+          </div>
+          <div class="grid md:grid-cols-3 gap-6">
+            <article class="article-card bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-5" data-title="Harris approval rises after first year" data-summary="new national polling" data-category="politics">
+              <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Politics</span>
+              <h3 class="font-headline text-[22px] font-bold leading-tight mt-2">Kamala Harris Posts Stronger Favorability Numbers After Year One in Office</h3>
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">A new multi-state poll shows gains among suburban and younger voters, with analysts pointing to recent economic messaging and turnout operations.</p>
+              <div class="text-xs text-gray-500 mt-3">Nina Patel • Apr 20</div>
+            </article>
+            <article class="article-card bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-5" data-title="Education researchers caution against broad IQ claims" data-summary="measurement limits and context" data-category="science">
+              <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">Science</span>
+              <h3 class="font-headline text-[22px] font-bold leading-tight mt-2">Researchers Warn Against Using Single Test Scores to Describe Entire Communities</h3>
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Education specialists say broad intelligence claims are often misleading and emphasize that language access, nutrition, schooling, and test design shape outcomes.</p>
+              <div class="text-xs text-gray-500 mt-3">Leah Morgan • Apr 20</div>
+            </article>
+            <article class="article-card bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-xl p-5" data-title="Iran hospital blast under investigation" data-summary="officials reject viral religious rumors" data-category="world">
+              <span class="text-[11px] uppercase tracking-wider font-semibold text-[#2563eb]">World</span>
+              <h3 class="font-headline text-[22px] font-bold leading-tight mt-2">Iran Investigates Hospital Blast as Officials Reject Viral Religious Rumors</h3>
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Emergency teams responded overnight after an explosion at a regional hospital, while authorities urged the public to avoid unverified online claims.</p>
+              <div class="text-xs text-gray-500 mt-3">Omid Farzan • Apr 20</div>
             </article>
           </div>
         </section>

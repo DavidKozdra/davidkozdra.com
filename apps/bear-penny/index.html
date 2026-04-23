@@ -1589,7 +1589,7 @@
     </div>
 </div>
 
-<script src="imagePreload.js"></script>
+<script src="image-preload.js"></script>
 <script src="game.js"></script>
 <script>
     var RAY_COOLDOWN_SECONDS = 120;
@@ -1936,9 +1936,19 @@
         });
 
         syncMarketBar();
-        setInterval(function() {
+        var _marketTickInterval = setInterval(function() {
+            var prevSig = filteredStocks.length > 0 ? filteredStocks[0].signal : null;
             runMarketTick();
-            applyFiltersAndRender();
+            var newFiltered = filterStocks(ALL_STOCKS);
+            var changed = newFiltered.length !== filteredStocks.length ||
+                (newFiltered.length > 0 && newFiltered[0].signal !== prevSig) ||
+                (newFiltered.length > 0 && newFiltered[0].price !== filteredStocks[0].price);
+            filteredStocks = newFiltered;
+            if (changed) {
+                renderCurrentPage();
+                renderPagination();
+                updatePortalMeta();
+            }
             loadFinanceVault().then(function(g) { updateBalanceBar(g); });
         }, 4000);
     }
@@ -1958,6 +1968,12 @@
         document.getElementById('pagination').innerHTML = '';
     }
 
+    var _filterDebounceTimer = null;
+    function debouncedApplyFiltersAndRender() {
+        clearTimeout(_filterDebounceTimer);
+        _filterDebounceTimer = setTimeout(applyFiltersAndRender, 180);
+    }
+
     function wireFilters() {
         document.getElementById('filter-sector').addEventListener('change', function() { currentPage = 1; applyFiltersAndRender(); });
         document.getElementById('filter-cap').addEventListener('change', function() { currentPage = 1; applyFiltersAndRender(); });
@@ -1967,9 +1983,9 @@
         document.getElementById('filter-price').addEventListener('input', function(e) {
             document.getElementById('price-label').textContent = e.target.value;
             currentPage = 1;
-            applyFiltersAndRender();
+            debouncedApplyFiltersAndRender();
         });
-        document.getElementById('search-input').addEventListener('input', function() { currentPage = 1; applyFiltersAndRender(); });
+        document.getElementById('search-input').addEventListener('input', function() { currentPage = 1; debouncedApplyFiltersAndRender(); });
     }
 
     function applyFiltersAndRender() {
@@ -1980,7 +1996,6 @@
     }
 
     function filterStocks(stocks) {
-        var filtered = stocks.slice();
         var sector = document.getElementById('filter-sector').value;
         var cap = document.getElementById('filter-cap').value;
         var signal = document.getElementById('filter-signal').value;
@@ -1989,26 +2004,32 @@
         var search = document.getElementById('search-input').value.toLowerCase();
         var sort = document.getElementById('filter-sort').value;
         var goldAmount = getAvailableGold();
+        var advMaxPrice = advancedFilters.maxPrice !== '' ? parseFloat(advancedFilters.maxPrice) : null;
+        var advMinChange = advancedFilters.minChange !== '' ? parseFloat(advancedFilters.minChange) : null;
+        var advMaxChange = advancedFilters.maxChange !== '' ? parseFloat(advancedFilters.maxChange) : null;
+        var advMinVolume = advancedFilters.minVolume !== '' ? parseFloat(advancedFilters.minVolume) : null;
+        var advMaxCapVal = advancedFilters.maxCap !== 'all' ? maxCapValue(advancedFilters.maxCap) : null;
+        var advMinOwned = advancedFilters.minOwned !== '' ? parseInt(advancedFilters.minOwned, 10) : null;
 
-        if (sector !== 'all') filtered = filtered.filter(function(s) { return s.sector === sector; });
-        if (cap !== 'all') filtered = filtered.filter(function(s) { return capLabel(s.cap) === cap; });
-        if (signal !== 'all') filtered = filtered.filter(function(s) { return s.signal === signal; });
-        if (minPrice > 0) filtered = filtered.filter(function(s) { return s.price >= minPrice; });
-        if (priceBand !== 'all') filtered = filtered.filter(function(s) { return matchesPriceBand(s.price, priceBand); });
-        if (search) filtered = filtered.filter(function(s) { return s.ticker.toLowerCase().indexOf(search) !== -1 || s.company.toLowerCase().indexOf(search) !== -1; });
-        if (advancedFilters.maxPrice !== '') filtered = filtered.filter(function(s) { return s.price <= parseFloat(advancedFilters.maxPrice); });
-        if (advancedFilters.minChange !== '') filtered = filtered.filter(function(s) { return s.change >= parseFloat(advancedFilters.minChange); });
-        if (advancedFilters.maxChange !== '') filtered = filtered.filter(function(s) { return s.change <= parseFloat(advancedFilters.maxChange); });
-        if (advancedFilters.minVolume !== '') filtered = filtered.filter(function(s) { return s.volume >= parseFloat(advancedFilters.minVolume); });
-        if (advancedFilters.maxCap !== 'all') filtered = filtered.filter(function(s) { return s.cap <= maxCapValue(advancedFilters.maxCap); });
-        if (advancedFilters.minOwned !== '') filtered = filtered.filter(function(s) {
-            var owned = portfolio[s.ticker] ? portfolio[s.ticker].shares : 0;
-            return owned >= parseInt(advancedFilters.minOwned, 10);
+        var filtered = stocks.filter(function(s) {
+            if (sector !== 'all' && s.sector !== sector) return false;
+            if (cap !== 'all' && capLabel(s.cap) !== cap) return false;
+            if (signal !== 'all' && s.signal !== signal) return false;
+            if (minPrice > 0 && s.price < minPrice) return false;
+            if (priceBand !== 'all' && !matchesPriceBand(s.price, priceBand)) return false;
+            if (search && s.ticker.toLowerCase().indexOf(search) === -1 && s.company.toLowerCase().indexOf(search) === -1) return false;
+            if (advMaxPrice !== null && s.price > advMaxPrice) return false;
+            if (advMinChange !== null && s.change < advMinChange) return false;
+            if (advMaxChange !== null && s.change > advMaxChange) return false;
+            if (advMinVolume !== null && s.volume < advMinVolume) return false;
+            if (advMaxCapVal !== null && s.cap > advMaxCapVal) return false;
+            if (advMinOwned !== null && (portfolio[s.ticker] ? portfolio[s.ticker].shares : 0) < advMinOwned) return false;
+            if (advancedFilters.affordableOnly && !canAffordStock(s, goldAmount)) return false;
+            if (advancedFilters.pennyOnly && s.price >= 5) return false;
+            if (advancedFilters.ownedOnly && !(portfolio[s.ticker] && portfolio[s.ticker].shares > 0)) return false;
+            if (advancedFilters.hideMega && capLabel(s.cap) === 'mega') return false;
+            return true;
         });
-        if (advancedFilters.affordableOnly) filtered = filtered.filter(function(s) { return canAffordStock(s, goldAmount); });
-        if (advancedFilters.pennyOnly) filtered = filtered.filter(function(s) { return s.price < 5; });
-        if (advancedFilters.ownedOnly) filtered = filtered.filter(function(s) { return portfolio[s.ticker] && portfolio[s.ticker].shares > 0; });
-        if (advancedFilters.hideMega) filtered = filtered.filter(function(s) { return capLabel(s.cap) !== 'mega'; });
 
         filtered.sort(function(a, b) {
             if (sort === 'affordable') return getStockBuyCost(a) - getStockBuyCost(b);
@@ -2657,17 +2678,15 @@
             '</tr>';
         }).join('');
 
-        // Draw sparklines after DOM update
-        setTimeout(function() {
-            var canvases = tbody.querySelectorAll('.sparkline');
-            canvases.forEach(function(c) {
-                var ticker = c.getAttribute('data-ticker');
-                var hist = priceHistory[ticker] || [];
-                var stock = ALL_STOCKS.find(function(s) { return s.ticker === ticker; });
-                var color = (stock && stock.change >= 0) ? '#4ade80' : '#f87171';
-                drawSparkline(c, hist, color);
-            });
-        }, 0);
+        // Draw sparklines immediately — data is available and canvas sizes are fixed
+        var canvases = tbody.querySelectorAll('.sparkline');
+        canvases.forEach(function(c) {
+            var ticker = c.getAttribute('data-ticker');
+            var hist = priceHistory[ticker] || [];
+            var stock = ALL_STOCKS.find(function(s) { return s.ticker === ticker; });
+            var color = (stock && stock.change >= 0) ? '#4ade80' : '#f87171';
+            drawSparkline(c, hist, color);
+        });
 
         // Refresh detail modal if open
         if (detailTicker) refreshStockDetail();

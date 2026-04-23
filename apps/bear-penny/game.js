@@ -377,7 +377,11 @@ function initGame() {
     canvas = document.getElementById('game-canvas');
     ctx = canvas.getContext('2d');
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    var _resizeDebounceTimer = null;
+    window.addEventListener('resize', function() {
+        clearTimeout(_resizeDebounceTimer);
+        _resizeDebounceTimer = setTimeout(resizeCanvas, 150);
+    });
     loadBearQuotes();
     openDB().then(function() {
         return Promise.all([loadVault(), loadStats(), loadUpgrades()]);
@@ -582,10 +586,9 @@ function renderRunMap() {
         traversedPairs[runState.path[pairIndex - 1] + '->' + runState.path[pairIndex]] = true;
     }
 
-    board.style.width = boardWidth + 'px';
-    board.style.height = boardHeight + 'px';
-    grid.style.width = boardWidth + 'px';
-    grid.style.height = boardHeight + 'px';
+    var dimCss = boardWidth + 'px';
+    board.style.cssText = 'width:' + dimCss + ';height:' + boardHeight + 'px';
+    grid.style.cssText = 'width:' + dimCss + ';height:' + boardHeight + 'px';
 
     for (var t = 0; t < runState.map.length; t++) {
         var tier = runState.map[t];
