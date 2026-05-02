@@ -47,6 +47,67 @@ function saveVault(amount) {
     });
 }
 
+// ==================== IDLE GIFT ====================
+var GIFT_MAX_PENNIES = 100000;
+var GIFT_ACCRUAL_MS  = 20 * 60 * 1000; // 20 minutes to reach max
+
+function loadGiftTimestamp() {
+    return new Promise(function(resolve) {
+        if (!db) { resolve(0); return; }
+        var tx = db.transaction('wallet', 'readonly');
+        var req = tx.objectStore('wallet').get('giftClaimed');
+        req.onsuccess = function() { resolve(req.result || 0); };
+        req.onerror = function() { resolve(0); };
+    });
+}
+
+function saveGiftTimestamp(ts) {
+    return new Promise(function(resolve) {
+        if (!db) { resolve(); return; }
+        var tx = db.transaction('wallet', 'readwrite');
+        tx.objectStore('wallet').put(ts, 'giftClaimed');
+        tx.oncomplete = resolve;
+        tx.onerror = resolve;
+    });
+}
+
+function calcPendingGift(lastClaimed) {
+    if (!lastClaimed) return GIFT_MAX_PENNIES;
+    var elapsed = Math.min(Date.now() - lastClaimed, GIFT_ACCRUAL_MS);
+    return Math.floor((elapsed / GIFT_ACCRUAL_MS) * GIFT_MAX_PENNIES);
+}
+
+function refreshGiftBanner(lastClaimed) {
+    var pending = calcPendingGift(lastClaimed);
+    var btn = document.getElementById('gift-claim-btn');
+    var bar = document.getElementById('gift-bar-fill');
+    var lbl = document.getElementById('gift-amount-lbl');
+    if (!btn) return;
+    if (pending < 1) {
+        document.getElementById('gift-banner').classList.add('hidden');
+        return;
+    }
+    document.getElementById('gift-banner').classList.remove('hidden');
+    lbl.textContent = pending.toLocaleString() + ' pennies';
+    var pct = Math.min(pending / GIFT_MAX_PENNIES * 100, 100);
+    bar.style.width = pct + '%';
+    btn.disabled = false;
+}
+
+function claimGift() {
+    loadGiftTimestamp().then(function(lastClaimed) {
+        var pending = calcPendingGift(lastClaimed);
+        if (pending < 1) return;
+        vaultGold += pending;
+        saveVault(vaultGold);
+        saveGiftTimestamp(Date.now());
+        refreshStartScreen();
+        document.getElementById('gift-banner').classList.add('hidden');
+        document.getElementById('gift-claim-btn').disabled = true;
+        showBearQuote('gift', null);
+    });
+}
+
 function loadStats() {
     return new Promise(function(resolve) {
         if (!db) { resolve(vaultStats); return; }
@@ -152,6 +213,15 @@ var RUN_NODE_TYPES = {
 
 var RUN_EVENT_POOL = [
     {
+        kicker: 'Tunnel Floor',
+        title: 'Dying Samaritan',
+        body: 'A man is slumped against the cave wall. He shoves a crumpled note at you — medicine, three tunnels over. He can\'t make it himself.',
+        choices: [
+            { label: 'Help him', detail: 'Pay 5% of your gold for medicine.', dynamicEffect: 'samaritanHelp', result: 'You find the medicine. He nods once and points you toward a shortcut. +1 HP.' },
+            { label: 'Leave him', detail: 'Keep everything. Invest the 5% instead — instant 2× return.', dynamicEffect: 'samaritanRefuse', result: 'You flip the note into a hedge position. It prints immediately. He watches you go.' }
+        ]
+    },
+    {
         kicker: 'Margin Desk',
         title: 'Ray Offers Leverage',
         body: 'A greasy ledger lands in your lap. Ray says debt is just confidence with paperwork.',
@@ -256,6 +326,11 @@ var BEAR_TAUNTS = {
         'I\'m watching every penny.',
         'The bear is visible. Your hope is not.',
         'Keep playing. I need the entertainment.'
+    ],
+    gift: [
+        'I let you have those. As a threat.',
+        'Enjoy it. I\'ll get them back on the next run.',
+        'Free pennies. My lawyers are reviewing this.'
     ]
 };
 
@@ -384,11 +459,12 @@ function initGame() {
     });
     loadBearQuotes();
     openDB().then(function() {
-        return Promise.all([loadVault(), loadStats(), loadUpgrades()]);
+        return Promise.all([loadVault(), loadStats(), loadUpgrades(), loadGiftTimestamp()]);
     }).then(function(results) {
         vaultGold = results[0];
         refreshSettingsPanel();
         refreshStartScreen();
+        refreshGiftBanner(results[3]);
     });
 }
 
@@ -401,6 +477,7 @@ function refreshStartScreen() {
     for (var i = 0; i < ids.length; i++) upgradeCount += shopUpgrades[ids[i]];
     var el = document.getElementById('start-upgrades');
     if (el) el.textContent = upgradeCount;
+    loadGiftTimestamp().then(refreshGiftBanner);
 }
 
 function shuffleCopy(list) {
@@ -606,7 +683,7 @@ function renderRunMap() {
                 ? Math.round(boardHeight / 2 - nodeHeight / 2)
                 : laneBase[node.lane] - Math.round(nodeHeight / 2) + (t % 2 === 0 ? laneOffsetsA[node.lane] : laneOffsetsB[node.lane]);
             var stateText = node.cleared ? 'CLEARED' : (available ? 'READY' : (t < runState.tier ? 'DONE' : 'LOCKED'));
-            var classes = 'run-node';
+            var classes = 'run-node node-' + node.type;
             if (lastPathId === node.id) classes += ' anchor';
             if (node.cleared) classes += ' cleared';
             if (available) { classes += ' available current'; availableCount++; }
@@ -786,7 +863,9 @@ function openRunEvent(node) {
 }
 
 function canAffordEventChoice(choice) {
-    if (!choice || !choice.effect || !runState) return false;
+    if (!choice || !runState) return false;
+    if (choice.dynamicEffect) return true;
+    if (!choice.effect) return false;
     if (typeof choice.effect.gold === 'number' && choice.effect.gold < 0 && runState.gold < Math.abs(choice.effect.gold)) return false;
     if (typeof choice.effect.maxHp === 'number' && runState.maxHp + choice.effect.maxHp < 1) return false;
     return true;
@@ -801,12 +880,28 @@ function renderCurrentRunEvent() {
     document.getElementById('event-continue').classList.add('hidden');
     var choicesEl = document.getElementById('event-choices');
     var html = '';
+    var g = runState ? runState.gold : 0;
     for (var i = 0; i < currentRunEvent.choices.length; i++) {
         var choice = currentRunEvent.choices[i];
         var blocked = !canAffordEventChoice(choice);
-        html += '<button class="event-choice"' + (blocked ? ' disabled' : ' onclick="resolveRunEventChoice(' + i + ')"') + '>';
+        var detail = choice.detail;
+        if (choice.dynamicEffect === 'samaritanHelp') {
+            var cost = Math.max(1, Math.round(g * 0.05));
+            detail = 'Pay ' + cost + 'g (' + cost + ' = 5% of current gold). Heal +1 HP.';
+        } else if (choice.dynamicEffect === 'samaritanRefuse') {
+            var stake = Math.max(1, Math.round(g * 0.05));
+            detail = 'Invest ' + stake + 'g → instant 2× return (+' + stake + 'g profit).';
+        }
+        var choiceClass = 'event-choice';
+        if (!blocked && choice.effect) {
+            var hasGain = (typeof choice.effect.gold === 'number' && choice.effect.gold > 0) || (typeof choice.effect.hp === 'number' && choice.effect.hp > 0) || (typeof choice.effect.maxHp === 'number' && choice.effect.maxHp > 0);
+            var hasLoss = (typeof choice.effect.hp === 'number' && choice.effect.hp < 0) || (typeof choice.effect.gold === 'number' && choice.effect.gold < 0);
+            if (hasGain && !hasLoss) choiceClass += ' choice-good';
+            else if (hasLoss) choiceClass += ' choice-bad';
+        }
+        html += '<button class="' + choiceClass + '"' + (blocked ? ' disabled' : ' onclick="resolveRunEventChoice(' + i + ')"') + '>';
         html += '<strong>' + choice.label + '</strong>';
-        html += '<span>' + choice.detail + (blocked ? ' (Not enough gold)' : '') + '</span>';
+        html += '<span>' + detail + (blocked ? ' (Not enough gold)' : '') + '</span>';
         html += '</button>';
     }
     choicesEl.innerHTML = html;
@@ -828,11 +923,30 @@ function applyRunEffects(effect) {
     maxHp = runState.maxHp;
 }
 
+function applyDynamicEffect(key) {
+    if (!runState) return;
+    var g = runState.gold;
+    if (key === 'samaritanHelp') {
+        var cost = Math.max(1, Math.round(g * 0.05));
+        runState.gold = Math.max(0, g - cost);
+        runState.hp = Math.min(runState.maxHp, runState.hp + 1);
+    } else if (key === 'samaritanRefuse') {
+        var stake = Math.max(1, Math.round(g * 0.05));
+        runState.gold = g + stake; // keep original gold + 1× profit = 2× the stake
+    }
+    gold = runState.gold;
+    hp = runState.hp;
+}
+
 function resolveRunEventChoice(index) {
     if (!currentRunEvent || !currentRunEvent.choices[index]) return;
     var choice = currentRunEvent.choices[index];
     if (!canAffordEventChoice(choice)) return;
-    applyRunEffects(choice.effect);
+    if (choice.dynamicEffect) {
+        applyDynamicEffect(choice.dynamicEffect);
+    } else {
+        applyRunEffects(choice.effect);
+    }
     if (runState.hp <= 0) {
         finishRun(false);
         return;
@@ -989,7 +1103,8 @@ function createMazeState(node) {
     for (var j = 0; j < trapCount; j++) {
         var trapCell = randomMazeCell(state, used);
         if (!trapCell) break;
-        state.traps.push({ x: trapCell.x, y: trapCell.y, damage: 1 });
+        var trapReward = Math.round((18 + node.tier * 5 + Math.random() * 10) * getRunMazeMultiplier());
+        state.traps.push({ x: trapCell.x, y: trapCell.y, damage: 1, reward: trapReward });
     }
     state.totalCoins = state.coins.length;
     return state;
@@ -1456,8 +1571,11 @@ function attemptMazeMove(dx, dy) {
 
     for (var j = mazeState.traps.length - 1; j >= 0; j--) {
         if (mazeState.traps[j].x === nx && mazeState.traps[j].y === ny) {
+            var trapReward = mazeState.traps[j].reward || 0;
             hp -= mazeState.traps[j].damage;
-            particles.push({ type: 'text', text: '-' + mazeState.traps[j].damage + ' HP', x: canvas.width / 2, y: canvas.height - 80, life: 42, color: '#f87171', size: 18 });
+            gold += trapReward;
+            particles.push({ type: 'text', text: '+' + trapReward + ' 🩸', x: canvas.width / 2, y: canvas.height - 50, life: 48, color: '#fbbf24', size: 17 });
+            particles.push({ type: 'text', text: '-1 HP', x: canvas.width / 2, y: canvas.height - 76, life: 42, color: '#f87171', size: 15 });
             mazeState.traps.splice(j, 1);
             if (hp <= 0) {
                 finishRun(false);
@@ -1594,6 +1712,7 @@ function update() {
                     comboTimer = 0;
                     showBearQuote('hit');
                     particles.push({ type: 'text', text: '-' + def.damage + ' HP', x: item.x, y: item.y, life: 45, color: '#f87171', size: 18 });
+                    if (magnetActive) particles.push({ type: 'text', text: 'GREED', x: item.x, y: item.y - 22, life: 60, color: '#fbbf24', size: 14 });
                     for (var s = 0; s < 8; s++) {
                         particles.push({ type: 'spark', x: item.x + item.w/2, y: item.y, vx: (Math.random()-.5)*5, vy: -Math.random()*4, life: 24, color: '#f87171' });
                     }
@@ -1708,17 +1827,30 @@ function drawMazeEncounter() {
         var trap = mazeState.traps[j];
         var tx = offsetX + trap.x * cell + cell / 2;
         var ty = offsetY + trap.y * cell + cell / 2;
+        // Red-tinted floor for danger cell
+        ctx.fillStyle = 'rgba(239,68,68,0.15)';
+        ctx.fillRect(offsetX + trap.x * cell, offsetY + trap.y * cell, cell - 2, cell - 2);
+        // Danger triangle
         ctx.fillStyle = '#ef4444';
         ctx.beginPath();
-        ctx.moveTo(tx, ty - cell * 0.18);
-        ctx.lineTo(tx - cell * 0.18, ty + cell * 0.18);
-        ctx.lineTo(tx + cell * 0.18, ty + cell * 0.18);
+        ctx.moveTo(tx, ty - cell * 0.22);
+        ctx.lineTo(tx - cell * 0.22, ty + cell * 0.14);
+        ctx.lineTo(tx + cell * 0.22, ty + cell * 0.14);
         ctx.closePath();
         ctx.fill();
+        // Gold reward label beneath triangle
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold ' + Math.max(9, Math.floor(cell * 0.27)) + 'px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText('+' + trap.reward, tx, ty + cell * 0.18);
+        ctx.textBaseline = 'middle';
     }
 
     var exitX = offsetX + mazeState.exit.x * cell;
     var exitY = offsetY + mazeState.exit.y * cell;
+    ctx.fillStyle = 'rgba(16,185,129,0.18)';
+    ctx.fillRect(exitX, exitY, cell - 2, cell - 2);
     if (typeof SPRITES !== 'undefined' && SPRITES.chestClosed) {
         drawSprite(ctx, SPRITES.chestClosed, exitX + 2, exitY + 2, cell - 4, cell - 4);
     } else {
@@ -1732,8 +1864,8 @@ function drawMazeEncounter() {
 
     var playerX = offsetX + mazeState.player.x * cell;
     var playerY = offsetY + mazeState.player.y * cell;
-    if (typeof SPRITES !== 'undefined' && SPRITES.chestOpen) {
-        drawSprite(ctx, SPRITES.chestOpen, playerX + 2, playerY + 2, cell - 4, cell - 4);
+    if (typeof SPRITES !== 'undefined' && SPRITES.bearFaceIdle) {
+        drawSprite(ctx, SPRITES.bearFaceIdle, playerX + 2, playerY + 2, cell - 4, cell - 4);
     } else {
         ctx.fillStyle = '#fbbf24';
         ctx.beginPath();
@@ -1741,7 +1873,7 @@ function drawMazeEncounter() {
         ctx.fill();
         ctx.fillStyle = '#0f172a';
         ctx.font = 'bold ' + Math.max(11, Math.floor(cell * 0.34)) + 'px sans-serif';
-        ctx.fillText('$', playerX + cell / 2, playerY + cell / 2 + 2);
+        ctx.fillText('🐻', playerX + cell / 2, playerY + cell / 2 + 2);
     }
 
     ctx.fillStyle = '#e2e8f0';

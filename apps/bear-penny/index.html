@@ -147,6 +147,27 @@
             border-color: #60a5fa;
             color: #60a5fa;
         }
+        #btn-ray:not(:disabled) {
+            background: linear-gradient(135deg, #065f46, #047857);
+            border-color: #34d399;
+            color: #ecfdf5;
+            font-size: .88rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
+            animation: rayPulse 2s ease-in-out infinite;
+        }
+        #btn-ray:not(:disabled):hover {
+            background: linear-gradient(135deg, #047857, #059669);
+            border-color: #6ee7b7;
+            color: #fff;
+            box-shadow: 0 0 16px rgba(52, 211, 153, 0.4);
+            animation: none;
+        }
+        @keyframes rayPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+            50% { box-shadow: 0 0 0 7px rgba(52, 211, 153, 0); }
+        }
         .ray-advice-toast {
             position: fixed; right: 18px; bottom: 18px; z-index: 150;
             width: 360px; max-width: calc(100vw - 36px);
@@ -249,8 +270,25 @@
             font-size: .8rem; color: #94a3b8;
         }
         .game-start-screen .start-stats span { color: #e2e8f0; font-weight: 600; }
-        .game-start-screen p { color: #94a3b8; margin-bottom: 20px; font-size: .82rem; line-height: 1.6; }
+        .game-start-screen p { color: #94a3b8; margin-bottom: 14px; font-size: .82rem; line-height: 1.6; }
         .game-start-screen .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .start-route-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; text-align: left; }
+        .start-route-card { background: rgba(30,41,59,.7); border: 1px solid rgba(255,255,255,.08); border-radius: 10px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px; }
+        .start-route-icon { font-size: 1.4rem; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+        .start-route-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #fbbf24; margin-bottom: 2px; }
+        .start-route-desc { font-size: .75rem; color: #94a3b8; line-height: 1.4; }
+        .start-route-card.boss { border-color: rgba(248,113,113,.25); }
+        .start-route-card.boss .start-route-label { color: #f87171; }
+        .start-info-row { font-size: .75rem; color: #64748b; margin-bottom: 14px; }
+        .gift-banner { background: linear-gradient(135deg, rgba(251,191,36,.12), rgba(74,222,128,.08)); border: 1px solid rgba(251,191,36,.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; text-align: left; }
+        .gift-banner-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .gift-banner-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #4ade80; flex: 1; }
+        .gift-banner-amount { font-size: .85rem; font-weight: 700; color: #fbbf24; }
+        .gift-bar-track { height: 4px; background: rgba(255,255,255,.1); border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
+        .gift-bar-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #4ade80); border-radius: 2px; transition: width .4s; }
+        .gift-claim-btn { background: rgba(251,191,36,.15); border: 1px solid rgba(251,191,36,.4); color: #fbbf24; font-size: .8rem; font-weight: 600; padding: 5px 14px; border-radius: 6px; cursor: pointer; }
+        .gift-claim-btn:hover:not(:disabled) { background: rgba(251,191,36,.25); }
+        .gift-claim-btn:disabled { opacity: .4; cursor: default; }
         .btn-primary {
             padding: 14px 40px; background: #fbbf24; color: #0f172a; border: none;
             border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
@@ -304,6 +342,8 @@
             font-size: .82rem;
             font-weight: 700;
         }
+        .run-map-pill.pill-gold { border-color: rgba(251,191,36,.35); color: #fbbf24; }
+        .run-map-pill.pill-hp   { border-color: rgba(248,113,113,.35); color: #f87171; }
         .run-map-layout {
             display: grid;
             grid-template-columns: minmax(0, 1fr) 280px;
@@ -463,6 +503,10 @@
             font-size: .71rem;
             font-weight: 700;
         }
+        .run-node.node-battle .run-node-tag { background: rgba(6,78,59,.5); border-color: rgba(74,222,128,.5); color: #4ade80; }
+        .run-node.node-maze   .run-node-tag { background: rgba(30,58,138,.5); border-color: rgba(96,165,250,.5); color: #60a5fa; }
+        .run-node.node-event  .run-node-tag { background: rgba(120,53,15,.5); border-color: rgba(251,191,36,.5); color: #fbbf24; }
+        .run-node.node-boss   .run-node-tag { background: rgba(69,10,10,.5); border-color: rgba(248,113,113,.5); color: #f87171; }
         .run-node-state {
             color: #64748b;
             font-size: .68rem;
@@ -574,6 +618,10 @@
             border-color: #60a5fa;
             background: rgba(30,41,59,.95);
         }
+        .event-choice.choice-good { border-color: rgba(74,222,128,.4); }
+        .event-choice.choice-good:hover { border-color: #4ade80; background: rgba(6,78,59,.2); }
+        .event-choice.choice-bad  { border-color: rgba(248,113,113,.4); }
+        .event-choice.choice-bad:hover  { border-color: #f87171; background: rgba(69,10,10,.2); }
         .event-choice:disabled {
             opacity: .42;
             cursor: default;
@@ -1267,6 +1315,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Trade</th>
                             <th>Ticker</th>
                             <th>Company</th>
                             <th>Price</th>
@@ -1277,7 +1326,6 @@
                             <th>Sector</th>
                             <th>Signal</th>
                             <th>Owned</th>
-                            <th>Trade</th>
                         </tr>
                     </thead>
                     <tbody id="stock-body"></tbody>
@@ -1293,7 +1341,7 @@
 <!-- PRISON OVERLAY -->
 <div class="prison-overlay hidden" id="prison-overlay">
     <h1>PRISON</h1>
-    <div class="prison-msg">You couldn't pay your taxes.<br>The BearPenny IRS has confiscated everything.<br>Your vault has been emptied. All positions liquidated.</div>
+    <div class="prison-msg">You couldn't pay your taxes.<br>The BearPenny IRS has confiscated everything.<br>Your vault has been emptied. All positions liquidated and you are owned by the government good bye civil and human rights !</div>
     <div class="prison-fine">Tax owed: <span id="prison-tax">0</span> gold · Vault: 0 gold</div>
     <button onclick="acceptPrison()">Accept Fate</button>
 </div>
@@ -1333,10 +1381,46 @@
             <div>Best Wave: <span id="start-best-wave">0</span></div>
             <div>Upgrades: <span id="start-upgrades">0</span></div>
         </div>
-        <p><strong>Ray the Bear:</strong> I'm a genus bear super star and I know everything you need to make a million pennies so I can take them all... or I will SUE YOU. GRRRR.<br>
-        Pick a route through drop fights, maze dives, random cave events, and a final boss gauntlet.<br>
-        Gold and damage carry across the run, and your broker stays available while the cave is trying to kill you.<br>
-        Gold earned is saved to your vault forever, until Ray decides it belongs to him.</p>
+        <p><strong>Ray the Bear:</strong> I'm a genus bear super star and I know everything you need to make a million pennies so I can take them all... or I will SUE YOU. GRRRR.</p>
+        <div class="start-route-grid">
+            <div class="start-route-card">
+                <div class="start-route-icon">🪙</div>
+                <div>
+                    <div class="start-route-label">Drop Fight</div>
+                    <div class="start-route-desc">Survive the cave drop. Catch coins, dodge bears.</div>
+                </div>
+            </div>
+            <div class="start-route-card">
+                <div class="start-route-icon">🧭</div>
+                <div>
+                    <div class="start-route-label">Maze Dive</div>
+                    <div class="start-route-desc">Grab what you can and escape the tunnels.</div>
+                </div>
+            </div>
+            <div class="start-route-card">
+                <div class="start-route-icon">🎲</div>
+                <div>
+                    <div class="start-route-label">Cave Event</div>
+                    <div class="start-route-desc">Random encounters. Could be good. Could be Ray.</div>
+                </div>
+            </div>
+            <div class="start-route-card boss">
+                <div class="start-route-icon">🐻</div>
+                <div>
+                    <div class="start-route-label">Boss Gauntlet</div>
+                    <div class="start-route-desc">Ray takes the gloves off. Every floor. No mercy.</div>
+                </div>
+            </div>
+        </div>
+        <div class="start-info-row">Gold &amp; damage carry across floors · Broker available mid-run · Vault gold is yours forever</div>
+        <div class="gift-banner hidden" id="gift-banner">
+            <div class="gift-banner-top">
+                <span class="gift-banner-label">🎁 Idle Gift</span>
+                <span class="gift-banner-amount" id="gift-amount-lbl">0 pennies</span>
+            </div>
+            <div class="gift-bar-track"><div class="gift-bar-fill" id="gift-bar-fill" style="width:0%"></div></div>
+            <button class="gift-claim-btn" id="gift-claim-btn" onclick="claimGift()">Claim Pennies</button>
+        </div>
         <div class="btn-row">
             <button class="btn-primary" onclick="startGame()">Start Run</button>
             <button class="btn-secondary" onclick="toggleShop()"><canvas data-sprite="chestClosed" width="14" height="14" style="vertical-align:middle;margin-right:4px;border-radius:2px;"></canvas>Shop</button>
@@ -1354,8 +1438,8 @@
                 </div>
                 <div class="run-map-stats">
                     <div class="run-map-pill">Floor <span id="run-map-floor">1 / 6</span></div>
-                    <div class="run-map-pill">Run Gold <span id="run-map-gold">0g</span></div>
-                    <div class="run-map-pill">HP <span id="run-map-hp">3 / 5</span></div>
+                    <div class="run-map-pill pill-gold">Run Gold <span id="run-map-gold">0g</span></div>
+                    <div class="run-map-pill pill-hp">HP <span id="run-map-hp">3 / 5</span></div>
                 </div>
             </div>
             <div class="run-map-layout">
@@ -2657,6 +2741,13 @@
             var owned = portfolio[s.ticker] ? portfolio[s.ticker].shares : 0;
             var affordable = canAffordStock(s, goldAmount);
             return '<tr class="' + (affordable ? 'row-affordable' : 'row-unaffordable') + '">' +
+                '<td><div class="trade-stack">' +
+                    '<div class="trade-actions">' +
+                        '<button class="btn-trade btn-buy" onclick="event.stopPropagation();buyStock(\'' + s.ticker + '\')"' + (affordable ? '' : ' disabled') + '>Buy</button>' +
+                        '<button class="btn-trade btn-sell-stock" onclick="event.stopPropagation();sellStock(\'' + s.ticker + '\')"' + (owned > 0 ? '' : ' disabled') + '>Sell</button>' +
+                    '</div>' +
+                    '<div class="afford-note ' + (affordable ? 'good' : 'bad') + '">' + formatAffordability(s, goldAmount) + '</div>' +
+                '</div></td>' +
                 '<td class="ticker" style="cursor:pointer" onclick="openStockDetail(\'' + s.ticker + '\')">' + s.ticker + '</td>' +
                 '<td>' + s.company + (s.price < 5 ? ' <span class="chip chip-penny">PENNY</span>' : '') + '</td>' +
                 '<td>$' + s.price.toFixed(2) + '</td>' +
@@ -2668,13 +2759,6 @@
                 '<td><span class="chip chip-' + s.signal + '">' + s.signal.toUpperCase() + '</span> ' +
                     '<span class="chip ' + (affordable ? 'chip-affordable' : 'chip-unaffordable') + '">' + (affordable ? 'LIVE' : 'LOCKED') + '</span></td>' +
                 '<td>' + (owned > 0 ? owned : '-') + '</td>' +
-                '<td><div class="trade-stack">' +
-                    '<div class="trade-actions">' +
-                        '<button class="btn-trade btn-buy" onclick="event.stopPropagation();buyStock(\'' + s.ticker + '\')"' + (affordable ? '' : ' disabled') + '>Buy</button>' +
-                        '<button class="btn-trade btn-sell-stock" onclick="event.stopPropagation();sellStock(\'' + s.ticker + '\')"' + (owned > 0 ? '' : ' disabled') + '>Sell</button>' +
-                    '</div>' +
-                    '<div class="afford-note ' + (affordable ? 'good' : 'bad') + '">' + formatAffordability(s, goldAmount) + '</div>' +
-                '</div></td>' +
             '</tr>';
         }).join('');
 
