@@ -432,7 +432,7 @@ function getMazeMoveDelay() {
 }
 
 function loadBearQuotes() {
-    fetch('./entities/bear-quotes.json')
+    fetch('./data/bear-quotes.json')
         .then(function(r) { return r.json(); })
         .then(function(data) { bearQuotes = data; })
         .catch(function() { bearQuotes = ['Grr...']; });

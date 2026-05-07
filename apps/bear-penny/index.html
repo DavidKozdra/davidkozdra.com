@@ -1989,7 +1989,7 @@
             updateBalanceBar(vaultGoldAmount);
             syncNewsTabState();
 
-            fetch('./entities/tickers.json')
+            fetch('./data/tickers.json')
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     var seedConfig = decodeSeedConfig(data);
