@@ -1713,6 +1713,7 @@
 
     function openRayBossBearMode() {
         if (raySecondsLeft > 0) return;
+        dismissRayAdvice();
 
         if (!rayGameInitialized && typeof initGame === 'function') {
             initGame();
@@ -1779,6 +1780,7 @@
 
     function maybeShowFirstOpenRayIntro() {
         if (rayIntroSeen) return;
+        dismissRayAdvice();
         if (!rayGameInitialized && typeof initGame === 'function') {
             initGame();
             rayGameInitialized = true;
@@ -2885,7 +2887,7 @@
     }
 
     function maybeTriggerRayAdvice() {
-        if (activeMainTab !== 'market' || isPrisoned) return;
+        if (!isStockPortalActiveForRayAdvice() || isPrisoned) return;
         if (rayAdviceCooldown > 0) {
             rayAdviceCooldown--;
             return;
@@ -2901,7 +2903,15 @@
         rayAdviceCooldown = 6 + Math.floor(Math.random() * 6);
     }
 
+    function isStockPortalActiveForRayAdvice() {
+        var gameOverlay = document.getElementById('game-overlay');
+        var stockPortalVisible = !gameOverlay || gameOverlay.classList.contains('hidden');
+        var noRunActive = typeof runState === 'undefined' || runState === null;
+        return stockPortalVisible && noRunActive && activeMainTab === 'market';
+    }
+
     function showRayAdvice(totalGold, totalValue, profit) {
+        if (!isStockPortalActiveForRayAdvice()) return;
         var toast = document.getElementById('ray-advice-toast');
         var lede = document.getElementById('ray-advice-lede');
         var body = document.getElementById('ray-advice-body');

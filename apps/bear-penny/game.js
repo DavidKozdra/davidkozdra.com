@@ -48,7 +48,7 @@ function saveVault(amount) {
 }
 
 // ==================== IDLE GIFT ====================
-var GIFT_MAX_PENNIES = 100000;
+var GIFT_MAX_PENNIES = 500;
 var GIFT_ACCRUAL_MS  = 20 * 60 * 1000; // 20 minutes to reach max
 
 function loadGiftTimestamp() {
@@ -1434,6 +1434,7 @@ function purchaseUpgrade(id) {
 
 function startGame() {
     stopEncounterLoop();
+    if (typeof dismissRayAdvice === 'function') dismissRayAdvice();
     document.getElementById('settings-panel').classList.add('hidden');
     document.getElementById('shop-panel').classList.add('hidden');
     document.getElementById('run-broker-panel').classList.add('hidden');
