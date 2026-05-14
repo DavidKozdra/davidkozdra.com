@@ -4,17 +4,28 @@
 const fs = require('fs');
 const path = require('path');
 
-const files = [
-  'index.html',
-  'pages/about/index.html',
-  'archive/intro.html',
-  'archive/old-site.html',
-  'archive/old-site-post.html',
-  'legal/wintest-privacy-policy/index.html',
-  'gitPulsePrivacyPolicy.html'
-];
+
+function getFiles(dir, fileList = []) {
+  const files = fs.readdirSync(dir);
+  files.forEach(file => {
+    const filePath = path.join(dir, file);
+
+    console.log(`Scanning ${filePath}...`);
+    if (!fs.existsSync(filePath)) return;
+    const stat = fs.statSync(filePath);
+
+    if (stat.isDirectory()) {
+      getFiles(filePath, fileList);
+    }
+    else if (/\.(html|js|jsx|ts|tsx)$/.test(file)) {
+      fileList.push(path.relative(repoRoot, filePath));
+    }
+  });
+  return fileList;
+}
 
 const repoRoot = path.resolve(__dirname, '..');
+const files = getFiles(repoRoot);
 
 files.forEach(file => {
   const filePath = path.join(repoRoot, file);
