@@ -183,7 +183,7 @@ function resetAllData() {
 var canvas, ctx, gameRunning, gameLoop;
 var keys = {};
 var player, fallingItems, particles;
-var gold, wave, combo, maxCombo, comboTimer, hp, maxHp;
+var gold, wave, combo, maxCombo, comboTimer, hp, maxHp, missBuffer;
 var waveTimer, waveInterval, spawnInterval, spawnTimer;
 var magnetActive, magnetTimer;
 var shieldActive, shieldTimer;
@@ -791,6 +791,7 @@ function resetEncounterState() {
     wave = 1;
     combo = 0;
     comboTimer = 0;
+    missBuffer = 0;
     magnetActive = false;
     magnetTimer = 0;
     shieldActive = false;
@@ -1451,6 +1452,18 @@ function startGame() {
     showBearQuote('start', 'Pick a route. Every floor wants your pennies.');
 }
 
+function quickRetry() {
+    stopEncounterLoop();
+    shopOpen = false;
+    runBrokerOpen = false;
+    document.getElementById('run-broker-panel').classList.add('hidden');
+    runState = createRunState();
+    gold = runState.gold; hp = runState.hp; maxHp = runState.maxHp;
+    wave = 1; combo = 0; maxCombo = 0; missBuffer = 0;
+    var tier0 = runState.map[0];
+    startBattleEncounter(tier0[Math.floor(tier0.length / 2)]);
+}
+
 function onKeyDown(e) {
     keys[e.key.toLowerCase()] = true;
     if (['arrowleft','arrowright','arrowup','arrowdown','a','d','w','s',' '].includes(e.key.toLowerCase())) e.preventDefault();
@@ -1489,8 +1502,8 @@ function spawnItem() {
     var goldbarChance = wave >= 5 ? 0.05 : 0;
     var diamondChance = wave >= 8 ? 0.02 : 0;
     var heartChance = getHeartSpawnChance();
-    var magnetChance = wave >= 2 ? 0.025 : 0;
-    var shieldChance = wave >= 3 ? 0.02 : 0;
+    var magnetChance = wave >= 1 ? (wave >= 2 ? 0.025 : 0.012) : 0;
+    var shieldChance = wave >= 2 ? 0.02 : 0;
     var frenzyChance = wave >= 4 ? 0.015 : 0;
 
     var c = 0;
@@ -1662,7 +1675,8 @@ function update() {
     if (spawnTimer >= actualSpawnInterval) {
         spawnTimer = 0;
         spawnItem();
-        if (wave >= 3 && Math.random() < 0.3) spawnItem();
+        var extraChance = Math.max(0, (wave - 1) * 0.08);
+        if (Math.random() < extraChance) spawnItem();
         if (wave >= 6 && Math.random() < 0.3) spawnItem();
         if (wave >= 9 && Math.random() < 0.2) spawnItem();
     }
@@ -1677,7 +1691,7 @@ function update() {
             return;
         }
         wave++;
-        spawnInterval = Math.max(10, 40 - wave * 2.5);
+        spawnInterval = Math.max(12, 42 - wave * 2.0);
         difficultyScale = 1 + wave * 0.07;
         particles.push({ type: 'text', text: 'WAVE ' + wave, x: canvas.width / 2, y: canvas.height / 2, life: 90, color: '#60a5fa', size: 34 });
         showBearQuote('wave');
@@ -1711,6 +1725,7 @@ function update() {
                     hp -= def.damage;
                     combo = 0;
                     comboTimer = 0;
+                    missBuffer = 0;
                     showBearQuote('hit');
                     particles.push({ type: 'text', text: '-' + def.damage + ' HP', x: item.x, y: item.y, life: 45, color: '#f87171', size: 18 });
                     if (magnetActive) particles.push({ type: 'text', text: 'GREED', x: item.x, y: item.y - 22, life: 60, color: '#fbbf24', size: 14 });
@@ -1740,6 +1755,7 @@ function update() {
                 particles.push({ type: 'text', text: 'FRENZY!', x: item.x, y: item.y, life: 50, color: '#facc15', size: 18 });
             } else {
                 // Coin collected
+                missBuffer = 0;
                 combo++;
                 comboTimer = 90;
                 if (combo > maxCombo) maxCombo = combo;
@@ -1760,8 +1776,11 @@ function update() {
         // Off screen
         if (item.y > canvas.height + 20) {
             if (!ITEM_TYPES[item.type].bad && ITEM_TYPES[item.type].value > 0) {
-                combo = 0;
-                comboTimer = 0;
+                missBuffer++;
+                var grace = 1 + Math.floor(getUpgradeLevel('comboBonus') * 0.5);
+                if (missBuffer > grace) {
+                    combo = 0; comboTimer = 0; missBuffer = 0;
+                }
                 if (Math.random() < 0.3) showBearQuote('miss');
             }
             fallingItems.splice(i, 1);

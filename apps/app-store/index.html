@@ -214,6 +214,13 @@
             });
         }
 
+        function openApp(appId) {
+            const app = APPS.find(a => a.id === appId);
+            if (app && app.url) {
+                window.open(app.url, "_blank");
+            }
+        }
+
         function getFaviconUrl(url) {
             try {
                 if (!url) return "/assets/images/brand/favicon.webp";
@@ -359,6 +366,8 @@
                             style="display:${installed ? 'inline-block' : 'none'}">
                             Uninstall
                         </button>
+
+                      ${installed ? `<button class="btn-install" data-id="${app.id}" onClick="openApp('${app.id}')">Open </button>` : ''}
                     </div>
                 `;
                 card.querySelector(".btn-install").addEventListener("click", function() {

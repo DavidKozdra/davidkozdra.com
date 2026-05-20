@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -34,12 +34,6 @@
   <link class="import" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <link rel="icon" type="image/x-icon" href="/assets/images/brand/favicon.webp">
-  <style>
-    @font-face {
-      font-display: swap;
-    }
-  </style>
-
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -341,7 +335,10 @@
 
         <div class="desktop-icon" role="button" aria-label="App Store" onclick="selectIcon(event)" ondblclick="desktopIconRouter(event,'appstore')" onkeypress="if(event.key==='Enter')desktopIconRouter(event,'appstore')" tabindex="0"
         style="cursor: pointer;">
-        <img src="/assets/images/ui-icons/shop.png" alt="" width="64" height="64" role="presentation" aria-hidden="true">
+        <picture>
+        <source srcset="/assets/images/ui-icons/shop.webp" type="image/webp">
+        <img src="/assets/images/ui-icons/shop.png" alt="" width="64" height="64" role="presentation">
+      </picture>
         <div class="icon-text">
           <p>App Store</p>
         </div>
