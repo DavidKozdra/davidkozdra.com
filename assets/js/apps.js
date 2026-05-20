@@ -85,6 +85,19 @@ const APPS = [
         external: true,
         tags: ["tool"],
         favicon: "https://lofi-music-eight.vercel.app/img/lofi.jpg"
+    },
+    {
+        id: "neonyke",
+        name: "Neo Nyke",
+        author: "davidkozdra.workers.dev",
+        description: "A dungeon crawler game where you fight monsters and collect loot.",
+        url: "https://neonyke.davidkozdra.workers.dev/",
+        icon: "https://neonyke.davidkozdra.workers.dev/assets/icons/icon-128x128.png",
+        width: 1200,
+        fullscreen: true,
+        external: false,
+        tags: ["game"],
+        favicon: "https://neonyke.davidkozdra.workers.dev/assets/icons/icon-128x128.png"
     }
 ];
 
