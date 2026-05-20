@@ -216,8 +216,10 @@
 
         function openApp(appId) {
             const app = APPS.find(a => a.id === appId);
+
+            // should open as our window system 
             if (app && app.url) {
-                window.open(app.url, "_blank");
+                window.parent.postMessage({ action: "launchApp", app: app }, "*");
             }
         }
 
