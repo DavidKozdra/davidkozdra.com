@@ -74,8 +74,15 @@ body {
 }
 
 .loader-display {
+    position: absolute;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: min(90dvw, 900px);
     font-size: 5vw;
     font-weight: 700;
     text-transform: uppercase;
@@ -90,19 +97,17 @@ body {
 }
 
 .loader-back {
-    position: absolute;
-    top: 50%;
-    left: 40%;
+    position: relative;
     border: 5px solid black;
-    width: 20dvw;
-    height: 2dvw;
+    width: clamp(12rem, 20dvw, 20rem);
+    height: clamp(1rem, 2dvw, 2rem);
     z-index: 5;
 
 }
 .loader-icon-inner {
     background: var(--main-gradient);
     width: 0dvw;
-    height: 2dvw;
+    height: 100%;
     -webkit-animation: grow .5s linear ; 
     animation: grow .5s linear;
 }
@@ -586,6 +591,10 @@ button {
       fadeIn .5s steps(10, end),
       typing .4s steps(40, end),
       blink-caret .5s step-end;    
+  }
+
+  .loader-display .typewriter {
+    margin: clamp(1.5rem, 5dvh, 3rem) auto;
   }
 
   .typewriter a:visited {
