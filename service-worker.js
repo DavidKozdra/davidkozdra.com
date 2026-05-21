@@ -1,9 +1,9 @@
-const CACHE_NAME = "pwa-cache-v3";
+const CACHE_NAME = "pwa-cache-v4";
 const PRECACHE_URLS = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/assets/css/DE_styles.css?v=1.1",
+  "/assets/css/DE_styles.css?v=1.2",
   "/assets/css/modern.css?v=1.16",
   "/assets/css/retro.css?v=1.4",
   "/assets/js/Games.js?v=1.0",

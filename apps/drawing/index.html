@@ -254,8 +254,6 @@
         let ctx = canvas.getContext('2d');
         let drawing = false;
         ctx.fillStyle = "rgb(255, 255, 255)"
-        let stack = [];
-        let reverseStack = [];
         let colors = [];
         let activeColor = {r: 0, g: 0, b: 0};
         let mouseX , mouseY;
@@ -263,6 +261,10 @@
         let layers = [];
         let currentLayer = 0;
 
+        // stroke history for undo/redo: each entry is {layer, pixels[]}
+        let strokeHistory = [];
+        let redoStack = [];
+        let currentStroke = null;
 
         let penSize =5;
 
@@ -396,8 +398,9 @@
 
         function clearDisplay() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            stack = [];
-            reverseStack = [];
+            strokeHistory = [];
+            redoStack = [];
+            currentStroke = null;
             layers = [];
             for (let i = 1; i < 10; i++) {
                 layers.push([]);
@@ -419,16 +422,23 @@
 
         function startdraw(event) {
             event.preventDefault();
+            if (document.activeElement) document.activeElement.blur();
             drawing = true;
+            redoStack = [];
+            currentStroke = {layer: currentLayer, pixels: []};
             let pos = getCanvasPos(event);
             mouseX = pos.x;
             mouseY = pos.y;
             let pixel = {x: pos.x, y: pos.y, color: activeColor, penSize: penSize};
-            stack.push(pixel);
+            currentStroke.pixels.push(pixel);
             layers[currentLayer].push(pixel);
         }
 
         function stopdraw() {
+            if (drawing && currentStroke && currentStroke.pixels.length > 0) {
+                strokeHistory.push(currentStroke);
+            }
+            currentStroke = null;
             drawing = false;
         }
 
@@ -439,25 +449,42 @@
             mouseY = pos.y;
         });
 
+        function rebuildLayers() {
+            layers = [];
+            for (let i = 0; i < 9; i++) layers.push([]);
+            for (let stroke of strokeHistory) {
+                for (let pixel of stroke.pixels) {
+                    layers[stroke.layer].push(pixel);
+                }
+            }
+            ctx.fillStyle = "rgb(255, 255, 255)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (let layer of layers) {
+                for (let pixel of layer) {
+                    ctx.fillStyle = colorMap(pixel.color);
+                    ctx.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
+                }
+            }
+        }
+
         document.addEventListener('keydown', (event) => {
             if (event.key == 'c') {
                 clearDisplay();
             }
 
             if (event.key == 'z' && event.ctrlKey) {
-                if (stack.length > 0) {
-                    let last = stack.pop();
-                    reverseStack.push(last);
-                    ctx.clearRect(last.x, last.y, last.penSize, last.penSize);
+                event.preventDefault();
+                if (strokeHistory.length > 0) {
+                    redoStack.push(strokeHistory.pop());
+                    rebuildLayers();
                 }
             }
 
             if (event.key == 'y' && event.ctrlKey) {
-                if (reverseStack.length > 0) {
-                    let last = reverseStack.pop();
-                    stack.push(last);
-                    ctx.fillStyle = last.color;
-                    ctx.fillRect(last.x, last.y, penSize, penSize);
+                event.preventDefault();
+                if (redoStack.length > 0) {
+                    strokeHistory.push(redoStack.pop());
+                    rebuildLayers();
                 }
             }
         });
@@ -467,26 +494,13 @@
         }
 
         function update() {
-            //ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             if (drawing) {
                 let pixel = {x: mouseX, y: mouseY, color: activeColor, penSize: penSize};
-                stack.push(pixel);
+                currentStroke.pixels.push(pixel);
                 layers[currentLayer].push(pixel);
                 ctx.fillStyle = colorMap(activeColor);
                 ctx.fillRect(mouseX, mouseY, penSize, penSize);
             }
-
-            for (let i = 0; i < layers.length; i++) {
-                let layer = layers[i];
-                for (let j = 0; j < layer.length; j++) {
-                    let pixel = layer[j];
-                    ctx.fillStyle = colorMap(pixel.color);
-                    ctx.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
-                }
-            }
-
-
 
             requestAnimationFrame(update);
         }
