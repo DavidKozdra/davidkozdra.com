@@ -101,6 +101,9 @@ function bearFaceForMood(mood) {
         case 'wave':     return SPRITES.bearFaceGrumpy;   // new wave incoming — watching
         case 'miss':     return SPRITES.bearFaceGrumpy;   // player missed a coin — smug
         case 'combo':    return SPRITES.bearFaceFurious;  // player on a streak — enraged
+        case 'anger':    return SPRITES.bearFaceFurious;  // Ray is heating up
+        case 'snow':     return SPRITES.bearFaceMad;      // powder-day intensity
+        case 'boss':     return SPRITES.bearFaceFurious;  // boss attacks
         case 'gameOver': return SPRITES.bearFaceFurious;  // player lost — triumphant rage
         case 'start':    return SPRITES.bearFaceAngry;    // run starts — competitive
         case 'powerup':  return SPRITES.bearFaceMad;      // powerup grabbed — flustered

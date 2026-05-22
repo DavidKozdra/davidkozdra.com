@@ -203,6 +203,14 @@ var currentEncounterGoalWave = 0;
 var currentEncounterType = '';
 var mazeState = null;
 var runBrokerOpen = false;
+var rayAnger = 0;
+var rayAngerLevel = 0;
+var raySnowTimer = 0;
+var bossHp = 0;
+var bossMaxHp = 0;
+var bossAttackTimer = 0;
+var bossAttackName = '';
+var bossAttackFlash = 0;
 
 var RUN_NODE_TYPES = {
     battle: { label: 'Drop',  icon: '🪙', sprite: 'coin',          desc: 'Survive the cave drop and keep the haul.' },
@@ -316,6 +324,21 @@ var BEAR_TAUNTS = {
         'Temporary edge. Permanent doom.',
         'Powerups won\'t fix your fundamentals.',
         'You juiced the run. I noticed.'
+    ],
+    anger: [
+        'Careful. Ray is getting hot.',
+        'You keep winning and I start doing math.',
+        'That was my penny. Now I am upset.'
+    ],
+    snow: [
+        'Nothing clears my head like fresh snow.',
+        'A little snow on the ledger. Perfectly normal.',
+        'Ray loves a powder day. So does the cave.'
+    ],
+    boss: [
+        'Final floor. I brought the good snow.',
+        'No more little bucket games.',
+        'You made me mad enough to budget for attacks.'
     ],
     gameOver: [
         'Run over. Treasury transferred.',
@@ -499,7 +522,7 @@ function getNodeCopy(type, tier) {
     if (type === 'battle') return 'Survive ' + getEncounterWaveGoal({ type: type, tier: tier }) + ' waves and keep the haul.';
     if (type === 'maze') return 'Grab stash, avoid traps, and find the exit.';
     if (type === 'event') return 'Take a risk, buy leverage, or leave with scars.';
-    return 'Ray takes the gloves off. Expect a brutal drop floor.';
+    return 'Ray has HP, attack patterns, and a fresh snow budget.';
 }
 
 function createRunNode(type, tier, lane) {
@@ -554,6 +577,7 @@ function createRunState() {
         },
         map: createRunMap(),
         path: [],
+        rayAnger: 0,
         startPowerupApplied: false,
         bestCombo: 0,
         bestWave: 0,
@@ -617,6 +641,7 @@ function syncRunStateFromGlobals() {
     runState.maxHp = maxHp || runState.maxHp;
     runState.bestCombo = Math.max(runState.bestCombo, maxCombo || 0);
     runState.bestWave = Math.max(runState.bestWave, wave || 0);
+    runState.rayAnger = rayAnger || 0;
 }
 
 function findRunNode(id) {
@@ -795,6 +820,52 @@ function clearTransientPowerupState() {
     frenzyTimer = 0;
 }
 
+function syncRayAngerFromRun() {
+    rayAnger = runState ? (runState.rayAnger || 0) : 0;
+    rayAngerLevel = Math.floor(rayAnger / 25);
+}
+
+function raiseRayAnger(amount, eventType) {
+    if (!runState || amount <= 0) return;
+    var oldLevel = Math.floor(rayAnger / 25);
+    rayAnger = Math.min(100, rayAnger + amount);
+    runState.rayAnger = rayAnger;
+    var newLevel = Math.floor(rayAnger / 25);
+    if (newLevel > oldLevel) {
+        rayAngerLevel = newLevel;
+        triggerRayAngerBurst(newLevel, eventType);
+    }
+}
+
+function calmRayAnger(amount) {
+    if (!runState || amount <= 0) return;
+    rayAnger = Math.max(0, rayAnger - amount);
+    rayAngerLevel = Math.floor(rayAnger / 25);
+    runState.rayAnger = rayAnger;
+}
+
+function triggerRayAngerBurst(level, eventType) {
+    var quoteType = level >= 3 || eventType === 'snow' ? 'snow' : 'anger';
+    showBearQuote(quoteType);
+    raySnowTimer = Math.max(raySnowTimer, 80 + level * 25);
+    bossAttackFlash = Math.max(bossAttackFlash, 40);
+    var burst = 4 + level * 2;
+    for (var i = 0; i < burst; i++) {
+        particles.push({
+            type: 'spark',
+            x: Math.random() * canvas.width,
+            y: 18 + Math.random() * 70,
+            vx: (Math.random() - 0.5) * 1.8,
+            vy: 1 + Math.random() * 2.2,
+            life: 38 + Math.floor(Math.random() * 22),
+            color: i % 3 === 0 ? '#e0f2fe' : '#f8fafc'
+        });
+    }
+    if (gameMode === 'battle') {
+        for (var j = 0; j < level; j++) spawnSpecificItem(j % 2 === 0 ? 'bear' : 'bomb', null, -30 - j * 24, 1.15 + level * 0.08);
+    }
+}
+
 function resetEncounterState() {
     fallingItems = [];
     particles = [];
@@ -807,6 +878,13 @@ function resetEncounterState() {
     activeBearQuote = '';
     bearQuoteTimer = 0;
     maxCombo = runState ? runState.bestCombo : 0;
+    syncRayAngerFromRun();
+    raySnowTimer = 0;
+    bossHp = 0;
+    bossMaxHp = 0;
+    bossAttackTimer = 0;
+    bossAttackName = '';
+    bossAttackFlash = 0;
 }
 
 function applyStartPowerup() {
@@ -846,11 +924,22 @@ function startBattleEncounter(node) {
     gameMode = 'battle';
     gameRunning = true;
     gamePaused = false;
+    if (node.type === 'boss') {
+        bossMaxHp = 180 + node.tier * 18;
+        bossHp = bossMaxHp;
+        bossAttackTimer = 70;
+        bossAttackName = 'Boss Bear';
+        bossAttackFlash = 60;
+        rayAnger = Math.max(rayAnger, 65);
+        runState.rayAnger = rayAnger;
+        rayAngerLevel = Math.floor(rayAnger / 25);
+        raySnowTimer = 120;
+    }
     applyStartPowerup();
     updateHUD();
     attachGameInput();
     if (gameLoop) cancelAnimationFrame(gameLoop);
-    showBearQuote('start', node.type === 'boss' ? 'Boss floor. All your pennies is MINE.' : 'New floor. Catch fast or pay later.');
+    showBearQuote(node.type === 'boss' ? 'boss' : 'start', node.type === 'boss' ? 'Boss floor. Ray brought the good snow.' : 'New floor. Catch fast or pay later.');
     tick();
 }
 
@@ -1039,6 +1128,11 @@ function mazeCellIndex(cols, x, y) {
 }
 
 function mazeHasPath(cols, rows, walls) {
+    var seen = getMazeReachableCells(cols, rows, walls);
+    return !!seen[(cols - 1) + ',' + (rows - 1)];
+}
+
+function getMazeReachableCells(cols, rows, walls) {
     var queue = [{ x: 0, y: 0 }];
     var seen = {};
     while (queue.length) {
@@ -1046,7 +1140,6 @@ function mazeHasPath(cols, rows, walls) {
         var key = cell.x + ',' + cell.y;
         if (seen[key]) continue;
         seen[key] = true;
-        if (cell.x === cols - 1 && cell.y === rows - 1) return true;
         var dirs = [[1,0],[-1,0],[0,1],[0,-1]];
         for (var i = 0; i < dirs.length; i++) {
             var nx = cell.x + dirs[i][0];
@@ -1056,7 +1149,7 @@ function mazeHasPath(cols, rows, walls) {
             queue.push({ x: nx, y: ny });
         }
     }
-    return false;
+    return seen;
 }
 
 function randomMazeCell(state, used) {
@@ -1065,6 +1158,7 @@ function randomMazeCell(state, used) {
         var y = Math.floor(Math.random() * state.rows);
         var key = x + ',' + y;
         if (used[key]) continue;
+        if (state.reachable && !state.reachable[key]) continue;
         if (state.walls[mazeCellIndex(state.cols, x, y)]) continue;
         if ((x === 0 && y === 0) || (x === state.exit.x && y === state.exit.y)) continue;
         used[key] = true;
@@ -1074,14 +1168,15 @@ function randomMazeCell(state, used) {
 }
 
 function createMazeState(node) {
-    var cols = 12;
-    var rows = 8;
+    var cols = 32;
+    var rows = 30;
     var walls = [];
     for (var attempt = 0; attempt < 40; attempt++) {
         walls = [];
         for (var y = 0; y < rows; y++) {
             for (var x = 0; x < cols; x++) {
-                var wall = Math.random() < 0.24 && !(x === 0 && y === 0) && !(x === cols - 1 && y === rows - 1);
+                var inStartPathBias = (x < 3 && y < 3) || (x > cols - 4 && y > rows - 4);
+                var wall = Math.random() < (inStartPathBias ? 0.08 : 0.22) && !(x === 0 && y === 0) && !(x === cols - 1 && y === rows - 1);
                 walls.push(wall);
             }
         }
@@ -1098,23 +1193,26 @@ function createMazeState(node) {
         traps: [],
         collected: 0,
         totalCoins: 0,
+        totalTraps: 0,
         stepCooldown: 0
     };
+    state.reachable = getMazeReachableCells(cols, rows, walls);
     var used = {};
-    var coinCount = 5 + Math.min(3, node.tier);
-    var trapCount = 3 + Math.min(2, Math.floor(node.tier / 2));
+    var coinCount = 50 + node.tier * 8;
+    var trapCount = 18 + node.tier * 4;
     for (var i = 0; i < coinCount; i++) {
         var coinCell = randomMazeCell(state, used);
         if (!coinCell) break;
-        state.coins.push({ x: coinCell.x, y: coinCell.y, value: Math.round((8 + node.tier * 3 + Math.random() * 6) * getRunMazeMultiplier()) });
+        state.coins.push({ x: coinCell.x, y: coinCell.y, value: Math.round((4 + node.tier * 1.4 + Math.random() * 5) * getRunMazeMultiplier()) });
     }
     for (var j = 0; j < trapCount; j++) {
         var trapCell = randomMazeCell(state, used);
         if (!trapCell) break;
-        var trapReward = Math.round((18 + node.tier * 5 + Math.random() * 10) * getRunMazeMultiplier());
+        var trapReward = Math.round((12 + node.tier * 3 + Math.random() * 12) * getRunMazeMultiplier());
         state.traps.push({ x: trapCell.x, y: trapCell.y, damage: 1, reward: trapReward });
     }
     state.totalCoins = state.coins.length;
+    state.totalTraps = state.traps.length;
     return state;
 }
 
@@ -1500,22 +1598,50 @@ function tick() {
     gameLoop = requestAnimationFrame(tick);
 }
 
+function spawnSpecificItem(type, x, y, speedMult) {
+    var def = ITEM_TYPES[type];
+    if (!def || !canvas) return;
+    var speed = (1.0 + wave * 0.22 + Math.random() * 1.2) * difficultyScale;
+    if (def.bad) speed *= 1.15;
+    speed *= speedMult || 1;
+
+    var itemW = def.w;
+    var itemH = def.h;
+    if (!def.bad && def.value > 0) {
+        var sizeScale = 1 + getUpgradeLevel('coinSize') * 0.10;
+        itemW = Math.round(def.w * sizeScale);
+        itemH = Math.round(def.h * sizeScale);
+    }
+
+    fallingItems.push({
+        type: type,
+        x: typeof x === 'number' ? Math.max(0, Math.min(canvas.width - itemW, x)) : Math.random() * (canvas.width - itemW),
+        y: typeof y === 'number' ? y : -itemH,
+        w: itemW,
+        h: itemH,
+        speed: speed,
+        wobble: Math.random() * Math.PI * 2,
+        wobbleAmp: def.bad ? 1.8 : 0.5,
+    });
+}
+
 function spawnItem() {
     var roll = Math.random();
     var type;
     var bearReduce = 1 - getUpgradeLevel('bearReduction') * 0.08;
-    var enemyRate = getEnemyRateMultiplier() * (currentEncounterType === 'boss' ? 1.2 : 1);
+    var angerBoost = 1 + rayAnger * 0.004;
+    var enemyRate = getEnemyRateMultiplier() * (currentEncounterType === 'boss' ? 1.35 : 1) * angerBoost;
     var bearChance = Math.min(0.14 + wave * 0.018, 0.32) * bearReduce * enemyRate;
     var bombChance = (wave >= 3 ? Math.min(0.04 + wave * 0.012, 0.18) : 0) * bearReduce * enemyRate;
-    var skullChance = (wave >= 7 ? Math.min(0.02 + (wave - 7) * 0.008, 0.1) : 0) * bearReduce * enemyRate;
+    var skullChance = (wave >= 7 || currentEncounterType === 'boss' ? Math.min(0.02 + Math.max(0, wave - 6) * 0.008, 0.1) : 0) * bearReduce * enemyRate;
     var redpennyChance = 0.18 + getUpgradeLevel('redPennyRate') * 0.04;
     var silverChance = wave >= 2 ? 0.10 : 0;
     var goldbarChance = wave >= 5 ? 0.05 : 0;
-    var diamondChance = wave >= 8 ? 0.02 : 0;
+    var diamondChance = wave >= 8 || currentEncounterType === 'boss' ? 0.02 : 0;
     var heartChance = getHeartSpawnChance();
     var magnetChance = wave >= 1 ? (wave >= 2 ? 0.025 : 0.012) : 0;
     var shieldChance = wave >= 2 ? 0.02 : 0;
-    var frenzyChance = wave >= 4 ? 0.015 : 0;
+    var frenzyChance = wave >= 4 || currentEncounterType === 'boss' ? 0.015 : 0;
 
     var c = 0;
     if (roll < (c += heartChance)) type = 'heart';
@@ -1531,30 +1657,62 @@ function spawnItem() {
     else if (roll < (c += redpennyChance)) type = 'redpenny';
     else type = 'penny';
 
-    var def = ITEM_TYPES[type];
-    // Slower base speed — game should feel hard but readable
-    var speed = (1.0 + wave * 0.22 + Math.random() * 1.2) * difficultyScale;
-    if (def.bad) speed *= 1.15;
+    spawnSpecificItem(type);
+}
 
-    // Apply coin size upgrade to collectible items
-    var itemW = def.w;
-    var itemH = def.h;
-    if (!def.bad && def.value > 0) {
-        var sizeScale = 1 + getUpgradeLevel('coinSize') * 0.10;
-        itemW = Math.round(def.w * sizeScale);
-        itemH = Math.round(def.h * sizeScale);
+function getBossPhase() {
+    if (!bossMaxHp) return 1;
+    var pct = bossHp / bossMaxHp;
+    if (pct <= 0.25) return 4;
+    if (pct <= 0.5) return 3;
+    if (pct <= 0.75) return 2;
+    return 1;
+}
+
+function spawnBossAttackPattern() {
+    if (currentEncounterType !== 'boss' || !canvas) return;
+    var phase = getBossPhase();
+    var pattern = Math.floor(Math.random() * 4);
+    bossAttackFlash = 55;
+
+    if (pattern === 0) {
+        bossAttackName = 'Bear Wall';
+        var safeLane = Math.floor(Math.random() * 5);
+        for (var i = 0; i < 5; i++) {
+            if (i === safeLane) continue;
+            spawnSpecificItem(i % 2 === 0 ? 'bear' : 'bomb', i * canvas.width / 5 + canvas.width / 10 - 16, -30, 1.25 + phase * 0.08);
+        }
+        showBearQuote('boss', 'No more little bucket games. Find the gap.');
+    } else if (pattern === 1) {
+        bossAttackName = 'Powder Squall';
+        raySnowTimer = 180;
+        for (var j = 0; j < 6 + phase; j++) {
+            spawnSpecificItem(j % 3 === 0 ? 'redpenny' : 'penny', null, -25 - j * 18, 1.15);
+        }
+        for (var k = 0; k < 2 + phase; k++) spawnSpecificItem('bomb', null, -45 - k * 34, 1.2);
+        showBearQuote('snow');
+    } else if (pattern === 2) {
+        bossAttackName = 'Margin Call';
+        var targetX = player ? player.x + player.w / 2 : canvas.width / 2;
+        for (var b = -1; b <= 1; b++) spawnSpecificItem('skull', targetX + b * 42, -30 - Math.abs(b) * 20, 1.25 + phase * 0.05);
+        spawnSpecificItem('heart', Math.random() * (canvas.width - 24), -90, 1);
+        showBearQuote('boss', 'Margin call. Catch the heart if you can.');
+    } else {
+        bossAttackName = 'Diamond Bait';
+        spawnSpecificItem('diamond', canvas.width / 2 - 15, -30, 0.92);
+        for (var d = 0; d < 4 + phase; d++) spawnSpecificItem(d % 2 ? 'bear' : 'bomb', null, -60 - d * 20, 1.18 + phase * 0.06);
+        showBearQuote('boss', 'Big shiny penny. Totally safe.');
     }
+}
 
-    fallingItems.push({
-        type: type,
-        x: Math.random() * (canvas.width - itemW),
-        y: -itemH,
-        w: itemW,
-        h: itemH,
-        speed: speed,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleAmp: def.bad ? 1.8 : 0.5,
-    });
+function updateBossBattle() {
+    if (currentEncounterType !== 'boss') return false;
+    bossAttackTimer--;
+    if (bossAttackTimer <= 0) {
+        spawnBossAttackPattern();
+        bossAttackTimer = Math.max(58, 132 - getBossPhase() * 18 - Math.floor(rayAnger * 0.28));
+    }
+    return bossHp <= 0;
 }
 
 function updateParticles() {
@@ -1679,6 +1837,14 @@ function update() {
 
     // Bear quote decay
     if (bearQuoteTimer > 0) bearQuoteTimer--;
+    if (raySnowTimer > 0) raySnowTimer--;
+    if (bossAttackFlash > 0) bossAttackFlash--;
+    if (updateBossBattle()) {
+        gold += 240 + Math.round(rayAnger * 1.5);
+        calmRayAnger(35);
+        finishCurrentNode('Boss floor cleared. Ray melted down, the snow settled, and your pockets got heavy.');
+        return;
+    }
 
     // Spawn items
     spawnTimer++;
@@ -1696,16 +1862,16 @@ function update() {
     waveTimer++;
     if (waveTimer >= waveInterval) {
         waveTimer = 0;
-        if (wave >= currentEncounterGoalWave) {
+        if (currentEncounterType !== 'boss' && wave >= currentEncounterGoalWave) {
             gold += currentEncounterType === 'boss' ? 120 : 40 + currentNode.tier * 12;
             finishCurrentNode(currentEncounterType === 'boss' ? 'Boss floor cleared. Ray is furious and your pockets are heavier.' : 'Floor cleared. You survived the drop and kept the spread.');
             return;
         }
         wave++;
         spawnInterval = Math.max(12, 42 - wave * 2.0);
-        difficultyScale = 1 + wave * 0.07;
-        particles.push({ type: 'text', text: 'WAVE ' + wave, x: canvas.width / 2, y: canvas.height / 2, life: 90, color: '#60a5fa', size: 34 });
-        showBearQuote('wave');
+        difficultyScale = 1 + wave * 0.07 + (currentEncounterType === 'boss' ? getBossPhase() * 0.04 : 0);
+        particles.push({ type: 'text', text: currentEncounterType === 'boss' ? 'RAY PHASE ' + getBossPhase() : 'WAVE ' + wave, x: canvas.width / 2, y: canvas.height / 2, life: 90, color: currentEncounterType === 'boss' ? '#f87171' : '#60a5fa', size: 34 });
+        showBearQuote(currentEncounterType === 'boss' ? 'boss' : 'wave');
     }
 
     // Update falling items
@@ -1730,6 +1896,7 @@ function update() {
                     // Shield absorbs
                     shieldActive = false;
                     shieldTimer = 0;
+                    raiseRayAnger(7, 'block');
                     showBearQuote('block');
                     particles.push({ type: 'text', text: 'BLOCKED!', x: item.x, y: item.y, life: 50, color: '#38bdf8', size: 18 });
                 } else {
@@ -1737,6 +1904,7 @@ function update() {
                     combo = 0;
                     comboTimer = 0;
                     missBuffer = 0;
+                    calmRayAnger(6);
                     showBearQuote('hit');
                     particles.push({ type: 'text', text: '-' + def.damage + ' HP', x: item.x, y: item.y, life: 45, color: '#f87171', size: 18 });
                     if (magnetActive) particles.push({ type: 'text', text: 'GREED', x: item.x, y: item.y - 22, life: 60, color: '#fbbf24', size: 14 });
@@ -1752,16 +1920,19 @@ function update() {
             } else if (def.powerup === 'magnet') {
                 magnetActive = true;
                 magnetTimer = getMagnetDurationFrames();
+                raiseRayAnger(6, 'powerup');
                 showBearQuote('powerup');
                 particles.push({ type: 'text', text: 'MAGNET!', x: item.x, y: item.y, life: 50, color: '#34d399', size: 16 });
             } else if (def.powerup === 'shield') {
                 shieldActive = true;
                 shieldTimer = Math.floor(12 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
+                raiseRayAnger(5, 'powerup');
                 showBearQuote('powerup');
                 particles.push({ type: 'text', text: 'SHIELD!', x: item.x, y: item.y, life: 50, color: '#38bdf8', size: 16 });
             } else if (def.powerup === 'frenzy') {
                 frenzyActive = true;
                 frenzyTimer = Math.floor(6 * 60 * (1 + getUpgradeLevel('powerupDuration') * 0.15));
+                raiseRayAnger(8, 'powerup');
                 showBearQuote('powerup');
                 particles.push({ type: 'text', text: 'FRENZY!', x: item.x, y: item.y, life: 50, color: '#facc15', size: 18 });
             } else {
@@ -1774,7 +1945,19 @@ function update() {
                 if (frenzyActive) multiplier *= 2;
                 var earned = Math.max(1, Math.round(def.value * multiplier * getRunCoinMultiplier()));
                 gold += earned;
-                if (combo > 0 && combo % 12 === 0) showBearQuote('combo');
+                var angerGain = 1 + Math.floor(def.value / 10);
+                if (combo > 0 && combo % 10 === 0) {
+                    angerGain += 7;
+                    raySnowTimer = Math.max(raySnowTimer, 55);
+                    particles.push({ type: 'text', text: 'RAY ANGER +' + angerGain, x: canvas.width / 2, y: 86, life: 46, color: '#f87171', size: 16 });
+                    showBearQuote(combo % 30 === 0 ? 'snow' : 'combo');
+                }
+                raiseRayAnger(angerGain, combo % 30 === 0 ? 'snow' : 'combo');
+                if (currentEncounterType === 'boss') {
+                    var bossDamage = Math.max(1, Math.round(earned / 7 + def.value * 0.6 + Math.floor(combo / 10)));
+                    bossHp = Math.max(0, bossHp - bossDamage);
+                    particles.push({ type: 'text', text: '-' + bossDamage + ' RAY', x: item.x, y: item.y - 18, life: 34, color: '#f87171', size: 13 });
+                }
                 particles.push({ type: 'text', text: '+' + earned, x: item.x, y: item.y, life: 35, color: '#fbbf24', size: 14 + Math.min(earned / 10, 10) });
                 for (var s = 0; s < 4; s++) {
                     particles.push({ type: 'spark', x: item.x + item.w/2, y: item.y, vx: (Math.random()-.5)*3, vy: -Math.random()*2.5-1, life: 20, color: def.value >= 25 ? '#fde68a' : '#fbbf24' });
@@ -1814,7 +1997,7 @@ function drawMazeEncounter() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (!mazeState) return;
-    var cell = Math.max(28, Math.floor(Math.min((canvas.width - 120) / mazeState.cols, (canvas.height - 120) / mazeState.rows)));
+    var cell = Math.max(8, Math.floor(Math.min((canvas.width - 48) / mazeState.cols, (canvas.height - 96) / mazeState.rows)));
     var offsetX = Math.floor((canvas.width - cell * mazeState.cols) / 2);
     var offsetY = Math.max(28, Math.floor((canvas.height - cell * mazeState.rows) / 2));
 
@@ -1913,7 +2096,7 @@ function drawMazeEncounter() {
     ctx.fillText('Audit Maze', 18, 28);
     ctx.fillStyle = '#94a3b8';
     ctx.font = '12px sans-serif';
-    ctx.fillText('Use arrows or WASD. Grab stash, dodge traps, reach EXIT.', 18, 46);
+    ctx.fillText('Use arrows or WASD. Bigger maze, more stash, more bad deals.', 18, 46);
 
     particles.forEach(function(p) {
         var alpha = Math.min(1, p.life / 15);
@@ -1961,6 +2144,12 @@ function draw() {
         ctx.fillStyle = 'rgba(250, 200, 20, 0.04)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
+    if (bossAttackFlash > 0) {
+        ctx.fillStyle = 'rgba(248,113,113,' + Math.min(0.14, bossAttackFlash / 360) + ')';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    drawSnowSquall();
 
     // Draw falling items
     ctx.textAlign = 'center';
@@ -2072,6 +2261,25 @@ function draw() {
     drawPowerupBar();
 }
 
+function drawSnowSquall() {
+    if (raySnowTimer <= 0) return;
+    ctx.save();
+    var alpha = Math.min(0.28, 0.08 + raySnowTimer / 900);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#e0f2fe';
+    for (var i = 0; i < 50; i++) {
+        var x = (i * 83 + raySnowTimer * (1 + (i % 5))) % (canvas.width + 80) - 40;
+        var y = (i * 47 + raySnowTimer * 2) % (canvas.height + 70) - 35;
+        var r = 1 + (i % 4) * 0.65;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    ctx.globalAlpha = Math.min(0.1, alpha * 0.4);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+}
+
 function drawBearPresenter() {
     var panelW = Math.min(320, canvas.width - 24);
     var panelH = 96;
@@ -2085,7 +2293,7 @@ function drawBearPresenter() {
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.fillStyle = 'rgba(15,23,42,0.9)';
-    ctx.strokeStyle = activeBearMood === 'hit' ? '#f87171' : '#fbbf24';
+    ctx.strokeStyle = activeBearMood === 'snow' ? '#e0f2fe' : (activeBearMood === 'hit' || activeBearMood === 'anger' || activeBearMood === 'boss' ? '#f87171' : '#fbbf24');
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.roundRect(panelX, panelY, panelW, panelH, 14);
@@ -2170,13 +2378,26 @@ function updateHUD() {
         document.getElementById('hud-wave').textContent = wave;
     }
     if (gameMode === 'battle') {
-        document.getElementById('hud-combo').textContent = String(currentEncounterType || 'drop').toUpperCase() + ' W' + wave + '/' + currentEncounterGoalWave;
+        if (currentEncounterType === 'boss' && bossMaxHp > 0) {
+            document.getElementById('hud-combo').textContent = 'BOSS ' + Math.max(0, bossHp) + '/' + bossMaxHp;
+        } else {
+            document.getElementById('hud-combo').textContent = String(currentEncounterType || 'drop').toUpperCase() + ' W' + wave + '/' + currentEncounterGoalWave;
+        }
     } else if (gameMode === 'maze' && mazeState) {
-        document.getElementById('hud-combo').textContent = 'MAZE ' + mazeState.collected + '/' + mazeState.totalCoins;
+        document.getElementById('hud-combo').textContent = 'MAZE ' + mazeState.collected + '/' + mazeState.totalCoins + ' T' + mazeState.traps.length;
     } else if (gameMode === 'map') {
         document.getElementById('hud-combo').textContent = 'ROUTE';
     } else {
         document.getElementById('hud-combo').textContent = 'RUN';
+    }
+    var rayHud = document.getElementById('hud-ray');
+    var rayFill = document.getElementById('hud-ray-fill');
+    var rayVal = document.getElementById('hud-ray-val');
+    if (rayHud && rayFill && rayVal) {
+        var rayPct = Math.max(0, Math.min(100, Math.round(rayAnger || 0)));
+        rayFill.style.width = rayPct + '%';
+        rayVal.textContent = rayPct >= 75 ? 'Snow' : rayPct + '%';
+        rayHud.classList.toggle('snow', rayPct >= 75);
     }
     var hearts = '';
     for (var i = 0; i < maxHp; i++) hearts += i < hp ? '♥' : '♡';

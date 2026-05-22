@@ -257,6 +257,26 @@
         .hud-wave .val { color: #60a5fa; }
         .hud-hp .val { color: #f87171; }
         .hud-combo .val { color: #a78bfa; }
+        .hud-ray {
+            min-width: 180px;
+            gap: 10px;
+        }
+        .hud-ray-meter {
+            width: 86px;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(248,113,113,.18);
+            border: 1px solid rgba(248,113,113,.35);
+        }
+        .hud-ray-fill {
+            height: 100%;
+            width: 0%;
+            background: #f87171;
+            transition: width .16s ease, background .16s ease;
+        }
+        .hud-ray.snow .hud-ray-fill { background: #e0f2fe; }
+        .hud-ray.snow .val { color: #e0f2fe; }
         .hud-action-btn {
             padding: 8px 12px;
             border-radius: 10px;
@@ -278,6 +298,8 @@
                 gap: 6px;
                 padding: 8px 10px;
             }
+            .hud-ray { min-width: 126px; }
+            .hud-ray-meter { width: 54px; }
             .hud-stat .label { font-size: .7rem; }
             .hud-stat .val { font-size: 1rem; }
             .hud-action-btn { padding: 7px 10px; font-size: .76rem; }
@@ -1393,6 +1415,11 @@
         </div>
         <div class="hud-center">
             <div class="hud-stat hud-combo"><span class="label">Mode</span> <span class="val" id="hud-combo">DROP</span></div>
+            <div class="hud-stat hud-ray" id="hud-ray">
+                <span class="label">Ray Anger</span>
+                <span class="hud-ray-meter"><span class="hud-ray-fill" id="hud-ray-fill"></span></span>
+                <span class="val" id="hud-ray-val">0%</span>
+            </div>
         </div>
         <div class="hud-right">
             <div class="hud-stat hud-hp"><span class="label">HP</span> <span class="val" id="hud-hp">♥♥♥</span></div>
@@ -1436,7 +1463,7 @@
                 <div class="start-route-icon">🐻</div>
                 <div>
                     <div class="start-route-label">Boss Gauntlet</div>
-                    <div class="start-route-desc">Ray takes the gloves off. Every floor. No mercy.</div>
+                    <div class="start-route-desc">Ray gets mad, throws patterns, and talks about snow.</div>
                 </div>
             </div>
         </div>
@@ -1706,12 +1733,29 @@
 <script src="game.js"></script>
 <script>
     var RAY_COOLDOWN_SECONDS = 120;
-    var raySecondsLeft = RAY_COOLDOWN_SECONDS;
+    var RAY_READY_AT_KEY = 'bearPennyRayReadyAt';
+    var raySecondsLeft = 0;
     var rayTimerInterval = null;
     var rayGameInitialized = false;
     var rayIntroSeen = localStorage.getItem('bearPennyRayIntroSeen') === '1';
     var rayIntroTimer = null;
     var rayIntroFullText = "I'M RAY THE BEAR. I'M A GENUS BEAR SUPER STAR AND I KNOW EVERYTHING YOU NEED TO MAKE A MILLION PENNIES SO I CAN TAKE THEM ALL... OR I WILL SUE YOU. GRRRR. NOW GET IN THE BUCKET AND PROVE YOU CAN SURVIVE MY CAVE.";
+
+    function loadRayReadyAt() {
+        var stored = parseInt(localStorage.getItem(RAY_READY_AT_KEY) || '0', 10);
+        return isNaN(stored) ? 0 : stored;
+    }
+
+    function syncRayTimerFromStorage() {
+        var readyAt = loadRayReadyAt();
+        raySecondsLeft = Math.max(0, Math.ceil((readyAt - Date.now()) / 1000));
+    }
+
+    function armRayCooldown() {
+        var readyAt = Date.now() + RAY_COOLDOWN_SECONDS * 1000;
+        localStorage.setItem(RAY_READY_AT_KEY, String(readyAt));
+        syncRayTimerFromStorage();
+    }
 
     function formatRayTimer(totalSeconds) {
         var m = Math.floor(totalSeconds / 60);
@@ -1720,6 +1764,7 @@
     }
 
     function updateRayTimerUI() {
+        syncRayTimerFromStorage();
         var timerEl = document.getElementById('ray-timer');
         var buttonEl = document.getElementById('btn-ray');
         var timerItemEl = document.getElementById('ray-timer-item');
@@ -1761,11 +1806,6 @@
         updateRayTimerUI();
         if (rayTimerInterval) clearInterval(rayTimerInterval);
         rayTimerInterval = setInterval(function() {
-            if (raySecondsLeft <= 0) {
-                updateRayTimerUI();
-                return;
-            }
-            raySecondsLeft--;
             updateRayTimerUI();
         }, 1000);
     }
@@ -1774,6 +1814,11 @@
         if (raySecondsLeft > 0) return;
         triggerRayLinkedPulse();
         dismissRayAdvice();
+
+        // Always enter the pre-run screen with transient effects fully cleared.
+        if (typeof clearTransientPowerupState === 'function') {
+            clearTransientPowerupState();
+        }
 
         if (!rayGameInitialized && typeof initGame === 'function') {
             initGame();
@@ -1793,7 +1838,7 @@
             refreshStartScreen();
         }
 
-        raySecondsLeft = RAY_COOLDOWN_SECONDS;
+        armRayCooldown();
         updateRayTimerUI();
     }
 
@@ -1841,6 +1886,9 @@
     function maybeShowFirstOpenRayIntro() {
         if (rayIntroSeen) return;
         dismissRayAdvice();
+        if (typeof clearTransientPowerupState === 'function') {
+            clearTransientPowerupState();
+        }
         if (!rayGameInitialized && typeof initGame === 'function') {
             initGame();
             rayGameInitialized = true;
