@@ -554,6 +554,7 @@ function createRunState() {
         },
         map: createRunMap(),
         path: [],
+        startPowerupApplied: false,
         bestCombo: 0,
         bestWave: 0,
         nodesCleared: 0,
@@ -785,6 +786,15 @@ function getEncounterWaveGoal(node) {
     return Math.min(4, 3 + Math.floor(node.tier / 3));
 }
 
+function clearTransientPowerupState() {
+    magnetActive = false;
+    magnetTimer = 0;
+    shieldActive = false;
+    shieldTimer = 0;
+    frenzyActive = false;
+    frenzyTimer = 0;
+}
+
 function resetEncounterState() {
     fallingItems = [];
     particles = [];
@@ -792,12 +802,7 @@ function resetEncounterState() {
     combo = 0;
     comboTimer = 0;
     missBuffer = 0;
-    magnetActive = false;
-    magnetTimer = 0;
-    shieldActive = false;
-    shieldTimer = 0;
-    frenzyActive = false;
-    frenzyTimer = 0;
+    clearTransientPowerupState();
     keys = {};
     activeBearQuote = '';
     bearQuoteTimer = 0;
@@ -806,12 +811,14 @@ function resetEncounterState() {
 
 function applyStartPowerup() {
     if (getUpgradeLevel('startPowerup') < 1) return;
+    if (!runState || runState.startPowerupApplied) return;
     var powerups = ['magnet', 'shield', 'frenzy'];
     var pick = powerups[Math.floor(Math.random() * powerups.length)];
     var durMult = 1 + getUpgradeLevel('powerupDuration') * 0.15;
     if (pick === 'magnet') { magnetActive = true; magnetTimer = getMagnetDurationFrames(); }
     else if (pick === 'shield') { shieldActive = true; shieldTimer = Math.floor(12 * 60 * durMult); }
     else if (pick === 'frenzy') { frenzyActive = true; frenzyTimer = Math.floor(6 * 60 * durMult); }
+    runState.startPowerupApplied = true;
 }
 
 function startBattleEncounter(node) {
@@ -1171,6 +1178,7 @@ function retireRun() {
 function finishRun(victory, retired) {
     syncRunStateFromGlobals();
     stopEncounterLoop();
+    clearTransientPowerupState();
     if (document.getElementById('run-broker-panel')) document.getElementById('run-broker-panel').classList.add('hidden');
     runBrokerOpen = false;
 
@@ -1217,6 +1225,7 @@ function resizeCanvas() {
 
 function closeGame() {
     stopEncounterLoop();
+    clearTransientPowerupState();
     if (canvas) canvas.classList.add('hidden');
     setGameView('start');
     document.getElementById('game-overlay').classList.add('hidden');
@@ -1435,6 +1444,7 @@ function purchaseUpgrade(id) {
 
 function startGame() {
     stopEncounterLoop();
+    clearTransientPowerupState();
     if (typeof dismissRayAdvice === 'function') dismissRayAdvice();
     document.getElementById('settings-panel').classList.add('hidden');
     document.getElementById('shop-panel').classList.add('hidden');
@@ -1454,6 +1464,7 @@ function startGame() {
 
 function quickRetry() {
     stopEncounterLoop();
+    clearTransientPowerupState();
     shopOpen = false;
     runBrokerOpen = false;
     document.getElementById('run-broker-panel').classList.add('hidden');

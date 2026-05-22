@@ -120,14 +120,22 @@
         .pagination .page-info { color: #94a3b8; font-size: .78rem; }
         /* Balance bar */
         .balance-bar { display: flex; align-items: center; gap: 16px; padding: 8px 20px; background: #0f172a; border-bottom: 1px solid #334155; font-size: .82rem; }
-        .balance-bar .bal-item { display: flex; align-items: center; gap: 5px; }
-        .balance-bar .bal-label { color: #94a3b8; font-size: .7rem; text-transform: uppercase; }
-        .balance-bar .bal-val { font-weight: 600; }
-        .bal-gold { color: #fbbf24; }
+        .balance-bar .bal-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border: 1px solid rgba(251, 191, 36, .16); border-radius: 999px; background: rgba(251, 191, 36, .06); }
+        .balance-bar .bal-label { color: #fde68a; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+        .balance-bar .bal-val { font-weight: 700; }
+        .bal-gold { color: #fff7cc; font-size: .98rem; font-weight: 800; text-shadow: 0 0 10px rgba(251, 191, 36, .35); }
         .bal-portfolio { color: #4ade80; }
         .bal-tax { color: #f87171; }
         .bal-tax.safe { color: #4ade80; }
-        .bal-ray { color: #60a5fa; }
+        .bal-ray { color: #60a5fa; font-weight: 800; }
+        .ray-timer-item {
+            border-color: rgba(96, 165, 250, .34) !important;
+            background: linear-gradient(90deg, rgba(59, 130, 246, .22) var(--ray-ready-pct, 0%), rgba(15, 23, 42, .35) var(--ray-ready-pct, 0%));
+            transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        .ray-timer-item.ray-near {
+            animation: rayNearPulse 1.05s ease-in-out infinite;
+        }
         .btn-ray {
             margin-left: auto;
             padding: 6px 12px;
@@ -140,8 +148,16 @@
             cursor: pointer;
         }
         .btn-ray:disabled {
-            opacity: 0.5;
+            opacity: 1;
             cursor: default;
+            color: #bfdbfe;
+            border-color: rgba(96, 165, 250, .35);
+            background: linear-gradient(90deg, rgba(59, 130, 246, .28) var(--ray-ready-pct, 0%), #0f172a var(--ray-ready-pct, 0%));
+            transition: background .25s ease, border-color .25s ease, color .25s ease;
+        }
+        .btn-ray.ray-near:disabled {
+            animation: rayNearPulse 1.05s ease-in-out infinite;
+            border-color: rgba(147, 197, 253, .75);
         }
         .btn-ray:not(:disabled):hover {
             border-color: #60a5fa;
@@ -167,6 +183,18 @@
         @keyframes rayPulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
             50% { box-shadow: 0 0 0 7px rgba(52, 211, 153, 0); }
+        }
+        @keyframes rayNearPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
+            50% { box-shadow: 0 0 0 6px rgba(96, 165, 250, .3); }
+        }
+        .ray-linked-pulse {
+            animation: rayLinkedPulse .45s ease-out;
+        }
+        @keyframes rayLinkedPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0.45); }
+            40% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0); }
         }
         .ray-advice-toast {
             position: fixed; right: 18px; bottom: 18px; z-index: 150;
@@ -1288,10 +1316,10 @@
         </div>
         <div class="bp-main">
             <div class="balance-bar" id="balance-bar">
-                <div class="bal-item"><span class="bal-label">Gold</span> <span class="bal-val bal-gold" id="bal-gold">0</span></div>
+                <div class="bal-item"><span class="bal-label">Pennies</span> <span class="bal-val bal-gold" id="bal-gold">0</span></div>
                 <div class="bal-item"><span class="bal-label">Portfolio</span> <span class="bal-val bal-portfolio" id="bal-portfolio">$0</span></div>
                 <div class="bal-item"><span class="bal-label">Next Tax</span> <span class="bal-val bal-tax" id="bal-tax">5:00</span></div>
-                <div class="bal-item"><span class="bal-label">Ray Timer</span> <span class="bal-val bal-ray" id="ray-timer">2:00</span></div>
+                <div class="bal-item ray-timer-item" id="ray-timer-item"><span class="bal-label">Ray Timer</span> <span class="bal-val bal-ray" id="ray-timer">2:00</span></div>
                 <button class="btn-ray" onclick="toggleShop()"><canvas data-sprite="chestClosed" width="16" height="16" style="vertical-align:middle;margin-right:5px;border-radius:3px;"></canvas>Upgrades</button>
                 <button class="btn-ray" id="btn-ray" onclick="openRayBossBearMode()" disabled>Collect Pennies (Ray the Boss Bear)</button>
             </div>
@@ -1694,9 +1722,39 @@
     function updateRayTimerUI() {
         var timerEl = document.getElementById('ray-timer');
         var buttonEl = document.getElementById('btn-ray');
+        var timerItemEl = document.getElementById('ray-timer-item');
         var ready = raySecondsLeft <= 0;
-        timerEl.textContent = ready ? 'READY' : formatRayTimer(raySecondsLeft);
+        var elapsed = Math.max(0, RAY_COOLDOWN_SECONDS - Math.max(0, raySecondsLeft));
+        var progressPct = Math.max(0, Math.min(100, Math.round((elapsed / RAY_COOLDOWN_SECONDS) * 100)));
+        timerEl.textContent = ready ? 'READY 100%' : formatRayTimer(raySecondsLeft) + ' ' + progressPct + '%';
         buttonEl.disabled = !ready;
+        buttonEl.textContent = ready ? 'Collect Pennies (Ray the Boss Bear)' : 'Collect Pennies (' + progressPct + '%)';
+        buttonEl.style.setProperty('--ray-ready-pct', progressPct + '%');
+        if (timerItemEl) timerItemEl.style.setProperty('--ray-ready-pct', progressPct + '%');
+
+        var nearReady = !ready && raySecondsLeft <= Math.max(15, Math.floor(RAY_COOLDOWN_SECONDS * 0.25));
+        buttonEl.classList.toggle('ray-near', nearReady);
+        if (timerItemEl) timerItemEl.classList.toggle('ray-near', nearReady);
+    }
+
+    function triggerRayLinkedPulse() {
+        var timerItemEl = document.getElementById('ray-timer-item');
+        var buttonEl = document.getElementById('btn-ray');
+        if (timerItemEl) {
+            timerItemEl.classList.remove('ray-linked-pulse');
+            timerItemEl.offsetWidth;
+            timerItemEl.classList.add('ray-linked-pulse');
+        }
+        if (buttonEl) {
+            buttonEl.classList.remove('ray-linked-pulse');
+            buttonEl.offsetWidth;
+            buttonEl.classList.add('ray-linked-pulse');
+        }
+
+        setTimeout(function() {
+            if (timerItemEl) timerItemEl.classList.remove('ray-linked-pulse');
+            if (buttonEl) buttonEl.classList.remove('ray-linked-pulse');
+        }, 500);
     }
 
     function startRayTimer() {
@@ -1714,6 +1772,7 @@
 
     function openRayBossBearMode() {
         if (raySecondsLeft > 0) return;
+        triggerRayLinkedPulse();
         dismissRayAdvice();
 
         if (!rayGameInitialized && typeof initGame === 'function') {
@@ -2943,7 +3002,7 @@
     }
 
     function updateBalanceBar(goldAmount) {
-        document.getElementById('bal-gold').textContent = goldAmount + 'g';
+        document.getElementById('bal-gold').textContent = goldAmount.toLocaleString() + ' pennies';
         document.getElementById('bal-portfolio').textContent = '$' + getPortfolioValue();
         updatePortalMeta();
     }
