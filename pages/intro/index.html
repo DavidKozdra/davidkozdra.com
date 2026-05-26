@@ -1521,21 +1521,35 @@
           alert("Choose an image file.");
           return;
         }
-        if (file.size > 2500000) {
-          alert("Choose an image under 2.5 MB so the theme can stay saved locally.");
-          return;
-        }
 
-        const reader = new FileReader();
-        reader.onload = () => {
+        const objectUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+          const MAX = 1920;
+          let { naturalWidth: w, naturalHeight: h } = img;
+          if (w > MAX || h > MAX) {
+            const scale = MAX / Math.max(w, h);
+            w = Math.round(w * scale);
+            h = Math.round(h * scale);
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
           const nextSettings = maybeForkToCustom(normalizeThemeSettings({
             ...activeThemeSettings,
             wallpaper: "upload",
-            wallpaperUrl: reader.result
+            wallpaperUrl: dataUrl
           }));
           updateThemeSettings(nextSettings);
         };
-        reader.readAsDataURL(file);
+        img.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          alert("Could not load that image file.");
+        };
+        img.src = objectUrl;
       });
     }
 
