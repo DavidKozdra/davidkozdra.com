@@ -21,14 +21,14 @@
   <link rel="canonical" href="https://davidkozdra.com/">
 
   <title>David Kozdra</title>
-  <link rel="stylesheet" href="assets/css/DE_styles.css?v=1.2" id="default" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/DE_styles.css?v=1.2"></noscript>
+  <link rel="stylesheet" href="assets/css/DE_styles.css?v=1.3" id="default" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/DE_styles.css?v=1.3"></noscript>
 
   <link rel="manifest" href="/manifest.json" />
-  <link rel="stylesheet" id="modern-theme" class="theme" href="assets/css/modern.css?v=1.16" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/modern.css?v=1.16"></noscript>
-  <link rel="stylesheet" id="retro-theme" class="theme" href="assets/css/retro.css?v=1.4" disabled="true" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/retro.css?v=1.4"></noscript>
+  <link rel="stylesheet" id="modern-theme" class="theme" href="assets/css/modern.css?v=1.17" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/modern.css?v=1.17"></noscript>
+  <link rel="stylesheet" id="retro-theme" class="theme" href="assets/css/retro.css?v=1.5" disabled="true" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/retro.css?v=1.5"></noscript>
   
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link class="import" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -197,25 +197,21 @@
       <!-- Navigation Menu -->
 
         <nav class="navigation" aria-label="Main navigation">
-          <div class="drop-down">
-            <button style="padding: 0%;" aria-label="Open menu" aria-expanded="false" aria-haspopup="true"><picture>
+          <div class="drop-down" id="main-drop-down">
+            <button id="main-menu-btn" style="padding: 0%;" aria-label="Open menu" aria-expanded="false" aria-haspopup="true"><picture>
                 <source srcset="/assets/images/brand/favicon.webp" type="image/webp">
                 <img src="/assets/images/brand/favicon.webp" alt="" id="task-bar-icon" width="32" height="32" role="presentation" aria-hidden="true">
               </picture></button>
-            <div class="drop-down-content">
+            <div class="drop-down-content" id="main-drop-down-content">
               <div id="dropdown-app-sections"></div>
-          
-              <!-- Settings -->
+              <hr id="dropdown-system-sep">
               <button id="settingsButton" onclick="desktopIconRouter(event,'System')" aria-label="Open System settings">
-                  System
+                  <i class="fa fa-gear" aria-hidden="true"></i> System
               </button>
-          
-              <!-- Power Button -->
-              <button onclick="refresh()" style="padding-bottom: 10%;" aria-label="Restart system">
+              <button onclick="refresh()" aria-label="Restart system">
                   <i class="fa fa-power-off" aria-hidden="true"></i> Power
               </button>
           </div>
-          
         </div>
           
 
@@ -425,6 +421,45 @@ document.addEventListener('DOMContentLoaded', () => {
     let winLen = 0;
     let activeWindowCount = 0;
     let loading = true;
+    const MOBILE_WINDOW_QUERY = window.matchMedia("(max-width: 820px), (orientation: portrait)");
+
+    const WALLPAPER_PRESETS = {
+      modern: {
+        fallback: 'url("/assets/images/projects/rainbow-ipad-2.png")',
+        image: 'image-set(url("/assets/images/projects/rainbow-ipad-2.webp") type("image/webp") 1x, url("/assets/images/projects/rainbow-ipad-2.png") type("image/png") 1x)'
+      },
+      retro: {
+        fallback: 'url("/assets/images/projects/backgroundOption2.jpg")',
+        image: 'image-set(url("/assets/images/projects/backgroundOption2.webp") type("image/webp") 1x, url("/assets/images/projects/backgroundOption2.jpg") type("image/jpeg") 1x)'
+      },
+      daintree: {
+        fallback: 'url("/assets/images/projects/DainTree.png")',
+        image: 'image-set(url("/assets/images/projects/DainTree.webp") type("image/webp") 1x, url("/assets/images/projects/DainTree.png") type("image/png") 1x)'
+      },
+      none: {
+        fallback: "none",
+        image: "none"
+      }
+    };
+
+    const DEFAULT_THEME_SETTINGS = {
+      stylesheetId: "modern-theme",
+      accent: "#09639f",
+      accentStrong: "#054f80",
+      desktopColor: "#77cff8",
+      windowSurface: "#ffffff",
+      windowText: "#111827",
+      titleText: "#111827",
+      headerStart: "#d3dee0",
+      headerEnd: "#d0f2ff",
+      menuSurface: "#343434",
+      wallpaper: "modern",
+      wallpaperUrl: "",
+      windowOpacity: 100,
+      windowRadius: 8,
+      iconScale: 100,
+      overlayStrength: 18
+    };
 
     const CORE_MENU_APPS = [
       { id: 'files', name: 'Files', route: 'files', icon: '/assets/images/ui-icons/File_System_icon.webp', tags: ['tool'] },
@@ -539,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
         category.classList.add('category');
 
         const categoryTitle = document.createElement('div');
-        categoryTitle.classList.add('category-btn');
+        categoryTitle.classList.add('category-label');
         categoryTitle.textContent = section.label;
 
         const subCategory = document.createElement('div');
@@ -554,6 +589,187 @@ document.addEventListener('DOMContentLoaded', () => {
         sectionsRoot.appendChild(category);
       });
     }
+
+    function clampNumber(value, min, max, fallback) {
+      const numberValue = Number(value);
+      if (!Number.isFinite(numberValue)) {
+        return fallback;
+      }
+      return Math.min(max, Math.max(min, numberValue));
+    }
+
+    function normalizeThemeSettings(settings = {}) {
+      const merged = {
+        ...DEFAULT_THEME_SETTINGS,
+        ...settings
+      };
+
+      if (!document.getElementById(merged.stylesheetId)) {
+        merged.stylesheetId = DEFAULT_THEME_SETTINGS.stylesheetId;
+      }
+
+      if (!WALLPAPER_PRESETS[merged.wallpaper] && merged.wallpaper !== "custom" && merged.wallpaper !== "upload") {
+        merged.wallpaper = DEFAULT_THEME_SETTINGS.wallpaper;
+      }
+
+      merged.windowOpacity = clampNumber(merged.windowOpacity, 65, 100, DEFAULT_THEME_SETTINGS.windowOpacity);
+      merged.windowRadius = clampNumber(merged.windowRadius, 0, 24, DEFAULT_THEME_SETTINGS.windowRadius);
+      merged.iconScale = clampNumber(merged.iconScale, 80, 125, DEFAULT_THEME_SETTINGS.iconScale);
+      merged.overlayStrength = clampNumber(merged.overlayStrength, 0, 45, DEFAULT_THEME_SETTINGS.overlayStrength);
+      merged._customId = settings._customId || null;
+      merged._unsaved = !!settings._unsaved;
+
+      return merged;
+    }
+
+    function readThemeSettings() {
+      let savedSettings = {};
+      try {
+        savedSettings = JSON.parse(localStorage.getItem("dkThemeSettings")) || {};
+      } catch {
+        savedSettings = {};
+      }
+
+      const legacyStylesheetId = localStorage.getItem("defaultStyleSheet") || localStorage.getItem("selectedTheme");
+      if (legacyStylesheetId && !savedSettings.stylesheetId) {
+        savedSettings.stylesheetId = legacyStylesheetId;
+      }
+
+      return normalizeThemeSettings(savedSettings);
+    }
+
+    function hexToRgb(hex, fallback = [9, 99, 159]) {
+      const normalized = String(hex || "").trim().replace("#", "");
+      const value = normalized.length === 3
+        ? normalized.split("").map(char => char + char).join("")
+        : normalized;
+
+      if (!/^[0-9a-fA-F]{6}$/.test(value)) {
+        return fallback;
+      }
+
+      return [
+        parseInt(value.slice(0, 2), 16),
+        parseInt(value.slice(2, 4), 16),
+        parseInt(value.slice(4, 6), 16)
+      ];
+    }
+
+    function cssUrl(value) {
+      const rawValue = String(value || "").trim();
+      const allowed = /^(https?:\/\/|data:image\/|\/|\.\/|\.\.\/)/i;
+      if (!rawValue || !allowed.test(rawValue)) {
+        return "";
+      }
+
+      return `url("${rawValue.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
+    }
+
+    function getWallpaperTokens(settings) {
+      if ((settings.wallpaper === "custom" || settings.wallpaper === "upload") && settings.wallpaperUrl) {
+        const customUrl = cssUrl(settings.wallpaperUrl);
+        if (customUrl) {
+          return { fallback: customUrl, image: customUrl };
+        }
+      }
+
+      return WALLPAPER_PRESETS[settings.wallpaper] || WALLPAPER_PRESETS.modern;
+    }
+
+    function setThemeElementEnabled(element, enabled) {
+      element.disabled = !enabled;
+      element.media = enabled ? "all" : "not all";
+      if (element.sheet) {
+        element.sheet.disabled = !enabled;
+      }
+    }
+
+    const BUILTIN_THEMES = ["modern-theme", "retro-theme"];
+    const THEME_OVERRIDEABLE_PROPS = [
+      "--accent-color", "--accent-strong", "--focus-ring", "--desktop-background",
+      "--main-gradient", "--window-header", "--window-header-hover", "--windowBackground",
+      "--windowText", "--window-title-text", "--window-border", "--window-radius",
+      "--system-grey", "--icon-selection", "--desktop-overlay", "--icon-scale",
+      "--background-image-fallback", "--background-image"
+    ];
+
+    function applyThemeSettings(settings = {}, options = {}) {
+      const normalized = normalizeThemeSettings(settings);
+      const root = document.documentElement;
+
+      const isBuiltIn = BUILTIN_THEMES.includes(normalized.stylesheetId);
+      const hasCustomisation = !!normalized._customId || !!normalized._unsaved;
+
+      const wallpaper = getWallpaperTokens(normalized);
+
+      if (isBuiltIn && !hasCustomisation) {
+        // Let the stylesheet's own color/chrome vars win — remove those inline overrides
+        const COLOR_PROPS = THEME_OVERRIDEABLE_PROPS.filter(p => p !== "--background-image-fallback" && p !== "--background-image");
+        COLOR_PROPS.forEach(prop => root.style.removeProperty(prop));
+      } else {
+        const accentRgb = hexToRgb(normalized.accent);
+        const accentStrongRgb = hexToRgb(normalized.accentStrong, accentRgb);
+        const windowRgb = hexToRgb(normalized.windowSurface, [255, 255, 255]);
+        const menuRgb = hexToRgb(normalized.menuSurface, [52, 52, 52]);
+        const opacity = normalized.windowOpacity / 100;
+        const overlay = normalized.overlayStrength / 100;
+
+        root.style.setProperty("--accent-color", normalized.accent);
+        root.style.setProperty("--accent-strong", normalized.accentStrong);
+        root.style.setProperty("--focus-ring", normalized.accent);
+        root.style.setProperty("--desktop-background", normalized.desktopColor);
+        root.style.setProperty("--main-gradient", `linear-gradient(135deg, ${normalized.accentStrong}, ${normalized.accent})`);
+        root.style.setProperty("--window-header", `linear-gradient(90deg, ${normalized.headerStart}, ${normalized.headerEnd})`);
+        root.style.setProperty("--window-header-hover", `linear-gradient(90deg, rgba(${accentStrongRgb.join(",")}, 0.85), rgba(${accentRgb.join(",")}, 0.92))`);
+        root.style.setProperty("--windowBackground", `rgba(${windowRgb.join(",")}, ${opacity})`);
+        root.style.setProperty("--windowText", normalized.windowText);
+        root.style.setProperty("--window-title-text", normalized.titleText);
+        root.style.setProperty("--window-border", `rgba(${accentStrongRgb.join(",")}, 0.38)`);
+        root.style.setProperty("--window-radius", `${normalized.windowRadius}px`);
+        root.style.setProperty("--system-grey", `linear-gradient(to bottom, rgba(${menuRgb.join(",")}, 0.98), rgba(${menuRgb.join(",")}, 0.92))`);
+        root.style.setProperty("--icon-selection", `rgba(${accentRgb.join(",")}, 0.24)`);
+        root.style.setProperty("--desktop-overlay", `linear-gradient(180deg, rgba(0,0,0,${overlay * 0.35}), rgba(0,0,0,${overlay}))`);
+        root.style.setProperty("--icon-scale", String(normalized.iconScale / 100));
+      }
+
+      // Always apply the stored wallpaper — even on built-in themes so the user's
+      // preset/custom choice survives theme switches.
+      root.style.setProperty("--background-image-fallback", wallpaper.fallback);
+      root.style.setProperty("--background-image", wallpaper.image);
+
+      const parentStylesheets = document.getElementsByClassName("theme");
+      Array.from(parentStylesheets).forEach(sheet => {
+        setThemeElementEnabled(sheet, sheet.id === normalized.stylesheetId);
+      });
+
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+      if (themeColor) {
+        themeColor.setAttribute("content", normalized.accent);
+      }
+
+      if (options.persist !== false) {
+        localStorage.setItem("dkThemeSettings", JSON.stringify(normalized));
+        localStorage.setItem("defaultStyleSheet", normalized.stylesheetId);
+        localStorage.setItem("selectedTheme", normalized.stylesheetId);
+      }
+
+      if (options.broadcast !== false) {
+        broadcastThemeSettings(normalized);
+      }
+
+      scheduleDesktopIconGridLayout();
+      return normalized;
+    }
+
+    function broadcastThemeSettings(settings = readThemeSettings()) {
+      document.querySelectorAll("iframe").forEach(frame => {
+        try {
+          frame.contentWindow?.postMessage({ action: "themeSettings", themeSettings: settings }, "*");
+        } catch {}
+      });
+    }
+
+    applyThemeSettings(readThemeSettings(), { persist: false, broadcast: false });
 
     
     const adjustBoundaries = () => {
@@ -606,13 +822,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (loading) {
 
-        let stylesheetId = localStorage.getItem("defaultStyleSheet")
-         window.parent.postMessage({ stylesheetId }, '*');
+        applyThemeSettings(readThemeSettings(), { persist: false, broadcast: false });
         document.getElementsByClassName("loader-page")[0].style.display = "block";
         document.getElementById("de").style.display = "none";
         await delay(500);
         document.getElementsByClassName("loader-page")[0].style.display = "none";
-        document.getElementById("de").style.display = "block";
+        document.getElementById("de").style.display = "flex";
         scheduleDesktopIconGridLayout();
         loading = false;
       } else {
@@ -649,15 +864,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.childNodes[0].style.width = window.offsetWidth + "px";
         });
 
-        if(activeWindowCount > 0){
-          //get desktop and set the height to 92 dvh
-          let desktop = document.getElementById("desktop");
-          desktop.style.height = "92dvh";
-        }else {
-          //get desktop and set the height to 100 dvh
-          let desktop = document.getElementById("desktop");
-          desktop.style.height = "93.5dvh";
-        }
+        document.getElementById("desktop").style.height = "";
 
         // applyBoundaries(activeWindows);
         if (activeWindowCount != activeWindows.length) {
@@ -947,6 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       sizeDesktopIconLabels();
+      setupMobileIconLaunch();
       CreateDesktopIconGrid();
     }
 
@@ -1043,17 +1251,32 @@ document.addEventListener('DOMContentLoaded', () => {
         function dragElement(title, elmnt) {
       var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
       var isDragging = false;
+      var hasMoved = false;
       if (title == null) {
         return;
       }
 
       // If present, the header is where you move the DIV from:
-      title.onmousedown = dragMouseDown;
+      if (window.PointerEvent) {
+        title.onpointerdown = dragMouseDown;
+      } else {
+        title.onmousedown = dragMouseDown;
+      }
 
       function dragMouseDown(e) {
         e = e || window.event;
+        if (e.button !== undefined && e.button !== 0) return;
+        if (e.target?.closest?.(".window-button")) return;
+        if (MOBILE_WINDOW_QUERY.matches && elmnt.classList.contains("window")) return;
         e.preventDefault();
         isDragging = true;
+        hasMoved = false;
+        elmnt.dataset.wasDragged = "false";
+        if (e.pointerId !== undefined && title.setPointerCapture) {
+          try {
+            title.setPointerCapture(e.pointerId);
+          } catch {}
+        }
 
         // Get the mouse cursor position at startup:
         pos3 = e.clientX;
@@ -1079,11 +1302,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Calculate new position
         let newTop = elmnt.offsetTop - pos2;
         let newLeft = elmnt.offsetLeft - pos1;
+        hasMoved = hasMoved || Math.abs(pos1) > 2 || Math.abs(pos2) > 2;
 
         if (elmnt.classList.contains('desktop-icon')) {
           const desktopGrid = elmnt.parentElement;
           const maxTop = Math.max(0, desktopGrid.clientHeight - elmnt.offsetHeight);
           const maxLeft = Math.max(0, desktopGrid.clientWidth - elmnt.offsetWidth);
+
+          newTop = Math.min(Math.max(0, newTop), maxTop);
+          newLeft = Math.min(Math.max(0, newLeft), maxLeft);
+        } else if (elmnt.classList.contains('window')) {
+          const desktop = document.getElementById("desktop");
+          const minVisibleHeight = Math.min(80, elmnt.offsetHeight);
+          const minVisibleWidth = Math.min(120, elmnt.offsetWidth);
+          const maxTop = Math.max(0, desktop.clientHeight - minVisibleHeight);
+          const maxLeft = Math.max(0, desktop.clientWidth - minVisibleWidth);
 
           newTop = Math.min(Math.max(0, newTop), maxTop);
           newLeft = Math.min(Math.max(0, newLeft), maxLeft);
@@ -1101,6 +1334,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check for icon collisions only when drag ends
         if (elmnt.classList.contains('desktop-icon')) {
           resolveIconCollisions(elmnt);
+        }
+        if (hasMoved) {
+          elmnt.dataset.wasDragged = "true";
+          setTimeout(() => {
+            elmnt.dataset.wasDragged = "false";
+          }, 80);
         }
       }
     }
@@ -1127,13 +1366,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectIcon(e) {
-      if (!e.target.classList.contains("icon-text")) {
-        e.target.classList.toggle("active");
+      const icon = e?.currentTarget?.classList?.contains("desktop-icon")
+        ? e.currentTarget
+        : e?.target?.closest?.(".desktop-icon");
+
+      if (!icon) {
+        return;
       }
 
-
-      e.target.classList.toggle("active");
+      deselectAllIcons();
+      icon.classList.add("active");
     }
+
+    function setupMobileIconLaunch() {
+      const icons = document.getElementsByClassName("desktop-icon");
+      for (let i = 0; i < icons.length; i++) {
+        const icon = icons[i];
+        if (icon.dataset.mobileLaunchBound === "true") {
+          continue;
+        }
+
+        icon.dataset.mobileLaunchBound = "true";
+        icon.addEventListener("click", function(evt) {
+          if (!MOBILE_WINDOW_QUERY.matches || icon.dataset.wasDragged === "true") {
+            return;
+          }
+
+          if (typeof icon.ondblclick === "function") {
+            evt.preventDefault();
+            icon.ondblclick.call(icon, evt);
+          }
+        });
+      }
+    }
+
     function delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -1492,7 +1758,12 @@ document.addEventListener('DOMContentLoaded', () => {
       header.appendChild(headerImage);
       header.innerHTML += title;
       header.appendChild(buttons);
-      newWindow.style.width = width + "px";
+      if (MOBILE_WINDOW_QUERY.matches) {
+        newWindow.style.width = "100%";
+        newWindow.style.height = "100%";
+      } else {
+        newWindow.style.width = width + "px";
+      }
       newWindow.marginTop = "50px";
       newWindow.appendChild(header);
 
@@ -1502,6 +1773,11 @@ document.addEventListener('DOMContentLoaded', () => {
         newWindow.appendChild(windowContent);
       } else {
         newWindow.appendChild(content);
+        if (content instanceof HTMLIFrameElement) {
+          content.addEventListener("load", () => {
+            broadcastThemeSettings(readThemeSettings());
+          });
+        }
       }
 
       newWindow.onmousedown = function () {
@@ -1735,19 +2011,22 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
+      if (event.data && event.data.action === 'requestThemeSettings') {
+        event.source?.postMessage({ action: 'themeSettings', themeSettings: readThemeSettings() }, '*');
+        return;
+      }
+
+      if (event.data && event.data.action === 'applyThemeSettings' && event.data.themeSettings) {
+        applyThemeSettings(event.data.themeSettings);
+        return;
+      }
+
       // Handle theme changes
       if (event.data && event.data.stylesheetId) {
-        // Disable all parent stylesheets
-        const parentStylesheets = document.getElementsByClassName('theme');
-        Array.from(parentStylesheets).forEach(sheet => {
-
-          sheet.disabled = true;
+        applyThemeSettings({
+          ...readThemeSettings(),
+          stylesheetId: event.data.stylesheetId
         });
-        localStorage.setItem('defaultStyleSheet', event.data.stylesheetId);
-        let target_theme = document.getElementById(event.data.stylesheetId);
-
-        // Enable the selected stylesheet in the parent document
-        target_theme.disabled = false;
       }
     }
 
@@ -1825,6 +2104,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         renderDropDownContent();
       } catch(e) {}
+    })();
+
+    // ── Dropdown toggle (click-to-open, click-outside-to-close) ──────────────
+    (function() {
+      const btn = document.getElementById('main-menu-btn');
+      const panel = document.getElementById('main-drop-down-content');
+      if (!btn || !panel) return;
+
+      function openMenu() {
+        panel.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeMenu() {
+        panel.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        panel.classList.contains('open') ? closeMenu() : openMenu();
+      });
+
+      // Close when clicking an item inside the panel
+      panel.addEventListener('click', () => {
+        closeMenu();
+      });
+
+      // Close on outside click
+      document.addEventListener('click', (e) => {
+        if (!panel.contains(e.target) && e.target !== btn) {
+          closeMenu();
+        }
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+      });
     })();
 
   </script>

@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 
-  <style id="modern-theme" class="theme">
+  <style id="modern-theme" class="theme" media="all">
     :root{
       --bg: #f0f4f8;
       --surface: #ffffff;
@@ -304,7 +304,7 @@
     }
   </style>
 
-  <style id="retro-theme" class="theme" disabled>
+  <style id="retro-theme" class="theme" media="not all" disabled>
     :root{
       --surface:#111;
       --primary:#aaff00;
@@ -550,14 +550,293 @@
       background:#aaff00;
     }
   </style>
+
+  <style>
+    .settings-shell{
+      max-width:920px;
+      margin:24px auto 0;
+      text-align:left;
+      display:grid;
+      gap:18px;
+    }
+
+    .settings-toolbar,
+    .settings-section{
+      background:var(--surface, #fff);
+      border:1px solid rgba(91,107,127,.22);
+      border-radius:var(--radius, 14px);
+      box-shadow:var(--shadow, 0 6px 18px rgba(0,0,0,.08));
+      padding:18px;
+    }
+
+    .settings-toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .settings-toolbar p,
+    .settings-section p{
+      margin:0;
+      color:var(--text-muted, #5b6b7f);
+    }
+
+    .settings-actions,
+    .theme-mode-grid,
+    .wallpaper-options{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .settings-section h2{
+      margin:0 0 14px;
+      font-size:1.15rem;
+      color:var(--text-main, #243b53);
+    }
+
+    .theme-mode-grid label,
+    .wallpaper-options label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(91,107,127,.22);
+      border-radius:10px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.04);
+      cursor:pointer;
+    }
+
+    .settings-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+      gap:14px;
+    }
+
+    .setting-field{
+      display:grid;
+      gap:8px;
+      font-weight:600;
+      color:var(--text-main, #243b53);
+    }
+
+    .setting-field span{
+      font-size:.9rem;
+    }
+
+    .setting-field input,
+    .setting-field select{
+      width:100%;
+      min-height:42px;
+      box-sizing:border-box;
+      border:1px solid rgba(91,107,127,.3);
+      border-radius:10px;
+      background:var(--bg, #f0f4f8);
+      color:var(--text-main, #243b53);
+      padding:8px 10px;
+      font:inherit;
+    }
+
+    .setting-field input[type="color"]{
+      padding:4px;
+    }
+
+    .setting-field input[type="range"]{
+      padding:0;
+    }
+
+    .setting-value{
+      color:var(--text-muted, #5b6b7f);
+      font-size:.8rem;
+      font-weight:400;
+    }
+
+    .wallpaper-preview{
+      min-height:150px;
+      border-radius:14px;
+      border:1px solid rgba(91,107,127,.3);
+      background-color:#77cff8;
+      background-image:var(--settings-wallpaper-preview, url("/assets/images/projects/rainbow-ipad-2.webp"));
+      background-size:cover;
+      background-position:center;
+      margin-top:14px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .wallpaper-preview::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.2));
+    }
+
+    .file-button input{
+      display:none;
+    }
+
+    .settings-danger{
+      color:#b91c1c;
+    }
+
+    .theme-mode-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+    }
+
+    .theme-mode-header h2{
+      margin:0;
+    }
+
+    .add-theme-btn{
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      border:2px solid var(--primary, #2d7ff9);
+      background:transparent;
+      color:var(--primary, #2d7ff9);
+      font-size:1.3rem;
+      line-height:1;
+      padding:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex-shrink:0;
+      transition:.2s;
+    }
+
+    .add-theme-btn:hover{
+      background:var(--primary, #2d7ff9);
+      color:#fff;
+    }
+
+    .custom-theme-chip{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      border:1px solid rgba(91,107,127,.22);
+      border-radius:10px;
+      padding:8px 10px;
+      background:rgba(255,255,255,.04);
+      cursor:pointer;
+    }
+
+    .custom-theme-chip .del-theme{
+      margin-left:2px;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      border:none;
+      background:rgba(185,28,28,.15);
+      color:#b91c1c;
+      font-size:.75rem;
+      line-height:1;
+      padding:0;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .custom-theme-chip .del-theme:hover{
+      background:#b91c1c;
+      color:#fff;
+    }
+
+    /* Modal */
+    .theme-modal-backdrop{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      z-index:9000;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .theme-modal-backdrop.open{
+      display:flex;
+    }
+
+    .theme-modal{
+      background:var(--surface, #fff);
+      color:var(--text-main, #243b53);
+      border-radius:16px;
+      padding:28px 24px 20px;
+      width:min(340px,90vw);
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      display:grid;
+      gap:14px;
+    }
+
+    .theme-modal h3{
+      margin:0;
+      font-size:1.1rem;
+    }
+
+    .theme-modal input[type="text"]{
+      width:100%;
+      box-sizing:border-box;
+      border:1px solid rgba(91,107,127,.3);
+      border-radius:10px;
+      padding:10px 12px;
+      font:inherit;
+      background:var(--bg, #f0f4f8);
+      color:var(--text-main, #243b53);
+    }
+
+    .theme-modal-actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .theme-modal-actions button{
+      padding:8px 18px;
+      border-radius:8px;
+      font-size:.9rem;
+    }
+
+    @media(max-width:650px){
+      .settings-shell{
+        margin-top:16px;
+      }
+
+      .settings-toolbar,
+      .settings-section{
+        padding:14px;
+      }
+
+      .settings-actions button{
+        width:100%;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
+  <!-- New-theme modal -->
+  <div class="theme-modal-backdrop" id="new-theme-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="theme-modal">
+      <h3 id="modal-title">Save Theme As</h3>
+      <input type="text" id="new-theme-name" placeholder="My Theme" maxlength="32" autocomplete="off">
+      <div class="theme-modal-actions">
+        <button type="button" id="modal-cancel">Cancel</button>
+        <button type="button" id="modal-save" style="background:var(--primary,#2d7ff9);color:#fff">Save</button>
+      </div>
+    </div>
+  </div>
   <div id="intro">
     <div id="tab-container">
-      <button class="tab-button active" onclick="openTab(event,'welcome')">About David</button>
-      <button class="tab-button" onclick="openTab(event,'help')">Help</button>
-      <button class="tab-button" onclick="openTab(event,'settings')">Settings</button>
+      <button class="tab-button active" data-tab-target="welcome" onclick="openTab(event,'welcome')">About David</button>
+      <button class="tab-button" data-tab-target="help" onclick="openTab(event,'help')">Help</button>
+      <button class="tab-button" data-tab-target="settings" onclick="openTab(event,'settings')">Settings</button>
     </div>
 
     <div class="tab active" id="welcome">
@@ -650,17 +929,127 @@
       </p>
     </div>
 
-    <div class="tab tab-card" id="settings">
-      <h1>Settings</h1>
-      <button onclick="clearData()">Clear Data</button>
-      <h2>Theme</h2>
+    <div class="tab" id="settings">
+      <div class="settings-shell">
+        <div class="settings-toolbar">
+          <div>
+            <h1>Settings</h1>
+            <p>Personalize the desktop, window chrome, wallpaper, and touch scale.</p>
+          </div>
+          <div class="settings-actions">
+            <button type="button" onclick="resetThemeSettings()">Reset Theme</button>
+            <button type="button" class="settings-danger" onclick="clearData()">Clear Data</button>
+          </div>
+        </div>
 
-      <label>
-        <input type="radio" name="styleToggle" id="modern-radio" onclick="setTheme('modern-theme')"> Default
-      </label>
-      <label>
-        <input type="radio" name="styleToggle" id="retro-radio" onclick="setTheme('retro-theme')"> Retro
-      </label>
+        <section class="settings-section" aria-labelledby="theme-mode-heading">
+          <div class="theme-mode-header">
+            <h2 id="theme-mode-heading">Base Mode</h2>
+            <button class="add-theme-btn" id="open-new-theme-modal" type="button" aria-label="Save current settings as a new theme" title="Save as new theme">+</button>
+          </div>
+          <div class="theme-mode-grid" id="theme-mode-grid">
+            <label>
+              <input type="radio" name="styleToggle" id="modern-radio" value="modern-theme">
+              Default
+            </label>
+            <label>
+              <input type="radio" name="styleToggle" id="retro-radio" value="retro-theme">
+              Retro
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-section" aria-labelledby="shell-colors-heading">
+          <h2 id="shell-colors-heading">Shell Colors</h2>
+          <div class="settings-grid">
+            <label class="setting-field">
+              <span>Accent</span>
+              <input type="color" id="theme-accent">
+            </label>
+            <label class="setting-field">
+              <span>Accent Depth</span>
+              <input type="color" id="theme-accent-strong">
+            </label>
+            <label class="setting-field">
+              <span>Desktop Color</span>
+              <input type="color" id="theme-desktop-color">
+            </label>
+            <label class="setting-field">
+              <span>Menu Surface</span>
+              <input type="color" id="theme-menu-surface">
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-section" aria-labelledby="window-style-heading">
+          <h2 id="window-style-heading">Window Style</h2>
+          <div class="settings-grid">
+            <label class="setting-field">
+              <span>Window Surface</span>
+              <input type="color" id="theme-window-surface">
+            </label>
+            <label class="setting-field">
+              <span>Window Text</span>
+              <input type="color" id="theme-window-text">
+            </label>
+            <label class="setting-field">
+              <span>Title Text</span>
+              <input type="color" id="theme-title-text">
+            </label>
+            <label class="setting-field">
+              <span>Header Start</span>
+              <input type="color" id="theme-header-start">
+            </label>
+            <label class="setting-field">
+              <span>Header End</span>
+              <input type="color" id="theme-header-end">
+            </label>
+            <label class="setting-field">
+              <span>Opacity <output class="setting-value" id="window-opacity-value"></output></span>
+              <input type="range" id="theme-window-opacity" min="65" max="100" step="1">
+            </label>
+            <label class="setting-field">
+              <span>Corner Radius <output class="setting-value" id="window-radius-value"></output></span>
+              <input type="range" id="theme-window-radius" min="0" max="24" step="1">
+            </label>
+            <label class="setting-field">
+              <span>Icon Scale <output class="setting-value" id="icon-scale-value"></output></span>
+              <input type="range" id="theme-icon-scale" min="80" max="125" step="1">
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-section" aria-labelledby="wallpaper-heading">
+          <h2 id="wallpaper-heading">Wallpaper</h2>
+          <div class="settings-grid">
+            <label class="setting-field">
+              <span>Preset</span>
+              <select id="theme-wallpaper">
+                <option value="modern">Rainbow iPad</option>
+                <option value="retro">Retro Blue</option>
+                <option value="daintree">DainTree</option>
+                <option value="none">Color Only</option>
+                <option value="custom">Custom URL</option>
+                <option value="upload">Uploaded Image</option>
+              </select>
+            </label>
+            <label class="setting-field">
+              <span>Custom URL</span>
+              <input type="url" id="theme-wallpaper-url" placeholder="https://example.com/wallpaper.jpg">
+            </label>
+            <label class="setting-field file-button">
+              <span>Upload Image</span>
+              <button type="button" id="wallpaper-upload-button">Choose Image</button>
+              <input type="file" id="theme-wallpaper-upload" accept="image/*">
+            </label>
+            <label class="setting-field">
+              <span>Overlay <output class="setting-value" id="overlay-strength-value"></output></span>
+              <input type="range" id="theme-overlay-strength" min="0" max="45" step="1">
+            </label>
+          </div>
+          <div class="wallpaper-preview" id="wallpaper-preview" aria-hidden="true"></div>
+        </section>
+      </div>
     </div>
 
     <p style="text-align:center;margin-top:50px">
@@ -669,31 +1058,531 @@
   </div>
 
   <script>
-    function openTab(evt, id) {
+    function activateTab(id, updateHash = false) {
+      if (!document.getElementById(id)) return;
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      evt.currentTarget.classList.add('active');
+      document.querySelector(`[data-tab-target="${id}"]`)?.classList.add('active');
+      if (updateHash) {
+        history.replaceState(null, "", `#${id}`);
+      }
+    }
+
+    function openTab(evt, id) {
+      activateTab(id, true);
+    }
+
+    const WALLPAPER_PRESETS = {
+      modern: 'url("/assets/images/projects/rainbow-ipad-2.webp")',
+      retro: 'url("/assets/images/projects/backgroundOption2.webp")',
+      daintree: 'url("/assets/images/projects/DainTree.webp")',
+      none: 'none'
+    };
+
+    const DEFAULT_THEME_SETTINGS = {
+      stylesheetId: "modern-theme",
+      accent: "#09639f",
+      accentStrong: "#054f80",
+      desktopColor: "#77cff8",
+      windowSurface: "#ffffff",
+      windowText: "#111827",
+      titleText: "#111827",
+      headerStart: "#d3dee0",
+      headerEnd: "#d0f2ff",
+      menuSurface: "#343434",
+      wallpaper: "modern",
+      wallpaperUrl: "",
+      windowOpacity: 100,
+      windowRadius: 8,
+      iconScale: 100,
+      overlayStrength: 18
+    };
+
+    let activeThemeSettings = { ...DEFAULT_THEME_SETTINGS };
+    let settingsControls = {};
+
+    function clampNumber(value, min, max, fallback) {
+      const numberValue = Number(value);
+      if (!Number.isFinite(numberValue)) return fallback;
+      return Math.min(max, Math.max(min, numberValue));
+    }
+
+    function normalizeThemeSettings(settings = {}) {
+      const merged = { ...DEFAULT_THEME_SETTINGS, ...settings };
+      if (!document.getElementById(merged.stylesheetId)) {
+        merged.stylesheetId = DEFAULT_THEME_SETTINGS.stylesheetId;
+      }
+      if (!WALLPAPER_PRESETS[merged.wallpaper] && merged.wallpaper !== "custom" && merged.wallpaper !== "upload") {
+        merged.wallpaper = DEFAULT_THEME_SETTINGS.wallpaper;
+      }
+      merged.windowOpacity = clampNumber(merged.windowOpacity, 65, 100, DEFAULT_THEME_SETTINGS.windowOpacity);
+      merged.windowRadius = clampNumber(merged.windowRadius, 0, 24, DEFAULT_THEME_SETTINGS.windowRadius);
+      merged.iconScale = clampNumber(merged.iconScale, 80, 125, DEFAULT_THEME_SETTINGS.iconScale);
+      merged.overlayStrength = clampNumber(merged.overlayStrength, 0, 45, DEFAULT_THEME_SETTINGS.overlayStrength);
+      merged._customId = settings._customId || null;
+      merged._unsaved = !!settings._unsaved;
+      return merged;
+    }
+
+    function readThemeSettings() {
+      let savedSettings = {};
+      try {
+        savedSettings = JSON.parse(localStorage.getItem("dkThemeSettings")) || {};
+      } catch {
+        savedSettings = {};
+      }
+
+      const legacyStylesheetId = localStorage.getItem("selectedTheme") || localStorage.getItem("defaultStyleSheet");
+      if (legacyStylesheetId && !savedSettings.stylesheetId) {
+        savedSettings.stylesheetId = legacyStylesheetId;
+      }
+
+      return normalizeThemeSettings(savedSettings);
+    }
+
+    function hexToRgb(hex, fallback = [9, 99, 159]) {
+      const normalized = String(hex || "").trim().replace("#", "");
+      const value = normalized.length === 3
+        ? normalized.split("").map(char => char + char).join("")
+        : normalized;
+
+      if (!/^[0-9a-fA-F]{6}$/.test(value)) return fallback;
+      return [
+        parseInt(value.slice(0, 2), 16),
+        parseInt(value.slice(2, 4), 16),
+        parseInt(value.slice(4, 6), 16)
+      ];
+    }
+
+    function cssUrl(value) {
+      const rawValue = String(value || "").trim();
+      const allowed = /^(https?:\/\/|data:image\/|\/|\.\/|\.\.\/)/i;
+      if (!rawValue || !allowed.test(rawValue)) return "";
+      return `url("${rawValue.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
+    }
+
+    function getWallpaperPreview(settings) {
+      if ((settings.wallpaper === "custom" || settings.wallpaper === "upload") && settings.wallpaperUrl) {
+        return cssUrl(settings.wallpaperUrl) || WALLPAPER_PRESETS.modern;
+      }
+      return WALLPAPER_PRESETS[settings.wallpaper] || WALLPAPER_PRESETS.modern;
+    }
+
+    function setThemeElementEnabled(element, enabled) {
+      element.disabled = !enabled;
+      element.media = enabled ? "all" : "not all";
+      if (element.sheet) {
+        element.sheet.disabled = !enabled;
+      }
+    }
+
+    const BUILTIN_THEMES = ["modern-theme", "retro-theme"];
+
+    function applyLocalThemeSettings(settings) {
+      const normalized = normalizeThemeSettings(settings);
+      const themes = Array.from(document.querySelectorAll('.theme'));
+      themes.forEach(style => {
+        setThemeElementEnabled(style, style.id === normalized.stylesheetId);
+      });
+
+      const root = document.documentElement;
+      const isBuiltIn = BUILTIN_THEMES.includes(normalized.stylesheetId);
+      const hasCustomisation = !!normalized._customId || !!normalized._unsaved;
+
+      if (isBuiltIn && !hasCustomisation) {
+        root.style.removeProperty("--primary");
+        root.style.removeProperty("--primary-light");
+        root.style.removeProperty("--bg");
+        root.style.removeProperty("--surface");
+        root.style.removeProperty("--text-main");
+        root.style.removeProperty("--text-muted");
+      } else {
+        const accentRgb = hexToRgb(normalized.accent);
+        const surfaceRgb = hexToRgb(normalized.windowSurface, [255, 255, 255]);
+        const textRgb = hexToRgb(normalized.windowText, [17, 24, 39]);
+
+        root.style.setProperty("--primary", normalized.accent);
+        root.style.setProperty("--primary-light", `rgba(${accentRgb.join(",")}, 0.12)`);
+        root.style.setProperty("--bg", `rgba(${surfaceRgb.join(",")}, 0.82)`);
+        root.style.setProperty("--surface", normalized.windowSurface);
+        root.style.setProperty("--text-main", normalized.windowText);
+        root.style.setProperty("--text-muted", `rgba(${textRgb.join(",")}, 0.68)`);
+      }
+
+      root.style.setProperty("--settings-wallpaper-preview", getWallpaperPreview(normalized));
+
+      
+    }
+
+    function persistThemeSettings(settings) {
+      localStorage.setItem("dkThemeSettings", JSON.stringify(settings));
+      localStorage.setItem("selectedTheme", settings.stylesheetId);
+      localStorage.setItem("defaultStyleSheet", settings.stylesheetId);
+    }
+
+    function postThemeSettings(settings) {
+      window.parent.postMessage({ action: "applyThemeSettings", themeSettings: settings }, "*");
+    }
+
+    function setSettingsControls(settings) {
+      const normalized = normalizeThemeSettings(settings);
+      if (!settingsControls.accent) return;
+
+      if (!normalized._customId && !normalized._unsaved) {
+        settingsControls.modernRadio.checked = normalized.stylesheetId === "modern-theme";
+        settingsControls.retroRadio.checked = normalized.stylesheetId === "retro-theme";
+      }
+      settingsControls.accent.value = normalized.accent;
+      settingsControls.accentStrong.value = normalized.accentStrong;
+      settingsControls.desktopColor.value = normalized.desktopColor;
+      settingsControls.menuSurface.value = normalized.menuSurface;
+      settingsControls.windowSurface.value = normalized.windowSurface;
+      settingsControls.windowText.value = normalized.windowText;
+      settingsControls.titleText.value = normalized.titleText;
+      settingsControls.headerStart.value = normalized.headerStart;
+      settingsControls.headerEnd.value = normalized.headerEnd;
+      settingsControls.windowOpacity.value = normalized.windowOpacity;
+      settingsControls.windowRadius.value = normalized.windowRadius;
+      settingsControls.iconScale.value = normalized.iconScale;
+      settingsControls.wallpaper.value = normalized.wallpaper;
+      settingsControls.wallpaperUrl.value = normalized.wallpaperUrl || "";
+      settingsControls.overlayStrength.value = normalized.overlayStrength;
+      settingsControls.windowOpacityValue.value = `${normalized.windowOpacity}%`;
+      settingsControls.windowRadiusValue.value = `${normalized.windowRadius}px`;
+      settingsControls.iconScaleValue.value = `${normalized.iconScale}%`;
+      settingsControls.overlayStrengthValue.value = `${normalized.overlayStrength}%`;
+    }
+
+    function collectThemeSettingsFromControls() {
+      let stylesheetId;
+      if (settingsControls.retroRadio.checked) {
+        stylesheetId = "retro-theme";
+      } else if (settingsControls.modernRadio.checked) {
+        stylesheetId = "modern-theme";
+      } else {
+        // Custom theme active — preserve its base
+        stylesheetId = activeThemeSettings.stylesheetId;
+      }
+      return normalizeThemeSettings({
+        ...activeThemeSettings,
+        stylesheetId,
+        accent: settingsControls.accent.value,
+        accentStrong: settingsControls.accentStrong.value,
+        desktopColor: settingsControls.desktopColor.value,
+        menuSurface: settingsControls.menuSurface.value,
+        windowSurface: settingsControls.windowSurface.value,
+        windowText: settingsControls.windowText.value,
+        titleText: settingsControls.titleText.value,
+        headerStart: settingsControls.headerStart.value,
+        headerEnd: settingsControls.headerEnd.value,
+        windowOpacity: settingsControls.windowOpacity.value,
+        windowRadius: settingsControls.windowRadius.value,
+        iconScale: settingsControls.iconScale.value,
+        wallpaper: settingsControls.wallpaper.value,
+        wallpaperUrl: settingsControls.wallpaperUrl.value.trim(),
+        overlayStrength: settingsControls.overlayStrength.value
+      });
+    }
+
+    function updateThemeSettings(nextSettings, options = {}) {
+      activeThemeSettings = normalizeThemeSettings({
+        ...activeThemeSettings,
+        ...nextSettings
+      });
+      persistThemeSettings(activeThemeSettings);
+      applyLocalThemeSettings(activeThemeSettings);
+      if (options.syncControls !== false) {
+        setSettingsControls(activeThemeSettings);
+        syncBaseThemeRadios();
+      }
+      postThemeSettings(activeThemeSettings );
     }
 
     function setTheme(themeId) {
-      const themes = Array.from(document.querySelectorAll('.theme'));
-      const selectedTheme = themes.find(style => style.id === themeId);
-      const activeThemeId = selectedTheme ? themeId : 'modern-theme';
+      updateThemeSettings({ stylesheetId: themeId });
+    }
 
-      themes.forEach(style => {
-        style.disabled = style.id !== activeThemeId;
+    // ── Custom saved themes ───────────────────────────────────────────────────
+
+    const CUSTOM_THEMES_KEY = "dkCustomThemes";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+    function loadCustomThemes() {
+      try {
+        return JSON.parse(localStorage.getItem(CUSTOM_THEMES_KEY)) || [];
+      } catch { return []; }
+    }
+
+    function saveCustomThemes(themes) {
+      localStorage.setItem(CUSTOM_THEMES_KEY, JSON.stringify(themes));
+    }
+
+    function renderCustomThemeChips() {
+      const grid = document.getElementById("theme-mode-grid");
+      if (!grid) return;
+
+      grid.querySelectorAll(".custom-theme-chip").forEach(el => el.remove());
+
+      const themes = loadCustomThemes();
+      themes.forEach(theme => {
+        const chip = document.createElement("label");
+        chip.className = "custom-theme-chip";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "styleToggle";
+        radio.value = "custom-saved:" + theme.id;
+        if (activeThemeSettings._customId === theme.id) radio.checked = true;
+
+        radio.addEventListener("change", () => {
+          if (!radio.checked) return;
+          // Always read fresh from storage — the saved settings may have been
+          // updated since this chip was rendered.
+          const fresh = loadCustomThemes().find(t => t.id === theme.id);
+          if (!fresh) return;
+          const restored = normalizeThemeSettings({ ...fresh.settings, _customId: fresh.id, _unsaved: false });
+          activeThemeSettings = restored;
+          persistThemeSettings(activeThemeSettings);
+          applyLocalThemeSettings(activeThemeSettings);
+          setSettingsControls(activeThemeSettings);
+          syncBaseThemeRadios();
+          postThemeSettings(activeThemeSettings);
+        });
+
+        const label = document.createTextNode(" " + theme.name);
+
+        const del = document.createElement("button");
+        del.className = "del-theme";
+        del.type = "button";
+        del.setAttribute("aria-label", "Delete theme " + theme.name);
+        del.innerHTML = "✕";
+        del.addEventListener("click", (e) => {
+          e.preventDefault();
+          deleteCustomTheme(theme.id);
+        });
+
+        chip.appendChild(radio);
+        chip.appendChild(label);
+        chip.appendChild(del);
+        grid.appendChild(chip);
+      });
+    }
+
+    function deleteCustomTheme(id) {
+      const themes = loadCustomThemes().filter(t => t.id !== id);
+      saveCustomThemes(themes);
+      if (activeThemeSettings._customId === id) {
+        updateThemeSettings({ ...DEFAULT_THEME_SETTINGS });
+      }
+      renderCustomThemeChips();
+      syncBaseThemeRadios();
+    }
+
+    function saveNewCustomTheme(name) {
+      const themes = loadCustomThemes();
+      const id = "ct-" + Date.now();
+      const settings = { ...activeThemeSettings, _customId: id };
+      themes.push({ id, name, settings });
+      saveCustomThemes(themes);
+      updateThemeSettings(settings);
+      renderCustomThemeChips();
+      syncBaseThemeRadios();
+    }
+
+    // When the user edits colors on Default/Retro, fork to an unnamed custom slot.
+    // When editing a saved custom theme, write the changes back into dkCustomThemes.
+    function maybeForkToCustom(nextSettings) {
+      const base = nextSettings.stylesheetId;
+      const isBuiltIn = base === "modern-theme" || base === "retro-theme";
+
+      if (nextSettings._customId) {
+        // Already a saved custom theme — persist the edits back into it
+        const themes = loadCustomThemes();
+        const idx = themes.findIndex(t => t.id === nextSettings._customId);
+        if (idx !== -1) {
+          themes[idx].settings = { ...nextSettings };
+          saveCustomThemes(themes);
+          renderCustomThemeChips();
+        }
+        return nextSettings;
+      }
+
+      if (!isBuiltIn) return nextSettings;
+      return { ...nextSettings, _customId: null, _unsaved: true };
+    }
+
+    function syncBaseThemeRadios() {
+      const { modernRadio, retroRadio } = settingsControls;
+      if (!modernRadio) return;
+      const s = activeThemeSettings;
+      const isCustom = !!s._customId || !!s._unsaved;
+      if (!isCustom) {
+        modernRadio.checked = s.stylesheetId === "modern-theme";
+        retroRadio.checked = s.stylesheetId === "retro-theme";
+      } else {
+        modernRadio.checked = false;
+        retroRadio.checked = false;
+        const saved = document.querySelector(`input[value="custom-saved:${s._customId}"]`);
+        if (saved) saved.checked = true;
+      }
+    }
+
+    function bindSettingsControls() {
+      settingsControls = {
+        modernRadio: document.getElementById("modern-radio"),
+        retroRadio: document.getElementById("retro-radio"),
+        accent: document.getElementById("theme-accent"),
+        accentStrong: document.getElementById("theme-accent-strong"),
+        desktopColor: document.getElementById("theme-desktop-color"),
+        menuSurface: document.getElementById("theme-menu-surface"),
+        windowSurface: document.getElementById("theme-window-surface"),
+        windowText: document.getElementById("theme-window-text"),
+        titleText: document.getElementById("theme-title-text"),
+        headerStart: document.getElementById("theme-header-start"),
+        headerEnd: document.getElementById("theme-header-end"),
+        windowOpacity: document.getElementById("theme-window-opacity"),
+        windowRadius: document.getElementById("theme-window-radius"),
+        iconScale: document.getElementById("theme-icon-scale"),
+        wallpaper: document.getElementById("theme-wallpaper"),
+        wallpaperUrl: document.getElementById("theme-wallpaper-url"),
+        wallpaperUpload: document.getElementById("theme-wallpaper-upload"),
+        wallpaperUploadButton: document.getElementById("wallpaper-upload-button"),
+        windowOpacityValue: document.getElementById("window-opacity-value"),
+        windowRadiusValue: document.getElementById("window-radius-value"),
+        iconScaleValue: document.getElementById("icon-scale-value"),
+        overlayStrength: document.getElementById("theme-overlay-strength"),
+        overlayStrengthValue: document.getElementById("overlay-strength-value")
+      };
+
+      const controlEvents = [
+        settingsControls.modernRadio,
+        settingsControls.retroRadio,
+        settingsControls.accent,
+        settingsControls.accentStrong,
+        settingsControls.desktopColor,
+        settingsControls.menuSurface,
+        settingsControls.windowSurface,
+        settingsControls.windowText,
+        settingsControls.titleText,
+        settingsControls.headerStart,
+        settingsControls.headerEnd,
+        settingsControls.windowOpacity,
+        settingsControls.windowRadius,
+        settingsControls.iconScale,
+        settingsControls.wallpaper,
+        settingsControls.wallpaperUrl,
+        settingsControls.overlayStrength
+      ];
+
+      controlEvents.forEach(control => {
+        if (!control) return;
+        const eventName = control.type === "range" || control.type === "color" ? "input" : "change";
+        control.addEventListener(eventName, () => {
+          const switchingBase = control === settingsControls.modernRadio || control === settingsControls.retroRadio;
+
+          // If a custom theme radio is the actually-checked one, this event fired
+          // because that radio deselected Default/Retro — ignore it.
+          if (switchingBase && !control.checked) return;
+
+          let nextSettings;
+          if (switchingBase) {
+            // Switching base theme: reset to that theme's own defaults, don't carry
+            // over wallpaper or colors from the previous theme.
+            const newId = control.value; // "modern-theme" or "retro-theme"
+            nextSettings = normalizeThemeSettings({
+              ...DEFAULT_THEME_SETTINGS,
+              stylesheetId: newId,
+              wallpaper: newId === "retro-theme" ? "retro" : "modern",
+              wallpaperUrl: "",
+              _customId: null,
+              _unsaved: false
+            });
+          } else {
+            nextSettings = collectThemeSettingsFromControls();
+            if (control === settingsControls.wallpaperUrl && nextSettings.wallpaperUrl) {
+              nextSettings.wallpaper = "custom";
+            }
+            nextSettings = maybeForkToCustom(nextSettings);
+          }
+          updateThemeSettings(nextSettings, { syncControls: control.type !== "range" });
+          setSettingsControls(activeThemeSettings);
+          syncBaseThemeRadios();
+        });
       });
 
-      localStorage.setItem('selectedTheme', activeThemeId);
+      settingsControls.wallpaperUploadButton?.addEventListener("click", () => {
+        settingsControls.wallpaperUpload.click();
+      });
 
-      const modernRadio = document.getElementById('modern-radio');
-      const retroRadio = document.getElementById('retro-radio');
+      settingsControls.wallpaperUpload?.addEventListener("change", () => {
+        const file = settingsControls.wallpaperUpload.files?.[0];
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+          alert("Choose an image file.");
+          return;
+        }
+        if (file.size > 2500000) {
+          alert("Choose an image under 2.5 MB so the theme can stay saved locally.");
+          return;
+        }
 
-      if (modernRadio) modernRadio.checked = activeThemeId === 'modern-theme';
-      if (retroRadio) retroRadio.checked = activeThemeId === 'retro-theme';
+        const reader = new FileReader();
+        reader.onload = () => {
+          const nextSettings = maybeForkToCustom(normalizeThemeSettings({
+            ...activeThemeSettings,
+            wallpaper: "upload",
+            wallpaperUrl: reader.result
+          }));
+          updateThemeSettings(nextSettings);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
 
-      window.parent.postMessage({ stylesheetId: activeThemeId }, '*');
+    function resetThemeSettings() {
+      updateThemeSettings({ ...DEFAULT_THEME_SETTINGS });
+    }
+
+    function initThemeSettings() {
+      bindSettingsControls();
+      activeThemeSettings = readThemeSettings();
+      applyLocalThemeSettings(activeThemeSettings);
+      setSettingsControls(activeThemeSettings);
+      postThemeSettings(activeThemeSettings);
+      window.parent.postMessage({ action: "requestThemeSettings" }, "*");
+
+      renderCustomThemeChips();
+      syncBaseThemeRadios();
+
+      // Modal wiring
+      const modal = document.getElementById("new-theme-modal");
+      const nameInput = document.getElementById("new-theme-name");
+
+      document.getElementById("open-new-theme-modal").addEventListener("click", () => {
+        nameInput.value = "";
+        modal.classList.add("open");
+        nameInput.focus();
+      });
+
+      document.getElementById("modal-cancel").addEventListener("click", () => {
+        modal.classList.remove("open");
+      });
+
+      document.getElementById("modal-save").addEventListener("click", () => {
+        const name = nameInput.value.trim();
+        if (!name) { nameInput.focus(); return; }
+        modal.classList.remove("open");
+        saveNewCustomTheme(name);
+      });
+
+      nameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") document.getElementById("modal-save").click();
+        if (e.key === "Escape") modal.classList.remove("open");
+      });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("open");
+      });
     }
 
     function updateExp() {
@@ -843,8 +1732,26 @@
     function clearData() {
       localStorage.clear();
       sessionStorage.clear();
+      activeThemeSettings = { ...DEFAULT_THEME_SETTINGS };
+      applyLocalThemeSettings(activeThemeSettings);
+      setSettingsControls(activeThemeSettings);
+      postThemeSettings(activeThemeSettings);
       alert('Local data cleared');
+
+      window.parent.postMessage({ action: "dataCleared" }, "*");
+
+      window.location.reload();
     }
+
+    window.addEventListener("message", (event) => {
+      if (!event.data || event.data.action !== "themeSettings" || !event.data.themeSettings) {
+        return;
+      }
+
+      activeThemeSettings = normalizeThemeSettings(event.data.themeSettings);
+      applyLocalThemeSettings(activeThemeSettings);
+      setSettingsControls(activeThemeSettings);
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
       updateExp();
@@ -854,8 +1761,9 @@
       setupReviewEvents();
       startCarousel();
 
-      const savedTheme = localStorage.getItem('selectedTheme') || 'modern-theme';
-      setTheme(savedTheme);
+      const initialTab = location.hash ? location.hash.slice(1) : "welcome";
+      activateTab(["welcome", "help", "settings"].includes(initialTab) ? initialTab : "welcome");
+      initThemeSettings();
     });
   </script>
 </body>

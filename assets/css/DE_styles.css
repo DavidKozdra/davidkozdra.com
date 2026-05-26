@@ -9,6 +9,16 @@ Shared Desktop env styles for all components
     --statusBarText: #fff;
     --windowBackground: #fff;
     --windowText: #000;
+    --window-title-text: #111827;
+    --window-border: rgba(15, 23, 42, 0.35);
+    --window-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    --window-radius: 8px;
+    --accent-color: #09639f;
+    --accent-strong: #054f80;
+    --focus-ring: #4a9eff;
+    --icon-selection: rgba(74, 158, 255, 0.22);
+    --desktop-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.18));
+    --icon-scale: 1;
     --desktop-background: rgba(119, 207, 248, 1);
     --main-gradient: rgba(9, 99, 159, 255);
     --window-header: linear-gradient(to right, rgba(211, 222, 224), rgb(208, 242, 255));
@@ -27,6 +37,14 @@ body {
     padding: 0;
     font-family: var(--system-font);
     background-color: #f1f1f1;
+    overflow: hidden;
+}
+
+#de {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    min-height: 100dvh;
     overflow: hidden;
 }
 
@@ -131,7 +149,8 @@ body {
 #desktop {
     background-image: var(--background-image-fallback, url("../images/projects/rainbow-ipad-2.png"));
     background-image: var(--background-image, var(--background-image-fallback, url("../images/projects/rainbow-ipad-2.png")));
-    height:93.5vh;
+    flex: 1 1 0;
+    min-height: 0;
     width: 100dvw;
     position: relative;
     overflow: hidden;
@@ -140,6 +159,15 @@ body {
     background-repeat: no-repeat;
     background-color: var(--desktop-background);
     z-index: 1;
+}
+
+#desktop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--desktop-overlay);
+    pointer-events: none;
+    z-index: 0;
 }
 
 #windows {
@@ -166,23 +194,28 @@ button {
     justify-content: space-between;
     align-items: center;
     background: var(--main-gradient);
-    padding: 1%;
+    padding: 0 12px;
     border-bottom: #1d1d1d 2px solid;
     border-radius: 0px 0px 5px 5px;
-    height: 1dvw;   
+    min-height: 46px;
+    height: 46px;   
     color : white;  
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-    min-width: 95dvw;
+    width: 100%;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 10;
 }
 
 
 .status-bar {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: flex-end;
     gap: 10px;
     align-items: center;
-    width: 15vw;
+    min-width: max-content;
 
 }
 
@@ -194,9 +227,10 @@ button {
 #Contact {
     font-size: 1.5dvh;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     flex-direction: row;    
-    column-gap: 20%;
+    column-gap: 16px;
+    align-items: center;
 }
 
 .task-bar button {
@@ -205,7 +239,7 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 2vw;
+    font-size: clamp(0.85rem, 1.4vw, 1rem);
     cursor: pointer;
     border: none;
     min-width: 30px;
@@ -222,27 +256,28 @@ button {
 }
 
 .drop-down-content {
-    display: none ;
-    list-style: none; 
+    display: none;
+    list-style: none;
     position: absolute;
     background: var(--system-grey);
-    border: 1px dotted black;
+    border: 1px solid rgba(255, 255, 255, 0.16);
     text-decoration: none;
-    color: black;
+    color: var(--text);
     z-index: 20000;
-    right : 0;
-    left: 0%;
-    min-width: 100px;
-    border-radius: 10px;
-    padding:10px;
-    row-gap: 20px;
+    left: 0;
+    /* Flush to bottom of taskbar; a transparent top padding acts as a hover bridge */
+    top: 100%;
+    padding-top: 8px;
+    min-width: 220px;
+    border-radius: 0 0 var(--window-radius) var(--window-radius);
+    padding-bottom: 6px;
     font-size: 1.5dvh;
-
+    box-shadow: var(--window-shadow);
 }
 
 .drop-down-content a {
     text-decoration: none;
-    color: black;
+    color: var(--text);
 }
 
 .drop-down {
@@ -257,46 +292,100 @@ button {
     padding-left: 10%;
     padding-right: 10%;
     cursor: pointer;
-
 }
 
+.drop-down-content.open {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
 
 .drop-down-menu-text {
     cursor: pointer;
     font-weight: bolder;
     font-size: 1.5em !important;
-
 }
 
 .navigation {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    padding: 1%;
-    height: 1dvw;   
-    color : white;
-    width: 50%;
+    gap: clamp(8px, 2vw, 24px);
+    padding: 0;
+    height: 100%;
+    color: white;
+    width: auto;
+    min-width: 0;
 }
 
+/* Section labels inside the dropdown (Tools, Games) */
+.category-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    padding: 10px 12px 4px;
+    margin: 0;
+    pointer-events: none;
+    user-select: none;
+}
 
-.drop-down:hover .drop-down-content {
+.category-label:not(:first-child) {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 4px;
+}
+
+/* App buttons inside each section */
+.sub-category {
     display: flex;
     flex-direction: column;
-    z-index:2;
-    cursor: pointer;
 }
 
-.category-btn ,.subcategory-btn{
-    text-decoration: underline;
-    font-weight: bolder;
-    color: var(--text);
-
+.sub-category button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    text-align: left;
+    font-size: 0.88rem;
+    border-radius: 6px;
+    transition: background 0.12s;
+    width: 100%;
 }
 
-.category-btn:hover ,.subcategory-btn{
-    background-color: transparent;
+.sub-category button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
 
+/* System/Power buttons at the bottom of the dropdown */
+.drop-down-content > button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    text-align: left;
+    font-size: 0.88rem;
+    border-radius: 6px;
+    transition: background 0.12s;
+    width: 100%;
+    margin: 0;
+}
+
+.drop-down-content > button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Separator before System/Power */
+#dropdown-system-sep {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 4px 0;
+}
+
+.category-btn, .subcategory-btn {
+    display: none; /* replaced by .category-label */
 }
 
 .subcategory-btn {
@@ -312,25 +401,29 @@ button {
 .window {
     display: none;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: stretch;
     background-color: var(--windowBackground);
-    border: 1px solid black;
-    border-radius: 5px;
+    color: var(--windowText);
+    border: 1px solid var(--window-border);
+    border-radius: var(--window-radius);
     width: 50%;
     height: 50%;
     z-index: 1;
     position: absolute;
     overflow: hidden; 
     resize: both;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: var(--window-shadow);
     pointer-events: auto;
+    backdrop-filter: blur(14px);
+    min-width: min(320px, 92dvw);
+    min-height: 220px;
 
     animation: pop-up .3s ease-in-out forwards;
 }
 
 .Max_window{
-    height: 90% !important;
+    height: 100% !important;
 }
 
 
@@ -350,17 +443,20 @@ button {
 
 
 .window-content {
-    color : black;
+    color : var(--windowText);
     width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    box-sizing: border-box;
 }
 
 .larger {
-    width: 98% !important;
-    height: 90% !important;
+    inset: 8px !important;
+    width: calc(100% - 16px) !important;
+    height: calc(100% - 16px) !important;
     overflow: hidden; 
     resize: none;
-    top : 0;
-    right : 0;
 }
 
 
@@ -370,11 +466,17 @@ button {
     justify-content: space-between;
     align-items: center;
     background: var(--window-header);
-    color: black;
+    color: var(--window-title-text);
     width: 100%;
-    position: fixed;
+    min-height: 44px;
+    position: relative;
+    flex: 0 0 44px;
     cursor: move;    
     user-select: none;
+    touch-action: none;
+    box-sizing: border-box;
+    padding: 0 4px;
+    font-weight: 700;
 }
 
 .window-icon {
@@ -385,9 +487,25 @@ button {
 }
 
 .window-buttons {
-    color : black;
+    color : var(--window-title-text);
     display: flex;
     flex-direction: row;
+    margin-left: auto;
+}
+
+.window-button,
+.window-button .fas {
+    color: var(--window-title-text) !important;
+}
+
+.window > iframe {
+    border: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100% !important;
+    height: 100% !important;
+    margin-top: 0 !important;
+    background: var(--windowBackground);
 }
 
 
@@ -451,8 +569,8 @@ button {
 }
 
 .desktop-icon img {
-    width: 56px;
-    height: 56px;
+    width: calc(56px * var(--icon-scale));
+    height: calc(56px * var(--icon-scale));
     object-fit: contain;
     pointer-events: none;
     display: block;
@@ -502,12 +620,13 @@ button {
 }
 
 .desktop-icon:hover {
-    background-color: rgb(104, 104, 179);
+    background-color: var(--icon-selection);
     color: white;
 }
 
 .active {
-    background-color: rgb(48, 48, 114) !important;
+    background-color: rgba(48, 48, 114, 0.78) !important;
+    background-color: color-mix(in srgb, var(--accent-color), transparent 42%) !important;
     color: white;
 }
 
@@ -526,11 +645,17 @@ button {
     display: flex;
     flex-direction: row;
     justify-content: left !important;
-    overflow-x: visible;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
     background: var(--main-gradient);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
     color: white;
-    min-height: 20vh;
+    min-height: 46px;
+    height: 46px;
+    flex: 0 0 auto;
+    padding: 0 12px;
+    box-sizing: border-box;
 }
 
 
@@ -543,10 +668,13 @@ button {
     font-size: 2vh;
     cursor: pointer;
     border: 1px dotted black;
-    min-width: 12vw;
-    min-height: 2vh;
+    min-width: 150px;
+    min-height: 34px;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    border-radius: calc(var(--window-radius) * 0.7);
     
 }
     @keyframes come-in {
@@ -631,10 +759,31 @@ button {
 
 
 
-@media only screen and (orientation: portrait ) {
+.notes {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    box-sizing: border-box;
+}
+
+.notes-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    resize: none;
+    box-sizing: border-box;
+    border: 1px solid var(--window-border);
+    border-radius: calc(var(--window-radius) * 0.75);
+    background: color-mix(in srgb, var(--windowBackground), white 8%);
+    color: var(--windowText);
+    padding: 12px;
+    font: 0.95rem/1.5 var(--system-font);
+}
+
+@media only screen and (max-width: 820px), only screen and (orientation: portrait ) {
 
     #desktop {
-        height: 92dvh !important;
         width: 100dvw;
     }
 
@@ -644,13 +793,14 @@ button {
     }
 
     .desktop-icon {
-        width: 80px;
-        height: 80px;
+        width: 82px;
+        min-height: 92px;
+        padding: 6px 4px;
     }
 
     .desktop-icon img {
-        width: 40px;
-        height: 40px;
+        width: calc(42px * var(--icon-scale));
+        height: calc(42px * var(--icon-scale));
     }
 
     .icon-text {
@@ -658,17 +808,22 @@ button {
     }
 
     .task-bar {
-        height: 5%;
-        font-size: .5vh;
+        height: 48px;
+        min-height: 48px;
+        font-size: .75rem;
         display: flex;
         flex-direction: row;
+        padding: 0 8px;
+        border-radius: 0;
     }
 
     .app-bar {
         display: flex;
         flex-direction: row;
-        justify-content: center;
-        height: 5%;
+        justify-content: flex-start !important;
+        height: 48px;
+        min-height: 48px;
+        gap: 8px;
 
     }
     #task-bar-icon{
@@ -678,6 +833,82 @@ button {
         border-radius: 50px;
     }
 
+    .navigation {
+        gap: 4px;
+        flex: 1 1 auto;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .navigation::-webkit-scrollbar {
+        display: none;
+    }
+
+    .drop-down {
+        padding-left: 0;
+        padding-right: 4px;
+        flex: 0 0 auto;
+    }
+
+    .drop-down-menu-text {
+        font-size: 0.78rem !important;
+        padding: 8px 6px;
+        white-space: nowrap;
+    }
+
+    .drop-down-content {
+        position: fixed;
+        top: 50px;
+        left: 8px;
+        right: 8px;
+        min-width: auto;
+        max-height: min(70dvh, 520px);
+        overflow: auto;
+        border-radius: var(--window-radius);
+        padding-top: 6px;
+    }
+
+    .status-bar {
+        gap: 6px;
+    }
+
+    #Contact {
+        column-gap: 10px;
+    }
+
+    .window {
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        min-width: 0;
+        min-height: 0;
+        resize: none;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+    }
+
+    .window-title {
+        min-height: 50px;
+        flex-basis: 50px;
+    }
+
+    .window-button {
+        min-width: 48px;
+        min-height: 48px;
+        padding: 10px;
+    }
+
+    .app-bar-button {
+        min-width: 112px;
+        max-width: 160px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
 
 
 
@@ -687,9 +918,6 @@ button {
 }
 
 
-.notes {
-    margin: 50px;
-}
 .app-bar-buffer {
     display: none;
     width: 100px;
@@ -700,14 +928,8 @@ button {
 
 
 @media screen and (min-width: 1800px) {
-    /* Your styles for larger screens go here */
     .app-bar-buffer {
-        /* Example: Adjusting margin for larger screens */
         margin: 20px;
-    }
-
-    #desktop {
-        height: 91dvh !important;
     }
 }
 
