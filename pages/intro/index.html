@@ -80,6 +80,30 @@
       margin-bottom:40px;
     }
 
+    .tab-card {
+      max-width:600px;
+      margin:40px auto 0;
+      padding:30px 20px;
+      background:var(--surface);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+
+      justify-content:center;
+      text-align:center;
+    }
+
+
+    button {
+      background:var(--primary-light);
+      border:none;
+      cursor:pointer;
+      font:600 1rem Inter, sans-serif;
+      color:var(--primary);
+      border-radius:50px;
+      padding:10px 24px;
+      transition:.25s;
+    }
+
     .me{
       width:160px;
       height:160px;
@@ -314,7 +338,10 @@
     }
 
     .tab{display:none}
-    .tab.active{display:block}
+    .tab.active{
+      display:block
+    }
+
 
     #tab-container{
       display:flex;
@@ -611,7 +638,7 @@
       </section>
     </div>
 
-    <div class="tab" id="help">
+    <div class="tab tab-card" id="help">
       <h1>Help</h1>
       <p>
         This desktop is a portfolio website, not a real OS.<br>
@@ -623,7 +650,7 @@
       </p>
     </div>
 
-    <div class="tab" id="settings">
+    <div class="tab tab-card" id="settings">
       <h1>Settings</h1>
       <button onclick="clearData()">Clear Data</button>
       <h2>Theme</h2>

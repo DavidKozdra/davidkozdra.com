@@ -16,7 +16,7 @@ const APPS = [
         id: "readyeshua",
         name: "Read Yeshua",
         author: "readyeshua.com",
-        description: "Read and study scripture online.",
+        description: "Read and study scripture offline.",
         url: "https://readyeshua.com/read",
         width: 1200,
         fullscreen: true,
