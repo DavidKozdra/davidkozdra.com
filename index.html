@@ -678,6 +678,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    function positionWindowAtDesktopTopCenter(newWindow) {
+      const desktopGrid = document.querySelector(".desktop-grid");
+      const desktop = desktopGrid || document.getElementById("desktop");
+      if (!desktop || !newWindow) {
+        return;
+      }
+
+      const desktopWidth = desktop.clientWidth || window.innerWidth;
+      const desktopHeight = desktop.clientHeight || window.innerHeight;
+      const sideInset = 10;
+      const topInset = 20;
+      const maxWidth = Math.max(0, desktopWidth - sideInset * 2);
+      const maxHeight = Math.max(0, desktopHeight - topInset - 5);
+      let windowWidth = newWindow.offsetWidth || parseFloat(newWindow.style.width) || 0;
+      let windowHeight = newWindow.offsetHeight || parseFloat(newWindow.style.height) || 0;
+
+      if (windowWidth > maxWidth) {
+        newWindow.style.width = maxWidth + "px";
+        windowWidth = maxWidth;
+      }
+
+      if (windowHeight > maxHeight) {
+        newWindow.style.height = maxHeight + "px";
+        windowHeight = maxHeight;
+      }
+
+      const left = Math.max(sideInset, Math.round((desktopWidth - windowWidth) / 2));
+
+      newWindow.style.left = left + "px";
+      newWindow.style.top = topInset + "px";
+    }
+
     function ReRenderAppTaskbar() {
       let taskbar = document.getElementsByClassName("app-bar");
       taskbar[0].innerHTML = "Tasks ";
@@ -1496,8 +1528,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("windows").appendChild(newWindow);
 
       // Set the window position
-      //newWindow.style.top = y + "px";
-      //newWindow.style.left = x + "px";
+      positionWindowAtDesktopTopCenter(newWindow);
 
 
       resizeWindowTItle(newWindow);
