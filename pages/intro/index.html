@@ -179,7 +179,7 @@
       font-size:.85rem;
     }
 
-    #reviews-carousel{
+    #testimonials-carousel{
       max-width:900px;
       margin:60px auto 0;
       padding:32px 20px;
@@ -189,55 +189,55 @@
       text-align:center;
     }
 
-    #reviews-carousel h2{
+    #testimonials-carousel h2{
       margin:0 0 20px;
       font-size:1.6rem;
     }
 
-    .reviews-track-wrapper{
+    .testimonials-track-wrapper{
       display:flex;
       align-items:center;
       gap:14px;
     }
 
-    .reviews-track{
+    .testimonials-track{
       flex:1;
       min-height:220px;
       position:relative;
       overflow:hidden;
     }
 
-    .review-slide{
+    .testimonial-slide{
       display:none;
       animation:fade .35s ease;
       padding:10px 20px;
     }
 
-    .review-slide.active{
+    .testimonial-slide.active{
       display:block;
     }
 
-    .review-slide img{
+    .testimonial-slide img{
       height:52px;
       max-width:180px;
       object-fit:contain;
       margin-bottom:18px;
     }
 
-    .review-slide blockquote{
+    .testimonial-slide blockquote{
       margin:0;
       font-style:italic;
       color:var(--text-muted);
       font-size:1rem;
     }
 
-    .review-slide strong{
+    .testimonial-slide strong{
       display:block;
       margin-top:16px;
       color:var(--text-main);
     }
 
-    .review-nav{
+    .testimonial-nav{
       width:44px;
       height:44px;
       border:none;
@@ -252,19 +252,19 @@
       flex-shrink:0;
     }
 
-    .review-nav:hover{
+    .testimonial-nav:hover{
       background:#d9e9ff;
       transform:translateY(-1px);
     }
 
-    .review-dots{
+    .testimonial-dots{
       display:flex;
       justify-content:center;
       gap:10px;
       margin-top:20px;
     }
 
-    .review-dot{
+    .testimonial-dot{
       width:10px;
       height:10px;
       border-radius:50%;
@@ -274,7 +274,7 @@
       padding:0;
     }
 
-    .review-dot.active{
+    .testimonial-dot.active{
       background:var(--primary);
     }
 
@@ -289,16 +289,16 @@
         height:120px;
       }
 
-      .reviews-track-wrapper{
+      .testimonials-track-wrapper{
         gap:8px;
       }
 
-      .review-nav{
+      .testimonial-nav{
         width:38px;
         height:38px;
       }
 
-      .review-slide{
+      .testimonial-slide{
         padding:10px 4px;
       }
     }
@@ -456,7 +456,7 @@
 
     button:hover{background-color:#555}
 
-    #reviews-carousel{
+    #testimonials-carousel{
       max-width:900px;
       margin:60px auto 0;
       padding:24px 20px;
@@ -465,53 +465,53 @@
       text-align:center;
     }
 
-    #reviews-carousel h2{
+    #testimonials-carousel h2{
       margin:0 0 20px;
       color:#aaff00;
     }
 
-    .reviews-track-wrapper{
+    .testimonials-track-wrapper{
       display:flex;
       align-items:center;
       gap:14px;
     }
 
-    .reviews-track{
+    .testimonials-track{
       flex:1;
       min-height:220px;
       overflow:hidden;
       position:relative;
     }
 
-    .review-slide{
+    .testimonial-slide{
       display:none;
       padding:10px 20px;
     }
 
-    .review-slide.active{
+    .testimonial-slide.active{
       display:block;
     }
 
-    .review-slide img{
+    .testimonial-slide img{
       height:52px;
       max-width:180px;
       object-fit:contain;
       margin-bottom:18px;
     }
 
-    .review-slide blockquote{
+    .testimonial-slide blockquote{
       margin:0;
       font-style:italic;
       color:#c7ff7a;
     }
 
-    .review-slide strong{
+    .testimonial-slide strong{
       display:block;
       margin-top:16px;
       color:#aaff00;
     }
 
-    .review-nav{
+    .testimonial-nav{
       width:44px;
       height:44px;
       border:2px solid #aaff00;
@@ -525,18 +525,18 @@
       flex-shrink:0;
     }
 
-    .review-nav:hover{
+    .testimonial-nav:hover{
       background:#333;
     }
 
-    .review-dots{
+    .testimonial-dots{
       display:flex;
       justify-content:center;
       gap:10px;
       margin-top:20px;
     }
 
-    .review-dot{
+    .testimonial-dot{
       width:10px;
       height:10px;
       border-radius:50%;
@@ -546,7 +546,7 @@
       padding:0;
     }
 
-    .review-dot.active{
+    .testimonial-dot.active{
       background:#aaff00;
     }
   </style>
@@ -898,22 +898,22 @@
         </div>
       </section>
 
-      <section id="reviews-carousel" aria-label="Reviews carousel">
-        <h2>Reviews</h2>
+      <section id="testimonials-carousel" aria-label="Testimonials carousel">
+        <h2>Testimonials</h2>
 
-        <div class="reviews-track-wrapper">
-          <button class="review-nav prev" type="button" aria-label="Previous review">
+        <div class="testimonials-track-wrapper">
+          <button class="testimonial-nav prev" type="button" aria-label="Previous testimonial">
             <i class="fas fa-chevron-left"></i>
           </button>
 
-          <div class="reviews-track" id="reviews-track"></div>
+          <div class="testimonials-track" id="testimonials-track"></div>
 
-          <button class="review-nav next" type="button" aria-label="Next review">
+          <button class="testimonial-nav next" type="button" aria-label="Next testimonial">
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
 
-        <div class="review-dots" id="review-dots" aria-label="Review navigation"></div>
+        <div class="testimonial-dots" id="testimonial-dots" aria-label="Testimonial navigation"></div>
       </section>
     </div>
 
@@ -1621,125 +1621,125 @@
       });
     }
 
-    const reviews = [
+    const testimonials = [
       {
         name: 'Jonathan Matsumoto @ Bridxe',
         logo: '/assets/images/company-logos/Bridxe.webp',
-        review: 'David mastered AWS, D3, Django and React quickly, communicating clearly and leaving maintainable code.'
+        testimonial: 'David mastered AWS, D3, Django and React quickly, communicating clearly and leaving maintainable code.'
       },
       {
         name: 'Michael Jennings @ Redchip',
         logo: 'https://www.redchip.com/assets/images/corporate/redchip-logo.png',
-        review: 'Moves fluidly between complex backend logic and user-facing interfaces, delivering clean code.'
+        testimonial: 'Moves fluidly between complex backend logic and user-facing interfaces, delivering clean code.'
       },
       {
         name: 'Mellissa Thomas @ FNN',
         logo: '/assets/images/company-logos/Logo-FNN-380x310.webp',
-        review: 'Self-starter, excellent communicator and a strong asset to any team.'
+        testimonial: 'Self-starter, excellent communicator and a strong asset to any team.'
       },
       {
         name: 'Dave Gentry @ RedChip Companies Inc',
         logo: 'https://www.redchip.com/assets/images/corporate/redchip-logo.png',
-        review: 'In 2024, Dave Gentry, then Owner of RedChip, publicly said there were only about one million programmers better than David Kozdra. Using an estimate of roughly 26 million programmers worldwide, that implies David ranks in roughly the top 4% globally. High Praise for sure'
+        testimonial: 'In 2024, Dave Gentry, then Owner of RedChip, publicly said there were only about one million programmers better than David Kozdra. Using an estimate of roughly 26 million programmers worldwide, that implies David ranks in roughly the top 4% globally. High Praise for sure'
       }
     ];
 
-    let reviewIndex = 0;
-    let reviewInterval = null;
+    let testimonialIndex = 0;
+    let testimonialInterval = null;
 
-    function renderReviews() {
-      const track = document.getElementById('reviews-track');
-      const dots = document.getElementById('review-dots');
+    function renderTestimonials() {
+      const track = document.getElementById('testimonials-track');
+      const dots = document.getElementById('testimonial-dots');
 
       if (!track || !dots) return;
 
-      track.innerHTML = reviews.map((r, i) => `
-        <article class="review-slide ${i === 0 ? 'active' : ''}" data-index="${i}">
+      track.innerHTML = testimonials.map((r, i) => `
+        <article class="testimonial-slide ${i === 0 ? 'active' : ''}" data-index="${i}">
           <img src="${r.logo}" alt="${r.name} logo">
-          <blockquote>${r.review}</blockquote>
+          <blockquote>${r.testimonial}</blockquote>
           <strong>— ${r.name}</strong>
         </article>
       `).join('');
 
-      dots.innerHTML = reviews.map((_, i) => `
+      dots.innerHTML = testimonials.map((_, i) => `
         <button
-          class="review-dot ${i === 0 ? 'active' : ''}"
+          class="testimonial-dot ${i === 0 ? 'active' : ''}"
           type="button"
-          aria-label="Go to review ${i + 1}"
+          aria-label="Go to testimonial ${i + 1}"
           data-index="${i}">
         </button>
       `).join('');
     }
 
-    function showReview(index) {
-      const slides = document.querySelectorAll('.review-slide');
-      const dots = document.querySelectorAll('.review-dot');
+    function showTestimonial(index) {
+      const slides = document.querySelectorAll('.testimonial-slide');
+      const dots = document.querySelectorAll('.testimonial-dot');
 
       if (!slides.length || !dots.length) return;
 
-      reviewIndex = (index + reviews.length) % reviews.length;
+      testimonialIndex = (index + testimonials.length) % testimonials.length;
 
       slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === reviewIndex);
+        slide.classList.toggle('active', i === testimonialIndex);
       });
 
       dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === reviewIndex);
+        dot.classList.toggle('active', i === testimonialIndex);
       });
     }
 
-    function nextReview() {
-      showReview(reviewIndex + 1);
+    function nextTestimonial() {
+      showTestimonial(testimonialIndex + 1);
     }
 
-    function prevReview() {
-      showReview(reviewIndex - 1);
+    function prevTestimonial() {
+      showTestimonial(testimonialIndex - 1);
     }
 
-    function stopCarousel() {
-      if (reviewInterval) {
-        clearInterval(reviewInterval);
-        reviewInterval = null;
+    function stopTestimonials() {
+      if (testimonialInterval) {
+        clearInterval(testimonialInterval);
+        testimonialInterval = null;
       }
     }
 
-    function startCarousel() {
-      stopCarousel();
-      reviewInterval = setInterval(nextReview, 7000);
+    function startTestimonials() {
+      stopTestimonials();
+      testimonialInterval = setInterval(nextTestimonial, 7000);
     }
 
-    function setupReviewEvents() {
-      const nextBtn = document.querySelector('.review-nav.next');
-      const prevBtn = document.querySelector('.review-nav.prev');
-      const dotsWrap = document.getElementById('review-dots');
-      const carousel = document.getElementById('reviews-carousel');
+    function setupTestimonialEvents() {
+      const nextBtn = document.querySelector('.testimonial-nav.next');
+      const prevBtn = document.querySelector('.testimonial-nav.prev');
+      const dotsWrap = document.getElementById('testimonial-dots');
+      const carousel = document.getElementById('testimonials-carousel');
 
       if (nextBtn) {
         nextBtn.addEventListener('click', () => {
-          nextReview();
-          startCarousel();
+          nextTestimonial();
+          startTestimonials();
         });
       }
 
       if (prevBtn) {
         prevBtn.addEventListener('click', () => {
-          prevReview();
-          startCarousel();
+          prevTestimonial();
+          startTestimonials();
         });
       }
 
       if (dotsWrap) {
         dotsWrap.addEventListener('click', (e) => {
-          const dot = e.target.closest('.review-dot');
+          const dot = e.target.closest('.testimonial-dot');
           if (!dot) return;
-          showReview(Number(dot.dataset.index));
-          startCarousel();
+          showTestimonial(Number(dot.dataset.index));
+          startTestimonials();
         });
       }
 
       if (carousel) {
-        carousel.addEventListener('mouseenter', stopCarousel);
-        carousel.addEventListener('mouseleave', startCarousel);
+        carousel.addEventListener('mouseenter', stopTestimonials);
+        carousel.addEventListener('mouseleave', startTestimonials);
       }
     }
 
@@ -1770,10 +1770,10 @@
     window.addEventListener('DOMContentLoaded', () => {
       updateExp();
 
-      renderReviews();
-      showReview(0);
-      setupReviewEvents();
-      startCarousel();
+      renderTestimonials();
+      showTestimonial(0);
+      setupTestimonialEvents();
+      startTestimonials();
 
       const initialTab = location.hash ? location.hash.slice(1) : "welcome";
       activateTab(["welcome", "help", "settings"].includes(initialTab) ? initialTab : "welcome");
