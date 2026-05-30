@@ -1,0 +1,25 @@
+{
+  "notes": "Add sprite atlas image/json pairs here and replace the empty values with relative file paths.",
+  "atlases": {
+    "chapter1Mask": {
+      "image": "",
+      "data": "",
+      "frame": "mask-idle"
+    },
+    "chapter1Boy": {
+      "image": "",
+      "data": "",
+      "frame": "boy-idle"
+    },
+    "chapter2Runner": {
+      "image": "",
+      "data": "",
+      "frame": "runner-idle"
+    },
+    "chapter3Cast": {
+      "image": "",
+      "data": "",
+      "frame": "cast-idle"
+    }
+  }
+}

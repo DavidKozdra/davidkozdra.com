@@ -1,0 +1,16 @@
+{
+  "books": [
+    { "id": 1, "title": "Book of Genesis", "implemented": true },
+    { "id": 2, "title": "Book of Exodus", "implemented": true },
+    { "id": 3, "title": "Book of Luke and Peter", "implemented": true },
+    { "id": 4, "title": "Book of John", "implemented": false },
+    { "id": 5, "title": "Book of Acts", "implemented": false },
+    { "id": 6, "title": "Book of Romans", "implemented": false },
+    { "id": 7, "title": "Book of Corinthians", "implemented": false },
+    { "id": 8, "title": "Book of Galatians", "implemented": false },
+    { "id": 9, "title": "Book of Ephesians", "implemented": false },
+    { "id": 10, "title": "Book of Philippians", "implemented": false },
+    { "id": 11, "title": "Book of Colossians", "implemented": false },
+    { "id": 12, "title": "Book of Revelation", "implemented": false }
+  ]
+}

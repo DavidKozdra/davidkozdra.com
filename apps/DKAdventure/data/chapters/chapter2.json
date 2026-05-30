@@ -1,0 +1,18 @@
+{
+  "legend": "Swipe up to jump, down to slide",
+  "introText": "Leave home for the next chapter",
+  "introDurationMs": 1800,
+  "distanceLabel": "Distance",
+  "gameOverTitle": "Blocked!",
+  "gameOverPrompt": "Tap to retry",
+  "physics": {
+    "speed": 6,
+    "gravity": 0.95,
+    "jumpVelocity": -18,
+    "slideDurationMs": 600
+  },
+  "spawns": {
+    "baseDelay": 60,
+    "randomDelay": 40
+  }
+}

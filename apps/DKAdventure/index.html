@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>David Kozdra Adventure — Starter</title>
+<style>
+  :root {
+    --bg: #050508;
+    --bg-2: #0c0f1a;
+    --panel: #111624;
+    --accent: #8b5cf6;
+    --accent-2: #22d3ee;
+    --text: #e5e7eb;
+    --text-dim: #9ca3af;
+    --danger: #ef4444;
+    --success: #10b981;
+    --warn: #f59e0b;
+    --radius: 16px;
+    --shadow: 0 10px 30px rgba(0,0,0,.5);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin:0; padding:0; height:100%; background: radial-gradient(1200px 800px at 50% -10%, #12172a 0%, var(--bg) 60%);
+    color: var(--text); overscroll-behavior: none; touch-action: none;
+  }
+  #app { position: fixed; inset:0; display:flex; flex-direction:column; }
+  .screen { position:absolute; inset:0; display:none; flex-direction:column; }
+  .screen.active { display:flex; }
+  /* LIBRARY MENU */
+  #menu-screen {
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    gap: 16px;
+    background:
+      linear-gradient(180deg, rgba(139,92,246,.08), transparent 30%),
+      var(--bg);
+  }
+  .header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 8px 4px 0;
+  }
+  .title {
+    font-size: clamp(22px, 5vw, 34px); font-weight:800; letter-spacing:.3px;
+    background: linear-gradient(90deg, #fff, #c4b5fd 40%, #67e8f9);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .subtitle { color:var(--text-dim); font-size:14px; margin-top:4px; }
+  .shelf {
+    background: linear-gradient(180deg, #1a1f2e, #0f1422);
+    border:1px solid #1f2a44;
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    flex:1; overflow:auto;
+  }
+  .shelf-wood {
+    height:12px; background: linear-gradient(90deg, #3b2a1e, #5a3c28);
+    border-radius: 6px; margin: 18px 0; box-shadow: inset 0 2px 4px rgba(0,0,0,.6);
+  }
+  .books {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px,1fr));
+    gap: 14px;
+  }
+  .book {
+    aspect-ratio: 3/4;
+    border-radius: 10px;
+    background: linear-gradient(160deg, #1e293b, #0f172a);
+    border:1px solid #243049;
+    box-shadow: 0 6px 16px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
+    padding:10px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    cursor:pointer; transform:translateZ(0);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    position:relative; overflow:hidden;
+  }
+  .book:active { transform: scale(.97); }
+  .book:hover { border-color: #334155; }
+  .book.locked { filter: grayscale(.8) brightness(.6); cursor:not-allowed; }
+  .book::before {
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(90deg, transparent 10%, rgba(255,255,255,.05) 50%, transparent 90%);
+    opacity:.0; transition:.2s;
+  }
+  .book:hover::before { opacity:1; }
+  .book-spine {
+    width:10px; background: linear-gradient(180deg, #334155, #1e293b);
+    position:absolute; left:0; top:0; bottom:0; border-radius:10px 0 0 10px;
+  }
+  .book-title { font-weight:700; font-size:13px; line-height:1.2; }
+  .book-chap { font-size:11px; color:var(--text-dim); }
+  .book-badge {
+    align-self:flex-end; font-size:10px; padding:3px 6px; border-radius:999px;
+    background:#1f2937; color:#a5b4fc; border:1px solid #373e5a;
+  }
+  .book.unlocked .book-badge { background: rgba(139,92,246,.15); color:#c4b5fd; border-color:#5b21b6; }
+
+  /* GAME SCREEN */
+  #game-screen { background: var(--bg); }
+  #canvas-container { position:absolute; inset:0; }
+  canvas { display:block; }
+  #ui-overlay {
+    position:absolute; inset:0; pointer-events:none;
+  }
+  .top-bar {
+    position:absolute; top:0; left:0; right:0; display:flex; align-items:center; gap:8px;
+    padding: 10px max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left));
+    background: linear-gradient(180deg, rgba(5,5,8,.9), rgba(5,5,8,0));
+    pointer-events:auto;
+  }
+  .btn {
+    pointer-events:auto; appearance:none; border:1px solid #2a344e; background:#0f1422;
+    color:var(--text); padding:10px 14px; border-radius:12px; font-weight:600; font-size:14px;
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,.4);
+    transition: transform .1s ease, background .2s ease;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: linear-gradient(180deg, #7c3aed, #5b21b6); border-color:#6d28d9; }
+  .btn-ghost { background: rgba(15,20,34,.7); backdrop-filter: blur(8px); }
+  .spacer { flex:1; }
+  .chip {
+    pointer-events:auto; font-size:12px; padding:6px 10px; border-radius:999px;
+    background: rgba(17,22,36,.8); border:1px solid #25304a; color:#cbd5e1;
+    backdrop-filter: blur(6px);
+  }
+  /* Bottom inventory / controls */
+  .bottom-ui {
+    position:absolute; left:0; right:0; bottom:0;
+    padding: 12px max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    display:flex; flex-direction:column; gap:10px;
+    background: linear-gradient(0deg, rgba(5,5,8,.95), rgba(5,5,8,0));
+    pointer-events:none;
+  }
+  .inventory {
+    pointer-events:auto; display:flex; gap:8px; background: rgba(10,14,24,.8);
+    border:1px solid #1f2a44; padding:8px; border-radius:14px; backdrop-filter: blur(8px);
+    box-shadow: var(--shadow);
+  }
+  .slot {
+    width:54px; height:54px; border-radius:10px; background:#0b1020; border:1px solid #1e293b;
+    display:flex; align-items:center; justify-content:center; font-size:24px; position:relative;
+  }
+  .slot.filled { border-color:#334155; box-shadow: inset 0 0 12px rgba(139,92,246,.25); }
+  .slot-label {
+    position:absolute; bottom:-14px; left:50%; transform:translateX(-50%);
+    font-size:10px; color:var(--text-dim); white-space:nowrap;
+  }
+  .progress-wrap {
+    pointer-events:auto; background: rgba(10,14,24,.8); border:1px solid #1f2a44; border-radius:12px;
+    padding:10px; backdrop-filter: blur(8px);
+  }
+  .progress-top { display:flex; justify-content:space-between; font-size:12px; color:#cbd5e1; margin-bottom:6px; }
+  .progress-bar {
+    height:10px; background:#0b1020; border-radius:999px; overflow:hidden; border:1px solid #1e293b;
+  }
+  .progress-fill {
+    height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .12s linear;
+  }
+  /* Modal */
+  .modal-backdrop {
+    position:absolute; inset:0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+    display:none; align-items:center; justify-content:center; pointer-events:auto;
+    padding:20px;
+  }
+  .modal-backdrop.show { display:flex; }
+  .modal {
+    background: var(--panel); border:1px solid #1f2a44; border-radius:18px; max-width:520px; width:100%;
+    box-shadow: var(--shadow); padding:20px;
+  }
+  .modal h2 { margin:0 0 8px; font-size:22px; }
+  .modal p { color:#cbd5e1; line-height:1.55; font-size:14px; margin:8px 0; }
+  .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:16px; }
+  .legend {
+    position:absolute; top:60px; left:50%; transform:translateX(-50%);
+    background: rgba(10,14,24,.85); border:1px solid #1f2a44; padding:10px 14px; border-radius:12px;
+    font-size:13px; color:#d1d5db; pointer-events:auto; max-width:90%; text-align:center;
+    backdrop-filter: blur(8px);
+  }
+  .center-text {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    text-align:center; max-width:85%; pointer-events:none;
+  }
+  .center-text h3 { font-size: clamp(18px, 4.5vw, 28px); margin:0 0 8px; }
+  .center-text p { color:var(--text-dim); font-size:14px; margin:0; }
+  .debug-toggle { font-size:11px; }
+  /* Touch hint */
+  .tap-hint {
+    position:absolute; bottom:120px; left:50%; transform:translateX(-50%);
+    background: rgba(139,92,246,.15); border:1px solid #5b21b6; color:#ddd6fe;
+    padding:8px 12px; border-radius:999px; font-size:13px; pointer-events:none;
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse { 0%,100%{ transform:translateX(-50%) scale(1); opacity:1 } 50%{ transform:translateX(-50%) scale(1.05); opacity:.85 } }
+
+  /* Scrollbars */
+  .shelf::-webkit-scrollbar { width:8px; }
+  .shelf::-webkit-scrollbar-thumb { background:#1e293b; border-radius:4px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- LIBRARY MENU -->
+  <div id="menu-screen" class="screen active">
+    <div class="header">
+      <div>
+        <div class="title">David Kozdra Adventure</div>
+        <div class="subtitle">Library • Tap a book to begin</div>
+      </div>
+      <button class="btn btn-ghost" id="resetBtn" title="Reset progress">Reset</button>
+    </div>
+    <div class="shelf">
+      <div class="books" id="booksGrid"></div>
+      <div class="shelf-wood"></div>
+      <div class="books" id="booksGrid2"></div>
+      <div class="shelf-wood"></div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen" class="screen">
+    <div id="canvas-container"></div>
+    <div id="ui-overlay">
+      <div class="top-bar">
+        <button class="btn btn-ghost" id="backBtn">← Library</button>
+        <div class="spacer"></div>
+        <span class="chip" id="chapterChip">Chapter</span>
+        <span class="chip debug-toggle" id="debugChip" style="display:none;">DEBUG</span>
+      </div>
+
+      <div class="legend" id="legend" style="display:none;"></div>
+      <div class="center-text" id="centerText" style="display:none;"></div>
+      <div class="tap-hint" id="tapHint" style="display:none;">Tap rapidly!</div>
+
+      <div class="bottom-ui">
+        <div class="progress-wrap" id="progressWrap" style="display:none;">
+          <div class="progress-top">
+            <span id="progressLabel">Crack Progress</span>
+            <span id="progressCount">0 taps</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="inventory" id="inventory" style="display:none;">
+          <div class="slot" id="slot-string">🧵<span class="slot-label">String</span></div>
+          <div class="slot" id="slot-money">💵<span class="slot-label">Money</span></div>
+          <div class="slot" id="slot-computer">💻<span class="slot-label">Computer</span></div>
+        </div>
+      </div>
+
+      <!-- TOS Modal -->
+      <div class="modal-backdrop" id="tosModal">
+        <div class="modal">
+          <h2>Terms of Service (Minor)</h2>
+          <p>This is a work of fiction and personal expression. No data is collected. Progress is saved locally on your device.</p>
+          <p>By tapping Accept you acknowledge this is an artistic interactive experience.</p>
+          <div class="modal-actions">
+            <button class="btn btn-ghost" id="tosDecline">Decline</button>
+            <button class="btn btn-primary" id="tosAccept">Accept</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Modal -->
+      <div class="modal-backdrop" id="infoModal">
+        <div class="modal">
+          <h2 id="infoTitle">Info</h2>
+          <p id="infoBody"></p>
+          <div class="modal-actions">
+            <button class="btn btn-primary" id="infoOk">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "p5": "https://esm.sh/p5@1.9.0"
+  }
+}
+</script>
+
+<script type="module" src="./js/main.js"></script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>

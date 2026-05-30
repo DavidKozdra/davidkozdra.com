@@ -1,0 +1,17 @@
+{
+  "legend": "Tap when hands overlap!",
+  "message": "Doc and Rock meet smart awesome artist people and friends healed It rocks",
+  "subtitle": "Princess and Knight / Kiss Kiah",
+  "tapNow": "TAP NOW!",
+  "waitText": "Wait...",
+  "result": {
+    "success": "PERFECT HIGH FIVE!",
+    "miss": "Missed",
+    "retry": "Fighting system tutorial placeholder -> Tap to retry"
+  },
+  "timing": {
+    "introDurationMs": 1200,
+    "hitDistance": 80,
+    "overlapDistance": 40
+  }
+}

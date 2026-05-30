@@ -1,0 +1,17 @@
+{
+  "introText": "The scariest thing about life is no matter how mean other people are, be nice to yourself cause in my experience self harm scars heal the slowest.",
+  "tapHint": "Tap rapidly!",
+  "progressLabel": "Crack Progress",
+  "legend": {
+    "crack": "Rapid tap the mask to crack it open",
+    "room": "Tap floor to move. Collect items."
+  },
+  "crackNeeded": 80,
+  "room": {
+    "items": [
+      { "id": "string", "x": -120, "y": -60, "emoji": "🧵", "label": "String" },
+      { "id": "money", "x": 140, "y": 40, "emoji": "💵", "label": "Money" },
+      { "id": "computer", "x": -40, "y": 120, "emoji": "💻", "label": "Computer" }
+    ]
+  }
+}

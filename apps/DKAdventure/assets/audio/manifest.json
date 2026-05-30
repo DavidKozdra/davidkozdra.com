@@ -1,0 +1,16 @@
+{
+  "notes": "Add music and sound effect files to this folder and replace the empty values with relative file paths.",
+  "music": {
+    "menu": "",
+    "chapter1": "",
+    "chapter2": "",
+    "chapter3": ""
+  },
+  "sfx": {
+    "chapter1Tap": "",
+    "chapter1Collect": "",
+    "chapter2Jump": "",
+    "chapter2Crash": "",
+    "chapter3HighFive": ""
+  }
+}
