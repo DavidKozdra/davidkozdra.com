@@ -1,513 +1,550 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Canvas</title>
-    <link rel="icon" type="image/webp" href="/assets/images/ui-icons/Pallet.webp">
+    <link
+      rel="icon"
+      type="image/webp"
+      href="/assets/images/ui-icons/Pallet.webp"
+    />
 
     <style>
-        :root {
-            --bg: #0f1115;
-            --surface: #1a1d25;
-            --surface-2: #242833;
-            --border: #2e3340;
-            --text: #e6e8ee;
-            --text-muted: #9aa0ae;
-            --accent: #6366f1;
-            --accent-hover: #7c7ff5;
-            --danger: #ef4444;
-            --radius: 10px;
-            --radius-sm: 6px;
-            --shadow: 0 4px 16px rgba(0,0,0,0.25);
-            --transition: 150ms ease;
-        }
+      :root {
+        --bg: #0f1115;
+        --surface: #1a1d25;
+        --surface-2: #242833;
+        --border: #2e3340;
+        --text: #e6e8ee;
+        --text-muted: #9aa0ae;
+        --accent: #6366f1;
+        --accent-hover: #7c7ff5;
+        --danger: #ef4444;
+        --radius: 10px;
+        --radius-sm: 6px;
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        --transition: 150ms ease;
+      }
 
-        * { box-sizing: border-box; }
+      * {
+        box-sizing: border-box;
+      }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            padding: 24px;
-        }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        padding: 24px;
+      }
 
-        .selectedColor {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-            transform: scale(1.15);
-        }
+      .selectedColor {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        transform: scale(1.15);
+      }
 
-        canvas {
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            background: #fff;
-            display: block;
-            touch-action: none;
-            max-width: 100%;
-            height: auto;
-        }
+      canvas {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        background: #fff;
+        display: block;
+        touch-action: none;
+        max-width: 100%;
+        height: auto;
+      }
 
-        #controls {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            margin-left: 32px;
-            min-width: 280px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
+      #controls {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin-left: 32px;
+        min-width: 280px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
 
-        .tab-bar {
-            display: flex;
-            background: var(--surface-2);
-            border-bottom: 1px solid var(--border);
-        }
+      .tab-bar {
+        display: flex;
+        background: var(--surface-2);
+        border-bottom: 1px solid var(--border);
+      }
 
-        .tab-bar button {
-            flex: 1;
-            margin: 0;
-            padding: 12px 10px;
-            border: none;
-            border-radius: 0;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            cursor: pointer;
-            transition: color var(--transition), background var(--transition);
-            position: relative;
-        }
+      .tab-bar button {
+        flex: 1;
+        margin: 0;
+        padding: 12px 10px;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition:
+          color var(--transition),
+          background var(--transition);
+        position: relative;
+      }
 
-        .tab-bar button:hover {
-            color: var(--text);
-            background: rgba(255,255,255,0.03);
-        }
+      .tab-bar button:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.03);
+      }
 
-        .tab-bar button.active {
-            color: var(--text);
-        }
+      .tab-bar button.active {
+        color: var(--text);
+      }
 
-        .tab-bar button.active::after {
-            content: "";
-            position: absolute;
-            left: 20%;
-            right: 20%;
-            bottom: 0;
-            height: 2px;
-            background: var(--accent);
-            border-radius: 2px 2px 0 0;
-        }
+      .tab-bar button.active::after {
+        content: "";
+        position: absolute;
+        left: 20%;
+        right: 20%;
+        bottom: 0;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 2px 2px 0 0;
+      }
 
-        .tab-panel {
-            display: none;
-            padding: 16px;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 12px;
-            min-height: 140px;
-        }
+      .tab-panel {
+        display: none;
+        padding: 16px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        min-height: 140px;
+      }
 
-        .tab-panel.active { display: flex; }
+      .tab-panel.active {
+        display: flex;
+      }
 
-        #pen-size-display {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
+      #pen-size-display {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
 
-        input[type="range"] {
-            width: 100%;
-            accent-color: var(--accent);
-        }
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+      }
 
-        input[type="color"] {
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--surface-2);
-            padding: 2px;
-            cursor: pointer;
-        }
+      input[type="color"] {
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--surface-2);
+        padding: 2px;
+        cursor: pointer;
+      }
 
-        .tab-actions {
-            display: flex;
-            gap: 8px;
-            padding: 12px 16px;
-            border-top: 1px solid var(--border);
-            background: var(--surface-2);
-        }
+      .tab-actions {
+        display: flex;
+        gap: 8px;
+        padding: 12px 16px;
+        border-top: 1px solid var(--border);
+        background: var(--surface-2);
+      }
 
-        .tab-actions button { flex: 1; }
+      .tab-actions button {
+        flex: 1;
+      }
 
-        .content {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+      .content {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
 
-        .colors-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 6px;
-        }
+      .colors-container {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+      }
 
-        #button-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-        }
+      #button-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
 
-        button {
-            padding: 8px 14px;
-            margin: 0;
-            border: 1px solid var(--border);
-            background: var(--surface-2);
-            color: var(--text);
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background var(--transition), border-color var(--transition), transform var(--transition);
-        }
+      button {
+        padding: 8px 14px;
+        margin: 0;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        color: var(--text);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          background var(--transition),
+          border-color var(--transition),
+          transform var(--transition);
+      }
 
-        button:hover {
-            background: #2d313d;
-            border-color: var(--accent);
-        }
+      button:hover {
+        background: #2d313d;
+        border-color: var(--accent);
+      }
 
-        button:active { transform: translateY(1px); }
+      button:active {
+        transform: translateY(1px);
+      }
 
-        button.selected {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-        }
+      button.selected {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
 
-        .layer-button { padding: 8px 0; }
+      .layer-button {
+        padding: 8px 0;
+      }
 
-        /*
+      /*
         If you are reading this you are a nerd
         */
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="content">
+      <canvas
+        id="drawing"
+        onpointerdown="startdraw(event)"
+        onpointerup="stopdraw()"
+        onpointercancel="stopdraw()"
+        onpointerleave="stopdraw()"
+        width="500px"
+        height="400px"
+      >
+      </canvas>
 
-        <canvas id="drawing" onpointerdown="startdraw(event)" onpointerup="stopdraw()" onpointercancel="stopdraw()" onpointerleave="stopdraw()"
-         width="500px" height="400px">
-        </canvas>
+      <div>
+        <div></div>
 
-        <div >
+        <div id="controls">
+          <div class="tab-bar">
+            <button
+              data-tab="brush"
+              class="active"
+              onclick="selectTab('brush')"
+            >
+              Brush
+            </button>
+            <button data-tab="colors" onclick="selectTab('colors')">
+              Colors
+            </button>
+            <button data-tab="layers" onclick="selectTab('layers')">
+              Layers
+            </button>
+          </div>
 
-            <div> 
-  
-              
+          <div id="tab-brush" class="tab-panel active">
+            <div id="pen-size-display">Pen Size: 5</div>
+            <input
+              type="range"
+              min="1"
+              max="50"
+              value="5"
+              onchange="updatePen()"
+              oninput="updatePen()"
+            />
+          </div>
+
+          <div id="tab-colors" class="tab-panel">
+            <div>
+              <input type="color" onchange="updateColor()" />
+              <button onclick="saveColor()">+</button>
             </div>
+            <div class="colors-container"></div>
+          </div>
 
-            <div id="controls">
-                <div class="tab-bar">
-                    <button data-tab="brush" class="active" onclick="selectTab('brush')">Brush</button>
-                    <button data-tab="colors" onclick="selectTab('colors')">Colors</button>
-                    <button data-tab="layers" onclick="selectTab('layers')">Layers</button>
-                </div>
+          <div id="tab-layers" class="tab-panel">
+            <div id="button-grid"></div>
+          </div>
 
-                <div id="tab-brush" class="tab-panel active">
-                    <div id="pen-size-display">Pen Size: 5</div>
-                    <input type="range" min="1" max="50" value="5" onchange="updatePen()" oninput="updatePen()">
-                </div>
-
-                <div id="tab-colors" class="tab-panel">
-                    <div>
-                        <input type="color" onchange="updateColor()">
-                        <button onclick="saveColor()">+</button>
-                    </div>
-                    <div class="colors-container"></div>
-                </div>
-
-                <div id="tab-layers" class="tab-panel">
-                    <div id="button-grid"></div>
-                </div>
-
-                <div class="tab-actions">
-                    <button onclick="clearDisplay()">Clear</button>
-                    <button onclick="saveCanvas()">Save</button>
-                </div>
-            </div>
+          <div class="tab-actions">
+            <button onclick="clearDisplay()">Clear</button>
+            <button onclick="saveCanvas()">Save</button>
+          </div>
         </div>
+      </div>
     </div>
 
-
-
     <script>
-        let canvas = document.getElementById('drawing');
+      let canvas = document.getElementById("drawing");
 
-        let ctx = canvas.getContext('2d');
-        let drawing = false;
-        ctx.fillStyle = "rgb(255, 255, 255)"
-        let colors = [];
-        let activeColor = {r: 0, g: 0, b: 0};
-        let mouseX , mouseY;
+      let ctx = canvas.getContext("2d");
+      let drawing = false;
+      ctx.fillStyle = "rgb(255, 255, 255)";
+      let colors = [];
+      let activeColor = { r: 0, g: 0, b: 0 };
+      let mouseX, mouseY;
 
-        let layers = [];
-        let currentLayer = 0;
+      let layers = [];
+      let currentLayer = 0;
 
-        // stroke history for undo/redo: each entry is {layer, pixels[]}
-        let strokeHistory = [];
-        let redoStack = [];
-        let currentStroke = null;
+      // stroke history for undo/redo: each entry is {layer, pixels[]}
+      let strokeHistory = [];
+      let redoStack = [];
+      let currentStroke = null;
 
-        let penSize =5;
+      let penSize = 5;
 
-        function saveCanvas() {
-            var link = document.createElement('a');
-            link.download = 'canvas_image.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            }
+      function saveCanvas() {
+        var link = document.createElement("a");
+        link.download = "canvas_image.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }
 
+      document.addEventListener("DOMContentLoaded", () => {
+        for (let i = 1; i < 10; i++) {
+          layers.push([]);
+        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            for (let i = 1; i < 10; i++) {
-                layers.push([]);
-            }
+        for (let i = 0; i < layers.length; i++) {
+          let button = document.createElement("button");
+          button.classList.add("layer-button");
 
-            for (let i = 0; i < layers.length; i++) {
-                let button = document.createElement('button');
-                button.classList.add('layer-button');
+          button.innerText = i + 1;
+          if (i == 1) {
+            button.classList.add("selected");
+          }
+          button.addEventListener("click", () => {
+            select_layer(i);
+          });
+          document.getElementById("button-grid").appendChild(button);
+        }
 
-                button.innerText = i+1;
-                if (i == 1) {
-                    button.classList.add('selected');
-                }
-                button.addEventListener('click', () => {
-                    select_layer(i)
-
-                });
-                document.getElementById('button-grid').appendChild(button);
-            }
-
-
-            let add_layer_button = document.createElement('button');
-            add_layer_button.innerText = '+';
-            add_layer_button.addEventListener('click', () => {
-                layers.push([]);
-                let button = document.createElement('button');
-                button.classList.add('layer-button');
-                button.innerText = layers.length;
-                let value = layers.length;
-                button.addEventListener('click', () => {
-
-                    select_layer(value-1);
-                });
-                document.getElementById('button-grid').appendChild(button);
-            });
-            document.getElementById('button-grid').appendChild(add_layer_button);
-
-
-                let savedColors = JSON.parse(localStorage.getItem('colors'));
-                if (savedColors) {
-                    savedColors.forEach(color => {
-                        setActiveColor(color);
-                        saveColor();
-                    });
-                }
-
+        let add_layer_button = document.createElement("button");
+        add_layer_button.innerText = "+";
+        add_layer_button.addEventListener("click", () => {
+          layers.push([]);
+          let button = document.createElement("button");
+          button.classList.add("layer-button");
+          button.innerText = layers.length;
+          let value = layers.length;
+          button.addEventListener("click", () => {
+            select_layer(value - 1);
+          });
+          document.getElementById("button-grid").appendChild(button);
         });
+        document.getElementById("button-grid").appendChild(add_layer_button);
 
-        function select_layer(layer){
-                    currentLayer = layer
-                    let buttons = document.getElementsByClassName('layer-button');
-                    for (let i = 0; i < buttons.length; i++) {
-                        console.log(buttons[i]);
-                        buttons[i].classList.remove('selected');
-                    }
-                    buttons[currentLayer].classList.add('selected');
+        let savedColors = JSON.parse(localStorage.getItem("colors"));
+        if (savedColors) {
+          savedColors.forEach((color) => {
+            setActiveColor(color);
+            saveColor();
+          });
         }
+      });
 
-        function hex(x) {
-            return ("0" + parseInt(x).toString(16)).slice(-2);
+      function select_layer(layer) {
+        currentLayer = layer;
+        let buttons = document.getElementsByClassName("layer-button");
+        for (let i = 0; i < buttons.length; i++) {
+          console.log(buttons[i]);
+          buttons[i].classList.remove("selected");
         }
+        buttons[currentLayer].classList.add("selected");
+      }
 
-        function setActiveColor(color) {
-            activeColor = color;
-            let colorInput = document.querySelector('input[type="color"]');
-            colorInput.value = "#"+ hex(color.r) + hex(color.g) + hex(color.b);
+      function hex(x) {
+        return ("0" + parseInt(x).toString(16)).slice(-2);
+      }
+
+      function setActiveColor(color) {
+        activeColor = color;
+        let colorInput = document.querySelector('input[type="color"]');
+        colorInput.value = "#" + hex(color.r) + hex(color.g) + hex(color.b);
+      }
+
+      function saveColor() {
+        if (colors.includes(activeColor)) {
+          return;
         }
+        colors.push(activeColor);
 
+        let color = activeColor;
+        let colorContainer = document.querySelector(".colors-container");
+        let colorDiv = document.createElement("div");
+        colorDiv.style.backgroundColor = colorMap(activeColor);
+        colorDiv.style.width = "20px";
+        colorDiv.style.height = "20px";
+        colorDiv.style.margin = "5px";
+        colorDiv.style.borderRadius = "50%";
+        colorDiv.style.cursor = "pointer";
+        colorDiv.addEventListener("click", () => {
+          setActiveColor(color);
 
-        function saveColor() {
-            if(colors.includes(activeColor)) {
-                return;
-            }
-            colors.push(activeColor);
+          for (let i = 0; i < colorContainer.children.length; i++) {
+            colorContainer.children[i].classList.remove("selectedColor");
+          }
 
-            let color = activeColor;
-            let colorContainer = document.querySelector('.colors-container');
-            let colorDiv = document.createElement('div');
-            colorDiv.style.backgroundColor = colorMap(activeColor);
-            colorDiv.style.width = '20px';
-            colorDiv.style.height = '20px';
-            colorDiv.style.margin = '5px';
-            colorDiv.style.borderRadius = '50%';
-            colorDiv.style.cursor = 'pointer';
-            colorDiv.addEventListener('click', () => {
-                setActiveColor(color);
-
-
-            for (let i = 0; i < colorContainer.children.length; i++) {
-                colorContainer.children[i].classList.remove('selectedColor');
-            }
-
-                colorDiv.classList.add('selectedColor');
-            });
-            colorContainer.appendChild(colorDiv);
-            localStorage.setItem('colors', JSON.stringify(colors));
-        }
-    
-        function updateColor() {
-            let color = document.querySelector('input[type="color"]').value;
-            let r = parseInt(color.substring(1, 3), 16);
-            let g = parseInt(color.substring(3, 5), 16);
-            let b = parseInt(color.substring(5, 7), 16);
-            activeColor = {r: r, g: g, b: b};
-        }    
-
-        function updatePen() {
-            penSize = document.querySelector('input[type="range"]').value;
-            document.getElementById('pen-size-display').innerText = `Pen Size: ${penSize}`;
-        }
-
-        function selectTab(name) {
-            document.querySelectorAll('.tab-bar button').forEach(b => {
-                b.classList.toggle('active', b.dataset.tab === name);
-            });
-            document.querySelectorAll('.tab-panel').forEach(p => {
-                p.classList.toggle('active', p.id === 'tab-' + name);
-            });
-        }
-
-        function clearDisplay() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            strokeHistory = [];
-            redoStack = [];
-            currentStroke = null;
-            layers = [];
-            for (let i = 1; i < 10; i++) {
-                layers.push([]);
-            }
-        }
-
-
-        ctx.fillRect(0, 0, canvas.width, canvas.height);    
-
-        function getCanvasPos(event) {
-            let rect = canvas.getBoundingClientRect();
-            let scaleX = canvas.width / rect.width;
-            let scaleY = canvas.height / rect.height;
-            return {
-                x: (event.clientX - rect.left) * scaleX,
-                y: (event.clientY - rect.top) * scaleY
-            };
-        }
-
-        function startdraw(event) {
-            event.preventDefault();
-            if (document.activeElement) document.activeElement.blur();
-            drawing = true;
-            redoStack = [];
-            currentStroke = {layer: currentLayer, pixels: []};
-            let pos = getCanvasPos(event);
-            mouseX = pos.x;
-            mouseY = pos.y;
-            let pixel = {x: pos.x, y: pos.y, color: activeColor, penSize: penSize};
-            currentStroke.pixels.push(pixel);
-            layers[currentLayer].push(pixel);
-        }
-
-        function stopdraw() {
-            if (drawing && currentStroke && currentStroke.pixels.length > 0) {
-                strokeHistory.push(currentStroke);
-            }
-            currentStroke = null;
-            drawing = false;
-        }
-
-        canvas.addEventListener('pointermove', (event) => {
-            event.preventDefault();
-            let pos = getCanvasPos(event);
-            mouseX = pos.x;
-            mouseY = pos.y;
+          colorDiv.classList.add("selectedColor");
         });
+        colorContainer.appendChild(colorDiv);
+        localStorage.setItem("colors", JSON.stringify(colors));
+      }
 
-        function rebuildLayers() {
-            layers = [];
-            for (let i = 0; i < 9; i++) layers.push([]);
-            for (let stroke of strokeHistory) {
-                for (let pixel of stroke.pixels) {
-                    layers[stroke.layer].push(pixel);
-                }
-            }
-            ctx.fillStyle = "rgb(255, 255, 255)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for (let layer of layers) {
-                for (let pixel of layer) {
-                    ctx.fillStyle = colorMap(pixel.color);
-                    ctx.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
-                }
-            }
-        }
+      function updateColor() {
+        let color = document.querySelector('input[type="color"]').value;
+        let r = parseInt(color.substring(1, 3), 16);
+        let g = parseInt(color.substring(3, 5), 16);
+        let b = parseInt(color.substring(5, 7), 16);
+        activeColor = { r: r, g: g, b: b };
+      }
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key == 'c') {
-                clearDisplay();
-            }
+      function updatePen() {
+        penSize = document.querySelector('input[type="range"]').value;
+        document.getElementById("pen-size-display").innerText =
+          `Pen Size: ${penSize}`;
+      }
 
-            if (event.key == 'z' && event.ctrlKey) {
-                event.preventDefault();
-                if (strokeHistory.length > 0) {
-                    redoStack.push(strokeHistory.pop());
-                    rebuildLayers();
-                }
-            }
-
-            if (event.key == 'y' && event.ctrlKey) {
-                event.preventDefault();
-                if (redoStack.length > 0) {
-                    strokeHistory.push(redoStack.pop());
-                    rebuildLayers();
-                }
-            }
+      function selectTab(name) {
+        document.querySelectorAll(".tab-bar button").forEach((b) => {
+          b.classList.toggle("active", b.dataset.tab === name);
         });
+        document.querySelectorAll(".tab-panel").forEach((p) => {
+          p.classList.toggle("active", p.id === "tab-" + name);
+        });
+      }
 
-        function colorMap(color) {
-            return `rgb(${color.r}, ${color.g}, ${color.b})`;
+      function clearDisplay() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        strokeHistory = [];
+        redoStack = [];
+        currentStroke = null;
+        layers = [];
+        for (let i = 1; i < 10; i++) {
+          layers.push([]);
+        }
+      }
+
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      function getCanvasPos(event) {
+        let rect = canvas.getBoundingClientRect();
+        let scaleX = canvas.width / rect.width;
+        let scaleY = canvas.height / rect.height;
+        return {
+          x: (event.clientX - rect.left) * scaleX,
+          y: (event.clientY - rect.top) * scaleY,
+        };
+      }
+
+      function startdraw(event) {
+        event.preventDefault();
+        if (document.activeElement) document.activeElement.blur();
+        drawing = true;
+        redoStack = [];
+        currentStroke = { layer: currentLayer, pixels: [] };
+        let pos = getCanvasPos(event);
+        mouseX = pos.x;
+        mouseY = pos.y;
+        let pixel = {
+          x: pos.x,
+          y: pos.y,
+          color: activeColor,
+          penSize: penSize,
+        };
+        currentStroke.pixels.push(pixel);
+        layers[currentLayer].push(pixel);
+      }
+
+      function stopdraw() {
+        if (drawing && currentStroke && currentStroke.pixels.length > 0) {
+          strokeHistory.push(currentStroke);
+        }
+        currentStroke = null;
+        drawing = false;
+      }
+
+      canvas.addEventListener("pointermove", (event) => {
+        event.preventDefault();
+        let pos = getCanvasPos(event);
+        mouseX = pos.x;
+        mouseY = pos.y;
+      });
+
+      function rebuildLayers() {
+        layers = [];
+        for (let i = 0; i < 9; i++) layers.push([]);
+        for (let stroke of strokeHistory) {
+          for (let pixel of stroke.pixels) {
+            layers[stroke.layer].push(pixel);
+          }
+        }
+        ctx.fillStyle = "rgb(255, 255, 255)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let layer of layers) {
+          for (let pixel of layer) {
+            ctx.fillStyle = colorMap(pixel.color);
+            ctx.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
+          }
+        }
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key == "c") {
+          clearDisplay();
         }
 
-        function update() {
-            if (drawing) {
-                let pixel = {x: mouseX, y: mouseY, color: activeColor, penSize: penSize};
-                currentStroke.pixels.push(pixel);
-                layers[currentLayer].push(pixel);
-                ctx.fillStyle = colorMap(activeColor);
-                ctx.fillRect(mouseX, mouseY, penSize, penSize);
-            }
+        if (event.key == "z" && event.ctrlKey) {
+          event.preventDefault();
+          if (strokeHistory.length > 0) {
+            redoStack.push(strokeHistory.pop());
+            rebuildLayers();
+          }
+        }
 
-            requestAnimationFrame(update);
+        if (event.key == "y" && event.ctrlKey) {
+          event.preventDefault();
+          if (redoStack.length > 0) {
+            strokeHistory.push(redoStack.pop());
+            rebuildLayers();
+          }
+        }
+      });
+
+      function colorMap(color) {
+        return `rgb(${color.r}, ${color.g}, ${color.b})`;
+      }
+
+      function update() {
+        if (drawing) {
+          let pixel = {
+            x: mouseX,
+            y: mouseY,
+            color: activeColor,
+            penSize: penSize,
+          };
+          currentStroke.pixels.push(pixel);
+          layers[currentLayer].push(pixel);
+          ctx.fillStyle = colorMap(activeColor);
+          ctx.fillRect(mouseX, mouseY, penSize, penSize);
         }
 
         requestAnimationFrame(update);
+      }
 
-
+      requestAnimationFrame(update);
     </script>
-</body>
+  </body>
 </html>

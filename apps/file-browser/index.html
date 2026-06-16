@@ -1,338 +1,365 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>File Browser</title>
-    <link rel="icon" type="image/webp" href="/assets/images/ui-icons/File_System_icon.webp">
+    <link
+      rel="icon"
+      type="image/webp"
+      href="/assets/images/ui-icons/File_System_icon.webp"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif; /* Set a clean font for the browser */
-            background-color: #f5f5f5; /* Light background for better contrast */
-            margin-top: 20px; /* Remove default margin */
-        }
+      body {
+        font-family: Arial, sans-serif; /* Set a clean font for the browser */
+        background-color: #f5f5f5; /* Light background for better contrast */
+        margin-top: 20px; /* Remove default margin */
+      }
 
-        #browser-container {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            height: 100vh;
-            padding: 20px; /* Add padding around the container */
-        }
+      #browser-container {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        height: 100vh;
+        padding: 20px; /* Add padding around the container */
+      }
 
-        #file-navigation {
-            background-color: #fff;
-            border-right: 1px solid #ddd;
-            padding: 10px;
-            overflow-y: auto;
-        }
+      #file-navigation {
+        background-color: #fff;
+        border-right: 1px solid #ddd;
+        padding: 10px;
+        overflow-y: auto;
+      }
 
-        #arrows {
-            display: flex;
-            margin-bottom: 10px;
-        }
+      #arrows {
+        display: flex;
+        margin-bottom: 10px;
+      }
 
-        #arrows button {
-            margin-right: 5px;
-        }
+      #arrows button {
+        margin-right: 5px;
+      }
 
-        button {
-            padding: 8px 12px; /* Button padding */
-            font-size: 14px; /* Button font size */
-            border: none; /* Remove default borders */
-            border-radius: 4px; /* Rounded corners for buttons */
-            background-color: #007bff; /* Bootstrap primary color */
-            color: white; /* White text for buttons */
-            cursor: pointer; /* Pointer cursor on hover */
-        }
+      button {
+        padding: 8px 12px; /* Button padding */
+        font-size: 14px; /* Button font size */
+        border: none; /* Remove default borders */
+        border-radius: 4px; /* Rounded corners for buttons */
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white; /* White text for buttons */
+        cursor: pointer; /* Pointer cursor on hover */
+      }
 
-        button:disabled {
-            background-color: #ccc; /* Disabled button background */
-            cursor: not-allowed; /* Not-allowed cursor for disabled buttons */
-        }
+      button:disabled {
+        background-color: #ccc; /* Disabled button background */
+        cursor: not-allowed; /* Not-allowed cursor for disabled buttons */
+      }
 
-        button:hover:enabled {
-            background-color: #0056b3; /* Darken button on hover */
-        }
+      button:hover:enabled {
+        background-color: #0056b3; /* Darken button on hover */
+      }
 
-        #browser {
-            background-color: #fff;
-            display: flex;
-            flex-direction: column;
-        }
+      #browser {
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+      }
 
-        #top {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+      #top {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
 
-        #search {
-            margin-bottom: 10px; /* Space below search */
-        }
+      #search {
+        margin-bottom: 10px; /* Space below search */
+      }
 
-        #search input {
-            width: 100%; /* Full width input */
-            padding: 8px; /* Padding for the input */
-            border: 1px solid #ddd; /* Light border */
-            border-radius: 4px; /* Rounded corners */
-            font-size: 14px; /* Input font size */
-        }
+      #search input {
+        width: 100%; /* Full width input */
+        padding: 8px; /* Padding for the input */
+        border: 1px solid #ddd; /* Light border */
+        border-radius: 4px; /* Rounded corners */
+        font-size: 14px; /* Input font size */
+      }
 
-        #breadcrumbs {
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
+      #breadcrumbs {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
 
-        #breadcrumbs a {
-            color: #007bff;
-            text-decoration: none;
-            margin-right: 5px;
-        }
+      #breadcrumbs a {
+        color: #007bff;
+        text-decoration: none;
+        margin-right: 5px;
+      }
 
-        #breadcrumbs a:hover {
-            text-decoration: underline;
-        }
+      #breadcrumbs a:hover {
+        text-decoration: underline;
+      }
 
-        #content-viewer {
-            flex: 1;
-            padding: 10px; /* Inner padding */
-            overflow-y: auto;
-        }
+      #content-viewer {
+        flex: 1;
+        padding: 10px; /* Inner padding */
+        overflow-y: auto;
+      }
 
-        .folder, .file {
-            cursor: pointer;
-            padding: 10px; /* Padding for items */
-            border-bottom: 1px solid #ddd; /* Light border below items */
-            display: flex;
-            align-items: center; /* Center align items */
-        }
+      .folder,
+      .file {
+        cursor: pointer;
+        padding: 10px; /* Padding for items */
+        border-bottom: 1px solid #ddd; /* Light border below items */
+        display: flex;
+        align-items: center; /* Center align items */
+      }
 
-        .folder:hover, .file:hover {
-            background-color: #f0f0f0; /* Light background on hover */
-        }
+      .folder:hover,
+      .file:hover {
+        background-color: #f0f0f0; /* Light background on hover */
+      }
 
-        .folder img, .file img {
-            width: 24px; /* Set width for icons */
-            height: 24px; /* Set height for icons */
-            margin-right: 10px; /* Space between icon and text */
-        }
+      .folder img,
+      .file img {
+        width: 24px; /* Set width for icons */
+        height: 24px; /* Set height for icons */
+        margin-right: 10px; /* Space between icon and text */
+      }
 
-        .file p, .folder p {
-            margin: 0; /* Remove default margin */
-            font-size: 14px; /* Set font size */
-            color: #333; /* Darker text for better visibility */
-        }
+      .file p,
+      .folder p {
+        margin: 0; /* Remove default margin */
+        font-size: 14px; /* Set font size */
+        color: #333; /* Darker text for better visibility */
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="browser-container">
-        <div id="file-navigation">
-            <div id="arrows">
-                <button id="back-btn" disabled>Back</button>
-                <button id="up-btn" disabled>Up</button>
-            </div>
-            <!-- Optionally, you can add a directory tree here -->
+      <div id="file-navigation">
+        <div id="arrows">
+          <button id="back-btn" disabled>Back</button>
+          <button id="up-btn" disabled>Up</button>
         </div>
+        <!-- Optionally, you can add a directory tree here -->
+      </div>
 
-        <div id="browser">
-            <div id="top">
-                <div id="breadcrumbs"></div>
-                <div id="search">
-                    <input type="text" id="search-input" placeholder="Search files...">
-                </div>
-            </div>
-            <div id="content-viewer">
-                <!-- Content will be rendered here -->
-            </div>
+      <div id="browser">
+        <div id="top">
+          <div id="breadcrumbs"></div>
+          <div id="search">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search files..."
+            />
+          </div>
         </div>
+        <div id="content-viewer">
+          <!-- Content will be rendered here -->
+        </div>
+      </div>
     </div>
     <script>
-
-        // Initialize file system
-        let defaultFileSystem = [
+      // Initialize file system
+      let defaultFileSystem = [
+        {
+          dir: "/",
+          files: [
             {
-                dir: "/",
-                files: [
-                    { name: "text.txt", content: "This is a test file you can read it directly or in the terminal.", dir: false },
-                    { name: "home", dir: true }
-                ]
+              name: "text.txt",
+              content:
+                "This is a test file you can read it directly or in the terminal.",
+              dir: false,
             },
+            { name: "home", dir: true },
+          ],
+        },
+        {
+          dir: "/home",
+          files: [
+            { name: "text2.txt", content: ":)", dir: false },
+            { name: "documents", dir: true },
+          ],
+        },
+        {
+          dir: "/home/documents",
+          files: [
             {
-                dir: "/home",
-                files: [
-                    { name: "text2.txt", content: ":)", dir: false },
-                    { name: "documents", dir: true }
-                ]
+              name: "file1.txt",
+              content: "This is file1 in documents.",
+              dir: false,
             },
-            {
-                dir: "/home/documents",
-                files: [
-                    { name: "file1.txt", content: "This is file1 in documents.", dir: false }
-                ]
-            }
-        ];
+          ],
+        },
+      ];
 
-        // Function to sync file system from parent
-        function syncFileSystem() {
-            try {
-                let storedFS = localStorage.getItem("fileSystem");
-                if (storedFS) {
-                    fileSystem = JSON.parse(storedFS);
-                    console.log('File system loaded:', fileSystem);
-                } else {
-                    fileSystem = defaultFileSystem;
-                    localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
-                }
-            } catch (error) {
-                console.error('Error loading file system:', error);
-                fileSystem = defaultFileSystem;
-            }
+      // Function to sync file system from parent
+      function syncFileSystem() {
+        try {
+          let storedFS = localStorage.getItem("fileSystem");
+          if (storedFS) {
+            fileSystem = JSON.parse(storedFS);
+            console.log("File system loaded:", fileSystem);
+          } else {
+            fileSystem = defaultFileSystem;
+            localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+          }
+        } catch (error) {
+          console.error("Error loading file system:", error);
+          fileSystem = defaultFileSystem;
+        }
+      }
+
+      // Initialize with sync
+      let fileSystem;
+      syncFileSystem();
+
+      // Pointer to current directory
+      let currentDir = "/";
+      let history = []; // To track directory history for back button
+
+      // Function to render the current directory content
+      function renderCurrentDir() {
+        // Find the current directory object
+        let dirObject = fileSystem.find((dir) => dir.dir === currentDir);
+        let dirContent = document.getElementById("content-viewer");
+        dirContent.innerHTML = ""; // Clear current content
+
+        if (!dirObject) {
+          console.error("Directory not found:", currentDir);
+          dirContent.innerHTML = "<p>Directory not found.</p>";
+          return;
         }
 
-        // Initialize with sync
-        let fileSystem;
-        syncFileSystem();
+        // Render breadcrumbs
+        renderBreadcrumbs();
 
-        // Pointer to current directory
-        let currentDir = "/";
-        let history = [];  // To track directory history for back button
+        // Get search query
+        let searchQuery = document
+          .getElementById("search-input")
+          .value.toLowerCase();
 
-        // Function to render the current directory content
-        function renderCurrentDir() {
-            // Find the current directory object
-            let dirObject = fileSystem.find(dir => dir.dir === currentDir);
-            let dirContent = document.getElementById('content-viewer');
-            dirContent.innerHTML = ''; // Clear current content
+        // Filter files and folders based on search query
+        let filteredFiles = dirObject.files.filter((file) =>
+          file.name.toLowerCase().includes(searchQuery),
+        );
 
-            if (!dirObject) {
-                console.error("Directory not found:", currentDir);
-                dirContent.innerHTML = '<p>Directory not found.</p>';
-                return;
+        filteredFiles.forEach((file) => {
+          let fileElement = document.createElement("div");
+          fileElement.className = file.dir ? "folder" : "file";
+
+          let fileElementImage = document.createElement("img");
+          fileElementImage.src = file.dir
+            ? "/assets/images/ui-icons/File_System_icon.webp"
+            : "/assets/images/ui-icons/Notes.webp";
+
+          let fileElementTitle = document.createElement("p");
+          fileElementTitle.textContent = file.name;
+
+          fileElement.appendChild(fileElementImage);
+          fileElement.appendChild(fileElementTitle);
+
+          fileElement.addEventListener("dblclick", () => {
+            if (file.dir) {
+              // If it's a folder, navigate into it
+              history.push(currentDir);
+              currentDir =
+                currentDir === "/"
+                  ? `/${file.name}`
+                  : `${currentDir}/${file.name}`;
+              renderCurrentDir();
+            } else {
+              // Display file content if it's a file
+              openFile(file);
             }
+          });
 
-            // Render breadcrumbs
-            renderBreadcrumbs();
-
-            // Get search query
-            let searchQuery = document.getElementById('search-input').value.toLowerCase();
-
-            // Filter files and folders based on search query
-            let filteredFiles = dirObject.files.filter(file => file.name.toLowerCase().includes(searchQuery));
-
-            filteredFiles.forEach(file => {
-                let fileElement = document.createElement('div');
-                fileElement.className = file.dir ? 'folder' : 'file';
-
-                let fileElementImage = document.createElement('img');
-                fileElementImage.src = file.dir ? '/assets/images/ui-icons/File_System_icon.webp' : '/assets/images/ui-icons/Notes.webp';
-
-                let fileElementTitle = document.createElement('p');
-                fileElementTitle.textContent = file.name;
-
-                fileElement.appendChild(fileElementImage);
-                fileElement.appendChild(fileElementTitle);
-
-                fileElement.addEventListener('dblclick', () => {
-                    if (file.dir) {
-                        // If it's a folder, navigate into it
-                        history.push(currentDir);
-                        currentDir = currentDir === '/' ? `/${file.name}` : `${currentDir}/${file.name}`;
-                        renderCurrentDir();
-                    } else {
-                        // Display file content if it's a file
-                        openFile(file);
-                    }
-                });
-
-                dirContent.appendChild(fileElement);
-            });
-
-            // Update buttons' disabled state
-            document.getElementById('back-btn').disabled = history.length === 0;
-            document.getElementById('up-btn').disabled = currentDir === '/';
-        }
-
-        // Function to render breadcrumbs
-        function renderBreadcrumbs() {
-            let breadcrumbs = document.getElementById('breadcrumbs');
-            breadcrumbs.innerHTML = '';
-
-            let pathParts = currentDir.split('/').filter(part => part);
-            let path = '';
-            breadcrumbs.innerHTML += `<a href="#" data-path="/">Home</a>`;
-
-            pathParts.forEach((part, index) => {
-                path += `/${part}`;
-                breadcrumbs.innerHTML += ` / `;
-                if (index === pathParts.length - 1) {
-                    breadcrumbs.innerHTML += `<span>${part}</span>`;
-                } else {
-                    breadcrumbs.innerHTML += `<a href="#" data-path="${path}">${part}</a>`;
-                }
-            });
-
-            // Add event listeners to breadcrumbs
-            const breadcrumbLinks = breadcrumbs.querySelectorAll('a');
-            breadcrumbLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    history.push(currentDir);
-                    currentDir = link.getAttribute('data-path');
-                    renderCurrentDir();
-                });
-            });
-        }
-
-        // Function to open a file
-        function openFile(file) {
-            // Send message to parent window to open the notes app with this file
-            const messageData = {
-                file: file,
-                dir: currentDir,
-                action: 'openFile'
-            };
-            window.parent.postMessage(messageData, '*');
-            console.log('Sending file to parent:', messageData);
-        }
-
-        // Navigate back in directory history
-        document.getElementById('back-btn').addEventListener('click', () => {
-            if (history.length > 0) {
-                currentDir = history.pop();
-                renderCurrentDir();
-            }
+          dirContent.appendChild(fileElement);
         });
 
-        // Navigate up in the directory hierarchy
-        document.getElementById('up-btn').addEventListener('click', () => {
-            if (currentDir !== "/") {
-                history.push(currentDir);
-                let parentDir = currentDir.substring(0, currentDir.lastIndexOf('/')) || "/";
-                currentDir = parentDir;
-                renderCurrentDir();
-            }
+        // Update buttons' disabled state
+        document.getElementById("back-btn").disabled = history.length === 0;
+        document.getElementById("up-btn").disabled = currentDir === "/";
+      }
+
+      // Function to render breadcrumbs
+      function renderBreadcrumbs() {
+        let breadcrumbs = document.getElementById("breadcrumbs");
+        breadcrumbs.innerHTML = "";
+
+        let pathParts = currentDir.split("/").filter((part) => part);
+        let path = "";
+        breadcrumbs.innerHTML += `<a href="#" data-path="/">Home</a>`;
+
+        pathParts.forEach((part, index) => {
+          path += `/${part}`;
+          breadcrumbs.innerHTML += ` / `;
+          if (index === pathParts.length - 1) {
+            breadcrumbs.innerHTML += `<span>${part}</span>`;
+          } else {
+            breadcrumbs.innerHTML += `<a href="#" data-path="${path}">${part}</a>`;
+          }
         });
 
-        // Event listener for search input
-        document.getElementById('search-input').addEventListener('input', () => {
+        // Add event listeners to breadcrumbs
+        const breadcrumbLinks = breadcrumbs.querySelectorAll("a");
+        breadcrumbLinks.forEach((link) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            history.push(currentDir);
+            currentDir = link.getAttribute("data-path");
             renderCurrentDir();
+          });
         });
+      }
 
-        // Refresh file system periodically to stay in sync
-        setInterval(() => {
-            let storedFS = localStorage.getItem("fileSystem");
-            if (storedFS) {
-                let newFS = JSON.parse(storedFS);
-                if (JSON.stringify(newFS) !== JSON.stringify(fileSystem)) {
-                    fileSystem = newFS;
-                    renderCurrentDir();
-                }
-            }
-        }, 1000);
+      // Function to open a file
+      function openFile(file) {
+        // Send message to parent window to open the notes app with this file
+        const messageData = {
+          file: file,
+          dir: currentDir,
+          action: "openFile",
+        };
+        window.parent.postMessage(messageData, "*");
+        console.log("Sending file to parent:", messageData);
+      }
 
-        // Initial render
+      // Navigate back in directory history
+      document.getElementById("back-btn").addEventListener("click", () => {
+        if (history.length > 0) {
+          currentDir = history.pop();
+          renderCurrentDir();
+        }
+      });
+
+      // Navigate up in the directory hierarchy
+      document.getElementById("up-btn").addEventListener("click", () => {
+        if (currentDir !== "/") {
+          history.push(currentDir);
+          let parentDir =
+            currentDir.substring(0, currentDir.lastIndexOf("/")) || "/";
+          currentDir = parentDir;
+          renderCurrentDir();
+        }
+      });
+
+      // Event listener for search input
+      document.getElementById("search-input").addEventListener("input", () => {
         renderCurrentDir();
+      });
+
+      // Refresh file system periodically to stay in sync
+      setInterval(() => {
+        let storedFS = localStorage.getItem("fileSystem");
+        if (storedFS) {
+          let newFS = JSON.parse(storedFS);
+          if (JSON.stringify(newFS) !== JSON.stringify(fileSystem)) {
+            fileSystem = newFS;
+            renderCurrentDir();
+          }
+        }
+      }, 1000);
+
+      // Initial render
+      renderCurrentDir();
     </script>
-
-
-</body>
+  </body>
 </html>

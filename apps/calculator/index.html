@@ -1,147 +1,169 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculator App</title>
-    <link rel="icon" type="image/webp" href="/assets/images/ui-icons/Calc.webp">
+    <link
+      rel="icon"
+      type="image/webp"
+      href="/assets/images/ui-icons/Calc.webp"
+    />
     <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh; /* Changed from 100dvh to 100vh */
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; /* Changed from 100dvh to 100vh */
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
 
-        .calculator {
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            width: 320px; /* Set a fixed width */
-        }
+      .calculator {
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        width: 320px; /* Set a fixed width */
+      }
 
-        .display {
-            padding: 10px;
-            text-align: right;
-            font-size: 1.5em;
-            border-bottom: 1px solid #ccc;
-            height: 50px;
-        }
+      .display {
+        padding: 10px;
+        text-align: right;
+        font-size: 1.5em;
+        border-bottom: 1px solid #ccc;
+        height: 50px;
+      }
 
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-        }
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      }
 
-        button {
-            padding: 20px;
-            font-size: 1.2em;
-            border: none;
-            cursor: pointer;
-            background-color: #f1f1f1;
-        }
+      button {
+        padding: 20px;
+        font-size: 1.2em;
+        border: none;
+        cursor: pointer;
+        background-color: #f1f1f1;
+      }
 
-        button:active {
-            background-color: #ccc;
-        }
+      button:active {
+        background-color: #ccc;
+      }
 
-        /* Optional: Style for the backspace button */
-        .backspace {
-            grid-column: span 2;
-        }
+      /* Optional: Style for the backspace button */
+      .backspace {
+        grid-column: span 2;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="calculator">
-        <div class="display" id="display">0</div>
-        <div class="buttons">
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="backspace()">←</button>
-            <button onclick="appendToDisplay('/')">/</button>
-            <button onclick="appendToDisplay('*')">*</button>
+      <div class="display" id="display">0</div>
+      <div class="buttons">
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="backspace()">←</button>
+        <button onclick="appendToDisplay('/')">/</button>
+        <button onclick="appendToDisplay('*')">*</button>
 
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button onclick="appendToDisplay('-')">-</button>
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button onclick="appendToDisplay('-')">-</button>
 
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button onclick="appendToDisplay('+')">+</button>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button onclick="appendToDisplay('+')">+</button>
 
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button onclick="calculate()">=</button>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button onclick="calculate()">=</button>
 
-            <button onclick="appendToDisplay('0')" class="backspace">0</button>
-            <button onclick="appendToDisplay('.')">.</button>
-        </div>
+        <button onclick="appendToDisplay('0')" class="backspace">0</button>
+        <button onclick="appendToDisplay('.')">.</button>
+      </div>
     </div>
     <script>
-        // Remove focus from non-focusable element
-        document.addEventListener('keydown', checkKeyInput);
+      // Remove focus from non-focusable element
+      document.addEventListener("keydown", checkKeyInput);
 
-        let displayValue = '0';
-        const allowedKeys = ['0','1','2','3','4','5','6','7','8','9','+','-','*','/','.', 'Enter', 'Backspace'];
+      let displayValue = "0";
+      const allowedKeys = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "+",
+        "-",
+        "*",
+        "/",
+        ".",
+        "Enter",
+        "Backspace",
+      ];
 
-        function checkKeyInput(event) {
-            if (!allowedKeys.includes(event.key)) return;
+      function checkKeyInput(event) {
+        if (!allowedKeys.includes(event.key)) return;
 
-            event.preventDefault(); // Prevent default actions like scrolling
+        event.preventDefault(); // Prevent default actions like scrolling
 
-            if (event.key === 'Enter') {
-                calculate();
-            } else if (event.key === 'Backspace') {
-                backspace();
-            } else {
-                appendToDisplay(event.key);
-            }
+        if (event.key === "Enter") {
+          calculate();
+        } else if (event.key === "Backspace") {
+          backspace();
+        } else {
+          appendToDisplay(event.key);
         }
+      }
 
-        function updateDisplay() {
-            if (displayValue === '') {
-                displayValue = '0';
-            }
-            if (displayValue == "80085") {
-                alert("Very funny, but let's keep it professional.");
-            }
-            document.getElementById('display').textContent = displayValue;
+      function updateDisplay() {
+        if (displayValue === "") {
+          displayValue = "0";
         }
+        if (displayValue == "80085") {
+          alert("Very funny, but let's keep it professional.");
+        }
+        document.getElementById("display").textContent = displayValue;
+      }
 
-        function appendToDisplay(value) {
-            if (displayValue === '0' && value !== '.') {
-                displayValue = value;
-            } else {
-                displayValue += value;
-            }
-            updateDisplay();
+      function appendToDisplay(value) {
+        if (displayValue === "0" && value !== ".") {
+          displayValue = value;
+        } else {
+          displayValue += value;
         }
+        updateDisplay();
+      }
 
-        function clearDisplay() {
-            displayValue = '0';
-            updateDisplay();
-        }
+      function clearDisplay() {
+        displayValue = "0";
+        updateDisplay();
+      }
 
-        function backspace() {
-            if (displayValue.length > 1) {
-                displayValue = displayValue.slice(0, -1);
-            } else {
-                displayValue = '0';
-            }
-            updateDisplay();
+      function backspace() {
+        if (displayValue.length > 1) {
+          displayValue = displayValue.slice(0, -1);
+        } else {
+          displayValue = "0";
         }
+        updateDisplay();
+      }
 
-        function calculate() {
-            try {
-                displayValue = eval(displayValue).toString();
-            } catch (error) {
-                displayValue = 'Err';
-            }
-            updateDisplay();
+      function calculate() {
+        try {
+          displayValue = eval(displayValue).toString();
+        } catch (error) {
+          displayValue = "Err";
         }
+        updateDisplay();
+      }
     </script>
-</body>
+  </body>
 </html>

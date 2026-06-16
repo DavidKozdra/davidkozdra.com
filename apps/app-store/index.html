@@ -1,352 +1,417 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>App Store</title>
-    <link rel="icon" type="image/webp" href="/assets/images/ui-icons/shop.png">
+    <link
+      rel="icon"
+      type="image/webp"
+      href="/assets/images/ui-icons/shop.png"
+    />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: #f5f5f5;
-            color: #222;
-        }
-        .store-header {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: #fff;
-            padding: 24px 28px 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .store-header h1 { font-size: 1.4rem; font-weight: 600; }
-        .store-header i { font-size: 1.6rem; }
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            padding: 24px;
-        }
-        .app-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 1px 4px rgba(0,0,0,.08);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            transition: box-shadow .15s;
-        }
-        .app-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); }
-        .app-card-top {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .app-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .app-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .app-meta { flex: 1; }
-        .app-name { font-size: 1.05rem; font-weight: 600; }
-        .app-author { font-size: .8rem; color: #666; margin-top: 2px; }
-        .app-desc { font-size: .85rem; color: #555; line-height: 1.45; }
-        .app-actions { display: flex; gap: 8px; margin-top: auto; }
-        .btn-install {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: #fff;
-            font-size: .85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background .15s;
-        }
-        .btn-install:hover { background: #1d4ed8; }
-        .btn-install.installed {
-            background: #d1d5db;
-            color: #555;
-            cursor: default;
-        }
-        .btn-install.installed:hover { background: #d1d5db; }
-        .btn-uninstall {
-            padding: 8px 14px;
-            border: 1px solid #dc2626;
-            border-radius: 8px;
-            background: transparent;
-            color: #dc2626;
-            font-size: .85rem;
-            cursor: pointer;
-            display: none;
-        }
-        .btn-uninstall:hover { background: #fef2f2; }
-        .badge-external {
-            display: inline-block; font-size: .65rem; background: #475569; color: #e2e8f0;
-            padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle;
-        }
-        .store-filters {
-            background: #fff;
-            padding: 16px 24px;
-            box-shadow: 0 1px 4px rgba(0,0,0,.08);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            align-items: center;
-        }
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-            position: relative;
-        }
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 10px 12px 10px 36px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: .95rem;
-            outline: none;
-            transition: border-color .15s;
-        }
-        .search-box input:focus {
-            border-color: #3b82f6;
-        }
-        .tags-filter {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .tag-btn {
-            padding: 6px 14px;
-            border: 1px solid #d1d5db;
-            background: #f9fafb;
-            color: #374151;
-            border-radius: 20px;
-            font-size: .85rem;
-            cursor: pointer;
-            transition: all .15s;
-        }
-        .tag-btn.active {
-            background: #3b82f6;
-            color: #fff;
-            border-color: #3b82f6;
-        }
-        .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px 20px;
-            color: #6b7280;
-            font-size: 1.1rem;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Roboto", sans-serif;
+        background: #f5f5f5;
+        color: #222;
+      }
+      .store-header {
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: #fff;
+        padding: 24px 28px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .store-header h1 {
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+      .store-header i {
+        font-size: 1.6rem;
+      }
+      .app-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        padding: 24px;
+      }
+      .app-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: box-shadow 0.15s;
+      }
+      .app-card:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      }
+      .app-card-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .app-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        object-fit: cover;
+        background: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .app-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .app-meta {
+        flex: 1;
+      }
+      .app-name {
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+      .app-author {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 2px;
+      }
+      .app-desc {
+        font-size: 0.85rem;
+        color: #555;
+        line-height: 1.45;
+      }
+      .app-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+      }
+      .btn-install {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-install:hover {
+        background: #1d4ed8;
+      }
+      .btn-install.installed {
+        background: #d1d5db;
+        color: #555;
+        cursor: default;
+      }
+      .btn-install.installed:hover {
+        background: #d1d5db;
+      }
+      .btn-uninstall {
+        padding: 8px 14px;
+        border: 1px solid #dc2626;
+        border-radius: 8px;
+        background: transparent;
+        color: #dc2626;
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: none;
+      }
+      .btn-uninstall:hover {
+        background: #fef2f2;
+      }
+      .badge-external {
+        display: inline-block;
+        font-size: 0.65rem;
+        background: #475569;
+        color: #e2e8f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .store-filters {
+        background: #fff;
+        padding: 16px 24px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+      }
+      .search-box {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+      }
+      .search-box i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+      }
+      .search-box input {
+        width: 100%;
+        padding: 10px 12px 10px 36px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .search-box input:focus {
+        border-color: #3b82f6;
+      }
+      .tags-filter {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .tag-btn {
+        padding: 6px 14px;
+        border: 1px solid #d1d5db;
+        background: #f9fafb;
+        color: #374151;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .tag-btn.active {
+        background: #3b82f6;
+        color: #fff;
+        border-color: #3b82f6;
+      }
+      .no-results {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px 20px;
+        color: #6b7280;
+        font-size: 1.1rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="store-header">
-        <i class="fas fa-store"></i>
-        <h1>App Store</h1>
+      <i class="fas fa-store"></i>
+      <h1>App Store</h1>
     </div>
     <div class="store-filters">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search apps...">
-        </div>
-        <div class="tags-filter" id="tagsFilter">
-        </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search apps..." />
+      </div>
+      <div class="tags-filter" id="tagsFilter"></div>
     </div>
     <div class="app-grid" id="app-grid"></div>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <!-- Load apps dynamically from central source -->
     <script src="/assets/js/apps.js"></script>
 
     <script>
+      function populateTags(apps) {
+        if (!apps || apps.length === 0) return;
 
-        function populateTags(apps) {
-
-            if (!apps || apps.length === 0) return;
-            
-
-            const tagsSet = new Set();
-            apps.forEach(app => {
-                if (app.tags) {
-                    app.tags.forEach(tag => tagsSet.add(tag));
-                }
-            });
-            tagsSet.add("all");
-
-            const tagsFilter = document.getElementById("tagsFilter");
-
-            Array.from(tagsSet).sort().forEach(tag => {
-                const btn = document.createElement("button");
-                btn.className = "tag-btn";
-                btn.setAttribute("data-tag", tag);
-                btn.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
-                btn.addEventListener("click", (e) => {
-                    console.log("Tag filter clicked:", tag);
-                    document.querySelectorAll(".tag-btn").forEach(b => b.classList.remove("active"));
-                    e.target.classList.add("active");
-                    currentTag = e.target.getAttribute("data-tag");
-                    renderApps();
-                });
-                tagsFilter.appendChild(btn);
-            });
-        }
-
-        function openApp(appId) {
-            const app = APPS.find(a => a.id === appId);
-
-            // should open as our window system 
-            if (app && app.url) {
-                window.parent.postMessage({ action: "launchApp", app: app }, "*");
-            }
-        }
-
-        function getFaviconUrl(url) {
-            try {
-                if (!url) return "/assets/images/brand/favicon.webp";
-
-                return "https://www.google.com/s2/favicons?domain=" + new URL(url).hostname + "&sz=128";
-            } catch { return "/assets/images/brand/favicon.webp"; }
-        }
-
-        const PREINSTALLED_APP_IDS = ["dkboy"];
-
-        // Attach favicon URL to each app (if not already set in apps.js)
-        APPS.forEach(app => {
-            if (!app.favicon) {
-                app.favicon = getFaviconUrl(app.url);
-            }
+        const tagsSet = new Set();
+        apps.forEach((app) => {
+          if (app.tags) {
+            app.tags.forEach((tag) => tagsSet.add(tag));
+          }
         });
+        tagsSet.add("all");
 
-        function getInstalledApps() {
-            try {
-                return JSON.parse(localStorage.getItem("installedApps")) || [];
-            } catch { return []; }
-        }
+        const tagsFilter = document.getElementById("tagsFilter");
 
-        function saveInstalledApps(list) {
-            localStorage.setItem("installedApps", JSON.stringify(list));
-        }
-
-        function isInstalled(appId) {
-            return getInstalledApps().includes(appId);
-        }
-
-        function ensurePreinstalledApps() {
-            if (localStorage.getItem("preinstalledAppsInitialized") === "true") {
-                return;
-            }
-
-            let installed = getInstalledApps();
-            let changed = false;
-
-            PREINSTALLED_APP_IDS.forEach(appId => {
-                if (!installed.includes(appId)) {
-                    installed.push(appId);
-                    changed = true;
-                    const app = APPS.find(a => a.id === appId);
-                    if (app) {
-                        window.parent.postMessage({ action: "installApp", app: app }, "*");
-                    }
-                }
-            });
-
-            if (changed) {
-                saveInstalledApps(installed);
-            }
-
-            localStorage.setItem("preinstalledAppsInitialized", "true");
-        }
-
-        function installApp(appId) {
-            const app = APPS.find(a => a.id === appId);
-            if (!app) return;
-            let installed = getInstalledApps();
-            if (!installed.includes(appId)) {
-                installed.push(appId);
-                saveInstalledApps(installed);
-            }
-            // Notify parent DE to add desktop icon
-            window.parent.postMessage({ action: "installApp", app: app }, "*");
-            renderApps();
-        }
-
-        function uninstallApp(appId) {
-            let installed = getInstalledApps();
-            installed = installed.filter(id => id !== appId);
-            saveInstalledApps(installed);
-            // Notify parent DE to remove desktop icon
-            window.parent.postMessage({ action: "uninstallApp", appId: appId }, "*");
-            renderApps();
-        }
-
-        let currentTag = "all";
-        let searchQuery = "";
-
-        document.getElementById("searchInput").addEventListener("input", (e) => {
-            searchQuery = e.target.value.toLowerCase();
-            renderApps();
-        });
-
-        document.querySelectorAll(".tag-btn").forEach(btn => {
+        Array.from(tagsSet)
+          .sort()
+          .forEach((tag) => {
+            const btn = document.createElement("button");
+            btn.className = "tag-btn";
+            btn.setAttribute("data-tag", tag);
+            btn.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
             btn.addEventListener("click", (e) => {
-                document.querySelectorAll(".tag-btn").forEach(b => b.classList.remove("active"));
-                e.target.classList.add("active");
-                currentTag = e.target.getAttribute("data-tag");
-                renderApps();
+              console.log("Tag filter clicked:", tag);
+              document
+                .querySelectorAll(".tag-btn")
+                .forEach((b) => b.classList.remove("active"));
+              e.target.classList.add("active");
+              currentTag = e.target.getAttribute("data-tag");
+              renderApps();
             });
+            tagsFilter.appendChild(btn);
+          });
+      }
+
+      function openApp(appId) {
+        const app = APPS.find((a) => a.id === appId);
+
+        // should open as our window system
+        if (app && app.url) {
+          window.parent.postMessage({ action: "launchApp", app: app }, "*");
+        }
+      }
+
+      function getFaviconUrl(url) {
+        try {
+          if (!url) return "/assets/images/brand/favicon.webp";
+
+          return (
+            "https://www.google.com/s2/favicons?domain=" +
+            new URL(url).hostname +
+            "&sz=128"
+          );
+        } catch {
+          return "/assets/images/brand/favicon.webp";
+        }
+      }
+
+      const PREINSTALLED_APP_IDS = ["dkboy"];
+
+      // Attach favicon URL to each app (if not already set in apps.js)
+      APPS.forEach((app) => {
+        if (!app.favicon) {
+          app.favicon = getFaviconUrl(app.url);
+        }
+      });
+
+      function getInstalledApps() {
+        try {
+          return JSON.parse(localStorage.getItem("installedApps")) || [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveInstalledApps(list) {
+        localStorage.setItem("installedApps", JSON.stringify(list));
+      }
+
+      function isInstalled(appId) {
+        return getInstalledApps().includes(appId);
+      }
+
+      function ensurePreinstalledApps() {
+        if (localStorage.getItem("preinstalledAppsInitialized") === "true") {
+          return;
+        }
+
+        let installed = getInstalledApps();
+        let changed = false;
+
+        PREINSTALLED_APP_IDS.forEach((appId) => {
+          if (!installed.includes(appId)) {
+            installed.push(appId);
+            changed = true;
+            const app = APPS.find((a) => a.id === appId);
+            if (app) {
+              window.parent.postMessage(
+                { action: "installApp", app: app },
+                "*",
+              );
+            }
+          }
         });
 
-        function renderApps() {
-            const grid = document.getElementById("app-grid");
-            grid.innerHTML = "";
-            let renderedCount = 0;
+        if (changed) {
+          saveInstalledApps(installed);
+        }
 
-            APPS.forEach(app => {
-                const searchMatch = !searchQuery || 
-                    app.name.toLowerCase().includes(searchQuery) || 
-                    app.description.toLowerCase().includes(searchQuery) ||
-                    app.author.toLowerCase().includes(searchQuery);
-                    
-                const tagMatch = currentTag === "all" || (app.tags && app.tags.includes(currentTag));
+        localStorage.setItem("preinstalledAppsInitialized", "true");
+      }
 
-                if (!searchMatch || !tagMatch) return;
+      function installApp(appId) {
+        const app = APPS.find((a) => a.id === appId);
+        if (!app) return;
+        let installed = getInstalledApps();
+        if (!installed.includes(appId)) {
+          installed.push(appId);
+          saveInstalledApps(installed);
+        }
+        // Notify parent DE to add desktop icon
+        window.parent.postMessage({ action: "installApp", app: app }, "*");
+        renderApps();
+      }
 
-                renderedCount++;
-                const installed = isInstalled(app.id);
-                const card = document.createElement("div");
-                let totalInstalls = Math.floor(Math.random() * 10000) + 100; // Random install count for demo
-                card.className = "app-card";
-                card.innerHTML = `
+      function uninstallApp(appId) {
+        let installed = getInstalledApps();
+        installed = installed.filter((id) => id !== appId);
+        saveInstalledApps(installed);
+        // Notify parent DE to remove desktop icon
+        window.parent.postMessage(
+          { action: "uninstallApp", appId: appId },
+          "*",
+        );
+        renderApps();
+      }
+
+      let currentTag = "all";
+      let searchQuery = "";
+
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchQuery = e.target.value.toLowerCase();
+        renderApps();
+      });
+
+      document.querySelectorAll(".tag-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          document
+            .querySelectorAll(".tag-btn")
+            .forEach((b) => b.classList.remove("active"));
+          e.target.classList.add("active");
+          currentTag = e.target.getAttribute("data-tag");
+          renderApps();
+        });
+      });
+
+      function renderApps() {
+        const grid = document.getElementById("app-grid");
+        grid.innerHTML = "";
+        let renderedCount = 0;
+
+        APPS.forEach((app) => {
+          const searchMatch =
+            !searchQuery ||
+            app.name.toLowerCase().includes(searchQuery) ||
+            app.description.toLowerCase().includes(searchQuery) ||
+            app.author.toLowerCase().includes(searchQuery);
+
+          const tagMatch =
+            currentTag === "all" || (app.tags && app.tags.includes(currentTag));
+
+          if (!searchMatch || !tagMatch) return;
+
+          renderedCount++;
+          const installed = isInstalled(app.id);
+          const card = document.createElement("div");
+          let totalInstalls = Math.floor(Math.random() * 10000) + 100; // Random install count for demo
+          card.className = "app-card";
+          card.innerHTML = `
                     <div class="app-card-top">
                         <div class="app-icon"><img src="${app.favicon}" onerror="this.onerror=null;this.src='/assets/images/brand/favicon.webp';" alt="${app.name} icon"></div>
                         <div class="app-meta">
 
                             <div class="app-name">${app.name}</div>
                              <div class="app-tags" style="margin-top: 6px;">
-                                ${app.tags ? app.tags.map(tag => `<span class="badge-external">${tag.toUpperCase()}</span>`).join('') : ''}
+                                ${app.tags ? app.tags.map((tag) => `<span class="badge-external">${tag.toUpperCase()}</span>`).join("") : ""}
                             </div>
                             <div class="app-author">${app.author}</div>
                            
@@ -359,37 +424,41 @@
                     </div>
                     <div class="app-desc">${app.description}</div>
                     <div class="app-actions">
-                        <button class="btn-install ${installed ? 'installed' : ''}"
-                            ${installed ? 'disabled' : ''}
+                        <button class="btn-install ${installed ? "installed" : ""}"
+                            ${installed ? "disabled" : ""}
                             data-id="${app.id}">
-                            ${installed ? 'Installed' : 'Install'}
+                            ${installed ? "Installed" : "Install"}
                         </button>
                         <button class="btn-uninstall" data-id="${app.id}"
-                            style="display:${installed ? 'inline-block' : 'none'}">
+                            style="display:${installed ? "inline-block" : "none"}">
                             Uninstall
                         </button>
 
-                      ${installed ? `<button class="btn-install" data-id="${app.id}" onClick="openApp('${app.id}')">Open </button>` : ''}
+                      ${installed ? `<button class="btn-install" data-id="${app.id}" onClick="openApp('${app.id}')">Open </button>` : ""}
                     </div>
                 `;
-                card.querySelector(".btn-install").addEventListener("click", function() {
-                    if (!installed) installApp(app.id);
-                });
-                card.querySelector(".btn-uninstall").addEventListener("click", function() {
-                    uninstallApp(app.id);
-                });
-                grid.appendChild(card);
+          card
+            .querySelector(".btn-install")
+            .addEventListener("click", function () {
+              if (!installed) installApp(app.id);
             });
+          card
+            .querySelector(".btn-uninstall")
+            .addEventListener("click", function () {
+              uninstallApp(app.id);
+            });
+          grid.appendChild(card);
+        });
 
-            if (renderedCount === 0) {
-                grid.innerHTML = `<div class="no-results">No apps found matching your search.</div>`;
-            }
+        if (renderedCount === 0) {
+          grid.innerHTML = `<div class="no-results">No apps found matching your search.</div>`;
         }
+      }
 
-        ensurePreinstalledApps();
-        renderApps();
-        
-        populateTags(APPS);
+      ensurePreinstalledApps();
+      renderApps();
+
+      populateTags(APPS);
     </script>
-</body>
+  </body>
 </html>
