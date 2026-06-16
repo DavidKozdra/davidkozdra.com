@@ -1,4 +1,4 @@
-const CACHE_NAME = "pwa-cache-v5";
+const CACHE_NAME = "pwa-cache-v6";
 const PRECACHE_URLS = [
   "/",
   "/index.html",
@@ -9,7 +9,7 @@ const PRECACHE_URLS = [
   "/assets/js/Games.js?v=1.0",
   "/assets/js/index.js",
   "/assets/js/apps.js",
-  "/assets/images/brand/favicon.webp",
+  "/assets/images/brand/favicon.ico",
   "/assets/images/brand/icon-192.png",
   "/assets/images/brand/icon-512.png",
 ];
