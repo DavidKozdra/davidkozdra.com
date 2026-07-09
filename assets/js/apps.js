@@ -24,19 +24,6 @@ const APPS = [
         tags: ["tool"]
     },
     {
-        id: "bearpenny",
-        name: "BearPenny",
-        author: "BearPenny.Capital",
-        description: "Every penny your family has will be the Bears, hes mad he doesnt understand the market or law but he is a bear RARRR",
-        url: "/apps/bear-penny/",
-        icon: "/apps/bear-penny/images/logo.svg",
-        width: 1200,
-        fullscreen: true,
-        external: false,
-        tags: ["game"],
-        favicon: "/apps/bear-penny/images/logo.svg"
-    },
-    {
         id: "muddygame",
         name: "Muddy Game",
         author: "muddygame.net",
@@ -46,19 +33,6 @@ const APPS = [
         fullscreen: false,
         external: true,
         tags: ["game"]
-    },
-    {
-        id: "peoplebook",
-        name: "People Book",
-        author: "extenalpb.com",
-        description: "Fake social collector game. Add friends, chat with DMs, earn coins, customize your character in the cosmetics shop.",
-        url: "/apps/people-book/",
-        icon: "/assets/images/ui-icons/peoplebook.svg",
-        width: 1200,
-        fullscreen: true,
-        external: false,
-        tags: ["game"],
-        favicon: "/assets/images/ui-icons/peoplebook.svg"
     },
     {
         id: "passwordgen",
@@ -98,6 +72,58 @@ const APPS = [
         external: false,
         tags: ["game"],
         favicon: "https://neonyke.davidkozdra.workers.dev/assets/icons/icon-128x128.png"
+    },
+    {
+        id: "bargainquest",
+        name: "Bargain Quest",
+        author: "davidkozdra.workers.dev",
+        description: "Pirate themed sales game all about buying low and selling high.",
+        url: "https://bargainquest.davidkozdra.workers.dev/",
+        icon: "/assets/images/projects/bq_logo.png",
+        width: 1200,
+        fullscreen: true,
+        external: false,
+        tags: ["game"],
+        favicon: "/assets/images/projects/bq_logo.png"
+    },
+    {
+        id: "cloudymeadows",
+        name: "Cloudy Meadows Deluxe",
+        author: "cloudy-meadows.pages.dev",
+        description: "A farming RPG browser game. Tend your crops, build your homestead.",
+        url: "https://cloudy-meadows.pages.dev/",
+        icon: "/assets/images/projects/cloudy_logo.webp",
+        width: 1200,
+        fullscreen: true,
+        external: false,
+        tags: ["game"],
+        favicon: "/assets/images/projects/cloudy_logo.webp"
+    },
+    {
+        id: "bearpenny",
+        name: "BearPenny",
+        author: "BearPenny.Capital",
+        description: "Every penny your family has will be the Bears, hes mad he doesnt understand the market or law but he is a bear RARRR",
+        url: "/apps/bear-penny/",
+        icon: "/apps/bear-penny/images/logo.svg",
+        width: 1200,
+        fullscreen: true,
+        external: false,
+        tags: ["game"],
+        favicon: "/apps/bear-penny/images/logo.svg"
+    },
+    {
+        id: "peoplebook",
+        name: "People Book",
+        author: "extenalpb.com",
+        description: "Fake social collector game. Add friends, chat with DMs, earn coins, customize your character in the cosmetics shop.",
+        url: "/apps/people-book/",
+        icon: "/assets/images/ui-icons/peoplebook.svg",
+        width: 1200,
+        fullscreen: true,
+        external: false,
+        tags: ["game"],
+        favicon: "/assets/images/ui-icons/peoplebook.svg"
     }
 ];
 
