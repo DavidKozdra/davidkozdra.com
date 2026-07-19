@@ -7,6 +7,12 @@
       type="image/svg+xml"
       href="/assets/images/ui-icons/peoplebook.svg"
     />
+  <link
+      rel="style"
+      type="css"
+      href="style.css"
+    />
+
 
     <!-- Playables SDK -->
     <script>
@@ -896,6 +902,18 @@
         min-height: 18px;
         background: var(--card);
         flex-shrink: 0;
+        animation: blink 1s infinite forwards; 
+      }
+      @keyframes blink {
+        0%{
+          opacity: 0.25;
+        }
+        50%{
+          opacity: 0.5;
+        }
+        100%{
+          opacity: 1;
+        }
       }
 
       /* Toast */
