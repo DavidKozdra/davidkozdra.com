@@ -8,8 +8,8 @@
       href="/assets/images/ui-icons/peoplebook.svg"
     />
   <link
-      rel="style"
-      type="css"
+      rel="stylesheet"
+      type="text/css"
       href="style.css"
     />
 
@@ -452,6 +452,9 @@
           "join my lobby",
           "ez clap",
           "Neo Nyke rules play with me ? https://neonyke.davidkozdra.workers.dev/ ? ",
+          "Neo Nyke rules play with me ? https://neonyke.davidkozdra.workers.dev/ ? ",
+          "Neo Nyke rules play with me ? https://neonyke.davidkozdra.workers.dev/ ? ",
+          "Neo Nyke rules play with me ? https://neonyke.davidkozdra.workers.dev/ ? ",
           "brb dinner",
           "u on later?",
           "no way lol",
@@ -481,7 +484,6 @@
           "just got a new hat lol",
           "check my drip",
           "your character looks fire",
-
           "yGSJSj9 - Smudge",
         ];
 
@@ -594,6 +596,170 @@
           "do quests",
           "1v1 now",
           "rate this build",
+        ];
+
+
+        // Each intent has example user messages and suitable replies.
+        // The examples are embedded once, then incoming messages are matched
+        // against them by meaning rather than exact wording.
+        const SEMANTIC_CHAT_INTENTS = [
+          {
+            id: "greeting",
+            examples: [
+              "hello",
+              "hi there",
+              "hey",
+              "yo what's up",
+              "how are you",
+              "good morning",
+            ],
+            replies: ["yo!", "hey what's up", "ayy", "hey lol", "im good, you?"],
+          },
+          {
+            id: "play_together",
+            examples: [
+              "want to play together",
+              "join my game",
+              "let's run duos",
+              "can you join my lobby",
+              "play with me",
+              "want to team up",
+            ],
+            replies: [
+              "yeah send the invite",
+              "bet im down",
+              "give me a sec then inv",
+              "lets run it",
+              "yeah what mode?",
+            ],
+          },
+          {
+            id: "trade",
+            examples: [
+              "want to trade",
+              "can we trade skins",
+              "what items do you have",
+              "sell me that cosmetic",
+              "swap items with me",
+            ],
+            replies: [
+              "maybe, what do you have?",
+              "yeah show me your stuff",
+              "depends what you're offering lol",
+              "im down to trade",
+              "what are you looking for?",
+            ],
+          },
+          {
+            id: "ranked",
+            examples: [
+              "what rank are you",
+              "do you play ranked",
+              "let's queue competitive",
+              "help me rank up",
+              "are you good at ranked",
+            ],
+            replies: [
+              "im trying to climb rn",
+              "queue with me and find out lol",
+              "ranked has been brutal today",
+              "yeah im down for ranked",
+              "whats your rank?",
+            ],
+          },
+          {
+            id: "compliment",
+            examples: [
+              "your avatar looks cool",
+              "nice profile",
+              "I like your outfit",
+              "your character looks amazing",
+              "cool cosmetic",
+            ],
+            replies: [
+              "ty! yours is fire too",
+              "appreciate it",
+              "thanks lol I just got it",
+              "ay thanks",
+              "ty I saved forever for it",
+            ],
+          },
+          {
+            id: "gift",
+            examples: [
+              "send me a gift",
+              "can I have some coins",
+              "give me an item",
+              "did you send that present",
+              "thanks for the gift",
+            ],
+            replies: [
+              "maybe if I get another one lol",
+              "check your gifts later",
+              "no promises 😂",
+              "yeah I got you",
+              "np!",
+            ],
+          },
+          {
+            id: "goodbye",
+            examples: [
+              "goodbye",
+              "bye",
+              "I have to go",
+              "talk to you later",
+              "see you tomorrow",
+              "brb dinner",
+            ],
+            replies: ["later!", "cya", "bet talk later", "peace", "aight see you"],
+          },
+          {
+            id: "neo_nyke",
+            examples: [
+              "want to play Neo Nyke",
+              "have you tried Neo Nyke",
+              "check out this dungeon game",
+              "play my roguelite",
+              "neonyke davidkozdra workers dev",
+            ],
+            replies: [
+              "yeah send me the Neo Nyke link",
+              "im down, lets try it",
+              "that dungeon game? bet",
+              "yeah I saw that, looks sick",
+              "lets run Neo Nyke",
+            ],
+          },
+          {
+            id: "agreement",
+            examples: [
+              "yes",
+              "I agree",
+              "that's true",
+              "exactly",
+              "for real",
+              "sounds good",
+            ],
+            replies: ["fr fr", "exactly", "facts", "bet", "yeah thats what im saying"],
+          },
+          {
+            id: "confusion",
+            examples: [
+              "what do you mean",
+              "I don't understand",
+              "that makes no sense",
+              "why",
+              "can you explain",
+              "wait what happened",
+            ],
+            replies: [
+              "wait lemme explain",
+              "lol I worded that badly",
+              "hold on what part?",
+              "long story honestly",
+              "idk either 😂",
+            ],
+          },
         ];
         const feedLeads = [
           "daily update:",
@@ -1016,12 +1182,111 @@
           return action + " " + context + ending;
         }
 
-        function generateChatMessage() {
+        // --- Semantic chat replies ---
+        let semanticEnginePromise = null;
+
+        function generateRandomChatMessage() {
           if (maybe(0.55)) return rand(chatMessages);
           const opener = rand(chatOpeners);
           const intent = rand(chatIntents);
           const tail = maybe(0.35) ? " ?" : maybe(0.25) ? " lol" : "";
           return opener + " " + intent + tail;
+        }
+
+        function dotProduct(a, b) {
+          let total = 0;
+          for (let i = 0; i < a.length; i++) total += a[i] * b[i];
+          return total;
+        }
+
+        function tensorToRows(tensor) {
+          const values = tensor.tolist();
+          return Array.isArray(values[0]) ? values : [values];
+        }
+
+        async function loadSemanticEngine() {
+          if (!semanticEnginePromise) {
+            semanticEnginePromise = (async () => {
+              const { pipeline } = await import(
+                "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1"
+              );
+
+              const extractor = await pipeline(
+                "feature-extraction",
+                "Xenova/all-MiniLM-L6-v2",
+              );
+
+              const exampleTexts = [];
+              const exampleIntentIndexes = [];
+
+              SEMANTIC_CHAT_INTENTS.forEach((intent, intentIndex) => {
+                intent.examples.forEach((example) => {
+                  exampleTexts.push(example);
+                  exampleIntentIndexes.push(intentIndex);
+                });
+              });
+
+              const output = await extractor(exampleTexts, {
+                pooling: "mean",
+                normalize: true,
+              });
+
+              return {
+                extractor,
+                exampleVectors: tensorToRows(output),
+                exampleIntentIndexes,
+              };
+            })().catch((error) => {
+              // Allow another load attempt after a network/model failure.
+              semanticEnginePromise = null;
+              throw error;
+            });
+          }
+
+          return semanticEnginePromise;
+        }
+
+        async function generateChatMessage(userInput) {
+          const cleanInput = String(userInput || "").trim();
+          if (!cleanInput) return generateRandomChatMessage();
+
+          try {
+            const engine = await loadSemanticEngine();
+            const output = await engine.extractor(cleanInput, {
+              pooling: "mean",
+              normalize: true,
+            });
+            const inputVector = tensorToRows(output)[0];
+
+            let bestScore = -Infinity;
+            let bestIntentIndex = -1;
+
+            for (let i = 0; i < engine.exampleVectors.length; i++) {
+              const score = dotProduct(inputVector, engine.exampleVectors[i]);
+              if (score > bestScore) {
+                bestScore = score;
+                bestIntentIndex = engine.exampleIntentIndexes[i];
+              }
+            }
+
+            // Low confidence: keep the old random behavior rather than force
+            // an unrelated response.
+            if (bestIntentIndex < 0 || bestScore < 0.32) {
+              return generateRandomChatMessage();
+            }
+
+            const matchedIntent = SEMANTIC_CHAT_INTENTS[bestIntentIndex];
+            console.debug("Semantic reply match", {
+              input: cleanInput,
+              intent: matchedIntent.id,
+              score: Number(bestScore.toFixed(3)),
+            });
+
+            return rand(matchedIntent.replies);
+          } catch (error) {
+            console.warn("Semantic matching unavailable; using random reply", error);
+            return generateRandomChatMessage();
+          }
         }
 
         function generateFeedPostText() {
@@ -1252,9 +1517,11 @@
               span +
               Math.floor((span / count) * i) +
               Math.floor(Math.random() * 60000);
-            msgs.push({
+              const last = generateRandomChatMessage();
+
+              msgs.push({
               contactId: contact.id,
-              text: generateChatMessage(),
+              text: last,
               sender: Math.random() > 0.5 ? "me" : "them",
               timestamp: t,
             });
@@ -1577,22 +1844,28 @@
           const msgs = await dbGetMessages(dmContact.id);
           renderDMMessages(msgs);
 
-          // Simulated reply
-          dmTyping.textContent = dmContact.name + " is typing...";
+          // Simulated semantic reply based on the message the user sent.
+          const replyingContact = dmContact;
+          dmTyping.textContent = replyingContact.name + " is typing...";
           const delay = 600 + Math.floor(Math.random() * 2000);
+
           setTimeout(async () => {
-            if (!dmContact) return;
+            const replyText = await generateChatMessage(text);
             const reply = {
-              contactId: dmContact.id,
-              text: generateChatMessage(),
+              contactId: replyingContact.id,
+              text: replyText,
               sender: "them",
               timestamp: Date.now(),
             };
             await dbSaveMsg(reply);
-            dmTyping.textContent = "";
-            const updated = await dbGetMessages(dmContact.id);
-            renderDMMessages(updated);
-            if (navigator.vibrate) navigator.vibrate(5);
+
+            // Only update the open panel if this same conversation is still open.
+            if (dmContact && dmContact.id === replyingContact.id) {
+              dmTyping.textContent = "";
+              const updated = await dbGetMessages(replyingContact.id);
+              renderDMMessages(updated);
+              if (navigator.vibrate) navigator.vibrate(5);
+            }
           }, delay);
         }
 
