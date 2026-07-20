@@ -684,6 +684,7 @@ window.Intl = window.Intl || {};
         let db = null;
         let activeMatch = null;
         let botInviteTimer = null;
+        let toastTimer = null;
         const giftTimers = {}; // runtime timers per contact id
 
         function rand(arr) {
@@ -1050,8 +1051,10 @@ window.Intl = window.Intl || {};
         function dbSaveMsg(msg) {
           return new Promise((resolve, reject) => {
             const tx = db.transaction("messages", "readwrite");
-            tx.objectStore("messages").add(msg);
-            tx.oncomplete = () => resolve();
+            const req = tx.objectStore("messages").add(msg);
+            let messageId = null;
+            req.onsuccess = () => { messageId = req.result; };
+            tx.oncomplete = () => resolve(messageId);
             tx.onerror = (e) => reject(e.target.error);
           });
         }
@@ -1313,9 +1316,26 @@ window.Intl = window.Intl || {};
         }
 
         function showToast(msg, type = "") {
+          if (toastTimer) clearTimeout(toastTimer);
           toast.textContent = msg;
           toast.className = "toast show" + (type ? " " + type : "");
-          setTimeout(() => toast.classList.remove("show"), 2500);
+          toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
+        }
+
+        function showInviteToast(contact, game, invite) {
+          if (toastTimer) clearTimeout(toastTimer);
+          toast.className = "toast show invite";
+          toast.innerHTML = `<div class="invite-toast-copy"><strong>🎮 ${escapeHTML(contact.name)} invited you</strong><span>${escapeHTML(game.title)} · win +${game.reward} 🪙</span></div><div class="invite-toast-actions"><button data-toast-invite="decline">Decline</button><button data-toast-invite="accept">Play</button></div>`;
+          toast.querySelectorAll("[data-toast-invite]").forEach((button) => {
+            button.addEventListener("click", async () => {
+              button.disabled = true;
+              const accepted = button.dataset.toastInvite === "accept";
+              if (accepted) await acceptBotGameInvite(invite);
+              else await declineBotGameInvite(invite);
+              toast.classList.remove("show");
+            });
+          });
+          toastTimer = setTimeout(() => toast.classList.remove("show"), 12000);
         }
 
         function flyCoin(amount, el) {
@@ -1709,7 +1729,7 @@ window.Intl = window.Intl || {};
             random: [`I have a weird urge to run ${game.title} right now.`, `${game.title} just popped into my head. Want in?`],
             rookie: [`I could use some practice in ${game.title}. Want to play?`, `I am down for a friendly ${game.title} match if you are.`],
           };
-          await dbSaveMsg({
+          const invite = {
             contactId: contact.id,
             text: rand(intros[personality.id] || intros.fun),
             sender: "them",
@@ -1717,14 +1737,15 @@ window.Intl = window.Intl || {};
             kind: "game-invite",
             gameId: game.id,
             inviteStatus: "pending",
-          });
+          };
+          invite.id = await dbSaveMsg(invite);
           state.botInviteCooldowns[contact.id] = Date.now();
           save();
           if (dmContact && dmContact.id === contact.id) {
             renderDMMessages(await dbGetMessages(contact.id));
             if (navigator.vibrate) navigator.vibrate([10, 25, 10]);
           } else {
-            showToast(`🎮 ${contact.name} invited you to ${game.title}!`, "gift");
+            showInviteToast(contact, game, invite);
             if (state.currentView === "chats") renderChatsList();
           }
         }

@@ -1454,6 +1454,27 @@
         background: linear-gradient(135deg, #f59e0b, #fbbf24);
         color: #0f0f12;
       }
+      .toast.invite {
+        width: min(350px, calc(100% - 28px));
+        max-width: none;
+        padding: 11px;
+        color: white;
+        text-align: left;
+        pointer-events: auto;
+        border: 1px solid rgba(103, 232, 249, .48);
+        border-radius: 15px;
+        background: linear-gradient(135deg, #172554, #312e81);
+        box-shadow: 0 13px 32px rgba(0,0,0,.42), 0 0 20px rgba(34,211,238,.12);
+      }
+      .invite-toast-copy { min-width: 0; }
+      .invite-toast-copy strong,
+      .invite-toast-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .invite-toast-copy strong { font-size: 12px; }
+      .invite-toast-copy span { margin-top: 3px; color: #bae6fd; font-size: 10px; }
+      .invite-toast-actions { display: grid; grid-template-columns: 1fr 1.25fr; gap: 7px; margin-top: 9px; }
+      .invite-toast-actions button { border: 0; border-radius: 8px; padding: 8px; color: white; background: rgba(255,255,255,.12); font: inherit; font-size: 11px; font-weight: 900; cursor: pointer; }
+      .invite-toast-actions button:last-child { background: linear-gradient(135deg, #06b6d4, #5865f2); }
+      .invite-toast-actions button:disabled { opacity: .55; cursor: wait; }
 
       /* Gift indicator on mini avatars */
       .contact-mini {
