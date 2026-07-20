@@ -105,15 +105,15 @@
         // pace, while left is the only control that can meaningfully brake.
         if (left) player.vx -= 5100 * dt;
         else player.vx += (right ? 5600 : 3500) * dt;
-        if (!left) player.vx = Math.max(player.vx, right ? 620 : 500);
-        player.vx = Math.max(-520, Math.min(right ? 920 : 760, player.vx));
+        if (!left) player.vx = Math.max(player.vx, right ? 1120 : 840);
+        player.vx = Math.max(-620, Math.min(right ? 1450 : 1200, player.vx));
         moveRacer(player, dt);
       }
       function obstacleAhead(racer) {
         return solids.find((solid) => solid.x > racer.x + racer.w && solid.x < racer.x + 64 && solid.y < racer.y + racer.h - 9 && solid.y + solid.h > racer.y + 10);
       }
       function updateCpu(dt) {
-        const topSpeed = 510 + difficulty * 220;
+        const topSpeed = 820 + difficulty * 280;
         cpu.vx += (topSpeed - cpu.vx) * Math.min(1, dt * 5.5);
         const obstacle = obstacleAhead(cpu);
         cpu.aiJump -= dt;

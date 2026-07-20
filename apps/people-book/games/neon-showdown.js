@@ -12,7 +12,7 @@
       const keys = new Set();
       let width = canvas.clientWidth, height = canvas.clientHeight;
       const player = { x: width * .28, y: height * .55, health: 100, reload: 0, dash: 0, cooldown: 0, aimX: width * .7, aimY: height * .5, hit: 0, firing: false, charge: 0 };
-      const enemy = { x: width * .72, y: height * .45, health: 100, reload: .6, phase: Math.random() * 6.2, hit: 0 };
+      const enemy = { x: width * .72, y: height * .45, health: 100, reload: 0, phase: Math.random() * 6.2, hit: 0, firing: 0, aimX: width * .28, aimY: height * .55 };
       const bullets = [];
       const lasers = [];
       const particles = [];
@@ -55,9 +55,12 @@
       removeListeners = () => { window.removeEventListener("resize", resize); window.removeEventListener("keydown", keydown); window.removeEventListener("keyup", keyup); window.removeEventListener("pointerup", pointerUp); canvas.removeEventListener("pointermove", aim); canvas.removeEventListener("pointerdown", pointerDown); };
       let previous = performance.now();
       function shootEnemy() {
-        const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x) + (Math.random() - .5) * (1 - difficulty) * .55;
-        const count = difficulty > .72 ? 3 : 2;
-        for (let i = 0; i < count; i++) { const a = angle + (i - (count - 1) / 2) * .17; bullets.push({ x: enemy.x, y: enemy.y, vx: Math.cos(a) * (265 + difficulty * 120), vy: Math.sin(a) * (265 + difficulty * 120), owner: "enemy", damage: 6 + difficulty * 5, radius: 4, life: 2 }); }
+        // Aim at the player's current position with a slight personality-based
+        // inaccuracy. This is intentionally a visible burst, not a rare tick.
+        enemy.aimX = player.x; enemy.aimY = player.y; enemy.firing = .14;
+        const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x) + (Math.random() - .5) * (1 - difficulty) * .34;
+        const count = 5 + (difficulty > .74 ? 1 : 0);
+        for (let i = 0; i < count; i++) { const a = angle + (i - (count - 1) / 2) * .13; bullets.push({ x: enemy.x, y: enemy.y, vx: Math.cos(a) * (390 + difficulty * 150), vy: Math.sin(a) * (390 + difficulty * 150), owner: "enemy", damage: 5 + difficulty * 5, radius: 5, life: 2.35 }); }
       }
       function hit(target, bullet) { return Math.hypot(target.x - bullet.x, target.y - bullet.y) < 17 + bullet.radius; }
       function spawnImpact(target, bullet) {
@@ -85,6 +88,7 @@
         ctx.globalAlpha = 1; ctx.shadowBlur = 0;
         const drawFighter = (fighter, color, dash) => { ctx.fillStyle = fighter.hit > 0 ? "#fff1f2" : color; ctx.shadowColor = color; ctx.shadowBlur = dash ? 28 : 12; ctx.beginPath(); ctx.arc(fighter.x, fighter.y, 15 + fighter.hit * 20, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = fighter.hit > 0 ? "rgba(244,63,94,.52)" : "rgba(255,255,255,.18)"; ctx.beginPath(); ctx.arc(fighter.x, fighter.y, 25 + fighter.hit * 32, 0, Math.PI * 2); ctx.fill(); };
         drawFighter(player, "#67e8f9", player.dash > 0); drawFighter(enemy, "#f0abfc", false);
+        if (enemy.firing > 0) { ctx.globalAlpha = enemy.firing / .14; ctx.strokeStyle = "#fb7185"; ctx.lineWidth = 2; ctx.setLineDash([4, 5]); ctx.beginPath(); ctx.moveTo(enemy.x, enemy.y); ctx.lineTo(enemy.aimX, enemy.aimY); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = "#fff1f2"; ctx.beginPath(); ctx.arc(enemy.x, enemy.y, 10 + enemy.firing * 35, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; }
         if (weapon === "laser" && player.firing) { const size = 18 + player.charge * 24; ctx.strokeStyle = "#67e8f9"; ctx.lineWidth = 3; ctx.globalAlpha = .45 + player.charge * .45; ctx.beginPath(); ctx.arc(player.x, player.y, size, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.min(1, player.charge / 1.25)); ctx.stroke(); ctx.globalAlpha = 1; }
         bullets.forEach((bullet) => { ctx.fillStyle = bullet.owner === "player" ? "#fde68a" : "#fb7185"; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(bullet.x, bullet.y, bullet.radius, 0, Math.PI * 2); ctx.fill(); }); ctx.shadowBlur = 0;
         hitMarkers.forEach((marker) => { const scale = 1 + (1 - marker.life / .48) * .5; ctx.strokeStyle = marker.color; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(marker.x - 8 * scale, marker.y - 8 * scale); ctx.lineTo(marker.x + 8 * scale, marker.y + 8 * scale); ctx.moveTo(marker.x + 8 * scale, marker.y - 8 * scale); ctx.lineTo(marker.x - 8 * scale, marker.y + 8 * scale); ctx.stroke(); ctx.fillStyle = marker.color; ctx.font = "800 12px system-ui"; ctx.textAlign = "center"; ctx.fillText(`-${marker.damage}`, marker.x, marker.y - 15 - (1 - marker.life / .48) * 16); });
@@ -98,10 +102,10 @@
         const length = Math.hypot(dx, dy) || 1, speed = player.dash > 0 ? 550 : weapon === "laser" && player.firing ? 105 : 250;
         player.x = Math.max(16, Math.min(width - 16, player.x + dx / length * speed * dt)); player.y = Math.max(16, Math.min(height - 16, player.y + dy / length * speed * dt));
         enemy.x = Math.max(18, Math.min(width - 18, enemy.x + Math.cos(now / 640 + enemy.phase) * (90 + difficulty * 50) * dt)); enemy.y = Math.max(18, Math.min(height - 18, enemy.y + Math.sin(now / 720 + enemy.phase) * (90 + difficulty * 50) * dt));
-        player.reload -= dt; player.dash = Math.max(0, player.dash - dt); player.cooldown -= dt; player.hit = Math.max(0, player.hit - dt); enemy.hit = Math.max(0, enemy.hit - dt); screenHit = Math.max(0, screenHit - dt);
+        player.reload -= dt; player.dash = Math.max(0, player.dash - dt); player.cooldown -= dt; player.hit = Math.max(0, player.hit - dt); enemy.hit = Math.max(0, enemy.hit - dt); enemy.firing = Math.max(0, enemy.firing - dt); screenHit = Math.max(0, screenHit - dt);
         if (player.firing && weapon !== "laser") fire();
         if (player.firing && weapon === "laser") player.charge = Math.min(1.25, player.charge + dt);
-        if (enemy.reload <= 0) { enemy.reload = .85 - difficulty * .36; shootEnemy(); }
+        if (enemy.reload <= 0) { enemy.reload = .2 + (1 - difficulty) * .12; shootEnemy(); }
         for (let i = lasers.length - 1; i >= 0; i--) { lasers[i].life -= dt; if (lasers[i].life <= 0) lasers.splice(i, 1); }
         for (let i = particles.length - 1; i >= 0; i--) { const particle = particles[i]; particle.x += particle.vx * dt; particle.y += particle.vy * dt; particle.vx *= .91; particle.vy = particle.vy * .91 + 130 * dt; particle.life -= dt; if (particle.life <= 0) particles.splice(i, 1); }
         for (let i = hitMarkers.length - 1; i >= 0; i--) { hitMarkers[i].life -= dt; if (hitMarkers[i].life <= 0) hitMarkers.splice(i, 1); }

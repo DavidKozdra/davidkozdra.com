@@ -242,7 +242,7 @@ window.Intl = window.Intl || {};
             price: 90,
             reward: 45,
             loss: 12,
-            file: "games/skyline-sprint.html?v=20260720-8",
+            file: "games/skyline-sprint.html?v=20260720-12",
             art: "sprint",
             controls: "Move: A/D or arrows · Dash: Space",
           },
@@ -254,9 +254,21 @@ window.Intl = window.Intl || {};
             price: 150,
             reward: 65,
             loss: 18,
-            file: "games/neon-showdown.html?v=20260720-9",
+            file: "games/neon-showdown.html?v=20260720-12",
             art: "showdown",
             controls: "Move: WASD / arrows · Fire: click · Dash: Space",
+          },
+          {
+            id: "deli-duel",
+            title: "Deli Duel",
+            tagline: "A condiment-fueled fleet battle",
+            description: "Find your rival's hot dogs, burgers, and subs before they find yours in a fast sandwich Battleship duel.",
+            price: 220,
+            reward: 85,
+            loss: 22,
+            file: "games/deli-duel.html?v=20260720-12",
+            art: "deli",
+            controls: "Aim: click an enemy tile · Hit every sandwich to win",
           },
         ];
         const BOT_PERSONALITIES = [
@@ -664,11 +676,14 @@ window.Intl = window.Intl || {};
           gamesPlayed: 0,
           gamesWon: 0,
           botInviteCooldowns: {}, // { contactId: timestamp }
+          savedAt: 0,
         };
+        const defaultState = JSON.parse(JSON.stringify(state));
         let currentContact = null;
         let dmContact = null;
         let db = null;
         let activeMatch = null;
+        let botInviteTimer = null;
         const giftTimers = {}; // runtime timers per contact id
 
         function rand(arr) {
@@ -945,32 +960,75 @@ window.Intl = window.Intl || {};
           return chatOptions.getFeedReply(postText);
         }
 
-        function save() {
-          try {
-            localStorage.setItem("contactGameV2", JSON.stringify(state));
-          } catch {}
-        }
-        function load() {
-          try {
-            const s = JSON.parse(localStorage.getItem("contactGameV2"));
-            if (s) state = { ...state, ...s };
-          } catch {}
+        function normalizeState(savedState) {
+          state = {
+            ...defaultState,
+            ...(savedState || {}),
+            equipped: { ...defaultState.equipped, ...(savedState?.equipped || {}) },
+            pendingGifts: { ...(savedState?.pendingGifts || {}) },
+            feedLikes: { ...(savedState?.feedLikes || {}) },
+            chatStates: { ...(savedState?.chatStates || {}) },
+            botInviteCooldowns: { ...(savedState?.botInviteCooldowns || {}) },
+          };
           state.ownedGames = Array.isArray(state.ownedGames)
             ? state.ownedGames
             : ["paddle-clash"];
+          state.ownedItems = Array.isArray(state.ownedItems)
+            ? Array.from(new Set([...defaultState.ownedItems, ...state.ownedItems]))
+            : [...defaultState.ownedItems];
+          state.myContacts = Array.isArray(state.myContacts) ? state.myContacts : [];
           state.chatStates = state.chatStates || {};
           state.gamesPlayed = Number(state.gamesPlayed) || 0;
           state.gamesWon = Number(state.gamesWon) || 0;
           state.botInviteCooldowns = state.botInviteCooldowns || {};
           state.myContacts.forEach((contact) => ensureContactPersonality(contact));
-          // Persist the migration for contacts created before personalities existed.
+        }
+
+        function save() {
+          state.savedAt = Date.now();
+          const snapshot = JSON.parse(JSON.stringify(state));
+          let localSaved = false;
+          try {
+            localStorage.setItem("contactGameV2", JSON.stringify(snapshot));
+            localSaved = true;
+          } catch (error) {
+            console.warn("Local profile save failed; using database backup.", error);
+          }
+          if (db) {
+            dbSaveProfile(snapshot).catch((error) => {
+              console.warn("Database profile save failed.", error);
+              if (!localSaved) showToast("Profile could not be saved on this device.");
+            });
+          } else if (!localSaved) {
+            console.warn("No persistence layer is available for this profile.");
+          }
+        }
+
+        async function load() {
+          let localState = null;
+          try {
+            localState = JSON.parse(localStorage.getItem("contactGameV2"));
+          } catch (error) {
+            console.warn("Local profile load failed.", error);
+          }
+          let databaseState = null;
+          try {
+            databaseState = await dbGetProfile();
+          } catch (error) {
+            console.warn("Database profile load failed.", error);
+          }
+          const savedState = [localState, databaseState]
+            .filter(Boolean)
+            .sort((a, b) => Number(b.savedAt || 0) - Number(a.savedAt || 0))[0];
+          normalizeState(savedState);
+          // Persist migrations and keep both stores in sync.
           save();
         }
 
         // --- IndexedDB ---
         function openDB() {
           return new Promise((resolve, reject) => {
-            const req = indexedDB.open("ContactGameDMs", 1);
+            const req = indexedDB.open("ContactGameDMs", 2);
             req.onupgradeneeded = (e) => {
               const d = e.target.result;
               if (!d.objectStoreNames.contains("messages")) {
@@ -979,6 +1037,9 @@ window.Intl = window.Intl || {};
                   autoIncrement: true,
                 });
                 store.createIndex("contactId", "contactId", { unique: false });
+              }
+              if (!d.objectStoreNames.contains("profile")) {
+                d.createObjectStore("profile", { keyPath: "id" });
               }
             };
             req.onsuccess = (e) => resolve(e.target.result);
@@ -992,6 +1053,29 @@ window.Intl = window.Intl || {};
             tx.objectStore("messages").add(msg);
             tx.oncomplete = () => resolve();
             tx.onerror = (e) => reject(e.target.error);
+          });
+        }
+
+        function dbSaveProfile(profile) {
+          return new Promise((resolve, reject) => {
+            const tx = db.transaction("profile", "readwrite");
+            tx.objectStore("profile").put({ id: "current", ...profile });
+            tx.oncomplete = () => resolve();
+            tx.onerror = (e) => reject(e.target.error);
+          });
+        }
+
+        function dbGetProfile() {
+          return new Promise((resolve, reject) => {
+            const tx = db.transaction("profile", "readonly");
+            const req = tx.objectStore("profile").get("current");
+            req.onsuccess = () => {
+              const profile = req.result;
+              if (!profile) return resolve(null);
+              const { id, ...savedState } = profile;
+              resolve(savedState);
+            };
+            req.onerror = (e) => reject(e.target.error);
           });
         }
 
@@ -1601,21 +1685,21 @@ window.Intl = window.Intl || {};
           return rand(owned);
         }
 
-        async function maybeSendBotGameInvite(contact, input, intentId) {
+        async function maybeSendBotGameInvite(contact, input, intentId, force = false) {
           const text = String(input || "").toLowerCase();
           const explicitPlayTalk = /\b(?:play|queue|duos|ranked|casual|match|game|1v1|challenge|invite|lobby)\b/.test(text);
           const inviteIntents = new Set(["invite_to_play", "choose_mode", "confirmation", "other_game"]);
           if (!explicitPlayTalk && !inviteIntents.has(intentId)) return;
 
           const lastInvite = state.botInviteCooldowns[contact.id] || 0;
-          if (Date.now() - lastInvite < 6 * 60 * 1000) return;
+          if (Date.now() - lastInvite < 50 * 1000) return;
           const messages = await dbGetMessages(contact.id);
           if (messages.some((message) => message.kind === "game-invite" && message.inviteStatus === "pending")) return;
 
           const personality = ensureContactPersonality(contact);
           const inviteOdds = { competitive: .9, fun: .68, random: .52, rookie: .42 };
           const chance = inviteOdds[personality.id] || .55;
-          if (Math.random() > chance) return;
+          if (!force && Math.random() > chance) return;
 
           const game = selectContextGame(text);
           if (!game) return;
@@ -1643,6 +1727,17 @@ window.Intl = window.Intl || {};
             showToast(`🎮 ${contact.name} invited you to ${game.title}!`, "gift");
             if (state.currentView === "chats") renderChatsList();
           }
+        }
+
+        function startBotInviteTimer() {
+          if (botInviteTimer) clearInterval(botInviteTimer);
+          botInviteTimer = setInterval(() => {
+            // Independent 45% roll once per active minute. The normal pending
+            // invite and short per-contact cooldown checks still prevent spam.
+            if (Math.random() > .45 || state.myContacts.length === 0) return;
+            const contact = rand(state.myContacts);
+            maybeSendBotGameInvite(contact, "want to play a game", "invite_to_play", true);
+          }, 60 * 1000);
         }
 
         function renderGames() {
@@ -1942,7 +2037,7 @@ window.Intl = window.Intl || {};
             const owned = state.ownedGames.includes(game.id);
             html += `<div class="shop-item shop-item-wide ${owned ? "owned" : ""}" data-game="${game.id}">
               ${owned ? '<span class="shop-item-check">✓</span>' : ""}
-              <span class="shop-item-preview">${game.id === "paddle-clash" ? "🏓" : game.id === "skyline-sprint" ? "🏙️" : "🔫"}</span>
+              <span class="shop-item-preview">${game.id === "paddle-clash" ? "🏓" : game.id === "skyline-sprint" ? "🏙️" : game.id === "neon-showdown" ? "🔫" : "🥪"}</span>
               <div class="shop-item-name">${game.title}</div>
               <div class="shop-item-price">${owned ? "Unlocked" : game.price === 0 ? "Starter game" : `🪙 ${game.price}`}</div>
             </div>`;
@@ -2226,13 +2321,14 @@ window.Intl = window.Intl || {};
         // --- Init ---
         async function init() {
           db = await openDB();
-          load();
+          await load();
           checkStreak();
           switchView(state.currentView);
           updateUI();
           nextContact();
           renderCharPreview();
           startAllGiftTimers();
+          startBotInviteTimer();
         }
         init();
 

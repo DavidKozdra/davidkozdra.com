@@ -1046,6 +1046,9 @@
       .game-cover-showdown { background: radial-gradient(circle at 70% 45%, rgba(244,114,182,.65), transparent 23%), radial-gradient(circle at 29% 65%, rgba(34,211,238,.65), transparent 18%), repeating-linear-gradient(0deg, transparent 0 23px, rgba(103,232,249,.12) 24px 25px), #140d2b; }
       .game-cover-showdown::before { left: 45%; top: -12px; width: 2px; height: 160px; background: #fde68a; transform: rotate(45deg); box-shadow: -54px 80px 0 #fb7185, 68px 22px 0 #67e8f9; }
       .game-cover-showdown::after { width: 24px; height: 24px; border-radius: 50%; bottom: 22px; left: 29%; background: #67e8f9; box-shadow: 144px -35px 0 #f0abfc, 0 0 24px #67e8f9; }
+      .game-cover-deli { background: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 31px), linear-gradient(145deg, #7c2d12, #ea580c 55%, #fbbf24); }
+      .game-cover-deli::before { left: 14%; top: 31px; width: 80px; height: 25px; border-radius: 14px; background: linear-gradient(#fbbf24 0 30%, #dc2626 31% 66%, #fbbf24 67%); transform: rotate(-11deg); box-shadow: 145px 17px 0 -4px #78350f, 145px 23px 0 -4px #fbbf24; }
+      .game-cover-deli::after { width: 64px; height: 64px; right: 15%; top: 14px; border: 2px dashed rgba(255,255,255,.65); border-radius: 12px; }
       .game-card-body { padding: 12px; }
       .game-card-topline { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
       .game-card-topline h3 { margin: 0; font-size: 16px; }
