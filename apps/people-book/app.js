@@ -242,7 +242,7 @@ window.Intl = window.Intl || {};
             price: 90,
             reward: 45,
             loss: 12,
-            file: "games/skyline-sprint.html?v=20260720-4",
+            file: "games/skyline-sprint.html?v=20260720-8",
             art: "sprint",
             controls: "Move: A/D or arrows · Dash: Space",
           },
@@ -254,7 +254,7 @@ window.Intl = window.Intl || {};
             price: 150,
             reward: 65,
             loss: 18,
-            file: "games/neon-showdown.html?v=20260720-4",
+            file: "games/neon-showdown.html?v=20260720-9",
             art: "showdown",
             controls: "Move: WASD / arrows · Fire: click · Dash: Space",
           },
@@ -663,6 +663,7 @@ window.Intl = window.Intl || {};
           ownedGames: ["paddle-clash"],
           gamesPlayed: 0,
           gamesWon: 0,
+          botInviteCooldowns: {}, // { contactId: timestamp }
         };
         let currentContact = null;
         let dmContact = null;
@@ -805,6 +806,26 @@ window.Intl = window.Intl || {};
           );
         }
 
+        // Tone repair is intentionally rule-based and runs before embeddings.
+        // A random game reply after an insult or a frustrated complaint makes the
+        // contact feel oblivious, even if the semantic model is unavailable.
+        function findToneRepairIntent(input) {
+          const text = input.toLowerCase().replace(/[^a-z0-9\s']/g, " ");
+          const isUserApologizing = /\b(?:i'?m sorry|im sorry|my bad|i apologize|sorry about that)\b/.test(text);
+          if (isUserApologizing) return chatOptions.getNode("user_apology");
+
+          const directHostility = [
+            /\bi\s+(?:really\s+)?(?:fucking\s+)?hate\s+(?:you|this|everything)\b/,
+            /\byou(?:'re| are| r)\s+(?:so\s+|the\s+)?(?:awful|terrible|useless|annoying|mean|stupid|dumb|pathetic|worthless)\b/,
+            /\b(?:fuck|fucking|bitch|asshole|loser|idiot|moron|trash|garbage|fag(?:got)?|retard(?:ed)?)\b/,
+            /\b(?:this|that|the game|your reply)\s+(?:is|was)\s+(?:so\s+)?(?:bad|awful|terrible|trash|garbage|stupid)\b/,
+            /\b(?:go away|shut up|leave me alone)\b/,
+          ];
+          return directHostility.some((pattern) => pattern.test(text))
+            ? chatOptions.getNode("repair")
+            : null;
+        }
+
         async function generateChatMessage(userInput, contactId) {
           const cleanInput = String(userInput || "").trim();
           if (!cleanInput) {
@@ -812,6 +833,22 @@ window.Intl = window.Intl || {};
               text: generateRandomChatMessage(),
               intentId: null,
               nextNodeIds: [],
+            };
+          }
+
+          const repairIntent = findToneRepairIntent(cleanInput);
+          if (repairIntent) {
+            const response = chatOptions.getResponse(repairIntent);
+            state.chatStates[contactId] = {
+              expectedNodeIds: response.next || [],
+              lastIntent: repairIntent.id,
+              updatedAt: Date.now(),
+            };
+            save();
+            return {
+              text: response.text,
+              intentId: repairIntent.id,
+              nextNodeIds: response.next,
             };
           }
 
@@ -924,6 +961,7 @@ window.Intl = window.Intl || {};
           state.chatStates = state.chatStates || {};
           state.gamesPlayed = Number(state.gamesPlayed) || 0;
           state.gamesWon = Number(state.gamesWon) || 0;
+          state.botInviteCooldowns = state.botInviteCooldowns || {};
           state.myContacts.forEach((contact) => ensureContactPersonality(contact));
           // Persist the migration for contacts created before personalities existed.
           save();
@@ -952,6 +990,15 @@ window.Intl = window.Intl || {};
           return new Promise((resolve, reject) => {
             const tx = db.transaction("messages", "readwrite");
             tx.objectStore("messages").add(msg);
+            tx.oncomplete = () => resolve();
+            tx.onerror = (e) => reject(e.target.error);
+          });
+        }
+
+        function dbUpdateMsg(msg) {
+          return new Promise((resolve, reject) => {
+            const tx = db.transaction("messages", "readwrite");
+            tx.objectStore("messages").put(msg);
             tx.oncomplete = () => resolve();
             tx.onerror = (e) => reject(e.target.error);
           });
@@ -1392,14 +1439,58 @@ window.Intl = window.Intl || {};
             }
             const div = document.createElement("div");
             div.className = "dm-msg " + m.sender;
+            const invite = m.kind === "game-invite";
+            const game = invite ? getGame(m.gameId) : null;
+            const inviteCard = invite && game
+              ? `<div class="dm-game-invite ${m.inviteStatus || "pending"}" data-message-id="${m.id}">
+                  <div class="dm-game-invite-top"><span>🎮</span><div><strong>${escapeHTML(game.title)}</strong><small>Win +${game.reward} 🪙 · Lose -${game.loss} 🪙</small></div></div>
+                  ${m.inviteStatus === "accepted"
+                    ? '<div class="dm-game-invite-state">✓ Challenge accepted</div>'
+                    : m.inviteStatus === "declined"
+                      ? '<div class="dm-game-invite-state">Challenge declined</div>'
+                      : `<div class="dm-game-invite-actions"><button data-invite-action="decline">Decline</button><button data-invite-action="accept">Play ${escapeHTML(game.title)}</button></div>`}
+                </div>`
+              : "";
             div.innerHTML =
               escapeHTML(m.text) +
+              inviteCard +
               '<span class="dm-time">' +
               formatTime(m.timestamp) +
               "</span>";
             dmMessages.appendChild(div);
           });
+          dmMessages.querySelectorAll(".dm-game-invite").forEach((card) => {
+            const message = msgs.find((item) => String(item.id) === card.dataset.messageId);
+            if (!message) return;
+            card.querySelectorAll("[data-invite-action]").forEach((button) => {
+              button.addEventListener("click", () => {
+                if (button.dataset.inviteAction === "accept") acceptBotGameInvite(message);
+                else declineBotGameInvite(message);
+              });
+            });
+          });
           dmMessages.scrollTop = dmMessages.scrollHeight;
+        }
+
+        async function acceptBotGameInvite(invite) {
+          const game = getGame(invite.gameId);
+          const contact = state.myContacts.find((item) => item.id === invite.contactId) || dmContact;
+          if (!game || !contact || !state.ownedGames.includes(game.id)) return;
+          invite.inviteStatus = "accepted";
+          await dbUpdateMsg(invite);
+          await dbSaveMsg({ contactId: contact.id, text: `I'm in. Let's play ${game.title}.`, sender: "me", timestamp: Date.now() });
+          renderDMMessages(await dbGetMessages(contact.id));
+          launchGame(game, contact);
+        }
+
+        async function declineBotGameInvite(invite) {
+          const contact = state.myContacts.find((item) => item.id === invite.contactId) || dmContact;
+          if (!contact) return;
+          invite.inviteStatus = "declined";
+          await dbUpdateMsg(invite);
+          await dbSaveMsg({ contactId: contact.id, text: "Not right now.", sender: "me", timestamp: Date.now() });
+          await dbSaveMsg({ contactId: contact.id, text: "All good. Hit me up when you feel like running one.", sender: "them", timestamp: Date.now() });
+          renderDMMessages(await dbGetMessages(contact.id));
         }
 
         async function openDM(contact) {
@@ -1474,6 +1565,12 @@ window.Intl = window.Intl || {};
               renderDMMessages(updated);
               if (navigator.vibrate) navigator.vibrate(5);
             }
+
+            // Once the bot has answered play-related conversation, it can turn
+            // that context into a real, actionable invite instead of only text.
+            setTimeout(() => {
+              maybeSendBotGameInvite(replyingContact, text, replyResult.intentId);
+            }, 450 + Math.floor(Math.random() * 850));
           }, delay);
         }
 
@@ -1492,6 +1589,60 @@ window.Intl = window.Intl || {};
         // --- Arcade ---
         function getGame(id) {
           return GAME_CATALOG.find((game) => game.id === id);
+        }
+
+        function selectContextGame(input) {
+          const text = String(input || "").toLowerCase();
+          const owned = GAME_CATALOG.filter((game) => state.ownedGames.includes(game.id));
+          if (!owned.length) return null;
+          if (/pong|paddle|swing/.test(text)) return owned.find((game) => game.id === "paddle-clash") || owned[0];
+          if (/race|racing|sprint|platform/.test(text)) return owned.find((game) => game.id === "skyline-sprint") || owned[0];
+          if (/shoot|gun|bullet|showdown|weapon/.test(text)) return owned.find((game) => game.id === "neon-showdown") || owned[0];
+          return rand(owned);
+        }
+
+        async function maybeSendBotGameInvite(contact, input, intentId) {
+          const text = String(input || "").toLowerCase();
+          const explicitPlayTalk = /\b(?:play|queue|duos|ranked|casual|match|game|1v1|challenge|invite|lobby)\b/.test(text);
+          const inviteIntents = new Set(["invite_to_play", "choose_mode", "confirmation", "other_game"]);
+          if (!explicitPlayTalk && !inviteIntents.has(intentId)) return;
+
+          const lastInvite = state.botInviteCooldowns[contact.id] || 0;
+          if (Date.now() - lastInvite < 6 * 60 * 1000) return;
+          const messages = await dbGetMessages(contact.id);
+          if (messages.some((message) => message.kind === "game-invite" && message.inviteStatus === "pending")) return;
+
+          const personality = ensureContactPersonality(contact);
+          const inviteOdds = { competitive: .9, fun: .68, random: .52, rookie: .42 };
+          const chance = inviteOdds[personality.id] || .55;
+          if (Math.random() > chance) return;
+
+          const game = selectContextGame(text);
+          if (!game) return;
+          const intros = {
+            competitive: [`I want a real rematch. ${game.title}?`, `Enough talking—let's settle it in ${game.title}.`],
+            fun: [`This chat has me wanting to play ${game.title}.`, `Want to make this a ${game.title} session?`],
+            random: [`I have a weird urge to run ${game.title} right now.`, `${game.title} just popped into my head. Want in?`],
+            rookie: [`I could use some practice in ${game.title}. Want to play?`, `I am down for a friendly ${game.title} match if you are.`],
+          };
+          await dbSaveMsg({
+            contactId: contact.id,
+            text: rand(intros[personality.id] || intros.fun),
+            sender: "them",
+            timestamp: Date.now(),
+            kind: "game-invite",
+            gameId: game.id,
+            inviteStatus: "pending",
+          });
+          state.botInviteCooldowns[contact.id] = Date.now();
+          save();
+          if (dmContact && dmContact.id === contact.id) {
+            renderDMMessages(await dbGetMessages(contact.id));
+            if (navigator.vibrate) navigator.vibrate([10, 25, 10]);
+          } else {
+            showToast(`🎮 ${contact.name} invited you to ${game.title}!`, "gift");
+            if (state.currentView === "chats") renderChatsList();
+          }
         }
 
         function renderGames() {

@@ -43,6 +43,49 @@ const CHAT_INTENTS = [
     ],
   },
   {
+    id: "repair",
+    noRuntime: true,
+    examples: [
+      "I hate you",
+      "you are awful",
+      "you are annoying",
+      "this is terrible",
+      "you are being mean",
+      "that made me mad",
+      "you are useless",
+    ],
+    responses: [
+      {
+        text: "I'm sorry this has been frustrating. I don't want to make it worse. We can reset, or I can give you some space.",
+        next: ["casual_chat", "goodbye"],
+      },
+      {
+        text: "I'm sorry I missed the mark. I will keep it respectful—if you want to continue, tell me what you need from me.",
+        next: ["casual_chat", "invite_to_play"],
+      },
+      {
+        text: "That sounds really frustrating, and I'm sorry this interaction got there. We can start over whenever you want.",
+        next: ["greeting", "goodbye"],
+      },
+    ],
+  },
+  {
+    id: "user_apology",
+    noRuntime: true,
+    keywords: ["i'm sorry", "im sorry", "my bad", "sorry about that", "i apologize"],
+    examples: ["I'm sorry", "my bad", "sorry about that", "I apologize"],
+    responses: [
+      {
+        text: "No worries. Thanks for saying that—we can reset and keep it chill.",
+        next: ["casual_chat", "invite_to_play"],
+      },
+      {
+        text: "You're good. Let's move on and make the next message a better one.",
+        next: ["casual_chat", "greeting"],
+      },
+    ],
+  },
+  {
     id: "invite_to_play",
     examples: [
       "want to play?",
@@ -668,10 +711,12 @@ class ChatOptionsManager {
     };
     return {
       ...response,
-      text: composeRuntimeReply(
-        response.text,
-        RUNTIME_TOPIC_BY_NODE[node.id] || "general",
-      ),
+      text: node.noRuntime
+        ? response.text
+        : composeRuntimeReply(
+            response.text,
+            RUNTIME_TOPIC_BY_NODE[node.id] || "general",
+          ),
     };
   }
 

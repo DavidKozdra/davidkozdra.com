@@ -1305,6 +1305,41 @@
         margin-top: 2px;
         display: block;
       }
+      .dm-game-invite {
+        margin-top: 9px;
+        min-width: 208px;
+        overflow: hidden;
+        border: 1px solid rgba(103, 232, 249, .32);
+        border-radius: 11px;
+        background: linear-gradient(135deg, rgba(49, 46, 129, .7), rgba(8, 47, 73, .7));
+      }
+      .dm-game-invite-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+      }
+      .dm-game-invite-top > span { font-size: 23px; }
+      .dm-game-invite-top strong,
+      .dm-game-invite-top small { display: block; }
+      .dm-game-invite-top strong { color: white; font-size: 12px; }
+      .dm-game-invite-top small { margin-top: 2px; color: #cffafe; font-size: 9px; font-weight: 700; }
+      .dm-game-invite-actions { display: grid; grid-template-columns: 1fr 1.45fr; gap: 6px; padding: 0 8px 8px; }
+      .dm-game-invite-actions button {
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 5px;
+        color: var(--text);
+        background: rgba(255,255,255,.12);
+        font: inherit;
+        font-size: 10px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .dm-game-invite-actions button:last-child { color: white; background: linear-gradient(135deg, #06b6d4, #5865f2); }
+      .dm-game-invite-state { padding: 0 10px 10px; color: #a7f3d0; font-size: 10px; font-weight: 800; }
+      .dm-game-invite.declined { border-color: rgba(255,255,255,.14); opacity: .72; }
+      .dm-game-invite.declined .dm-game-invite-state { color: var(--text-dim); }
       .dm-date-sep {
         text-align: center;
         font-size: 10px;

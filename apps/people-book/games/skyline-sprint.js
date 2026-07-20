@@ -2,44 +2,173 @@
   let running = false, frame = 0, removeListeners = () => {};
   PeopleArcade.boot({
     title: "Skyline Sprint",
-    hint: "Move with A/D or ←/→ · jump with Space · dash with Shift",
-    instructions: "This is a real rooftop platform race: clear the gaps, use your double jump when you need it, and tap Shift for a mid-air dash. Reach the beacon twice before your rival.",
+    hint: "Run with A/D or ←/→ · Space jumps / wall-jumps · Shift dashes",
+    instructions: "A fast, continuous side-scroller. There are no death pits: keep your speed, wall-jump up the towers, spring over hazards, and avoid spikes because they drain your momentum.",
     start({ canvas, ctx, getConfig, finish }) {
       running = true;
       const scoreEl = document.querySelector("#progress");
       const keys = new Set();
       let width = canvas.clientWidth, height = canvas.clientHeight;
-      let level = 0, playerRounds = 0, cpuRounds = 0, finishLock = 0;
-      const player = { x: 0, y: 0, vx: 0, vy: 0, grounded: false, jumps: 0, dash: 0, dashReady: true, color: "#67e8f9" };
-      const cpu = { x: 0, y: 0, vx: 0, vy: 0, grounded: false, jumps: 0, target: 1, color: "#f0abfc" };
+      let groundY, worldWidth = 6400, finishX = 6150, solids = [], springs = [], spikes = [];
+      const player = makeRacer("#67e8f9");
+      const cpu = makeRacer("#f0abfc");
       const difficulty = getConfig().opponent.difficulty || .6;
-      let platforms = [];
-      let beacon = null;
+      let cameraX = 0;
 
+      function makeRacer(color) {
+        return { x: 60, y: 0, w: 24, h: 32, vx: 0, vy: 0, grounded: false, wall: 0, dash: 0, dashReady: true, hazard: 0, color, aiJump: 0 };
+      }
       function buildLevel() {
-        const y = (fraction) => Math.round(height * fraction);
-        const w = (fraction) => Math.round(width * fraction);
-        // A deliberately readable route: each platform is a real collision surface,
-        // with two optional shortcuts that reward accurate double-jumps/dashes.
-        platforms = [
-          { x: w(.03), y: y(.83), w: w(.18), h: 18 },
-          { x: w(.26), y: y(.69), w: w(.13), h: 18 },
-          { x: w(.45), y: y(.53), w: w(.15), h: 18 },
-          { x: w(.65), y: y(.72), w: w(.14), h: 18 },
-          { x: w(.84), y: y(.46), w: w(.13), h: 18 },
-          { x: w(.34), y: y(.38), w: w(.12), h: 14, shortcut: true },
-          { x: w(.68), y: y(.34), w: w(.11), h: 14, shortcut: true },
+        groundY = height - 70;
+        const block = (x, y, w, h) => ({ x, y: groundY - y - h, w, h });
+        solids = [
+          { x: 0, y: groundY, w: worldWidth + 400, h: 120 },
+          block(360, 84, 150, 24), block(600, 155, 145, 24),
+          block(930, 0, 42, 195), block(1110, 110, 165, 24),
+          block(1420, 0, 48, 270), block(1570, 175, 138, 24),
+          block(1830, 78, 120, 24), block(2050, 0, 50, 225),
+          block(2180, 154, 172, 24), block(2520, 58, 125, 24),
+          block(2740, 0, 46, 305), block(2895, 205, 130, 24),
+          block(3220, 105, 154, 24), block(3490, 0, 48, 245),
+          block(3645, 165, 180, 24), block(3990, 72, 120, 24),
+          block(4210, 0, 47, 280), block(4380, 188, 150, 24),
+          block(4690, 100, 135, 24), block(4940, 0, 46, 225),
+          block(5105, 168, 155, 24), block(5420, 76, 140, 24),
+          block(5680, 0, 50, 300), block(5845, 204, 215, 24),
         ];
-        beacon = { x: width - w(.09), y: platforms[4].y - 62, w: 18, h: 62 };
+        springs = [
+          { x: 224, y: groundY - 16, w: 28, h: 16 }, { x: 760, y: groundY - 16, w: 28, h: 16 },
+          { x: 1740, y: groundY - 16, w: 28, h: 16 }, { x: 2410, y: groundY - 16, w: 28, h: 16 },
+          { x: 3328, y: groundY - 16, w: 28, h: 16 }, { x: 4560, y: groundY - 16, w: 28, h: 16 },
+          { x: 5350, y: groundY - 16, w: 28, h: 16 },
+        ];
+        spikes = [
+          { x: 790, y: groundY - 18, w: 95, h: 18 }, { x: 1300, y: groundY - 18, w: 80, h: 18 },
+          { x: 1965, y: groundY - 18, w: 65, h: 18 }, { x: 3060, y: groundY - 18, w: 115, h: 18 },
+          { x: 3860, y: groundY - 18, w: 92, h: 18 }, { x: 4770, y: groundY - 18, w: 105, h: 18 },
+          { x: 5595, y: groundY - 18, w: 68, h: 18 },
+        ];
       }
-      function resetRacers() {
-        const start = platforms[0];
-        Object.assign(player, { x: start.x + 24, y: start.y - 19, vx: 0, vy: 0, grounded: false, jumps: 0, dash: 0, dashReady: true });
-        Object.assign(cpu, { x: start.x + 43, y: start.y - 19, vx: 0, vy: 0, grounded: false, jumps: 0, target: 1 });
+      function resetRacer(racer, offset) {
+        Object.assign(racer, { x: 60 + offset, y: groundY - racer.h, vx: 0, vy: 0, grounded: true, wall: 0, dash: 0, dashReady: true, hazard: 0, aiJump: 0 });
       }
-      function resize() { width = canvas.clientWidth; height = canvas.clientHeight; buildLevel(); resetRacers(); }
-      buildLevel(); resetRacers();
+      function resize() { width = canvas.clientWidth; height = canvas.clientHeight; buildLevel(); resetRacer(player, 0); resetRacer(cpu, -34); }
+      buildLevel(); resetRacer(player, 0); resetRacer(cpu, -34);
 
+      function overlaps(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+      function jump(racer) {
+        if (racer.grounded) { racer.vy = -620; racer.grounded = false; racer.dashReady = true; return; }
+        if (racer.wall) { racer.vy = -595; racer.vx = racer.wall * 455; racer.wall = 0; racer.dashReady = true; }
+      }
+      function dash(racer, direction) {
+        if (!racer.dashReady) return;
+        racer.dashReady = false; racer.dash = .15; racer.vx = direction * 860; racer.vy *= .24;
+      }
+      function moveRacer(racer, dt) {
+        racer.wall = 0;
+        const oldX = racer.x;
+        racer.x += racer.vx * dt;
+        for (const solid of solids) {
+          if (!overlaps(racer, solid)) continue;
+          if (racer.vx > 0 && oldX + racer.w <= solid.x + 6) { racer.x = solid.x - racer.w; racer.vx = 0; racer.wall = -1; }
+          if (racer.vx < 0 && oldX >= solid.x + solid.w - 6) { racer.x = solid.x + solid.w; racer.vx = 0; racer.wall = 1; }
+        }
+        const oldY = racer.y;
+        racer.vy += 1750 * dt;
+        racer.y += racer.vy * dt;
+        racer.grounded = false;
+        for (const solid of solids) {
+          if (!overlaps(racer, solid)) continue;
+          if (racer.vy >= 0 && oldY + racer.h <= solid.y + 7) {
+            racer.y = solid.y - racer.h; racer.vy = 0; racer.grounded = true; racer.dashReady = true;
+          } else if (racer.vy < 0 && oldY >= solid.y + solid.h - 7) {
+            racer.y = solid.y + solid.h; racer.vy = 0;
+          }
+        }
+        for (const spring of springs) {
+          if (overlaps(racer, spring) && racer.vy >= 0) { racer.y = spring.y - racer.h; racer.vy = -885; racer.grounded = false; racer.dashReady = true; }
+        }
+        racer.hazard = Math.max(0, racer.hazard - dt);
+        for (const spike of spikes) {
+          if (racer.hazard <= 0 && overlaps(racer, spike)) { racer.hazard = .6; racer.vx *= .34; racer.vy = Math.min(racer.vy, -265); }
+        }
+        racer.dash = Math.max(0, racer.dash - dt);
+        // Preserve momentum. A sprint should feel fast on the ground, with
+        // friction only taking the edge off instead of turning every run into
+        // a stop-start walk between obstacles.
+        racer.vx *= racer.dash > 0 ? Math.pow(.82, dt) : racer.grounded ? Math.pow(.16, dt) : Math.pow(.68, dt);
+        racer.x = Math.max(0, racer.x);
+      }
+      function updatePlayer(dt) {
+        const left = keys.has("ArrowLeft") || keys.has("KeyA"), right = keys.has("ArrowRight") || keys.has("KeyD");
+        // The runner has a strong forward cruise by default. Right boosts the
+        // pace, while left is the only control that can meaningfully brake.
+        if (left) player.vx -= 5100 * dt;
+        else player.vx += (right ? 5600 : 3500) * dt;
+        if (!left) player.vx = Math.max(player.vx, right ? 620 : 500);
+        player.vx = Math.max(-520, Math.min(right ? 920 : 760, player.vx));
+        moveRacer(player, dt);
+      }
+      function obstacleAhead(racer) {
+        return solids.find((solid) => solid.x > racer.x + racer.w && solid.x < racer.x + 64 && solid.y < racer.y + racer.h - 9 && solid.y + solid.h > racer.y + 10);
+      }
+      function updateCpu(dt) {
+        const topSpeed = 510 + difficulty * 220;
+        cpu.vx += (topSpeed - cpu.vx) * Math.min(1, dt * 5.5);
+        const obstacle = obstacleAhead(cpu);
+        cpu.aiJump -= dt;
+        if ((cpu.grounded && (obstacle || spikes.some((spike) => spike.x > cpu.x && spike.x < cpu.x + 80))) || (cpu.wall && cpu.aiJump <= 0)) {
+          jump(cpu); cpu.aiJump = .16;
+        }
+        if (cpu.dashReady && !cpu.grounded && Math.random() < dt * (.18 + difficulty * .42)) dash(cpu, 1);
+        moveRacer(cpu, dt);
+      }
+      function drawBackground() {
+        const sky = ctx.createLinearGradient(0, 0, 0, height); sky.addColorStop(0, "#150d39"); sky.addColorStop(.58, "#3a175b"); sky.addColorStop(1, "#f35b75"); ctx.fillStyle = sky; ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = "#ffd166"; ctx.beginPath(); ctx.arc(width * .78, height * .19, 34, 0, Math.PI * 2); ctx.fill();
+        const layers = [{ factor: .12, color: "#241348", base: .69, size: 180 }, { factor: .26, color: "#1b1b4c", base: .81, size: 105 }, { factor: .46, color: "#16213e", base: .93, size: 68 }];
+        layers.forEach((layer) => {
+          const offset = -((cameraX * layer.factor) % layer.size) - layer.size;
+          ctx.fillStyle = layer.color;
+          for (let x = offset, i = 0; x < width + layer.size; x += layer.size, i++) {
+            const building = layer.size * (.6 + ((i * 19) % 31) / 100);
+            const buildingH = height * (.1 + ((i * 31) % 17) / 100);
+            ctx.fillRect(x, height * layer.base - buildingH, building, buildingH + height * (1 - layer.base));
+            ctx.fillStyle = "rgba(255,224,150,.16)";
+            for (let wx = x + 12; wx < x + building - 7; wx += 18) for (let wy = height * layer.base - buildingH + 13; wy < height * layer.base - 8; wy += 23) ctx.fillRect(wx, wy, 5, 8);
+            ctx.fillStyle = layer.color;
+          }
+        });
+      }
+      function drawSolid(solid) {
+        const x = solid.x - cameraX;
+        if (x + solid.w < -20 || x > width + 20) return;
+        ctx.fillStyle = solid.y === groundY ? "#15213e" : "#263b6d"; ctx.fillRect(x, solid.y, solid.w, solid.h);
+        ctx.fillStyle = solid.y === groundY ? "#3c5f8f" : "#6ee7f7"; ctx.fillRect(x, solid.y, solid.w, 5);
+        if (solid.y !== groundY) { ctx.fillStyle = "rgba(255,255,255,.1)"; for (let px = x + 8; px < x + solid.w; px += 19) ctx.fillRect(px, solid.y + 11, 8, 4); }
+      }
+      function drawRacer(racer, label) {
+        const x = racer.x - cameraX, y = racer.y;
+        if (racer.dash > 0) { ctx.fillStyle = racer.color; ctx.globalAlpha = .23; ctx.fillRect(x - 46, y + 6, 42, 18); ctx.globalAlpha = 1; }
+        ctx.fillStyle = racer.hazard > 0 ? "#fb7185" : racer.color; ctx.shadowColor = racer.color; ctx.shadowBlur = racer.dash > 0 ? 24 : 8;
+        ctx.fillRect(x, y, racer.w, racer.h); ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fillRect(x + 15, y + 8, 5, 5);
+        ctx.fillStyle = "white"; ctx.font = "800 9px system-ui"; ctx.textAlign = "center"; ctx.fillText(label, x + racer.w / 2, y - 8);
+      }
+      function draw() {
+        drawBackground();
+        solids.forEach(drawSolid);
+        springs.forEach((spring) => { const x = spring.x - cameraX; if (x > -30 && x < width + 30) { ctx.fillStyle = "#facc15"; ctx.fillRect(x, spring.y + 8, spring.w, 8); ctx.strokeStyle = "#fff7ae"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 3, spring.y + 8); ctx.lineTo(x + 9, spring.y + 2); ctx.lineTo(x + 16, spring.y + 8); ctx.lineTo(x + 23, spring.y + 2); ctx.lineTo(x + 27, spring.y + 8); ctx.stroke(); } });
+        spikes.forEach((spike) => { const x = spike.x - cameraX; if (x > -spike.w && x < width) { ctx.fillStyle = "#fb7185"; for (let px = x; px < x + spike.w; px += 12) { ctx.beginPath(); ctx.moveTo(px, spike.y + spike.h); ctx.lineTo(px + 6, spike.y); ctx.lineTo(px + 12, spike.y + spike.h); ctx.fill(); } } });
+        const finishScreenX = finishX - cameraX;
+        if (finishScreenX > -80 && finishScreenX < width + 80) { ctx.fillStyle = "#f8fafc"; ctx.fillRect(finishScreenX, groundY - 170, 6, 170); ctx.fillStyle = "#f43f5e"; ctx.fillRect(finishScreenX + 6, groundY - 170, 64, 36); ctx.fillStyle = "#fde68a"; ctx.font = "900 11px system-ui"; ctx.fillText("FINISH", finishScreenX + 37, groundY - 147); }
+        drawRacer(player, "YOU"); drawRacer(cpu, getConfig().opponent.name.slice(0, 7));
+        ctx.fillStyle = "rgba(6,8,20,.45)"; ctx.fillRect(12, 13, width - 24, 6); ctx.fillStyle = "#67e8f9"; ctx.fillRect(12, 13, (width - 24) * Math.min(1, player.x / finishX), 6); ctx.fillStyle = "#f0abfc"; ctx.fillRect(12 + (width - 24) * Math.min(1, cpu.x / finishX), 10, 6, 6);
+      }
+      function complete(won) {
+        running = false;
+        finish(won, won ? "You crossed the whole skyline first." : `${getConfig().opponent.name} reached the finish banner first.`);
+      }
       function press(event) {
         if (["ArrowLeft", "ArrowRight", "KeyA", "KeyD", "Space", "ShiftLeft", "ShiftRight"].includes(event.code)) event.preventDefault();
         if (keys.has(event.code)) return;
@@ -50,110 +179,15 @@
       function release(event) { keys.delete(event.code); }
       window.addEventListener("resize", resize); window.addEventListener("keydown", press); window.addEventListener("keyup", release);
       removeListeners = () => { window.removeEventListener("resize", resize); window.removeEventListener("keydown", press); window.removeEventListener("keyup", release); };
-
-      function jump(racer) {
-        if (racer.jumps >= 2) return;
-        racer.vy = racer.jumps === 0 ? -470 : -405;
-        racer.jumps++;
-        racer.grounded = false;
-      }
-      function dash(racer, direction) {
-        if (!racer.dashReady) return;
-        racer.vx = direction * 530;
-        racer.dash = .17;
-        racer.dashReady = false;
-      }
-      function physics(racer, dt) {
-        const oldY = racer.y;
-        racer.vy += 1180 * dt;
-        racer.x += racer.vx * dt;
-        racer.y += racer.vy * dt;
-        racer.vx *= racer.dash > 0 ? .985 : .79;
-        racer.dash = Math.max(0, racer.dash - dt);
-        racer.grounded = false;
-        for (const platform of platforms) {
-          const insideX = racer.x + 12 > platform.x && racer.x - 12 < platform.x + platform.w;
-          const fellOnto = oldY + 17 <= platform.y && racer.y + 17 >= platform.y && racer.vy >= 0;
-          if (insideX && fellOnto) {
-            racer.y = platform.y - 17;
-            racer.vy = 0;
-            racer.grounded = true;
-            racer.jumps = 0;
-            racer.dashReady = true;
-          }
-        }
-        if (racer.y > height + 44 || racer.x < -40 || racer.x > width + 42) resetRacer(racer);
-      }
-      function resetRacer(racer) {
-        const start = platforms[0];
-        racer.x = start.x + (racer === player ? 24 : 43);
-        racer.y = start.y - 19; racer.vx = 0; racer.vy = 0; racer.jumps = 0; racer.dashReady = true;
-        if (racer === cpu) racer.target = 1;
-      }
-      function updatePlayer(dt) {
-        const left = keys.has("ArrowLeft") || keys.has("KeyA"), right = keys.has("ArrowRight") || keys.has("KeyD");
-        if (left !== right) player.vx += (right ? 1 : -1) * 870 * dt;
-        player.vx = Math.max(-255, Math.min(255, player.vx));
-        physics(player, dt);
-      }
-      function updateCpu(dt) {
-        const target = platforms[Math.min(cpu.target, platforms.length - 1)];
-        const targetX = target.x + target.w * .55;
-        const direction = Math.sign(targetX - cpu.x);
-        cpu.vx += direction * (560 + difficulty * 380) * dt;
-        cpu.vx = Math.max(-200, Math.min(220 + difficulty * 70, cpu.vx));
-        const launchPad = platforms[Math.max(0, cpu.target - 1)];
-        const next = platforms[Math.min(cpu.target + 1, 4)];
-        const nearLaunchEdge = direction > 0 && cpu.x > launchPad.x + launchPad.w - 29;
-        if (cpu.grounded && (nearLaunchEdge || (next && next.y < target.y - 34 && Math.abs(cpu.x - targetX) < 38))) jump(cpu);
-        if (cpu.grounded && Math.abs(cpu.x - targetX) < 30 && cpu.target < 4) cpu.target++;
-        if (cpu.dashReady && cpu.target >= 2 && Math.random() < dt * difficulty * .8) dash(cpu, direction || 1);
-        physics(cpu, dt);
-      }
-      function drawPlatform(platform) {
-        ctx.fillStyle = platform.shortcut ? "#4338ca" : "#1d4ed8";
-        ctx.fillRect(platform.x, platform.y, platform.w, platform.h);
-        ctx.fillStyle = platform.shortcut ? "#f0abfc" : "#67e8f9";
-        ctx.fillRect(platform.x, platform.y, platform.w, 4);
-        ctx.fillStyle = "rgba(255,255,255,.08)";
-        for (let x = platform.x + 9; x < platform.x + platform.w; x += 18) ctx.fillRect(x, platform.y + 8, 7, 3);
-      }
-      function drawRacer(racer, label) {
-        ctx.fillStyle = racer.color; ctx.shadowColor = racer.color; ctx.shadowBlur = racer.dash > 0 ? 28 : 11;
-        ctx.beginPath(); ctx.arc(racer.x, racer.y, 15, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0; ctx.fillStyle = "white"; ctx.font = "700 9px system-ui"; ctx.textAlign = "center"; ctx.fillText(label, racer.x, racer.y - 26);
-        if (racer.dash > 0) { ctx.strokeStyle = racer.color; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(racer.x - Math.sign(racer.vx || 1) * 38, racer.y); ctx.lineTo(racer.x - Math.sign(racer.vx || 1) * 16, racer.y); ctx.stroke(); }
-      }
-      function draw() {
-        ctx.clearRect(0, 0, width, height);
-        const sky = ctx.createLinearGradient(0, 0, 0, height); sky.addColorStop(0, "#111b46"); sky.addColorStop(.55, "#172554"); sky.addColorStop(1, "#070b1d"); ctx.fillStyle = sky; ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = "rgba(253,224,71,.75)"; ctx.beginPath(); ctx.arc(width * .8, height * .17, 28, 0, Math.PI * 2); ctx.fill();
-        for (let i = 0; i < 13; i++) { const x = i * 43 - 10, h = 45 + (i * 31) % 92; ctx.fillStyle = i % 2 ? "#101a35" : "#0c1530"; ctx.fillRect(x, height - h, 37, h); ctx.fillStyle = "rgba(103,232,249,.16)"; ctx.fillRect(x + 8, height - h + 13, 5, 7); }
-        platforms.forEach(drawPlatform);
-        ctx.strokeStyle = "#fde68a"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(beacon.x, beacon.y); ctx.lineTo(beacon.x, beacon.y + beacon.h); ctx.stroke(); ctx.fillStyle = "#f43f5e"; ctx.beginPath(); ctx.moveTo(beacon.x, beacon.y); ctx.lineTo(beacon.x + 28, beacon.y + 10); ctx.lineTo(beacon.x, beacon.y + 20); ctx.fill();
-        drawRacer(player, "YOU"); drawRacer(cpu, getConfig().opponent.name.slice(0, 7));
-      }
-      function score(racer) {
-        if (finishLock > 0) return;
-        finishLock = .8;
-        if (racer === player) playerRounds++; else cpuRounds++;
-        scoreEl.textContent = `${playerRounds} / 2`;
-        if (playerRounds >= 2 || cpuRounds >= 2) {
-          running = false;
-          finish(playerRounds >= 2, playerRounds >= 2 ? "Two beacon captures. You owned the rooftops." : `${getConfig().opponent.name} won the rooftop race.`);
-          return;
-        }
-        level++;
-        setTimeout(resetRacers, 650);
-      }
       let previous = performance.now();
       function loop(now) {
         if (!running) return;
-        const dt = Math.min(.032, (now - previous) / 1000); previous = now;
-        finishLock = Math.max(0, finishLock - dt);
+        const dt = Math.min(.025, (now - previous) / 1000); previous = now;
         updatePlayer(dt); updateCpu(dt);
-        if (player.x + 14 > beacon.x && player.y + 18 > beacon.y && player.y < beacon.y + beacon.h) score(player);
-        if (cpu.x + 14 > beacon.x && cpu.y + 18 > beacon.y && cpu.y < beacon.y + beacon.h) score(cpu);
+        cameraX += ((player.x - width * .36) - cameraX) * Math.min(1, dt * 5.5);
+        cameraX = Math.max(0, Math.min(worldWidth - width, cameraX));
+        scoreEl.textContent = `${Math.floor(Math.min(100, player.x / finishX * 100))}%`;
+        if (player.x >= finishX || cpu.x >= finishX) complete(player.x >= finishX && player.x >= cpu.x);
         draw(); frame = requestAnimationFrame(loop);
       }
       frame = requestAnimationFrame(loop);
