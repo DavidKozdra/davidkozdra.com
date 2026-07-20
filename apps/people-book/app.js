@@ -221,6 +221,50 @@ window.Intl = window.Intl || {};
 
         const chatOptions = new ChatOptionsManager();
         const SEMANTIC_CHAT_INTENTS = chatOptions.get();
+        const GAME_CATALOG = [
+          {
+            id: "paddle-clash",
+            title: "Paddle Clash",
+            tagline: "Swing-powered pong duels",
+            description: "Track the ball with your paddle, then hit Space at the right moment to swing for a powerful return.",
+            price: 0,
+            reward: 30,
+            loss: 8,
+            file: "games/paddle-clash.html?v=20260720-4",
+            art: "paddle",
+            controls: "Move: mouse / touch · Swing: Space",
+          },
+          {
+            id: "skyline-sprint",
+            title: "Skyline Sprint",
+            tagline: "A rooftop race to the finish",
+            description: "Outrun your rival over floating platforms. Move with A/D or arrows and use Space for a burst dash.",
+            price: 90,
+            reward: 45,
+            loss: 12,
+            file: "games/skyline-sprint.html?v=20260720-4",
+            art: "sprint",
+            controls: "Move: A/D or arrows · Dash: Space",
+          },
+          {
+            id: "neon-showdown",
+            title: "Neon Showdown",
+            tagline: "Dash, dodge, and outshoot",
+            description: "Pick a weapon, dodge enemy fire, and land the final hit in a neon arena.",
+            price: 150,
+            reward: 65,
+            loss: 18,
+            file: "games/neon-showdown.html?v=20260720-4",
+            art: "showdown",
+            controls: "Move: WASD / arrows · Fire: click · Dash: Space",
+          },
+        ];
+        const BOT_PERSONALITIES = [
+          { id: "competitive", difficulty: 0.83, acceptChance: 0.96 },
+          { id: "fun", difficulty: 0.58, acceptChance: 0.82 },
+          { id: "random", difficulty: 0.67, acceptChance: 0.7 },
+          { id: "rookie", difficulty: 0.32, acceptChance: 0.76 },
+        ];
         const feedLeads = [
           "daily update:",
           "hot take:",
@@ -534,12 +578,14 @@ window.Intl = window.Intl || {};
           chats: $("viewChats"),
           feed: $("viewFeed"),
           shop: $("viewShop"),
+          games: $("viewGames"),
         };
         const tabs = {
           people: $("tabPeople"),
           chats: $("tabChats"),
           feed: $("tabFeed"),
           shop: $("tabShop"),
+          games: $("tabGames"),
         };
 
         // Chats
@@ -552,6 +598,19 @@ window.Intl = window.Intl || {};
         const shopCoins = $("shopCoins"),
           shopSections = $("shopSections"),
           charPreview = $("charPreview");
+
+        // Games
+        const gamesLibrary = $("gamesLibrary"),
+          gameSearch = $("gameSearch"),
+          gamesCoins = $("gamesCoins"),
+          gameModal = $("gameModal"),
+          gameModalContent = $("gameModalContent"),
+          gameModalClose = $("gameModalClose"),
+          playableOverlay = $("playableOverlay"),
+          playableFrame = $("playableFrame"),
+          playableTitle = $("playableTitle"),
+          playableOpponent = $("playableOpponent"),
+          playableClose = $("playableClose");
 
         // DM
         const dmOverlay = $("dmOverlay"),
@@ -601,10 +660,14 @@ window.Intl = window.Intl || {};
           feedReplyUnlocked: false,
           feedLikes: {}, // { postKey: true }
           chatStates: {}, // { contactId: { expectedNodeIds, lastIntent, updatedAt } }
+          ownedGames: ["paddle-clash"],
+          gamesPlayed: 0,
+          gamesWon: 0,
         };
         let currentContact = null;
         let dmContact = null;
         let db = null;
+        let activeMatch = null;
         const giftTimers = {}; // runtime timers per contact id
 
         function rand(arr) {
@@ -855,6 +918,15 @@ window.Intl = window.Intl || {};
             const s = JSON.parse(localStorage.getItem("contactGameV2"));
             if (s) state = { ...state, ...s };
           } catch {}
+          state.ownedGames = Array.isArray(state.ownedGames)
+            ? state.ownedGames
+            : ["paddle-clash"];
+          state.chatStates = state.chatStates || {};
+          state.gamesPlayed = Number(state.gamesPlayed) || 0;
+          state.gamesWon = Number(state.gamesWon) || 0;
+          state.myContacts.forEach((contact) => ensureContactPersonality(contact));
+          // Persist the migration for contacts created before personalities existed.
+          save();
         }
 
         // --- IndexedDB ---
@@ -1003,6 +1075,18 @@ window.Intl = window.Intl || {};
         }
 
         // --- Contacts ---
+        function makePersonality() {
+          const base = rand(BOT_PERSONALITIES);
+          return { ...base, seed: Math.floor(Math.random() * 1000000) };
+        }
+
+        // This is deliberately never rendered in the contact UI. It gives every
+        // bot a consistent way to play and decide on challenges across sessions.
+        function ensureContactPersonality(contact) {
+          if (!contact.personality) contact.personality = makePersonality();
+          return contact.personality;
+        }
+
         function generateContact() {
           let name,
             tries = 0;
@@ -1016,6 +1100,7 @@ window.Intl = window.Intl || {};
             name,
             avatar,
             status: generateStatus(),
+            personality: makePersonality(),
           };
         }
 
@@ -1058,6 +1143,7 @@ window.Intl = window.Intl || {};
           contactCount.textContent = state.myContacts.length;
           xpBar.style.width = (state.xp / XP_PER_LEVEL) * 100 + "%";
           shopCoins.textContent = state.coins;
+          gamesCoins.textContent = state.coins;
 
           if (state.myContacts.length === 0) {
             contactsList.innerHTML =
@@ -1182,6 +1268,7 @@ window.Intl = window.Intl || {};
           if (view === "chats") renderChatsList();
           if (view === "feed") renderFeed();
           if (view === "shop") renderShop();
+          if (view === "games") renderGames();
           save();
         }
 
@@ -1402,6 +1489,225 @@ window.Intl = window.Intl || {};
           }
         });
 
+        // --- Arcade ---
+        function getGame(id) {
+          return GAME_CATALOG.find((game) => game.id === id);
+        }
+
+        function renderGames() {
+          const query = gameSearch.value.trim().toLowerCase();
+          const games = GAME_CATALOG.filter((game) =>
+            [game.title, game.tagline, game.description]
+              .join(" ")
+              .toLowerCase()
+              .includes(query),
+          );
+          gamesCoins.textContent = state.coins;
+
+          if (!games.length) {
+            gamesLibrary.innerHTML = '<div class="games-empty">No games match that search.</div>';
+            return;
+          }
+
+          gamesLibrary.innerHTML = games
+            .map((game) => {
+              const owned = state.ownedGames.includes(game.id);
+              return `<article class="game-card ${owned ? "game-owned" : "game-locked"}">
+                <div class="game-cover game-cover-${game.art}" role="img" aria-label="${game.title} gameplay preview">
+                  <span class="game-cover-label">${game.tagline}</span>
+                  <span class="game-cover-play">▶</span>
+                </div>
+                <div class="game-card-body">
+                  <div class="game-card-topline"><h3>${game.title}</h3><span>${owned ? "OWNED" : "LOCKED"}</span></div>
+                  <p>${game.description}</p>
+                  <div class="game-card-footer">
+                    <span class="game-stakes">Win +${game.reward} 🪙 · Lose -${game.loss} 🪙</span>
+                    <button class="game-action" data-game-id="${game.id}" data-action="${owned ? "play" : "buy"}">${owned ? "Play" : `Buy · ${game.price} 🪙`}</button>
+                  </div>
+                </div>
+              </article>`;
+            })
+            .join("");
+
+          gamesLibrary.querySelectorAll(".game-action").forEach((button) => {
+            button.addEventListener("click", () => {
+              const game = getGame(button.dataset.gameId);
+              if (!game) return;
+              if (button.dataset.action === "buy") buyGame(game);
+              else openChallengeSetup(game);
+            });
+          });
+        }
+
+        function buyGame(game) {
+          if (state.coins < game.price) {
+            showToast(`Need ${game.price - state.coins} more coins to unlock ${game.title}.`);
+            return;
+          }
+          state.coins -= game.price;
+          state.ownedGames.push(game.id);
+          state.itemsBought += 1;
+          addXP(10);
+          checkAchievements();
+          save();
+          updateUI();
+          renderGames();
+          showToast(`${game.title} unlocked! 🎮`);
+        }
+
+        function makeQuickOpponent() {
+          const contact = generateContact();
+          contact.id = `quick_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+          return contact;
+        }
+
+        function openGameModal(content) {
+          gameModalContent.innerHTML = content;
+          gameModal.classList.add("open");
+          gameModal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeGameModal() {
+          gameModal.classList.remove("open");
+          gameModal.setAttribute("aria-hidden", "true");
+          gameModalContent.innerHTML = "";
+        }
+
+        function openChallengeSetup(game) {
+          const quickOpponent = makeQuickOpponent();
+          const opponents = [...state.myContacts, quickOpponent];
+          const options = opponents
+            .map(
+              (contact, index) => `<button class="opponent-option ${index === 0 ? "selected" : ""}" data-index="${index}">
+                <img src="${contact.avatar}" alt=""><span>${escapeHTML(contact.name)}</span><small>${contact === quickOpponent ? "Quick match" : "Send via DM"}</small>
+              </button>`,
+            )
+            .join("");
+          openGameModal(`<div class="challenge-head">
+              <div class="challenge-icon game-cover-${game.art}">▶</div>
+              <div><p>CHALLENGE</p><h2>${game.title}</h2><span>${game.controls}</span></div>
+            </div>
+            <p class="challenge-copy">Pick an opponent. Their personality affects how tough they are and whether they take the match.</p>
+            <div class="opponent-list">${options}</div>
+            <button class="challenge-send" id="challengeSend">Send challenge</button>`);
+
+          let selectedOpponent = opponents[0];
+          gameModalContent.querySelectorAll(".opponent-option").forEach((button) => {
+            button.addEventListener("click", () => {
+              gameModalContent.querySelectorAll(".opponent-option").forEach((item) => item.classList.remove("selected"));
+              button.classList.add("selected");
+              selectedOpponent = opponents[Number(button.dataset.index)];
+            });
+          });
+          $("challengeSend").addEventListener("click", () => sendGameChallenge(game, selectedOpponent));
+        }
+
+        async function addGameDM(contact, text, sender) {
+          await dbSaveMsg({ contactId: contact.id, text, sender, timestamp: Date.now() });
+          if (dmContact && dmContact.id === contact.id) {
+            renderDMMessages(await dbGetMessages(contact.id));
+          }
+        }
+
+        function challengeResponse(game, personality) {
+          const lines = {
+            competitive: ["I was hoping you would ask. Queue it up.", "Accepted. I am not giving you an easy win though."],
+            fun: ["Yeah, that sounds fun. Let’s run it!", "I’m in — no pressure, just a good match."],
+            random: ["Why not? I’m feeling unpredictable today.", "Okay, I’ll take the challenge. This could get weird."],
+            rookie: ["I might get cooked, but I’m down to try.", "Sure! Go easy on me for like five seconds."],
+          };
+          return rand(lines[personality.id] || lines.fun);
+        }
+
+        async function sendGameChallenge(game, contact) {
+          const sendButton = $("challengeSend");
+          sendButton.disabled = true;
+          sendButton.textContent = "Sending to DM…";
+          await addGameDM(contact, `🎮 Challenge: ${game.title}. Want to play for ${game.reward} coins?`, "me");
+          const personality = ensureContactPersonality(contact);
+          const accepted = Math.random() < personality.acceptChance;
+          setTimeout(async () => {
+            if (!accepted) {
+              await addGameDM(contact, "Not right now — I’m not feeling this match. Maybe later?", "them");
+              gameModalContent.innerHTML = `<div class="challenge-result"><span>✕</span><h2>${escapeHTML(contact.name)} declined</h2><p>The challenge is still in your DMs. Try a different opponent or come back later.</p><button class="challenge-send" id="challengeRetry">Choose another opponent</button></div>`;
+              $("challengeRetry").addEventListener("click", () => openChallengeSetup(game));
+              return;
+            }
+            await addGameDM(contact, `🎮 ${challengeResponse(game, personality)} Launching ${game.title} now.`, "them");
+            closeGameModal();
+            launchGame(game, contact);
+          }, 750 + Math.floor(Math.random() * 650));
+        }
+
+        function launchGame(game, opponent) {
+          const personality = ensureContactPersonality(opponent);
+          activeMatch = { game, opponent, personality, settled: false };
+          playableTitle.textContent = game.title;
+          playableOpponent.textContent = ` vs ${opponent.name}`;
+          playableFrame.src = game.file;
+          playableOverlay.classList.add("open");
+          playableOverlay.setAttribute("aria-hidden", "false");
+        }
+
+        function sendMatchConfig() {
+          if (!activeMatch || !playableFrame.contentWindow) return;
+          playableFrame.contentWindow.postMessage({
+            type: "people-book:match-config",
+            gameId: activeMatch.game.id,
+            opponent: { name: activeMatch.opponent.name, difficulty: activeMatch.personality.difficulty },
+          }, "*");
+        }
+
+        async function settleMatch(playerWon) {
+          if (!activeMatch || activeMatch.settled) return;
+          activeMatch.settled = true;
+          const { game, opponent } = activeMatch;
+          const amount = playerWon ? game.reward : Math.min(game.loss, state.coins);
+          state.gamesPlayed += 1;
+          if (playerWon) {
+            state.gamesWon += 1;
+            state.coins += amount;
+            state.totalCoins += amount;
+            addXP(12);
+            await addGameDM(opponent, `gg! You got me that time. +${amount} coins is yours.`, "them");
+            showToast(`Victory! +${amount} 🪙`, "achievement");
+          } else {
+            state.coins -= amount;
+            addXP(4);
+            await addGameDM(opponent, `gg — that was close. ${amount ? `-${amount} coins this round.` : "No coins left to lose."}`, "them");
+            showToast(amount ? `Match lost. -${amount} 🪙` : "Match lost — your coins are safe at zero.");
+          }
+          checkAchievements();
+          save();
+          updateUI();
+          renderGames();
+        }
+
+        function closePlayable() {
+          if (playableFrame.contentWindow) playableFrame.contentWindow.postMessage({ type: "people-book:stop" }, "*");
+          playableOverlay.classList.remove("open");
+          playableOverlay.setAttribute("aria-hidden", "true");
+          playableFrame.src = "about:blank";
+          activeMatch = null;
+        }
+
+        window.addEventListener("message", async (event) => {
+          const message = event.data;
+          if (!message || typeof message.type !== "string") return;
+          if (message.type === "people-book:game-ready") sendMatchConfig();
+          if (message.type === "people-book:game-result") {
+            await settleMatch(message.playerWon === true);
+          }
+          if (message.type === "people-book:leave-game") closePlayable();
+        });
+
+        gameModalClose.addEventListener("click", closeGameModal);
+        gameModal.addEventListener("click", (event) => {
+          if (event.target === gameModal) closeGameModal();
+        });
+        playableClose.addEventListener("click", closePlayable);
+        gameSearch.addEventListener("input", renderGames);
+
         // --- Shop ---
         function renderCharPreview() {
           const eq = state.equipped;
@@ -1480,6 +1786,18 @@ window.Intl = window.Intl || {};
       </div>`;
           html += "</div>";
 
+          html += '<div class="shop-section-title">Game Keys</div><div class="shop-grid">';
+          for (const game of GAME_CATALOG) {
+            const owned = state.ownedGames.includes(game.id);
+            html += `<div class="shop-item shop-item-wide ${owned ? "owned" : ""}" data-game="${game.id}">
+              ${owned ? '<span class="shop-item-check">✓</span>' : ""}
+              <span class="shop-item-preview">${game.id === "paddle-clash" ? "🏓" : game.id === "skyline-sprint" ? "🏙️" : "🔫"}</span>
+              <div class="shop-item-name">${game.title}</div>
+              <div class="shop-item-price">${owned ? "Unlocked" : game.price === 0 ? "Starter game" : `🪙 ${game.price}`}</div>
+            </div>`;
+          }
+          html += "</div>";
+
           shopSections.innerHTML = html;
 
           // Upgrade click handler
@@ -1542,6 +1860,15 @@ window.Intl = window.Intl || {};
                 updateUI();
               });
             });
+
+          shopSections.querySelectorAll(".shop-item[data-game]").forEach((el) => {
+            el.addEventListener("click", () => {
+              const game = getGame(el.dataset.game);
+              if (!game || state.ownedGames.includes(game.id)) return;
+              buyGame(game);
+              renderShop();
+            });
+          });
         }
 
         // --- Feed ---
@@ -1724,6 +2051,14 @@ window.Intl = window.Intl || {};
 
         // Keyboard
         window.addEventListener("keydown", (e) => {
+          if (playableOverlay.classList.contains("open")) {
+            if (e.key === "Escape") closePlayable();
+            return;
+          }
+          if (gameModal.classList.contains("open")) {
+            if (e.key === "Escape") closeGameModal();
+            return;
+          }
           if (dmOverlay.classList.contains("open")) {
             if (e.key === "Escape") closeDM();
             return;

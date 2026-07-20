@@ -1,0 +1,25 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #05070f; color: #f8fafc; }
+body { display: grid; place-items: center; }
+.arcade { width: min(100%, 960px); height: 100%; display: flex; flex-direction: column; padding: 10px; gap: 8px; }
+.hud { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 38px; font-size: 12px; font-weight: 800; letter-spacing: .02em; }
+.hud-title { color: #a5b4fc; text-transform: uppercase; }
+.hud-score { font-size: 18px; font-variant-numeric: tabular-nums; }
+.hud-opponent { color: #f0abfc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.arena { position: relative; flex: 1; min-height: 0; border: 1px solid rgba(129, 140, 248, .38); border-radius: 16px; overflow: hidden; box-shadow: 0 0 40px rgba(79, 70, 229, .2), inset 0 0 35px rgba(15, 23, 42, .8); }
+canvas { display: block; width: 100%; height: 100%; touch-action: none; background: radial-gradient(circle at 50% 40%, #182448, #060816 70%); }
+.hint { text-align: center; color: #cbd5e1; font-size: 12px; min-height: 18px; }
+.start-layer, .result-layer { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(3, 6, 15, .5); backdrop-filter: blur(3px); }
+.panel { width: min(90%, 360px); text-align: center; border: 1px solid rgba(165, 180, 252, .42); border-radius: 18px; padding: 22px; background: linear-gradient(145deg, rgba(30, 41, 78, .96), rgba(10, 14, 32, .96)); box-shadow: 0 18px 50px rgba(0, 0, 0, .45); }
+.panel h1 { font-size: 23px; margin: 0 0 7px; }
+.panel p { color: #cbd5e1; font-size: 13px; line-height: 1.45; margin: 0 0 16px; }
+button { border: 0; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(135deg, #6366f1, #a855f7); padding: 11px 16px; font-weight: 900; font-size: 13px; }
+button:active { transform: scale(.97); }
+.weapon-row { display: flex; gap: 8px; margin: 12px 0 16px; }
+.weapon-row button { flex: 1; padding: 9px 5px; background: #1e293b; border: 1px solid #475569; font-size: 11px; }
+.weapon-row button.selected { background: #4f46e5; border-color: #a5b4fc; }
+.hidden { display: none !important; }

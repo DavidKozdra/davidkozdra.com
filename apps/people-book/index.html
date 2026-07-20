@@ -10,13 +10,13 @@
   <link
       rel="stylesheet"
       type="text/css"
-      href="style.css"
+      href="style.css?v=20260720-3"
     />
 
 
     <!-- Playables SDK -->
-    <script src="playables-sdk.js"></script>
-    <script src="chatOptions.js"></script>
+    <script src="playables-sdk.js?v=20260720-2"></script>
+    <script src="chatOptions.js?v=20260720-2"></script>
 
     <meta charset="UTF-8" />
     <meta
@@ -103,6 +103,13 @@
           </svg>
           Shop
         </button>
+        <button class="tab" data-view="games" id="tabGames">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="6" width="18" height="12" rx="3" />
+            <path d="M7 12h4M9 10v4M16 11h.01M18 13h.01" />
+          </svg>
+          Game
+        </button>
       </nav>
 
       <!-- People View -->
@@ -166,6 +173,25 @@
         </div>
       </div>
 
+      <!-- Games View -->
+      <div class="view" id="viewGames">
+        <div class="games-view">
+          <div class="games-heading">
+            <div>
+              <p class="games-eyebrow">ARCADE LIBRARY</p>
+              <h2>Challenge your friends</h2>
+              <p>Every contact has their own hidden play style.</p>
+            </div>
+            <div class="games-wallet">🪙 <span id="gamesCoins">0</span></div>
+          </div>
+          <label class="game-search-wrap" for="gameSearch">
+            <span>⌕</span>
+            <input id="gameSearch" type="search" placeholder="Search your games..." autocomplete="off" />
+          </label>
+          <div class="games-library" id="gamesLibrary"></div>
+        </div>
+      </div>
+
       <!-- DM Overlay -->
       <div class="dm-overlay" id="dmOverlay">
         <div class="dm-panel">
@@ -193,9 +219,26 @@
         </div>
       </div>
 
+      <!-- Challenge / playable overlays -->
+      <div class="game-modal" id="gameModal" aria-hidden="true">
+        <div class="game-modal-card">
+          <button class="game-modal-close" id="gameModalClose" aria-label="Close">&times;</button>
+          <div id="gameModalContent"></div>
+        </div>
+      </div>
+      <div class="playable-overlay" id="playableOverlay" aria-hidden="true">
+        <div class="playable-shell">
+          <div class="playable-bar">
+            <div><strong id="playableTitle">Game</strong><span id="playableOpponent"></span></div>
+            <button id="playableClose">Leave match</button>
+          </div>
+          <iframe id="playableFrame" title="People Book game" allow="fullscreen"></iframe>
+        </div>
+      </div>
+
       <div class="toast" id="toast"></div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=20260720-4"></script>
   </body>
 </html>
