@@ -356,6 +356,147 @@ const FEED_REPLY_OPTIONS = [
   },
 ];
 
+const RUNTIME_OPENERS = [
+  "Honestly",
+  "Not gonna lie",
+  "For real",
+  "Okay",
+  "No way",
+  "I was just thinking that",
+  "That is actually wild",
+  "You know what",
+  "Lowkey",
+  "Wait",
+];
+
+const RUNTIME_CLOSERS = {
+  achievement: [
+    "What are you going for next?",
+    "That is a milestone worth celebrating.",
+    "Keep the momentum going.",
+    "I need to see the next update.",
+    "You are closer than you think.",
+    "That grind is finally paying off.",
+    "Do not stop now.",
+    "The next goal is going to be even better.",
+    "I would be showing that off too.",
+    "That deserves a victory lap.",
+  ],
+  squad: [
+    "What are you trying to run?",
+    "Send an invite if you still need someone.",
+    "We should put a group together.",
+    "I would join that lobby.",
+    "This feels like the start of a good session.",
+    "Let us make it happen instead of just talking about it.",
+    "Someone needs to make the lobby.",
+    "I am curious who else is down.",
+    "That sounds more fun with a full squad.",
+    "I will check who is online.",
+  ],
+  cosmetic: [
+    "Where did you find the main piece?",
+    "That is an easy W.",
+    "I would keep that loadout exactly as it is.",
+    "The colors work together really well.",
+    "That might be my favorite setup today.",
+    "Now I want to change my own avatar.",
+    "You should definitely keep posting fits like this.",
+    "That look has way more personality than the default gear.",
+    "I did not expect that combination to work so well.",
+    "The shop needs more items like that.",
+  ],
+  coins: [
+    "What are you saving for?",
+    "The shop always finds a way to empty my wallet.",
+    "I would hold onto a few coins for the next drop.",
+    "Check your gifts before starting another grind.",
+    "That next purchase is going to feel earned.",
+    "The economy in this game is kind of ridiculous.",
+    "I keep spending mine on things I did not plan to buy.",
+    "You are probably closer to the goal than it feels.",
+    "Let us compare collections sometime.",
+    "The grind is painful, but the good items are worth it.",
+  ],
+  question: [
+    "What have you tried so far?",
+    "Someone with more experience needs to answer this.",
+    "I want to hear what everyone else thinks.",
+    "There are probably a few ways to approach it.",
+    "That deserves a real answer instead of just a reaction.",
+    "I am curious where this goes.",
+    "Maybe we can test it together.",
+    "That is a better question than people are giving it credit for.",
+    "I have a theory, but I am not completely sure.",
+    "Keep us posted if you figure it out.",
+  ],
+  gameplay: [
+    "There is always time for one more match.",
+    "The good games make all the rough ones worth it.",
+    "I said the same thing and then queued again.",
+    "That is exactly how the evening disappears.",
+    "The lobbies have been intense lately.",
+    "I am still trying to decide whether that is a good thing.",
+    "At least the game is keeping things interesting.",
+    "That is probably why I keep coming back.",
+    "The next match could be the best one yet.",
+    "I know I should log off, but I probably will not.",
+  ],
+  general: [
+    "What happened after this?",
+    "I need to know how this turns out.",
+    "Keep us posted.",
+    "This makes me want to log back in.",
+    "I can relate to this way more than I expected.",
+    "That is a solid update.",
+    "Someone else has definitely had the same experience.",
+    "This is exactly the kind of post I open the feed for.",
+    "I am invested now.",
+    "That deserves a follow-up post.",
+  ],
+};
+
+const RUNTIME_TOPIC_BY_NODE = {
+  greeting: "general",
+  invite_to_play: "squad",
+  choose_mode: "gameplay",
+  invite_sent: "squad",
+  rank_question: "gameplay",
+  compliment: "cosmetic",
+  trade: "coins",
+  trade_offer: "coins",
+  good_game: "gameplay",
+  loss: "gameplay",
+  lag: "gameplay",
+  neo_nyke: "gameplay",
+  neo_nyke_progress: "achievement",
+  goodbye: "general",
+};
+
+function randomItem(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function getFeedOption(postText) {
+  const normalizedText = String(postText || "").toLowerCase();
+  return (
+    FEED_REPLY_OPTIONS.find((option) =>
+      option.keywords.some((keyword) => normalizedText.includes(keyword)),
+    ) || FEED_REPLY_OPTIONS[FEED_REPLY_OPTIONS.length - 1]
+  );
+}
+
+function composeRuntimeReply(text, topic) {
+  const closers = RUNTIME_CLOSERS[topic] || RUNTIME_CLOSERS.general;
+  const body =
+    text && /^I(?:\b|')/.test(text)
+      ? text
+      : text
+        ? text[0].toLowerCase() + text.slice(1)
+        : text;
+  return `${randomItem(RUNTIME_OPENERS)}, ${body} ${randomItem(closers)}`;
+}
+
 class ChatOptionsManager {
   get() {
     return CHAT_INTENTS;
@@ -372,20 +513,22 @@ class ChatOptionsManager {
 
   getResponse(node) {
     const responses = node.responses || [];
-    return responses[Math.floor(Math.random() * responses.length)] || {
+    const response = randomItem(responses) || {
       text: "I'm not sure what to say to that yet.",
       next: [],
+    };
+    return {
+      ...response,
+      text: composeRuntimeReply(
+        response.text,
+        RUNTIME_TOPIC_BY_NODE[node.id] || "general",
+      ),
     };
   }
 
   getFeedReply(postText) {
-    const normalizedText = String(postText || "").toLowerCase();
-    const matchedOption = FEED_REPLY_OPTIONS.find((option) =>
-      option.keywords.some((keyword) => normalizedText.includes(keyword)),
-    );
-    const option =
-      matchedOption || FEED_REPLY_OPTIONS[FEED_REPLY_OPTIONS.length - 1];
-    return option.responses[Math.floor(Math.random() * option.responses.length)];
+    const option = getFeedOption(postText);
+    return composeRuntimeReply(randomItem(option.responses), option.id);
   }
 
   length() {
