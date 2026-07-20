@@ -21,6 +21,28 @@ const CHAT_INTENTS = [
     ],
   },
   {
+    id: "identity",
+    keywords: ["are you ai", "are you a bot", "how smart are you", "are you real", "is this a real person"],
+    examples: [
+      "are you AI?",
+      "are you a bot?",
+      "how smart are you?",
+      "are you real?",
+      "what are you?",
+      "is this a real person?",
+    ],
+    responses: [
+      {
+        text: "I'm one of the game contacts in this app, so I am not a real person. I can still keep a conversation going if you give me something to work with.",
+        next: ["greeting", "invite_to_play"],
+      },
+      {
+        text: "I'm an AI game contact with a small personality and a lot of opinions about games. I remember the direction of our conversation, not every detail forever.",
+        next: ["greeting", "casual_chat"],
+      },
+    ],
+  },
+  {
     id: "invite_to_play",
     examples: [
       "want to play?",
@@ -38,6 +60,91 @@ const CHAT_INTENTS = [
       {
         text: "I'm in. Send me an invite and tell me what we're running.",
         next: ["choose_mode", "invite_sent"],
+      },
+    ],
+  },
+  {
+    id: "voice_chat",
+    keywords: ["join vc", "voice chat", "voice call", "join call", "discord"],
+    examples: [
+      "join vc",
+      "come to voice chat",
+      "want to hop in a call?",
+      "join the Discord",
+      "are you in voice?",
+    ],
+    responses: [
+      {
+        text: "I cannot actually join voice from here, but I can stay in chat while you set it up. Send the lobby details when you are ready.",
+        next: ["invite_sent", "invite_to_play"],
+      },
+      {
+        text: "I am text-only in this app, but I am still down to coordinate. What are we playing?",
+        next: ["choose_mode", "invite_to_play"],
+      },
+    ],
+  },
+  {
+    id: "other_game",
+    keywords: ["minecraft", "roblox", "fortnite", "valorant", "apex", "terraria"],
+    examples: [
+      "let's play Minecraft",
+      "do you like Minecraft?",
+      "have you played Roblox?",
+      "want to play another game?",
+      "what games do you like?",
+    ],
+    responses: [
+      {
+        text: "Minecraft is a solid choice. I cannot launch it from this chat, but I can talk builds, servers, or what we should play next.",
+        next: ["invite_to_play", "casual_chat"],
+      },
+      {
+        text: "I am mostly here for this game, but I am not against switching it up. What do you want to play?",
+        next: ["choose_mode", "invite_to_play"],
+      },
+    ],
+  },
+  {
+    id: "confirmation",
+    keywords: ["ok sure", "okay sure", "sounds good", "bet"],
+    examples: [
+      "ok sure",
+      "okay",
+      "sounds good",
+      "bet",
+      "yeah let's do it",
+      "alright",
+    ],
+    responses: [
+      {
+        text: "Perfect. I am ready when you are—send the invite or tell me what we are running.",
+        next: ["invite_sent", "choose_mode"],
+      },
+      {
+        text: "Bet. Let us actually make it happen this time instead of leaving it in the chat.",
+        next: ["invite_to_play", "invite_sent"],
+      },
+    ],
+  },
+  {
+    id: "casual_chat",
+    examples: [
+      "bro chill",
+      "lol",
+      "that's funny",
+      "no way",
+      "what are you doing?",
+      "just chilling",
+    ],
+    responses: [
+      {
+        text: "I am just hanging out here and waiting for something interesting to happen. What are you doing?",
+        next: ["greeting", "invite_to_play", "other_game"],
+      },
+      {
+        text: "Fair enough. We can keep it casual, but you know I am eventually going to suggest a game.",
+        next: ["invite_to_play", "goodbye"],
       },
     ],
   },
@@ -458,7 +565,12 @@ const RUNTIME_CLOSERS = {
 
 const RUNTIME_TOPIC_BY_NODE = {
   greeting: "general",
+  identity: "general",
   invite_to_play: "squad",
+  voice_chat: "squad",
+  other_game: "gameplay",
+  confirmation: "squad",
+  casual_chat: "general",
   choose_mode: "gameplay",
   invite_sent: "squad",
   rank_question: "gameplay",
@@ -472,6 +584,39 @@ const RUNTIME_TOPIC_BY_NODE = {
   neo_nyke_progress: "achievement",
   goodbye: "general",
 };
+
+const FAKE_CONVERSATIONS = [
+  [
+    { sender: "them", text: "yo, you online?" },
+    { sender: "me", text: "yeah, what are we running?" },
+    { sender: "them", text: "duos if you are down. I need a teammate who will not rage quit." },
+    { sender: "me", text: "send the invite, I am getting on now." },
+  ],
+  [
+    { sender: "them", text: "I finally changed my avatar and I cannot tell if it is clean or too much." },
+    { sender: "me", text: "send it over, I will rate it honestly." },
+    { sender: "them", text: "okay, but do not pretend the hat is good if it is not." },
+    { sender: "me", text: "the hat stays. It gives the whole outfit a little personality." },
+  ],
+  [
+    { sender: "them", text: "I tried Neo Nyke again and the dungeon ended my run immediately." },
+    { sender: "me", text: "what score did you get this time?" },
+    { sender: "them", text: "not enough to brag about, but I made it farther than yesterday." },
+    { sender: "me", text: "that still counts. Send me the score and I will try to beat it." },
+  ],
+  [
+    { sender: "them", text: "are you getting on later?" },
+    { sender: "me", text: "probably. I am finishing something first." },
+    { sender: "them", text: "cool, message me when you are free and we can run a few casual games." },
+    { sender: "me", text: "sounds good. I will bring the questionable loadout." },
+  ],
+  [
+    { sender: "them", text: "the shop has too many good items today." },
+    { sender: "me", text: "I know. I was saving coins and then the new cape appeared." },
+    { sender: "them", text: "that is how they get us. We need a better budget system." },
+    { sender: "me", text: "agreed, but I am still buying it before it rotates out." },
+  ],
+];
 
 function randomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -488,13 +633,17 @@ function getFeedOption(postText) {
 
 function composeRuntimeReply(text, topic) {
   const closers = RUNTIME_CLOSERS[topic] || RUNTIME_CLOSERS.general;
-  const body =
-    text && /^I(?:\b|')/.test(text)
-      ? text
-      : text
-        ? text[0].toLowerCase() + text.slice(1)
-        : text;
-  return `${randomItem(RUNTIME_OPENERS)}, ${body} ${randomItem(closers)}`;
+  const startsConversation =
+    /^(yo|hey|yeah|i(?:'m|\b)|you\b|later|have\b|gg|same|that\b|maybe|sure|ranked|casual|got it|okay|ok|wait|no way)\b/i.test(
+      text,
+    );
+  const body = startsConversation
+    ? text
+    : text
+      ? text[0].toLowerCase() + text.slice(1)
+      : text;
+  const opener = startsConversation ? "" : `${randomItem(RUNTIME_OPENERS)}, `;
+  return `${opener}${body} ${randomItem(closers)}`;
 }
 
 class ChatOptionsManager {
@@ -529,6 +678,10 @@ class ChatOptionsManager {
   getFeedReply(postText) {
     const option = getFeedOption(postText);
     return composeRuntimeReply(randomItem(option.responses), option.id);
+  }
+
+  getFakeConversation() {
+    return randomItem(FAKE_CONVERSATIONS).map((message) => ({ ...message }));
   }
 
   length() {

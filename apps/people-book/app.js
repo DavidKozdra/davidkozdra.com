@@ -735,6 +735,13 @@ window.Intl = window.Intl || {};
           return { bestScore, bestIntentIndex };
         }
 
+        function findDirectChatIntent(input) {
+          const normalizedInput = input.toLowerCase();
+          return SEMANTIC_CHAT_INTENTS.find((intent) =>
+            intent.keywords?.some((keyword) => normalizedInput.includes(keyword)),
+          );
+        }
+
         async function generateChatMessage(userInput, contactId) {
           const cleanInput = String(userInput || "").trim();
           if (!cleanInput) {
@@ -742,6 +749,22 @@ window.Intl = window.Intl || {};
               text: generateRandomChatMessage(),
               intentId: null,
               nextNodeIds: [],
+            };
+          }
+
+          const directIntent = findDirectChatIntent(cleanInput);
+          if (directIntent) {
+            const response = chatOptions.getResponse(directIntent);
+            state.chatStates[contactId] = {
+              expectedNodeIds: response.next || [],
+              lastIntent: directIntent.id,
+              updatedAt: Date.now(),
+            };
+            save();
+            return {
+              text: response.text,
+              intentId: directIntent.id,
+              nextNodeIds: response.next,
             };
           }
 
@@ -1012,26 +1035,19 @@ window.Intl = window.Intl || {};
 
         // --- Fake history ---
         function generateFakeHistory(contact) {
-          const msgs = [];
-          const count = 3 + Math.floor(Math.random() * 8);
+          const conversation = chatOptions.getFakeConversation();
           const now = Date.now();
-          const span = (1 + Math.floor(Math.random() * 5)) * 86400000;
-          for (let i = 0; i < count; i++) {
-            const t =
-              now -
-              span +
-              Math.floor((span / count) * i) +
-              Math.floor(Math.random() * 60000);
-              const last = generateRandomChatMessage();
-
-              msgs.push({
+          const span = (1 + Math.floor(Math.random() * 4)) * 86400000;
+          return conversation.map((message, index) => ({
               contactId: contact.id,
-              text: last,
-              sender: Math.random() > 0.5 ? "me" : "them",
-              timestamp: t,
-            });
-          }
-          return msgs;
+              text: message.text,
+              sender: message.sender,
+              timestamp:
+                now -
+                span +
+                Math.floor((span / conversation.length) * index) +
+                Math.floor(Math.random() * 60000),
+            }));
         }
 
         // --- UI Updates ---
