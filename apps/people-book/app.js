@@ -169,36 +169,6 @@ window.Intl = window.Intl || {};
           "the armor shirt is so clean",
           "anyone else a tycoon yet?",
         ];
-        const feedReplyTexts = [
-          "fr fr",
-          "so true",
-          "W post",
-          "L take",
-          "based",
-          "cope",
-          "lets go",
-          "same",
-          "no way",
-          "lol",
-          "big W",
-          "ratio",
-          "valid",
-          "cap",
-          "goated",
-          "slay",
-          "real",
-          "me too",
-          "facts",
-          "nice",
-          "fire",
-          "hard agree",
-          "mood",
-          "literally me",
-          "yo same",
-          "crazy",
-          "ok go off",
-        ];
-
         const statusActions = [
           "Grinding",
           "Queueing",
@@ -249,7 +219,8 @@ window.Intl = window.Intl || {};
         ];
 
 
-        const SEMANTIC_CHAT_INTENTS = new ChatOptionsManager().get();
+        const chatOptions = new ChatOptionsManager();
+        const SEMANTIC_CHAT_INTENTS = chatOptions.get();
         const feedLeads = [
           "daily update:",
           "hot take:",
@@ -629,6 +600,7 @@ window.Intl = window.Intl || {};
           pendingGifts: {}, // { contactId: { emoji, name, coins, xp } }
           feedReplyUnlocked: false,
           feedLikes: {}, // { postKey: true }
+          chatStates: {}, // { contactId: { expectedNodeIds, lastIntent, updatedAt } }
         };
         let currentContact = null;
         let dmContact = null;
@@ -735,9 +707,43 @@ window.Intl = window.Intl || {};
           return semanticEnginePromise;
         }
 
-        async function generateChatMessage(userInput) {
+        function getChatState(contactId) {
+          return (state.chatStates && state.chatStates[contactId]) || {
+            expectedNodeIds: [],
+            lastIntent: null,
+          };
+        }
+
+        function findBestSemanticMatch(inputVector, engine, allowedIntentIds) {
+          const allowed = allowedIntentIds
+            ? new Set(allowedIntentIds)
+            : null;
+          let bestScore = -Infinity;
+          let bestIntentIndex = -1;
+
+          for (let i = 0; i < engine.exampleVectors.length; i++) {
+            const intent = SEMANTIC_CHAT_INTENTS[engine.exampleIntentIndexes[i]];
+            if (allowed && !allowed.has(intent.id)) continue;
+
+            const score = dotProduct(inputVector, engine.exampleVectors[i]);
+            if (score > bestScore) {
+              bestScore = score;
+              bestIntentIndex = engine.exampleIntentIndexes[i];
+            }
+          }
+
+          return { bestScore, bestIntentIndex };
+        }
+
+        async function generateChatMessage(userInput, contactId) {
           const cleanInput = String(userInput || "").trim();
-          if (!cleanInput) return generateRandomChatMessage();
+          if (!cleanInput) {
+            return {
+              text: generateRandomChatMessage(),
+              intentId: null,
+              nextNodeIds: [],
+            };
+          }
 
           try {
             const engine = await loadSemanticEngine();
@@ -746,35 +752,58 @@ window.Intl = window.Intl || {};
               normalize: true,
             });
             const inputVector = tensorToRows(output)[0];
+            const chatState = getChatState(contactId);
+            let match = findBestSemanticMatch(
+              inputVector,
+              engine,
+              chatState.expectedNodeIds.length
+                ? chatState.expectedNodeIds
+                : null,
+            );
 
-            let bestScore = -Infinity;
-            let bestIntentIndex = -1;
-
-            for (let i = 0; i < engine.exampleVectors.length; i++) {
-              const score = dotProduct(inputVector, engine.exampleVectors[i]);
-              if (score > bestScore) {
-                bestScore = score;
-                bestIntentIndex = engine.exampleIntentIndexes[i];
-              }
+            // If the message changes topics, use the full intent list instead
+            // of forcing it into the previous conversational branch.
+            if (match.bestIntentIndex < 0 || match.bestScore < 0.32) {
+              match = findBestSemanticMatch(inputVector, engine, null);
             }
 
             // Low confidence: keep the old random behavior rather than force
             // an unrelated response.
-            if (bestIntentIndex < 0 || bestScore < 0.32) {
-              return generateRandomChatMessage();
+            if (match.bestIntentIndex < 0 || match.bestScore < 0.32) {
+              return {
+                text: generateRandomChatMessage(),
+                intentId: null,
+                nextNodeIds: [],
+              };
             }
 
-            const matchedIntent = SEMANTIC_CHAT_INTENTS[bestIntentIndex];
+            const matchedIntent = SEMANTIC_CHAT_INTENTS[match.bestIntentIndex];
+            const response = chatOptions.getResponse(matchedIntent);
+            state.chatStates[contactId] = {
+              expectedNodeIds: response.next || [],
+              lastIntent: matchedIntent.id,
+              updatedAt: Date.now(),
+            };
+            save();
             console.debug("Semantic reply match", {
               input: cleanInput,
               intent: matchedIntent.id,
-              score: Number(bestScore.toFixed(3)),
+              score: Number(match.bestScore.toFixed(3)),
+              expectedNext: response.next,
             });
 
-            return rand(matchedIntent.replies);
+            return {
+              text: response.text,
+              intentId: matchedIntent.id,
+              nextNodeIds: response.next,
+            };
           } catch (error) {
             console.warn("Semantic matching unavailable; using random reply", error);
-            return generateRandomChatMessage();
+            return {
+              text: generateRandomChatMessage(),
+              intentId: null,
+              nextNodeIds: [],
+            };
           }
         }
 
@@ -789,21 +818,8 @@ window.Intl = window.Intl || {};
           );
         }
 
-        function generateFeedReplyText() {
-          if (maybe(0.6)) return rand(feedReplyTexts);
-          return (
-            rand(chatOpeners) +
-            " " +
-            rand([
-              "W",
-              "facts",
-              "real",
-              "same",
-              "insane",
-              "fire",
-              "valid",
-            ]).toLowerCase()
-          );
+        function generateFeedReplyText(postText) {
+          return chatOptions.getFeedReply(postText);
         }
 
         function save() {
@@ -1339,10 +1355,10 @@ window.Intl = window.Intl || {};
           const delay = 600 + Math.floor(Math.random() * 2000);
 
           setTimeout(async () => {
-            const replyText = await generateChatMessage(text);
+            const replyResult = await generateChatMessage(text, replyingContact.id);
             const reply = {
               contactId: replyingContact.id,
-              text: replyText,
+              text: replyResult.text,
               sender: "them",
               timestamp: Date.now(),
             };
@@ -1529,6 +1545,7 @@ window.Intl = window.Intl || {};
               author = { name, avatar, id: null };
             }
             const minutesAgo = Math.floor(Math.random() * 120) + 1;
+            const postText = generateFeedPostText();
             const replyCount = Math.floor(Math.random() * 4);
             const replies = [];
             for (let r = 0; r < replyCount; r++) {
@@ -1537,13 +1554,13 @@ window.Intl = window.Intl || {};
               replies.push({
                 name: rName,
                 avatar: rAvatar,
-                text: generateFeedReplyText(),
+                text: generateFeedReplyText(postText),
               });
             }
             posts.push({
               key: "fp_" + Date.now() + "_" + i + "_" + Math.random(),
               author,
-              text: generateFeedPostText(),
+              text: postText,
               time: minutesAgo,
               likes: Math.floor(Math.random() * 50),
               isFriend: !!author.id,
@@ -1733,4 +1750,3 @@ window.Intl = window.Intl || {};
           { passive: false },
         );
       })();
-
