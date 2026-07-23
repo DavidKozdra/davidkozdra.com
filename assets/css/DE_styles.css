@@ -500,10 +500,11 @@ button {
 
 .window > iframe {
     border: 0;
-    flex: 1 1 auto;
+    display: block;
+    flex: 1 1 0;
     min-height: 0;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
     margin-top: 0 !important;
     background: var(--windowBackground);
 }

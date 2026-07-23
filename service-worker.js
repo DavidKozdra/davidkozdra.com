@@ -1,13 +1,13 @@
-const CACHE_NAME = "pwa-cache-v7";
+const CACHE_NAME = "pwa-cache-v8";
 const PRECACHE_URLS = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/assets/css/DE_styles.css?v=1.3",
-  "/assets/css/modern.css?v=1.17",
-  "/assets/css/retro.css?v=1.5",
-  "/assets/js/Games.js?v=1.0",
-  "/assets/js/index.js",
+  "/assets/css/DE_styles.css?v=1.5",
+  "/assets/css/modern.css?v=1.18",
+  "/assets/css/retro.css?v=1.6",
+  "/assets/js/Games.js?v=1.1",
+  "/assets/js/index.js?v=1.1",
   "/assets/js/apps.js",
   "/assets/images/brand/favicon.ico",
   "/assets/images/brand/icon-192.png",
@@ -63,7 +63,7 @@ self.addEventListener("fetch", (event) => {
         }
       }
 
-      const cachedResponse = await cache.match(event.request, { ignoreSearch: true });
+      const cachedResponse = await cache.match(event.request);
       if (cachedResponse) {
         return cachedResponse;
       }

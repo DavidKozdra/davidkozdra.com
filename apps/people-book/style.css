@@ -1731,3 +1731,17 @@
           padding: 20px;
         }
       }
+
+      html.is-embedded body {
+        padding: 0;
+        align-items: stretch;
+        justify-content: stretch;
+      }
+      html.is-embedded .app {
+        width: 100%;
+        max-width: none;
+        height: 100dvh;
+        max-height: none;
+        border-radius: 0;
+        box-shadow: none;
+      }

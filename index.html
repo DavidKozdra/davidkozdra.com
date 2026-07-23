@@ -38,13 +38,13 @@
     <title>David Kozdra</title>
     <link
       rel="stylesheet"
-      href="assets/css/DE_styles.css?v=1.4"
+      href="assets/css/DE_styles.css?v=1.5"
       id="default"
       media="print"
       onload="this.media = 'all'"
     />
     <noscript>
-      <link rel="stylesheet" href="assets/css/DE_styles.css?v=1.4" />
+      <link rel="stylesheet" href="assets/css/DE_styles.css?v=1.5" />
     </noscript>
 
     <link rel="manifest" href="/manifest.json" />
@@ -2432,7 +2432,7 @@
         if (title == "empty") {
           newWindow.classList.add("empty_window");
         }
-        newWindow.style.display = "block";
+        newWindow.style.display = "flex";
         document.getElementById("windows").appendChild(newWindow);
 
         // Set the window position
@@ -2711,16 +2711,16 @@
         icon.setAttribute("tabindex", "0");
         icon.setAttribute("aria-label", app.name);
         icon.style.cursor = "pointer";
-        icon.onclick = function () {
-          selectIcon(event);
+        icon.onclick = function (evt) {
+          selectIcon(evt);
         };
 
         function launchInstalledAppFromUserGesture(evt) {
           desktopIconRouter(evt, "installed-app", app.name, app);
         }
 
-        icon.ondblclick = function () {
-          launchInstalledAppFromUserGesture(event);
+        icon.ondblclick = function (evt) {
+          launchInstalledAppFromUserGesture(evt);
         };
         icon.onkeypress = function (e) {
           if (e.key === "Enter") launchInstalledAppFromUserGesture(e);
