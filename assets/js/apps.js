@@ -104,11 +104,11 @@ const APPS = [
         name: "BearPenny",
         author: "BearPenny.Capital",
         description: "Every penny your family has will be the Bears, hes mad he doesnt understand the market or law but he is a bear RARRR",
-        url: "/apps/bear-penny/",
+        url: "https://pennyquest.davidkozdra.workers.dev/",
         icon: "/apps/bear-penny/images/logo.svg",
         width: 1200,
         fullscreen: true,
-        external: false,
+        external: true,
         tags: ["game"],
         favicon: "/apps/bear-penny/images/logo.svg"
     },
