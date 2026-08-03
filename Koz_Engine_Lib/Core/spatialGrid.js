@@ -1,0 +1,211 @@
+(function initSpatialGridLib(root, factory) {
+  const api = factory();
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  }
+})(typeof globalThis !== "undefined" ? globalThis : this, function createSpatialGridApi() {
+/**
+ * Spatial partitioning grid for efficient entity queries.
+ * Divides 2D space into cells for O(1) lookups of nearby entities.
+ */
+class SpatialGrid {
+  /**
+   * Creates a new SpatialGrid.
+   * @param {number} cellSize - Size of each grid cell (default 32)
+   */
+  constructor(cellSize = 32) {
+      this._cs = cellSize;
+      this._cells = new Map();
+      this._entityCount = 0;
+    }
+
+    /**
+     * Generates a collision-free key for grid coordinates.
+     * @param {number} tx - Tile x coordinate
+     * @param {number} ty - Tile y coordinate
+     * @returns {string} Grid cell key
+     * @private
+     */
+    _key(tx, ty) {
+      const cx = Math.floor(tx / this._cs);
+      const cy = Math.floor(ty / this._cs);
+      return `${cx},${cy}`;
+    }
+
+    /**
+     * Generates cell coords for key comparison.
+     * @private
+     */
+    _cellCoords(tx, ty) {
+      return (Math.floor(tx / this._cs) << 16) | (Math.floor(ty / this._cs) & 0xFFFF);
+    }
+
+    /**
+     * Inserts an entity into the grid at the specified tile coordinates.
+     * @param {Object} entity - The entity to insert
+     * @param {number} tx - Tile x coordinate
+     * @param {number} ty - Tile y coordinate
+     */
+    insert(entity, tx, ty) {
+      const key = this._key(tx, ty);
+      if (entity._sgKey != null) {
+        if (entity._sgKey === key) return;
+        this.remove(entity);
+      }
+      let cell = this._cells.get(key);
+      if (!cell) {
+        cell = new Set();
+        this._cells.set(key, cell);
+      }
+      cell.add(entity);
+      entity._sgKey = key;
+      this._entityCount++;
+    }
+
+    /**
+     * Removes an entity from the grid.
+     * @param {Object} entity - The entity to remove
+     */
+    remove(entity) {
+      const key = entity._sgKey;
+      if (key == null) return;
+      const cell = this._cells.get(key);
+      if (cell) {
+        cell.delete(entity);
+        if (cell.size === 0) this._cells.delete(key);
+        this._entityCount--;
+      }
+      entity._sgKey = null;
+    }
+
+    /**
+     * Moves an entity to a new position in the grid.
+     * @param {Object} entity - The entity to move
+     * @param {number} newTx - New tile x coordinate
+     * @param {number} newTy - New tile y coordinate
+     */
+    move(entity, newTx, newTy) {
+      const newKey = this._key(newTx, newTy);
+      if (entity._sgKey === newKey) return;
+      this.remove(entity);
+      this.insert(entity, newTx, newTy);
+    }
+
+    /**
+     * Bulk insert an array of entities at their current positions.
+     * @param {Array} entities - Array of entities with tx/ty or x/y properties
+     * @param {Function} [posGetter] - Optional function to get {tx, ty} from entity
+     */
+    insertBatch(entities, posGetter) {
+      for (let i = 0; i < entities.length; i++) {
+        const e = entities[i];
+        if (posGetter) {
+          const pos = posGetter(e);
+          this.insert(e, pos.tx, pos.ty);
+        } else {
+          this.insert(e, e.tx || e.x || 0, e.ty || e.y || 0);
+        }
+      }
+    }
+
+    /**
+     * Queries all entities within a viewport bounds.
+     * @param {Object} viewportBounds - Viewport definition
+     * @param {number} viewportBounds.minX - Minimum x in world coordinates
+     * @param {number} viewportBounds.maxX - Maximum x in world coordinates
+     * @param {number} viewportBounds.minY - Minimum y in world coordinates
+     * @param {number} viewportBounds.maxY - Maximum y in world coordinates
+     * @param {number} [viewportBounds.tileSize=1] - Size of tiles
+     * @returns {Array} Array of entities in the viewport
+     */
+    queryViewport(viewportBounds) {
+      const cs = this._cs;
+      const vp = viewportBounds || {
+        minX: typeof _vpMinX !== "undefined" ? _vpMinX : 0,
+        maxX: typeof _vpMaxX !== "undefined" ? _vpMaxX : 0,
+        minY: typeof _vpMinY !== "undefined" ? _vpMinY : 0,
+        maxY: typeof _vpMaxY !== "undefined" ? _vpMaxY : 0,
+        tileSize: typeof tileSize !== "undefined" ? tileSize : 1,
+      };
+
+      const ts = vp.tileSize || 1;
+      const minCX = Math.floor((vp.minX / ts) / cs);
+      const maxCX = Math.floor((vp.maxX / ts) / cs);
+      const minCY = Math.floor((vp.minY / ts) / cs);
+      const maxCY = Math.floor((vp.maxY / ts) / cs);
+
+      const result = [];
+      for (let cy = minCY; cy <= maxCY; cy++) {
+        for (let cx = minCX; cx <= maxCX; cx++) {
+          const key = `${cx},${cy}`;
+          const cell = this._cells.get(key);
+          if (cell) {
+            for (const e of cell) result.push(e);
+          }
+        }
+      }
+      return result;
+    }
+
+    /**
+     * Queries entities within radius of a point (tile coords).
+     * @param {number} tx - Center tile x
+     * @param {number} ty - Center tile y
+     * @param {number} radius - Radius in tiles
+     * @returns {Array} Entities within radius
+     */
+    queryRadius(tx, ty, radius) {
+      const result = [];
+      this.visitRadius(tx, ty, radius, (entity) => result.push(entity));
+      return result;
+    }
+
+    /**
+     * Visits entities within a radius without allocating a result array.
+     * Returning false from the visitor stops the scan early.
+     * @returns {boolean} true when every matching entity was visited
+     */
+    visitRadius(tx, ty, radius, visitor) {
+      if (typeof visitor !== "function") return true;
+      const cs = this._cs;
+      const minCX = Math.floor((tx - radius) / cs);
+      const maxCX = Math.floor((tx + radius) / cs);
+      const minCY = Math.floor((ty - radius) / cs);
+      const maxCY = Math.floor((ty + radius) / cs);
+      const r2 = radius * radius;
+
+      for (let cy = minCY; cy <= maxCY; cy++) {
+        for (let cx = minCX; cx <= maxCX; cx++) {
+          const key = `${cx},${cy}`;
+          const cell = this._cells.get(key);
+          if (!cell) continue;
+          for (const e of cell) {
+            const ex = e.tx != null ? e.tx : (e.x || 0);
+            const ey = e.ty != null ? e.ty : (e.y || 0);
+            const dx = ex - tx, dy = ey - ty;
+            if (dx * dx + dy * dy <= r2 && visitor(e) === false) return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    /**
+     * Returns total entity count.
+     */
+    get size() {
+      return this._entityCount;
+    }
+
+    /**
+     * Clears all entities from the grid.
+     */
+    clear() {
+      this._cells.clear();
+      this._entityCount = 0;
+    }
+  }
+
+  return { SpatialGrid };
+});
