@@ -33,3 +33,14 @@ This project is a personal exploration of two things:
 ## Why Desktop Environments?
 
 My fascination with old desktop environments stems from their simplicity, functionality, and aesthetic appeal. I believe that many of these concepts can still serve as a basis for clean, user-friendly web design today. By blending the nostalgic feel of these operating systems with modern web technology, I aimed to create an engaging and interactive user experience.
+
+## Git hooks
+
+Enable the repository's version-controlled hooks once after cloning:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+Before each commit, the pre-commit hook updates every `sitemap.xml` `<lastmod>`
+value to the current date and stages the sitemap if it changed.

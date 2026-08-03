@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+sitemap="$repo_root/sitemap.xml"
+today=$(date +%Y-%m-%d)
+temporary_file=$(mktemp "${TMPDIR:-/tmp}/sitemap.xml.XXXXXX")
+
+trap 'rm -f "$temporary_file"' EXIT HUP INT TERM
+
+sed -E "s|<lastmod>[^<]*</lastmod>|<lastmod>${today}</lastmod>|g" \
+  "$sitemap" > "$temporary_file"
+
+if ! cmp -s "$temporary_file" "$sitemap"; then
+  cp "$temporary_file" "$sitemap"
+  git -C "$repo_root" add -- sitemap.xml
+  echo "Updated sitemap.xml lastmod dates to $today"
+fi
