@@ -730,13 +730,19 @@
           <div style="min-height:40px;"> </div>
 
           <div class="actions">
-            <button id="add-calendar" class="action action-primary" type="button">
+            <a
+              id="add-calendar"
+              class="action action-primary"
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=David%20Kozdra%27s%2026th%20Birthday%20%E2%80%94%20Dinos%20and%20Drinks&amp;dates=20261116T000000Z%2F20261116T030000Z&amp;ctz=America%2FNew_York&amp;details=Drinks%2C%20snacks%2C%20and%20prehistoric%20party%20vibes!&amp;location=13248%20Glacier%20National%20Drive%20%235304%2C%20Orlando%2C%20FL%2032837"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                 <rect x="3" y="5" width="18" height="16" rx="2"></rect>
                 <path d="M8 3v4M16 3v4M3 10h18"></path>
               </svg>
-              Add to calendar
-            </button>
+              Add to Google
+            </a>
             <a id="open-map" class="action action-secondary" href="https://maps.google.com/?q=13248+Glacier+National+Drive+%235304+Orlando+FL+32837" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                 <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"></path>
@@ -1161,31 +1167,6 @@
       });
 
       calendarButton.addEventListener("click", () => {
-        const calendar = [
-          "BEGIN:VCALENDAR",
-          "VERSION:2.0",
-          "PRODID:-//Dinos and Drinks//David Kozdra Birthday//EN",
-          "CALSCALE:GREGORIAN",
-          "BEGIN:VEVENT",
-          "UID:david-kozdra-26-birthday-20261115@davidkozdra.com",
-          "DTSTAMP:20260803T120000Z",
-          "DTSTART;TZID=America/New_York:20261115T190000",
-          "DTEND;TZID=America/New_York:20261115T220000",
-          "SUMMARY:David Kozdra's 26th Birthday — Dinos and Drinks",
-          "DESCRIPTION:Drinks\\, snacks\\, and prehistoric party vibes!",
-          "LOCATION:13248 Glacier National Drive #5304\\, Orlando\\, FL 32837",
-          "END:VEVENT",
-          "END:VCALENDAR"
-        ].join("\r\n");
-
-        const file = new Blob([calendar], { type: "text/calendar;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(file);
-        link.download = "david-kozdra-26th-birthday.ics";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        window.setTimeout(() => URL.revokeObjectURL(link.href), 0);
         celebrate(calendarButton, 80);
       });
 
