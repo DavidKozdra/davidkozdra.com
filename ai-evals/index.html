@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI &amp; LLM Evaluation Engineering — David Kozdra</title>
+    <meta
+      name="description"
+      content="How David Kozdra builds and evaluates LLM systems: MCP-based test infrastructure that raised automated coverage from 40% to 70%+, prompt systems, scoring scripts, automated QA pipelines, and an AWS RAG system indexing 1,000+ documents."
+    />
+    <meta name="author" content="David Kozdra" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <link rel="canonical" href="https://davidkozdra.com/ai-evals/" />
+
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:title"
+      content="AI &amp; LLM Evaluation Engineering — David Kozdra"
+    />
+    <meta
+      property="og:description"
+      content="MCP-based test infrastructure, prompt systems, and scoring scripts for large-scale LLM systems. Automated coverage raised from 40% to 70%+."
+    />
+    <meta property="og:url" content="https://davidkozdra.com/ai-evals/" />
+    <meta
+      property="og:image"
+      content="https://davidkozdra.com/assets/images/brand/favicon.webp"
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/images/brand/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/assets/images/brand/icon-192.png" />
+    <link rel="stylesheet" href="/assets/css/docs.css?v=1" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "AI & LLM Evaluation Engineering",
+        "description": "How David Kozdra builds and evaluates LLM systems: MCP-based test infrastructure, prompt systems, scoring scripts, automated QA pipelines, and retrieval-augmented generation.",
+        "url": "https://davidkozdra.com/ai-evals/",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://davidkozdra.com/ai-evals/"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com",
+          "jobTitle": "Software Engineer",
+          "sameAs": [
+            "https://github.com/DavidKozdra",
+            "https://www.linkedin.com/in/david-kozdra-5ab269186/"
+          ]
+        },
+        "publisher": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "about": [
+          { "@type": "Thing", "name": "LLM Evaluation" },
+          { "@type": "Thing", "name": "Model Context Protocol" },
+          { "@type": "Thing", "name": "Automated Testing" },
+          { "@type": "Thing", "name": "Retrieval-Augmented Generation" },
+          { "@type": "Thing", "name": "Prompt Engineering" }
+        ],
+        "keywords": "LLM evaluation, MCP, Model Context Protocol, eval harness, prompt systems, scoring scripts, automated QA, RAG, regression testing, AI tooling"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://davidkozdra.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "AI Evals",
+            "item": "https://davidkozdra.com/ai-evals/"
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="wrap">
+        <a class="brand" href="/">David Kozdra</a>
+        <a href="/resume/">Resume</a>
+        <a href="/work/">Work</a>
+        <a href="/ai-evals/" aria-current="page">AI Evals</a>
+        <a href="/pages/about/">About</a>
+        <a href="https://github.com/DavidKozdra" rel="me noopener">GitHub</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li>AI Evals</li>
+      </ol>
+    </div>
+
+    <header class="masthead">
+      <div class="wrap">
+        <h1>AI &amp; LLM Evaluation Engineering</h1>
+        <p class="tagline">
+          I build the testing infrastructure that tells you whether an AI system
+          actually works — MCP-based harnesses, prompt systems, scoring scripts,
+          and automated QA pipelines that validate large-scale LLM behavior before
+          it reaches production.
+        </p>
+        <ul class="stats">
+          <li>
+            <span class="stat-value">40% → 70%+</span>
+            <span class="stat-label"
+              >Automated test coverage on internal AI systems</span
+            >
+          </li>
+          <li>
+            <span class="stat-value">1,000+</span>
+            <span class="stat-label">Documents indexed in an AWS RAG system</span>
+          </li>
+          <li>
+            <span class="stat-value">100,000+</span>
+            <span class="stat-label"
+              >SEC filings prepared for retrieval on RedChat</span
+            >
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="wrap">
+        <section aria-labelledby="current">
+          <h2 id="current">Current Work — Cognara.io (Meta Contingent Worker)</h2>
+          <p>
+            Since October 2025 I have worked as a software engineer at Cognara.io
+            as a Meta contingent worker, focused on testing and evaluation
+            infrastructure for internal AI systems.
+          </p>
+          <article class="role">
+            <h3>What I built</h3>
+            <ul>
+              <li>
+                <strong>MCP-based testing infrastructure</strong> for Horizon Worlds
+                and wearable-device systems, increasing automated test coverage from
+                <span class="metric">40% to 70%+</span> and improving the
+                reliability of internal AI workflows.
+              </li>
+              <li>
+                <strong>Automated QA pipelines</strong> designed and executed in
+                cloud-based environments, validating large-scale LLM system behavior
+                and reducing regression risk across deployments.
+              </li>
+              <li>
+                <strong>LLM evaluation tooling</strong>, including prompt systems and
+                scoring scripts, improving output consistency and test coverage
+                across internal use cases.
+              </li>
+              <li>
+                <strong>GraphQL integration fixes</strong> within PHP/Hack services,
+                resolving build failures and restoring reliability in internal
+                AI-driven application workflows.
+              </li>
+              <li>
+                <strong>Engineering documentation and guides</strong>, reducing
+                onboarding friction and improving maintainability across teams.
+              </li>
+            </ul>
+            <ul class="tags">
+              <li>MCP</li>
+              <li>LLM Evaluation</li>
+              <li>Automated QA</li>
+              <li>Prompt Systems</li>
+              <li>Scoring Scripts</li>
+              <li>GraphQL</li>
+              <li>PHP/Hack</li>
+              <li>React</li>
+            </ul>
+          </article>
+        </section>
+
+        <section aria-labelledby="why">
+          <h2 id="why">Why Evaluation Is a Testing Problem</h2>
+          <div class="callout">
+            <p>
+              A model that scores well on a benchmark can still fail the specific
+              job you gave it. The useful question is not “is this model good?” but
+              “does this system still do what it did last week, on the cases we
+              care about?” That reframing turns evaluation into an engineering
+              discipline with familiar tools: fixtures, coverage, regression gates,
+              and CI.
+            </p>
+          </div>
+          <p>
+            LLM outputs are non-deterministic, so the assertions have to change even
+            though the pipeline does not. Instead of exact-match checks, evaluation
+            leans on scored rubrics, structural validation, and comparison against
+            recorded baselines — then treats a score drop the same way a test suite
+            treats a failing test.
+          </p>
+        </section>
+
+        <section aria-labelledby="approach">
+          <h2 id="approach">How I Approach an Eval Harness</h2>
+          <div class="table-scroll">
+            <table>
+              <caption class="sr-only">
+                Stages of building an LLM evaluation harness and what each produces
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Stage</th>
+                  <th scope="col">What it answers</th>
+                  <th scope="col">What it produces</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Case collection</th>
+                  <td>
+                    Which real inputs matter, including the failures people actually
+                    reported?
+                  </td>
+                  <td>A versioned fixture set that grows with each bug found</td>
+                </tr>
+                <tr>
+                  <th scope="row">Scoring design</th>
+                  <td>What does a correct answer look like for this task?</td>
+                  <td>
+                    Scoring scripts — structural checks, rubrics, and graded
+                    comparisons
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Harness plumbing</th>
+                  <td>Can the system be driven the way a real client drives it?</td>
+                  <td>
+                    MCP-based tooling that exercises the system through its real
+                    interface
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Baselines</th>
+                  <td>What was the score before this change?</td>
+                  <td>Recorded runs that make regressions visible</td>
+                </tr>
+                <tr>
+                  <th scope="row">Pipeline integration</th>
+                  <td>Will a regression block the deploy?</td>
+                  <td>Automated QA pipelines running in cloud environments</td>
+                </tr>
+                <tr>
+                  <th scope="row">Coverage review</th>
+                  <td>Which behaviors are still untested?</td>
+                  <td>The gap list that drove coverage from 40% to 70%+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Coverage is the metric I keep coming back to, because it is the one that
+            predicts surprises. Raising it from
+            <span class="metric">40% to 70%+</span> mattered less as a number than
+            as a description of how much of the system's behavior was pinned down
+            well enough that a change could not quietly break it.
+          </p>
+        </section>
+
+        <section aria-labelledby="mcp">
+          <h2 id="mcp">MCP as Test Infrastructure</h2>
+          <p>
+            The Model Context Protocol gives an AI system a standard way to reach
+            tools and data. That same interface is a natural test seam: if the
+            harness drives the system through MCP, it exercises the real path
+            production uses rather than a mock that drifts out of sync.
+          </p>
+          <p>
+            Building test infrastructure on MCP meant the tooling for Horizon Worlds
+            and wearable-device systems could grow with the surface being tested
+            instead of being rewritten each time a capability was added — which is
+            what made a sustained coverage increase practical rather than a one-time
+            push.
+          </p>
+        </section>
+
+        <section aria-labelledby="rag">
+          <h2 id="rag">Retrieval Systems — RedChip &amp; RedChat</h2>
+          <p>
+            Before the evaluation work, I built the retrieval systems that raise
+            these questions in the first place.
+          </p>
+          <article class="role">
+            <h3>AWS RAG infrastructure — RedChip Companies</h3>
+            <p class="role-meta">December 2023 – June 2025</p>
+            <ul>
+              <li>
+                Architected AWS-based infrastructure for a RAG system, enabling
+                indexing and retrieval across
+                <span class="metric">1,000+ documents</span> with scalable query
+                performance.
+              </li>
+              <li>
+                Built <span class="metric">20+ REST APIs</span> in Flask and Node.js
+                integrating EDGAR SEC, OpenAI, Salesforce, and Google Sheets as data
+                sources.
+              </li>
+              <li>
+                Shipped <a href="/work/redchat/">RedChat</a>, an AI SEC-filing
+                summarizer, loading and preparing over
+                <span class="metric">100,000 documents</span> covering every company
+                on the NYSE and NASDAQ.
+              </li>
+            </ul>
+            <ul class="tags">
+              <li>AWS</li>
+              <li>RAG</li>
+              <li>Flask</li>
+              <li>OpenAI API</li>
+              <li>Python</li>
+              <li>EDGAR SEC</li>
+            </ul>
+          </article>
+          <p>
+            Retrieval quality is where most RAG systems fail, and it fails quietly —
+            the model produces a fluent answer from the wrong documents. That is
+            precisely the failure mode a scored eval set catches and a spot check
+            does not.
+          </p>
+        </section>
+
+        <section aria-labelledby="stack">
+          <h2 id="stack">Stack</h2>
+          <ul class="tags">
+            <li>Model Context Protocol (MCP)</li>
+            <li>Python</li>
+            <li>Node.js</li>
+            <li>TypeScript</li>
+            <li>Flask</li>
+            <li>AWS</li>
+            <li>OpenAI API</li>
+            <li>GraphQL</li>
+            <li>PHP/Hack</li>
+            <li>React</li>
+            <li>Jest</li>
+            <li>Postman</li>
+            <li>Docker</li>
+            <li>Linux</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="contact">
+          <h2 id="contact">Work With Me</h2>
+          <p>
+            I am a software engineer in Orlando, Florida working on LLM evaluation,
+            testing infrastructure, and API/cloud systems. Reach me at
+            <a href="mailto:davidkozdra@gmail.com">davidkozdra@gmail.com</a> or on
+            <a
+              href="https://www.linkedin.com/in/david-kozdra-5ab269186/"
+              rel="me noopener"
+              >LinkedIn</a
+            >.
+          </p>
+          <ul class="grid">
+            <li class="card">
+              <h3><a href="/resume/">Full Resume</a></h3>
+              <p>
+                Complete work history, education, and certifications with measured
+                outcomes.
+              </p>
+            </li>
+            <li class="card">
+              <h3><a href="/work/">Project Case Studies</a></h3>
+              <p>Shipped systems, the constraints behind them, and what they moved.</p>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/resume/">Resume</a>
+          <a href="/work/">Work</a>
+          <a href="/ai-evals/">AI Evals</a>
+          <a href="/pages/about/">About</a>
+          <a href="/pages/projects/">Project Explorer</a>
+        </nav>
+        <p>© 2026 David Kozdra · Orlando, Florida</p>
+      </div>
+    </footer>
+  </body>
+</html>

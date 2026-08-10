@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Real-Time Stock Portal (Case Study) | David Kozdra</title>
+    <meta
+      name="description"
+      content="Case study: a real-time stock tracking and analysis portal for RedChip with a Python data aggregation backend on a 15-minute delayed feed and tabled SEC filing views, part of work contributing to a 30-point increase in key site performance metrics."
+    />
+    <meta name="author" content="David Kozdra" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <link rel="canonical" href="https://davidkozdra.com/work/stock-portal/" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Real-Time Stock Portal (Case Study)" />
+    <meta
+      property="og:description"
+      content="Stock tracking portal with a Python aggregation backend and tabled SEC filing data, built for RedChip Companies."
+    />
+    <meta property="og:url" content="https://davidkozdra.com/work/stock-portal/" />
+    <meta
+      property="og:image"
+      content="https://davidkozdra.com/assets/images/projects/stock_portal.webp"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/images/brand/favicon.ico" sizes="48x48" />
+    <link rel="stylesheet" href="/assets/css/docs.css?v=1" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Real-Time Stock Portal",
+        "description": "Case study of a real-time stock tracking and analysis portal with a Python data aggregation backend and SEC filing data views.",
+        "url": "https://davidkozdra.com/work/stock-portal/",
+        "image": "https://davidkozdra.com/assets/images/projects/stock_portal.webp",
+        "datePublished": "2024-01-01",
+        "dateModified": "2024-03-01",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://davidkozdra.com/work/stock-portal/"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "publisher": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "keywords": "stock portal, Python, data aggregation, SEC filings, PHP, JavaScript, web performance"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://davidkozdra.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://davidkozdra.com/work/" },
+          { "@type": "ListItem", "position": 3, "name": "Real-Time Stock Portal", "item": "https://davidkozdra.com/work/stock-portal/" }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="wrap">
+        <a class="brand" href="/">David Kozdra</a>
+        <a href="/resume/">Resume</a>
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/ai-evals/">AI Evals</a>
+        <a href="/pages/about/">About</a>
+        <a href="https://github.com/DavidKozdra" rel="me noopener">GitHub</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/work/">Work</a></li>
+        <li>Real-Time Stock Portal</li>
+      </ol>
+    </div>
+
+    <header class="masthead">
+      <div class="wrap">
+        <h1>Real-Time Stock Portal</h1>
+        <p class="tagline">
+          A stock tracking and analysis portal built for RedChip Companies, pairing
+          a delayed market data feed with structured SEC filing views.
+        </p>
+        <ul class="contact-line">
+          <li><strong>Role:</strong> Lead Software Engineer, RedChip Companies</li>
+          <li><strong>Timeline:</strong> January – March 2024</li>
+          <li><a href="https://redchip.com/stocks" rel="noopener">redchip.com/stocks</a></li>
+        </ul>
+        <ul class="stats">
+          <li>
+            <span class="stat-value">15 min</span>
+            <span class="stat-label">Delayed market data aggregation interval</span>
+          </li>
+          <li>
+            <span class="stat-value">30 pts</span>
+            <span class="stat-label">Increase in key site performance metrics</span>
+          </li>
+          <li>
+            <span class="stat-value">20+</span>
+            <span class="stat-label">REST APIs built across the platform</span>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="wrap">
+        <section aria-labelledby="problem">
+          <h2 id="problem">The Problem</h2>
+          <p>
+            RedChip's audience follows small-cap public companies, where the
+            information that moves a stock is scattered between price data and
+            filings that few people read. The company's existing digital presence
+            was, in the most literal sense, out of date — modernizing it was a large
+            part of why I was there.
+          </p>
+          <p>
+            The portal had to present live-feeling market data and filing history
+            together, on a site whose performance and SEO were already a known
+            weakness.
+          </p>
+        </section>
+
+        <section aria-labelledby="build">
+          <h2 id="build">What I Built</h2>
+          <ul class="grid">
+            <li class="card">
+              <h3>Python aggregation backend</h3>
+              <p>
+                Services collecting and normalizing market data on a
+                <span class="metric">15-minute delayed</span> feed, decoupling the
+                portal from upstream provider limits and latency.
+              </p>
+            </li>
+            <li class="card">
+              <h3>SEC filing tables</h3>
+              <p>
+                Structured, sortable views of filing data, giving readers the
+                document history alongside the price rather than on a separate site.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Performance &amp; SEO work</h3>
+              <p>
+                Platform-wide improvements to performance, accessibility, and SEO
+                contributing to a <span class="metric">30-point increase</span> in
+                key site performance metrics.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Query optimization</h3>
+              <p>
+                Reworked SQL and Prisma query design to cut duplication and support
+                reusable data flows across the platform's workflows.
+              </p>
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="decisions">
+          <h2 id="decisions">Engineering Decisions</h2>
+          <div class="table-scroll">
+            <table>
+              <caption class="sr-only">Decisions made and the reasoning behind each</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Decision</th>
+                  <th scope="col">Reasoning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Aggregate on an interval, not per request</th>
+                  <td>
+                    A delayed feed was acceptable for this audience, and batching
+                    kept the portal fast and predictable regardless of traffic or
+                    upstream rate limits.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Python for the data layer</th>
+                  <td>
+                    The aggregation and normalization work sat naturally alongside
+                    the other Python data tooling already running in the company.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Server-rendered tables</th>
+                  <td>
+                    Filing tables needed to be indexable and readable without
+                    waiting on client-side rendering — the same crawlability concern
+                    that motivated these case study pages.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section aria-labelledby="stack">
+          <h2 id="stack">Stack</h2>
+          <ul class="tags">
+            <li>Python</li>
+            <li>PHP</li>
+            <li>JavaScript</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>SQL</li>
+            <li>Prisma</li>
+            <li>EDGAR SEC</li>
+          </ul>
+          <p style="margin-top: 1.5rem">
+            <a href="/work/">← All case studies</a>
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/resume/">Resume</a>
+          <a href="/work/">Work</a>
+          <a href="/ai-evals/">AI Evals</a>
+          <a href="/pages/about/">About</a>
+        </nav>
+        <p>© 2026 David Kozdra · Orlando, Florida</p>
+      </div>
+    </footer>
+  </body>
+</html>

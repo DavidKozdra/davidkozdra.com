@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GitPulse — Chrome Extension (Case Study) | David Kozdra</title>
+    <meta
+      name="description"
+      content="Case study: GitPulse, a Chrome extension that surfaces GitHub repository activity at a glance so you can judge whether a project is maintained without cloning it. Published on the Chrome Web Store, open source on GitHub."
+    />
+    <meta name="author" content="David Kozdra" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <link rel="canonical" href="https://davidkozdra.com/work/gitpulse/" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GitPulse — Chrome Extension (Case Study)" />
+    <meta
+      property="og:description"
+      content="A Chrome extension showing GitHub repository activity status at a glance. Published on the Chrome Web Store."
+    />
+    <meta property="og:url" content="https://davidkozdra.com/work/gitpulse/" />
+    <meta
+      property="og:image"
+      content="https://davidkozdra.com/assets/images/brand/favicon.webp"
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/images/brand/favicon.ico" sizes="48x48" />
+    <link rel="stylesheet" href="/assets/css/docs.css?v=1" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "GitPulse — Chrome Extension",
+        "description": "Case study of GitPulse, a Chrome extension that visualizes GitHub repository activity to show whether a project is actively maintained.",
+        "url": "https://davidkozdra.com/work/gitpulse/",
+        "datePublished": "2025-06-15",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://davidkozdra.com/work/gitpulse/"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "publisher": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "about": {
+          "@type": "SoftwareApplication",
+          "name": "GitPulse",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Chrome",
+          "url": "https://chromewebstore.google.com/detail/gitpulse/fiamhceclfnbckgpnmpkhldgbdhiamhg",
+          "author": { "@type": "Person", "name": "David Kozdra" },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        },
+        "keywords": "Chrome extension, GitHub API, developer tools, open source, JavaScript"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://davidkozdra.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://davidkozdra.com/work/" },
+          { "@type": "ListItem", "position": 3, "name": "GitPulse", "item": "https://davidkozdra.com/work/gitpulse/" }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="wrap">
+        <a class="brand" href="/">David Kozdra</a>
+        <a href="/resume/">Resume</a>
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/ai-evals/">AI Evals</a>
+        <a href="/pages/about/">About</a>
+        <a href="https://github.com/DavidKozdra" rel="me noopener">GitHub</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/work/">Work</a></li>
+        <li>GitPulse</li>
+      </ol>
+    </div>
+
+    <header class="masthead">
+      <div class="wrap">
+        <h1>GitPulse — Chrome Extension</h1>
+        <p class="tagline">
+          Repository activity at a glance, so you can tell whether an open source
+          project is alive before you depend on it.
+        </p>
+        <ul class="contact-line">
+          <li><strong>Role:</strong> Sole developer</li>
+          <li><strong>Started:</strong> June 2025</li>
+          <li>
+            <a
+              href="https://chromewebstore.google.com/detail/gitpulse/fiamhceclfnbckgpnmpkhldgbdhiamhg"
+              rel="noopener"
+              >Chrome Web Store</a
+            >
+          </li>
+          <li>
+            <a href="https://github.com/DavidKozdra/GitPulse" rel="noopener"
+              >Source on GitHub</a
+            >
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="wrap">
+        <section aria-labelledby="problem">
+          <h2 id="problem">The Problem</h2>
+          <p>
+            Deciding whether to adopt a dependency usually starts with a question
+            GitHub answers slowly: is anyone still working on this? The signals exist
+            — commit recency, issue turnover, release cadence — but they are spread
+            across tabs, and star count, the one number shown prominently, says
+            almost nothing about whether a project is maintained today.
+          </p>
+          <div class="callout">
+            <p>
+              The intent was to save the loop of cloning a repository or clicking
+              through the commit graph just to learn that the last meaningful change
+              was two years ago.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="build">
+          <h2 id="build">What I Built</h2>
+          <p>
+            A browser extension that reads repository activity through the GitHub
+            API and presents it as an at-a-glance status, surfaced where you are
+            already looking instead of on a separate dashboard.
+          </p>
+          <ul class="grid">
+            <li class="card">
+              <h3>Activity visualization</h3>
+              <p>
+                Repository metrics rendered compactly enough to read in the moment
+                you are evaluating a project.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Zero-dependency front end</h3>
+              <p>
+                Plain HTML, CSS, and JavaScript — an extension that ships no
+                framework keeps its permissions narrow and its review surface small.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Published &amp; open source</h3>
+              <p>
+                Listed on the Chrome Web Store and developed in the open on GitHub,
+                where the privacy policy and source are both public.
+              </p>
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="notes">
+          <h2 id="notes">Notes</h2>
+          <p>
+            Shipping to the Chrome Web Store is a different discipline from shipping
+            a web app: permissions are reviewed, a privacy policy is mandatory, and
+            every additional API scope has to justify itself. That constraint pushed
+            the design toward doing one thing with the narrowest access that could
+            support it.
+          </p>
+          <p>
+            GitPulse also fits a pattern in the tools I build for myself — most of
+            them exist to make an invisible signal visible, which is the same idea
+            behind
+            <a href="/ai-evals/">evaluation tooling for AI systems</a>.
+          </p>
+        </section>
+
+        <section aria-labelledby="stack">
+          <h2 id="stack">Stack</h2>
+          <ul class="tags">
+            <li>JavaScript</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>Chrome Extension APIs</li>
+            <li>GitHub API</li>
+          </ul>
+          <p style="margin-top: 1.5rem">
+            <a href="/work/">← All case studies</a> ·
+            <a href="/gitPulsePrivacyPolicy.html">Privacy policy</a>
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/resume/">Resume</a>
+          <a href="/work/">Work</a>
+          <a href="/ai-evals/">AI Evals</a>
+          <a href="/pages/about/">About</a>
+        </nav>
+        <p>© 2026 David Kozdra · Orlando, Florida</p>
+      </div>
+    </footer>
+  </body>
+</html>

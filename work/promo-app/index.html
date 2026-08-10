@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Promo — Event-Based Social Mobile App (Case Study) | David Kozdra</title>
+    <meta
+      name="description"
+      content="Case study: Promo, a cross-platform mobile app for discovering local business promotions. Expanded 40+ Node.js API endpoints and delivered 20+ features including real-time chat, automated email workflows, and data export."
+    />
+    <meta name="author" content="David Kozdra" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <link rel="canonical" href="https://davidkozdra.com/work/promo-app/" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Promo — Event-Based Social Mobile App (Case Study)" />
+    <meta
+      property="og:description"
+      content="Cross-platform app for local business promotions: 40+ backend endpoints, real-time chat, and automated email workflows."
+    />
+    <meta property="og:url" content="https://davidkozdra.com/work/promo-app/" />
+    <meta
+      property="og:image"
+      content="https://davidkozdra.com/assets/images/company-logos/PromoSite.webp"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/images/brand/favicon.ico" sizes="48x48" />
+    <link rel="stylesheet" href="/assets/css/docs.css?v=1" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Promo — Event-Based Social Mobile App",
+        "description": "Case study of Promo, a cross-platform mobile app for discovering local business promotions, built on a Node.js and MongoDB backend.",
+        "url": "https://davidkozdra.com/work/promo-app/",
+        "image": "https://davidkozdra.com/assets/images/company-logos/PromoSite.webp",
+        "datePublished": "2022-08-01",
+        "dateModified": "2023-09-01",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://davidkozdra.com/work/promo-app/"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "publisher": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "keywords": "React Native, Node.js, MongoDB, Express, real-time chat, REST API, TDD, Jest"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://davidkozdra.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://davidkozdra.com/work/" },
+          { "@type": "ListItem", "position": 3, "name": "Promo", "item": "https://davidkozdra.com/work/promo-app/" }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="wrap">
+        <a class="brand" href="/">David Kozdra</a>
+        <a href="/resume/">Resume</a>
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/ai-evals/">AI Evals</a>
+        <a href="/pages/about/">About</a>
+        <a href="https://github.com/DavidKozdra" rel="me noopener">GitHub</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/work/">Work</a></li>
+        <li>Promo</li>
+      </ol>
+    </div>
+
+    <header class="masthead">
+      <div class="wrap">
+        <h1>Promo — Event-Based Social Mobile App</h1>
+        <p class="tagline">
+          A cross-platform app for discovering exclusive local business promotions,
+          built at Z-Axis Solutions on a Node.js and MongoDB backend.
+        </p>
+        <ul class="contact-line">
+          <li><strong>Role:</strong> Jr Full Stack Developer, Z-Axis Solutions</li>
+          <li><strong>Timeline:</strong> August 2022 – September 2023</li>
+          <li><strong>Platforms:</strong> iOS, Android</li>
+        </ul>
+        <ul class="stats">
+          <li>
+            <span class="stat-value">40+</span>
+            <span class="stat-label">Backend API endpoints expanded and maintained</span>
+          </li>
+          <li>
+            <span class="stat-value">20+</span>
+            <span class="stat-label">Features delivered across production apps</span>
+          </li>
+          <li>
+            <span class="stat-value">5</span>
+            <span class="stat-label">Engineers coordinated with on delivery</span>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="wrap">
+        <section aria-labelledby="problem">
+          <h2 id="problem">The Problem</h2>
+          <p>
+            Promo connected local businesses running limited-time offers with people
+            nearby who would act on them. That makes it an event-driven product: the
+            content is time-bound, the audience is location-bound, and a promotion
+            that surfaces late is worthless.
+          </p>
+          <p>
+            The backend had to serve that freshness reliably to mobile clients while
+            the team kept adding surface area — chat, email automation, exports —
+            without destabilizing what already shipped.
+          </p>
+        </section>
+
+        <section aria-labelledby="build">
+          <h2 id="build">What I Built</h2>
+          <ul class="grid">
+            <li class="card">
+              <h3>REST API surface</h3>
+              <p>
+                Expanded and maintained
+                <span class="metric">40+ backend endpoints</span> in Node.js and
+                Express, improving reliability and delivery of database-driven
+                content.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Real-time chat</h3>
+              <p>
+                One of <span class="metric">20+ features</span> delivered, letting
+                users and businesses communicate inside the app rather than through
+                an external channel.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Email automation</h3>
+              <p>
+                Middleware and automated email workflows handling lifecycle
+                messaging without manual sends.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Data export systems</h3>
+              <p>
+                Export tooling so businesses could pull their own promotion
+                performance data out of the platform.
+              </p>
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="practices">
+          <h2 id="practices">Practices</h2>
+          <p>
+            This was the role where testing discipline became habit rather than
+            instruction. I applied TDD with Jest and Postman across the API surface,
+            which measurably improved reliability and cut production defects — on a
+            codebase where <span class="metric">40+ endpoints</span> shared models
+            and a careless change could break something three features away.
+          </p>
+          <p>
+            I also mentored interns on debugging, accessibility standards, and
+            engineering practice, and coordinated with a team of
+            <span class="metric">5 engineers</span> to deliver a full educational
+            event platform spanning backend, frontend, and infrastructure.
+          </p>
+          <div class="callout">
+            <p>
+              Writing tests first on a shared API is less about correctness in the
+              moment than about making the next person's change safe. That is the
+              same instinct that later turned into
+              <a href="/ai-evals/">evaluation infrastructure for LLM systems</a> —
+              build the harness so a regression announces itself.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="stack">
+          <h2 id="stack">Stack</h2>
+          <ul class="tags">
+            <li>React Native</li>
+            <li>React</li>
+            <li>Node.js</li>
+            <li>Express</li>
+            <li>MongoDB</li>
+            <li>Jest</li>
+            <li>Postman</li>
+            <li>CSS</li>
+          </ul>
+          <p style="margin-top: 1.5rem">
+            <a href="/work/">← All case studies</a>
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/resume/">Resume</a>
+          <a href="/work/">Work</a>
+          <a href="/ai-evals/">AI Evals</a>
+          <a href="/pages/about/">About</a>
+        </nav>
+        <p>© 2026 David Kozdra · Orlando, Florida</p>
+      </div>
+    </footer>
+  </body>
+</html>

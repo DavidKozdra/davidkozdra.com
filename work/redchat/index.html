@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RedChat — AI SEC Filing Summarizer (Case Study) | David Kozdra</title>
+    <meta
+      name="description"
+      content="Case study: RedChat, a retrieval-augmented AI chatbot summarizing SEC filings. Loaded and prepared 100,000+ documents covering every NYSE and NASDAQ company, on AWS RAG infrastructure indexing 1,000+ documents, shipped to web, iOS, and Android."
+    />
+    <meta name="author" content="David Kozdra" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <link rel="canonical" href="https://davidkozdra.com/work/redchat/" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="RedChat — AI SEC Filing Summarizer (Case Study)" />
+    <meta
+      property="og:description"
+      content="Retrieval-augmented AI chatbot over 100,000+ SEC filings, built on AWS and shipped to web, iOS, and Android."
+    />
+    <meta property="og:url" content="https://davidkozdra.com/work/redchat/" />
+    <meta
+      property="og:image"
+      content="https://davidkozdra.com/assets/images/projects/red_chat.webp"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/images/brand/favicon.ico" sizes="48x48" />
+    <link rel="stylesheet" href="/assets/css/docs.css?v=1" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "RedChat — AI SEC Filing Summarizer",
+        "description": "Case study of RedChat, a retrieval-augmented AI chatbot that summarizes SEC filings across every company on the NYSE and NASDAQ.",
+        "url": "https://davidkozdra.com/work/redchat/",
+        "image": "https://davidkozdra.com/assets/images/projects/red_chat.webp",
+        "datePublished": "2024-01-01",
+        "dateModified": "2025-01-15",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://davidkozdra.com/work/redchat/"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "publisher": {
+          "@type": "Person",
+          "name": "David Kozdra",
+          "url": "https://davidkozdra.com"
+        },
+        "about": {
+          "@type": "SoftwareApplication",
+          "name": "RedChat",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Web, iOS, Android",
+          "url": "https://red.chat",
+          "author": { "@type": "Person", "name": "David Kozdra" }
+        },
+        "keywords": "RAG, SEC filings, AI chatbot, AWS, Python, React, retrieval augmented generation"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://davidkozdra.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://davidkozdra.com/work/" },
+          { "@type": "ListItem", "position": 3, "name": "RedChat", "item": "https://davidkozdra.com/work/redchat/" }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="wrap">
+        <a class="brand" href="/">David Kozdra</a>
+        <a href="/resume/">Resume</a>
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/ai-evals/">AI Evals</a>
+        <a href="/pages/about/">About</a>
+        <a href="https://github.com/DavidKozdra" rel="me noopener">GitHub</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/work/">Work</a></li>
+        <li>RedChat</li>
+      </ol>
+    </div>
+
+    <header class="masthead">
+      <div class="wrap">
+        <h1>RedChat — AI SEC Filing Summarizer</h1>
+        <p class="tagline">
+          A retrieval-augmented chatbot that turns dense SEC filings into quick,
+          sourced answers — covering every company listed on the NYSE and NASDAQ.
+        </p>
+        <ul class="contact-line">
+          <li><strong>Role:</strong> Lead Software Engineer, RedChip Companies</li>
+          <li><strong>Timeline:</strong> January 2024 – January 2025</li>
+          <li><a href="https://red.chat" rel="noopener">red.chat</a></li>
+        </ul>
+        <ul class="stats">
+          <li>
+            <span class="stat-value">100,000+</span>
+            <span class="stat-label">Filings loaded and prepared for retrieval</span>
+          </li>
+          <li>
+            <span class="stat-value">1,000+</span>
+            <span class="stat-label">Documents indexed in the AWS RAG system</span>
+          </li>
+          <li>
+            <span class="stat-value">3</span>
+            <span class="stat-label">Platforms shipped: web, iOS, Android</span>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="wrap">
+        <section aria-labelledby="problem">
+          <h2 id="problem">The Problem</h2>
+          <p>
+            SEC filings are public, comprehensive, and nearly unreadable at speed. A
+            10-K runs hundreds of pages of boilerplate wrapped around a handful of
+            facts an investor actually wants. RedChip's audience — investors
+            researching small-cap public companies — needed those facts without
+            reading the document, and needed to trust that the answer came from the
+            filing rather than from a model's memory.
+          </p>
+          <div class="callout">
+            <p>
+              The hard requirement was coverage plus grounding: answers for
+              <em>any</em> company on the NYSE or NASDAQ, each traceable back to the
+              filing it came from.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="build">
+          <h2 id="build">What I Built</h2>
+          <ul class="grid">
+            <li class="card">
+              <h3>Ingestion pipeline</h3>
+              <p>
+                Python services pulling filings from EDGAR SEC, then normalizing and
+                chunking them for retrieval — over
+                <span class="metric">100,000 documents</span> covering the full NYSE
+                and NASDAQ listings.
+              </p>
+            </li>
+            <li class="card">
+              <h3>AWS RAG infrastructure</h3>
+              <p>
+                Architected the indexing and retrieval layer, supporting
+                <span class="metric">1,000+ indexed documents</span> with query
+                performance that stayed stable as the corpus grew.
+              </p>
+            </li>
+            <li class="card">
+              <h3>REST API layer</h3>
+              <p>
+                Part of the <span class="metric">20+ REST APIs</span> I built in
+                Flask and Node.js, integrating EDGAR SEC, OpenAI, Salesforce, and
+                Google Sheets.
+              </p>
+            </li>
+            <li class="card">
+              <h3>Cross-platform delivery</h3>
+              <p>
+                A React front end shipped as a PWA plus iOS and Google Play builds,
+                part of cross-platform work reaching over
+                <span class="metric">10,000 users</span>.
+              </p>
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="decisions">
+          <h2 id="decisions">Engineering Decisions</h2>
+          <div class="table-scroll">
+            <table>
+              <caption class="sr-only">Decisions made and the reasoning behind each</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Decision</th>
+                  <th scope="col">Reasoning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Retrieval over fine-tuning</th>
+                  <td>
+                    Filings arrive continuously and answers must cite a source. RAG
+                    keeps the corpus current without retraining and keeps every
+                    answer traceable to a document.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Preprocess the full corpus up front</th>
+                  <td>
+                    Parsing EDGAR filings at query time would have made responses
+                    unpredictably slow. Normalizing ahead of time moved the cost off
+                    the request path.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">AWS-managed indexing</th>
+                  <td>
+                    A small team could not operate self-hosted vector
+                    infrastructure alongside everything else in flight.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">PWA first, native wrappers second</th>
+                  <td>
+                    One codebase covered web, iOS, and Android, matching the team's
+                    capacity for maintenance.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section aria-labelledby="learned">
+          <h2 id="learned">What I Took From It</h2>
+          <p>
+            RAG systems fail quietly. When retrieval returns the wrong chunk, the
+            model still writes a fluent, confident answer — nothing crashes and no
+            error surfaces. Spot-checking finds the obvious breakages and misses the
+            rest, which is what pushed me toward treating evaluation as real test
+            infrastructure rather than manual review.
+          </p>
+          <p>
+            That thread runs directly into my current work on
+            <a href="/ai-evals/">LLM evaluation and MCP-based testing</a>, where the
+            question is not whether a system produced an answer but whether it
+            produced the right one, repeatedly, under change.
+          </p>
+        </section>
+
+        <section aria-labelledby="stack">
+          <h2 id="stack">Stack</h2>
+          <ul class="tags">
+            <li>Python</li>
+            <li>React</li>
+            <li>AWS</li>
+            <li>RAG</li>
+            <li>OpenAI API</li>
+            <li>EDGAR SEC</li>
+            <li>Flask</li>
+            <li>Node.js</li>
+            <li>PWA</li>
+          </ul>
+          <p style="margin-top: 1.5rem">
+            <a href="/work/">← All case studies</a>
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/resume/">Resume</a>
+          <a href="/work/">Work</a>
+          <a href="/ai-evals/">AI Evals</a>
+          <a href="/pages/about/">About</a>
+        </nav>
+        <p>© 2026 David Kozdra · Orlando, Florida</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -90,18 +90,28 @@ ExpiresByType font/woff2 A31557
 
 ## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
 # END NON_LSCACHE
-# BEGIN WordPress
-# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
-# dynamically generated, and should only be modified via WordPress filters.
-# Any changes to the directives between these markers will be overwritten.
+# BEGIN STATIC SITE ROUTING
+# This site is static HTML: there is no index.php. The previous WordPress
+# catch-all rewrote every non-file request to /index.php, which does not
+# exist here, so extensionless URLs returned a server error instead of
+# content. That is what made crawlers report pages as unretrievable.
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteBase /
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-</IfModule>
 
-# END WordPress
+# Serve real files and directories untouched.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Allow extensionless URLs to resolve to their .html file (/resume -> /resume.html).
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ /$1.html [L]
+
+# Anything genuinely missing gets a real 404, not a rewrite loop.
+ErrorDocument 404 /404.html
+</IfModule>
+# END STATIC SITE ROUTING
+
+# Directory requests should serve index.html.
+DirectoryIndex index.html
