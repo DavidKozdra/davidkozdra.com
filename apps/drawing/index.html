@@ -312,8 +312,12 @@
         link.click();
       }
 
+      // Layers created on load. The buttons, the initial array, and the
+      // rebuild all read this instead of each carrying their own literal.
+      const INITIAL_LAYERS = 9;
+
       document.addEventListener("DOMContentLoaded", () => {
-        for (let i = 1; i < 10; i++) {
+        for (let i = 0; i < INITIAL_LAYERS; i++) {
           layers.push([]);
         }
 
@@ -322,7 +326,9 @@
           button.classList.add("layer-button");
 
           button.innerText = i + 1;
-          if (i == 1) {
+          // currentLayer starts at 0, so layer 1's button is the selected one.
+          // Highlighting i == 1 marked layer 2 while strokes went to layer 1.
+          if (i === currentLayer) {
             button.classList.add("selected");
           }
           button.addEventListener("click", () => {
@@ -337,12 +343,17 @@
           layers.push([]);
           let button = document.createElement("button");
           button.classList.add("layer-button");
+          let index = layers.length - 1;
           button.innerText = layers.length;
-          let value = layers.length;
           button.addEventListener("click", () => {
-            select_layer(value - 1);
+            select_layer(index);
           });
-          document.getElementById("button-grid").appendChild(button);
+          // Insert before "+" so the new layer button lands at the end of the
+          // numbered run rather than after the add control.
+          document.getElementById("button-grid").insertBefore(
+            button,
+            add_layer_button,
+          );
         });
         document.getElementById("button-grid").appendChild(add_layer_button);
 
@@ -359,10 +370,11 @@
         currentLayer = layer;
         let buttons = document.getElementsByClassName("layer-button");
         for (let i = 0; i < buttons.length; i++) {
-          console.log(buttons[i]);
           buttons[i].classList.remove("selected");
         }
-        buttons[currentLayer].classList.add("selected");
+        if (buttons[currentLayer]) {
+          buttons[currentLayer].classList.add("selected");
+        }
       }
 
       function hex(x) {
@@ -427,14 +439,20 @@
       }
 
       function clearDisplay() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
         strokeHistory = [];
         redoStack = [];
         currentStroke = null;
+        drawing = false;
         layers = [];
-        for (let i = 1; i < 10; i++) {
+        // Keep the layers the user added; clearing wipes the drawing, not the
+        // layer stack they set up.
+        for (let i = 0; i < layerCount(); i++) {
           layers.push([]);
         }
+        // Repaint to the white background the canvas started with. clearRect
+        // left it transparent, which read as white on the page but exported
+        // as an empty PNG.
+        rebuildLayers();
       }
 
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -465,7 +483,9 @@
           penSize: penSize,
         };
         currentStroke.pixels.push(pixel);
-        layers[currentLayer].push(pixel);
+        // `layers` is derived state now — rebuildLayers() repopulates it from
+        // stroke history, so pushing here would just be overwritten.
+        rebuildLayers();
       }
 
       function stopdraw() {
@@ -474,6 +494,7 @@
         }
         currentStroke = null;
         drawing = false;
+        rebuildLayers();
       }
 
       canvas.addEventListener("pointermove", (event) => {
@@ -483,14 +504,36 @@
         mouseY = pos.y;
       });
 
+      /*
+       * Rebuild `layers` from stroke history and repaint bottom layer first.
+       *
+       * This is the only thing that draws to the canvas. Painting each pixel
+       * as the pointer moved was cheaper, but it composited in chronological
+       * order, so a stroke on layer 1 still landed on top of layer 9 — the
+       * layer only took effect once an undo happened to trigger a rebuild.
+       *
+       * The in-progress stroke is included so the current line appears while
+       * you draw, correctly ordered against the layers above it.
+       */
       function rebuildLayers() {
+        // Keep however many layers exist; the "+" button can add past the
+        // initial set, and hardcoding a count here silently dropped them.
         layers = [];
-        for (let i = 0; i < 9; i++) layers.push([]);
-        for (let stroke of strokeHistory) {
+        for (let i = 0; i < layerCount(); i++) layers.push([]);
+
+        const strokes = currentStroke
+          ? strokeHistory.concat([currentStroke])
+          : strokeHistory;
+
+        for (let stroke of strokes) {
+          // A stroke can outlive the layer it was drawn on (clear, undo past
+          // an add). Skip it rather than throwing on an undefined bucket.
+          if (!layers[stroke.layer]) continue;
           for (let pixel of stroke.pixels) {
             layers[stroke.layer].push(pixel);
           }
         }
+
         ctx.fillStyle = "rgb(255, 255, 255)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         for (let layer of layers) {
@@ -499,6 +542,18 @@
             ctx.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
           }
         }
+      }
+
+      /*
+       * The number of layers the UI is offering, which is what the render and
+       * rebuild paths must agree on. Derived from the buttons so adding a
+       * layer needs no second place to update.
+       */
+      function layerCount() {
+        return Math.max(
+          layers.length,
+          document.getElementsByClassName("layer-button").length,
+        );
       }
 
       document.addEventListener("keydown", (event) => {
@@ -528,7 +583,7 @@
       }
 
       function update() {
-        if (drawing) {
+        if (drawing && currentStroke) {
           let pixel = {
             x: mouseX,
             y: mouseY,
@@ -536,9 +591,10 @@
             penSize: penSize,
           };
           currentStroke.pixels.push(pixel);
-          layers[currentLayer].push(pixel);
-          ctx.fillStyle = colorMap(activeColor);
-          ctx.fillRect(mouseX, mouseY, penSize, penSize);
+          // Repaint the whole stack instead of stamping this pixel straight
+          // onto the canvas, so the stroke sits inside its own layer rather
+          // than on top of everything drawn before it.
+          rebuildLayers();
         }
 
         requestAnimationFrame(update);
