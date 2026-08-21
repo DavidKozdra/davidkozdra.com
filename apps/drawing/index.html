@@ -449,6 +449,7 @@
         for (let i = 0; i < layerCount(); i++) {
           layers.push([]);
         }
+        markCommittedDirty();
         // Repaint to the white background the canvas started with. clearRect
         // left it transparent, which read as white on the page but exported
         // as an empty PNG.
@@ -494,6 +495,7 @@
         }
         currentStroke = null;
         drawing = false;
+        markCommittedDirty();
         rebuildLayers();
       }
 
@@ -515,31 +517,84 @@
        * The in-progress stroke is included so the current line appears while
        * you draw, correctly ordered against the layers above it.
        */
-      function rebuildLayers() {
-        // Keep however many layers exist; the "+" button can add past the
-        // initial set, and hardcoding a count here silently dropped them.
-        layers = [];
-        for (let i = 0; i < layerCount(); i++) layers.push([]);
+      /*
+       * Committed strokes are cached to an offscreen canvas.
+       *
+       * Compositing by layer means a repaint has to replay every pixel ever
+       * drawn, which after a few minutes is tens of thousands of fillRect
+       * calls — far too slow to run once per animation frame. But the
+       * committed strokes only change on stroke-end, undo, redo, and clear.
+       * Caching them means a frame costs the in-progress stroke plus one
+       * drawImage, no matter how long the session has run.
+       */
+      let committedCanvas = document.createElement("canvas");
+      let committedCtx = committedCanvas.getContext("2d");
+      let committedDirty = true;
 
-        const strokes = currentStroke
-          ? strokeHistory.concat([currentStroke])
-          : strokeHistory;
+      function markCommittedDirty() {
+        committedDirty = true;
+      }
 
+      // Group strokes into layer buckets, bottom layer first.
+      function bucketStrokes(strokes) {
+        const buckets = [];
+        for (let i = 0; i < layerCount(); i++) buckets.push([]);
         for (let stroke of strokes) {
           // A stroke can outlive the layer it was drawn on (clear, undo past
           // an add). Skip it rather than throwing on an undefined bucket.
-          if (!layers[stroke.layer]) continue;
+          if (!buckets[stroke.layer]) continue;
           for (let pixel of stroke.pixels) {
-            layers[stroke.layer].push(pixel);
+            buckets[stroke.layer].push(pixel);
           }
         }
+        return buckets;
+      }
 
-        ctx.fillStyle = "rgb(255, 255, 255)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for (let layer of layers) {
+      function paintPixels(target, buckets) {
+        for (let layer of buckets) {
           for (let pixel of layer) {
-            ctx.fillStyle = colorMap(pixel.color);
-            ctx.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
+            target.fillStyle = colorMap(pixel.color);
+            target.fillRect(pixel.x, pixel.y, pixel.penSize, pixel.penSize);
+          }
+        }
+      }
+
+      function rebuildLayers() {
+        if (
+          committedCanvas.width !== canvas.width ||
+          committedCanvas.height !== canvas.height
+        ) {
+          committedCanvas.width = canvas.width;
+          committedCanvas.height = canvas.height;
+          committedDirty = true;
+        }
+
+        if (committedDirty) {
+          // `layers` stays the committed picture, so anything reading it sees
+          // finished strokes rather than a half-drawn one.
+          layers = bucketStrokes(strokeHistory);
+          committedCtx.fillStyle = "rgb(255, 255, 255)";
+          committedCtx.fillRect(0, 0, canvas.width, canvas.height);
+          paintPixels(committedCtx, layers);
+          committedDirty = false;
+        }
+
+        ctx.drawImage(committedCanvas, 0, 0);
+
+        // The live stroke is layered on top of the cache. It only sits above
+        // higher layers correctly if nothing above it is committed — so when
+        // there is one, fall back to a full ordered repaint.
+        if (currentStroke && currentStroke.pixels.length) {
+          const hasCommittedAbove = strokeHistory.some(
+            (s) => s.layer > currentStroke.layer,
+          );
+          if (hasCommittedAbove) {
+            const all = bucketStrokes(strokeHistory.concat([currentStroke]));
+            ctx.fillStyle = "rgb(255, 255, 255)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            paintPixels(ctx, all);
+          } else {
+            paintPixels(ctx, bucketStrokes([currentStroke]));
           }
         }
       }
@@ -565,6 +620,7 @@
           event.preventDefault();
           if (strokeHistory.length > 0) {
             redoStack.push(strokeHistory.pop());
+            markCommittedDirty();
             rebuildLayers();
           }
         }
@@ -573,6 +629,7 @@
           event.preventDefault();
           if (redoStack.length > 0) {
             strokeHistory.push(redoStack.pop());
+            markCommittedDirty();
             rebuildLayers();
           }
         }

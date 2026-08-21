@@ -1,0 +1,10 @@
+{
+  "name": "davidkozdra-site",
+  "private": true,
+  "description": "Static portfolio site. No build step — package.json exists only for the test suite.",
+  "scripts": {
+    "test": "node --test tests/",
+    "test:watch": "node --test --watch tests/",
+    "test:static": "node --test tests/static/"
+  }
+}
