@@ -35,7 +35,7 @@
 
     <link rel="canonical" href="https://davidkozdra.com/" />
 
-    <title>David Kozdra</title>
+    <title>David Kozdra — Full-Stack Software Developer</title>
     <link
       rel="stylesheet"
       href="assets/css/DE_styles.css?v=1.5"
@@ -1743,11 +1743,8 @@
         var hours = date.getHours();
         var minutes = date.getMinutes();
         var seconds = date.getSeconds();
-        var ampm = "AM";
-        if (hours > 12) {
-          hours = hours - 12;
-          ampm = "PM";
-        }
+        var ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
         if (hours == 0) {
           hours = 12;
         }
