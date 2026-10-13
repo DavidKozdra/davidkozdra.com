@@ -465,6 +465,17 @@
       line-height: 1.5;
     }
 
+    .back-swipe-cue {
+      display: none;
+      margin-top: 22px;
+      color: var(--gold);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .63rem;
+      font-weight: 700;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
     .back-close-cue {
       display: inline-block;
       margin-top: 28px;
@@ -674,24 +685,53 @@
         --card-height: min(680px, calc(100dvh - 42px));
       }
 
+      /* The open spread is two pages wide, so the stage scrolls sideways
+         and snaps to one page at a time, read left to right. */
       .stage {
+        display: flex;
+        align-items: center;
         padding: 21px 23px;
+        overflow-x: hidden;
+        scrollbar-width: none;
       }
 
-      .card-scene.is-open .card {
-        transform: translateX(-50%);
+      .stage::-webkit-scrollbar {
+        display: none;
       }
 
-      .card-scene.is-open .cover {
-        transform: rotateY(-168deg);
+      .stage.is-book-open {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
       }
 
-      .cover-back {
-        justify-content: flex-start;
+      .card-scene {
+        flex: none;
+        width: calc(var(--card-width) * 2);
+        margin-inline: auto;
       }
 
-      .back-content {
-        opacity: .2;
+      .card-scene::before,
+      .card-scene::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 50%;
+        content: "";
+        pointer-events: none;
+        scroll-snap-align: center;
+      }
+
+      .card-scene::before {
+        left: 0;
+      }
+
+      .card-scene::after {
+        right: 0;
+      }
+
+      .back-swipe-cue {
+        display: block;
       }
     }
 
@@ -817,7 +857,6 @@
           <p class="eyebrow">Dinos &amp; Drinks</p>
           <h1 class="inside-title">Let's get prehistoric!</h1>
           <div class="ornament" aria-hidden="true">◆</div>
-          <p class="inside-intro">Drinks, snacks, and prehistoric party vibes in honor of David's 26th trip around the sun.</p>
 
           <div class="details-grid">
             <div class="detail">
@@ -859,9 +898,11 @@
               Open map
             </a>
 
-              <a id="open-map" class="action action-secondary" href="/menu.html" target="_blank" rel="noopener noreferrer">
-              
+            <a id="open-menu" class="action action-secondary" href="menu.html" target="_blank" rel="noopener noreferrer">
               Menu
+            </a>
+             <a id="open-menu" class="action action-secondary" href="games.html" target="_blank" rel="noopener noreferrer">
+              Games
             </a>
           </div>
 
@@ -879,8 +920,7 @@
               </span>
 
               <span class="theme-pill">Dinos and drinks</span>
-              <span class="cover-subtitle">Drinks, snacks, and prehistoric party vibes</span>
-              <span class="open-cue">
+            <span class="open-cue">
                 Open the card
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
                   <path d="M5 12h13m-5-5 5 5-5 5"></path>
@@ -898,6 +938,7 @@
               <img class="back-drinks" src="drinks-sprite-sheet.png" alt="" draggable="false">
               <span class="back-copy">Come raise a glass, make some memories, and help make twenty-six one for the fossil record.</span>
               <span class="back-note">Formal dress optional but appreciated, same as gifts</span>
+              <span class="back-swipe-cue">Swipe for party details →</span>
               <span class="back-close-cue">Tap this page to close</span>
             </span>
           </span>
@@ -918,6 +959,7 @@
     (() => {
       "use strict";
 
+      const stage = document.querySelector(".stage");
       const scene = document.getElementById("card-scene");
       const cover = document.getElementById("card-cover");
       const details = document.getElementById("invitation-details");
@@ -1322,10 +1364,23 @@
         confetti.burst(rect.left + rect.width / 2, rect.top + rect.height * .36, count);
       }
 
+      // On narrow screens the open spread is wider than the stage. Opened, it
+      // starts on the left page like a book; closed, the cover sits centered.
+      function alignBook(smooth) {
+        const overflow = stage.scrollWidth - stage.clientWidth;
+        if (overflow <= 0) return;
+        stage.scrollTo({
+          left: isOpen ? 0 : overflow / 2,
+          behavior: smooth && !prefersReducedMotion.matches ? "smooth" : "auto"
+        });
+      }
+
       function setCardOpen(nextOpen) {
         if (isOpen === nextOpen) return;
         isOpen = nextOpen;
         scene.classList.toggle("is-open", isOpen);
+        stage.classList.toggle("is-book-open", isOpen);
+        alignBook(true);
         cover.setAttribute("aria-expanded", String(isOpen));
         cover.setAttribute("aria-label", isOpen ? "Close David's birthday invitation" : "Open David's birthday invitation");
         details.toggleAttribute("inert", !isOpen);
@@ -1346,11 +1401,16 @@
         }
       }
 
+      alignBook(false);
+      window.addEventListener("resize", () => {
+        if (!isOpen) alignBook(false);
+      });
+
       cover.addEventListener("click", () => {
         setCardOpen(!isOpen);
       });
 
-      closeButton.addEventListener("click", () => {
+      closeButton?.addEventListener("click", () => {
         setCardOpen(false);
         cover.focus({ preventScroll: true });
       });

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games — David's Birthday</title>
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      color-scheme: light;
+      --forest: #0f3d2e;
+      --forest-light: #1f664d;
+      --gold: #d4af37;
+      --gold-light: #f1d98a;
+      --cream: #f6f0e4;
+      --paper: #fffdf7;
+      --ink-muted: #527064;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--cream);
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+      padding: 40px 16px 56px;
+      color: var(--forest);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(212, 175, 55, .14), transparent 25rem),
+        radial-gradient(circle at 85% 84%, rgba(15, 61, 46, .11), transparent 29rem),
+        var(--cream);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .games-page {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 40px 32px 36px;
+      border: 1px solid rgba(212, 175, 55, .55);
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow:
+        inset 0 0 0 6px var(--paper),
+        inset 0 0 0 7px rgba(212, 175, 55, .35),
+        0 24px 50px rgba(15, 61, 46, .14);
+    }
+
+    .games-header {
+      text-align: center;
+    }
+
+    .games-kicker {
+      margin: 0;
+      color: var(--ink-muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .games-title {
+      margin: 6px 0 0;
+      color: var(--forest);
+      font-family: "URW Chancery L", "Apple Chancery", "Segoe Script", cursive;
+      font-size: clamp(2.4rem, 9vw, 3.4rem);
+      font-weight: 400;
+      line-height: 1.05;
+    }
+
+    .games-rule {
+      width: 72px;
+      height: 1px;
+      margin: 18px auto 0;
+      border: 0;
+      background: var(--gold);
+    }
+
+    .game-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .game-item {
+      padding: 28px 0;
+      border-bottom: 1px dashed rgba(212, 175, 55, .6);
+      text-align: center;
+    }
+
+    .game-item:last-child {
+      padding-bottom: 8px;
+      border-bottom: 0;
+    }
+
+    .game-name {
+      margin: 0;
+      color: var(--forest);
+      font-size: 1.35rem;
+      font-weight: 400;
+    }
+
+    .game-description {
+      max-width: 340px;
+      margin: 8px auto 0;
+      color: var(--ink-muted);
+      font-size: .95rem;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .play-link,
+    .back-link {
+      display: inline-block;
+      padding-bottom: 4px;
+      color: var(--forest);
+      border-bottom: 1px solid var(--gold);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .17em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .play-link {
+      margin-top: 16px;
+      color: var(--gold);
+    }
+
+    .play-link:focus-visible,
+    .back-link:focus-visible {
+      outline: 3px solid var(--gold-light);
+      outline-offset: 4px;
+    }
+
+    .games-footer {
+      margin-top: 28px;
+      text-align: center;
+    }
+
+    @media (max-width: 440px) {
+      body {
+        padding-top: 20px;
+      }
+
+      .games-page {
+        padding: 30px 20px 28px;
+      }
+
+      .game-item {
+        padding: 22px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="games-page">
+    <header class="games-header">
+      <p class="games-kicker">David's Birthday</p>
+      <h1 class="games-title">Games</h1>
+      <hr class="games-rule">
+    </header>
+
+    <ul class="game-list">
+      <li class="game-item">
+        <h2 class="game-name">Dino Break-Out <span aria-hidden="true">🦖</span></h2>
+        <p class="game-description">Bounce the ball off your paddle and smash every brick. Three lives — don't let it drop.</p>
+        <a class="play-link" href="dino-break-out/game.html">Play →</a>
+      </li>
+    </ul>
+
+    <footer class="games-footer">
+      <a class="back-link" href="./">Back to the invitation</a>
+    </footer>
+  </main>
+</body>
+</html>

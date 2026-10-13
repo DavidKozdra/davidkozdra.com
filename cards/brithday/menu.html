@@ -1,76 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu — David's Birthday</title>
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      color-scheme: light;
+      --forest: #0f3d2e;
+      --forest-light: #1f664d;
+      --gold: #d4af37;
+      --gold-light: #f1d98a;
+      --cream: #f6f0e4;
+      --paper: #fffdf7;
+      --ink-muted: #527064;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--cream);
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+      padding: 40px 16px 56px;
+      color: var(--forest);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(212, 175, 55, .14), transparent 25rem),
+        radial-gradient(circle at 85% 84%, rgba(15, 61, 46, .11), transparent 29rem),
+        var(--cream);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    /* Two facing pages, read left to right: Bites, then Drinks. */
+    .menu-book {
+      display: flex;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .menu-page {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 40px 32px 36px;
+      border: 1px solid rgba(212, 175, 55, .55);
+      box-shadow:
+        inset 0 0 0 6px var(--paper),
+        inset 0 0 0 7px rgba(212, 175, 55, .35),
+        0 24px 50px rgba(15, 61, 46, .14);
+    }
+
+    .menu-page-left {
+      border-right: 0;
+      border-radius: 18px 3px 3px 18px;
+      background:
+        linear-gradient(270deg, rgba(15, 61, 46, .09), transparent 9%),
+        var(--paper);
+    }
+
+    .menu-page-right {
+      border-radius: 3px 18px 18px 3px;
+      background:
+        linear-gradient(90deg, rgba(15, 61, 46, .09), transparent 9%),
+        var(--paper);
+    }
+
+    .menu-page > .menu-section:first-child {
+      margin-top: 0;
+    }
+
+    .swipe-cue {
+      display: none;
+      margin: 14px 0 0;
+      color: var(--gold);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .63rem;
+      font-weight: 700;
+      letter-spacing: .17em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .menu-header {
+      text-align: center;
+    }
+
+    .menu-kicker {
+      margin: 0;
+      color: var(--ink-muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .menu-title {
+      margin: 6px 0 0;
+      color: var(--forest);
+      font-family: "URW Chancery L", "Apple Chancery", "Segoe Script", cursive;
+      font-size: clamp(2.4rem, 9vw, 3.4rem);
+      font-weight: 400;
+      line-height: 1.05;
+    }
+
+    .menu-rule {
+      width: 72px;
+      height: 1px;
+      margin: 18px auto 0;
+      border: 0;
+      background: var(--gold);
+    }
+
+    .menu-section {
+      margin-top: 34px;
+    }
+
+    .menu-section-title {
+      margin: 0;
+      color: var(--forest);
+      font-family: "URW Chancery L", "Apple Chancery", "Segoe Script", cursive;
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .item-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .menu-item {
+      padding: 28px 0;
+      border-bottom: 1px dashed rgba(212, 175, 55, .6);
+    }
+
+    .menu-item:last-child {
+      padding-bottom: 8px;
+      border-bottom: 0;
+    }
+
+    .item-name {
+      margin: 0;
+      color: var(--forest);
+      font-size: 1.35rem;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .item-label {
+      margin: 16px 0 6px;
+      color: var(--gold);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .item-description {
+      max-width: 340px;
+      margin: 8px auto 0;
+      color: var(--ink-muted);
+      font-size: .95rem;
+      font-style: italic;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .ingredients {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--ink-muted);
+      font-size: .95rem;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .ingredients .amount {
+      color: var(--forest-light);
+      font-weight: 700;
+    }
+
+    .garnish {
+      font-style: italic;
+    }
+
+    .menu-footer {
+      margin-top: 28px;
+      text-align: center;
+    }
+
+    .back-link {
+      display: inline-block;
+      padding-bottom: 4px;
+      color: var(--forest);
+      border-bottom: 1px solid var(--gold);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .17em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .back-link:focus-visible {
+      outline: 3px solid var(--gold-light);
+      outline-offset: 4px;
+    }
+
+    /* Too narrow for a spread: one page per screen, swiped left to right. */
+    @media (max-width: 860px) {
+      .menu-book {
+        gap: 16px;
+        margin: 0 -16px -30px;
+        padding: 0 16px 30px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 16px;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+      }
+
+      .menu-book::-webkit-scrollbar {
+        display: none;
+      }
+
+      .menu-page {
+        flex: 0 0 100%;
+        scroll-snap-align: start;
+      }
+
+      .menu-page-left {
+        border-right: 1px solid rgba(212, 175, 55, .55);
+      }
+
+      .swipe-cue {
+        display: block;
+      }
+    }
+
+    @media (max-width: 440px) {
+      body {
+        padding-top: 20px;
+      }
+
+      .menu-page {
+        padding: 30px 20px 28px;
+      }
+
+      .menu-item {
+        padding: 22px 0;
+      }
+    }
+  </style>
 </head>
 <body>
-    
+  <main class="menu-book">
+    <article class="menu-page menu-page-left" aria-label="Bites and desserts">
+      <header class="menu-header">
+        <p class="menu-kicker">David's Birthday</p>
+        <h1 class="menu-title">Menu</h1>
+        <hr class="menu-rule">
+        <p class="swipe-cue" aria-hidden="true">Swipe for drinks →</p>
+      </header>
 
-    <ul>
-        <li>
-            <b>Smudge Daiquiri</b>
+      <section class="menu-section" aria-labelledby="bites-title">
+        <h2 id="bites-title" class="menu-section-title">Bites</h2>
+        <ul class="item-list">
+          <li class="menu-item">
+            <h3 class="item-name">Meteor Meatballs</h3>
+            <p class="item-description">Juicy meatballs crashing in hot savory sauce like prehistoric asteroids.</p>
+          </li>
 
-            <p>
-                    2 oz white rum
-
-
-
-                    1 oz fresh lime juice
-
-
-
-                    ¾ oz simple syrup (equal parts sugar and water)
-
-
-
-                    Ice
-
-                    choclet syrup 
-
-                    whipped cream
-
-                    cherry 
-            </p>
+        <li class="menu-item">
+          <h3 class="item-name">Dino Nugget Flight</h3>
+          <p class="item-description">Crispy dino nuggets served with a sampler of wild dipping sauces.</p>
+          <p class="item-label">Sauces</p>
+          <ul class="ingredients">
+            <li> BBQ</li>
+            <li> Honey Mustard</li>
+            <li> Ranch</li>
+            <li> Buffalo</li>
+            <li> Cheese Sauce</li>
+          </ul>
         </li>
 
 
-           <li>
-            <b>Princess Punch</b>
+          <li class="menu-item">
+            <h3 class="item-name">Crustacean Rangoon</h3>
+            <p class="item-description">Crispy golden crab rangoons filled with creamy crab goodness.</p>
+          </li>
 
-            <p>
-                   Ingredients — 1 Drink
-                - 1½ oz white rum
-                - 1 oz strawberry lemonade
-                - 1 oz pineapple juice
-                - ½ oz fresh lime juice
-                - ½ oz grenadine
-                - 2 oz Sprite or lemon-lime soda
-                - Ice
-                - Strawberries and a cherry for garnish
-            </p>
-        </li>
+          <li class="menu-item">
+            <h3 class="item-name">Jurassic Wonton Bowl</h3>
+            <p class="item-description">A warm, comforting bowl of wonton soup big enough for a hungry dinosaur.</p>
+          </li>
+        </ul>
+      </section>
 
+      <section class="menu-section" aria-labelledby="desserts-title">
+        <h2 id="desserts-title" class="menu-section-title">Desserts</h2>
+        <ul class="item-list">
+          <li class="menu-item">
+            <h3 class="item-name">Ice Age Sandwiches <span aria-hidden="true">❄️</span></h3>
+            <p class="item-description">Classic ice cream sandwiches with vanilla, chocolate, or strawberry ice cream. Roll the edges in crushed Oreos or sprinkles.</p>
+          </li>
 
+          <li class="menu-item">
+            <h3 class="item-name">Dino Dirt Cups</h3>
+            <p class="item-description">Chocolate pudding topped with crushed Oreos, gummy worms, and tiny dinosaur candies.</p>
+          </li>
 
-            <li>
-            <b>Dino fruit Daiquiri</b>
+          <li class="menu-item">
+            <h3 class="item-name">Volcanic Eruption Cakes <span aria-hidden="true">🌋</span></h3>
+            <p class="item-description">Mini chocolate lava cakes with molten chocolate centers and a scoop of ice cream.</p>
+          </li>
+        </ul>
+      </section>
+    </article>
 
-            <p>
-                - 2 oz white rum
-                - 1 oz dragon fruit puree or blended fresh dragon fruit
-                - 1 oz fresh lime juice
-                - ¾ oz simple syrup
-                - ½ oz pineapple juice
-                - Ice
-                - Splash of coconut cream
-                - Kiwi slice, lime wheel, or dragon fruit wedge for garnish
-                - Green sugar rim 
-                - Tiny dinosaur gummy 
-            </p>
-        </li>
-    </ul>
+    <article class="menu-page menu-page-right" aria-label="Drinks">
+      <section class="menu-section" aria-labelledby="drinks-title">
+        <h2 id="drinks-title" class="menu-section-title">Drinks</h2>
+        <ul class="item-list">
+          <li class="menu-item">
+            <h3 class="item-name">Smudge Daiquiri</h3>
+            <p class="item-label">Ingredients</p>
+            <ul class="ingredients">
+              <li><span class="amount">2 oz</span> white rum</li>
+              <li><span class="amount">1 oz</span> fresh lime juice</li>
+              <li><span class="amount">¾ oz</span> simple syrup</li>
+              <li>Chocolate syrup</li>
+              <li>Ice</li>
+            </ul>
+            <p class="item-label">Garnish</p>
+            <ul class="ingredients garnish">
+              <li>Whipped cream and a cherry</li>
+            </ul>
+          </li>
 
+          <li class="menu-item">
+            <h3 class="item-name">Princess Punch</h3>
+            <p class="item-label">Ingredients</p>
+            <ul class="ingredients">
+              <li><span class="amount">1½ oz</span> white rum</li>
+              <li><span class="amount">1 oz</span> strawberry lemonade</li>
+              <li><span class="amount">1 oz</span> pineapple juice</li>
+              <li><span class="amount">½ oz</span> fresh lime juice</li>
+              <li><span class="amount">½ oz</span> grenadine</li>
+              <li><span class="amount">2 oz</span> Sprite or lemon-lime soda</li>
+              <li>Ice</li>
+            </ul>
+            <p class="item-label">Garnish</p>
+            <ul class="ingredients garnish">
+              <li>Strawberries and a cherry</li>
+            </ul>
+          </li>
+
+          <li class="menu-item">
+            <h3 class="item-name">Dino Fruit Daiquiri</h3>
+            <p class="item-label">Ingredients</p>
+            <ul class="ingredients">
+              <li><span class="amount">2 oz</span> white rum</li>
+              <li><span class="amount">1 oz</span> dragon fruit purée or blended fresh dragon fruit</li>
+              <li><span class="amount">1 oz</span> fresh lime juice</li>
+              <li><span class="amount">¾ oz</span> simple syrup</li>
+              <li><span class="amount">½ oz</span> pineapple juice</li>
+              <li>Splash of coconut cream</li>
+              <li>Ice</li>
+            </ul>
+            <p class="item-label">Garnish</p>
+            <ul class="ingredients garnish">
+              <li>Green sugar rim</li>
+              <li>Kiwi slice, lime wheel, or dragon fruit wedge</li>
+              <li>A tiny dinosaur gummy</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <footer class="menu-footer">
+        <a class="back-link" href="./">Back to the invitation</a>
+      </footer>
+    </article>
+  </main>
 </body>
 </html>
