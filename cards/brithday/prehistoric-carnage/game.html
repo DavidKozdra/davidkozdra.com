@@ -108,6 +108,219 @@
         display: none;
       }
     }
+
+    /* The Bone Market: a panel over the paused game. */
+    .market {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(246, 240, 228, .88);
+    }
+
+    .market[hidden] {
+      display: none;
+    }
+
+    .market-panel {
+      display: flex;
+      flex-direction: column;
+      width: min(560px, 100%);
+      max-height: calc(100dvh - 32px);
+      padding: 22px 22px 16px;
+      background: var(--paper);
+      border: 1px solid rgba(212, 175, 55, .7);
+      border-radius: 14px;
+      box-shadow:
+        0 0 0 5px var(--paper),
+        0 0 0 6px rgba(212, 175, 55, .45),
+        0 24px 50px rgba(15, 61, 46, .18);
+    }
+
+    .market-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .market-kicker {
+      margin: 0;
+      color: var(--ink-muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .market-title {
+      margin: 2px 0 0;
+      font-family: "URW Chancery L", "Apple Chancery", "Segoe Script", cursive;
+      font-size: clamp(1.7rem, 6vw, 2.3rem);
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .market-bones {
+      margin: 0;
+      color: var(--forest);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .market-bones span {
+      font-size: 1.15rem;
+    }
+
+    .market-tabs {
+      display: flex;
+      gap: 18px;
+      margin: 16px 0 6px;
+      border-bottom: 1px solid rgba(212, 175, 55, .5);
+    }
+
+    .market-tab {
+      padding: 0 0 8px;
+      color: var(--ink-muted);
+      background: none;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .market-tab.is-active {
+      color: var(--forest);
+      border-bottom-color: var(--gold);
+    }
+
+    .market-list {
+      flex: 1;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      overflow-y: auto;
+      list-style: none;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(212, 175, 55, .55) transparent;
+    }
+
+    .upgrade {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px dashed rgba(212, 175, 55, .5);
+    }
+
+    .upgrade:last-child {
+      border-bottom: 0;
+    }
+
+    .upgrade-copy {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .upgrade-name {
+      margin: 0;
+      font-size: 1.02rem;
+      font-weight: 400;
+    }
+
+    .upgrade-level {
+      margin-left: 4px;
+      color: var(--gold);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      vertical-align: middle;
+    }
+
+    .upgrade-desc {
+      margin: 3px 0 0;
+      color: var(--ink-muted);
+      font-size: .85rem;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .upgrade-buy {
+      flex: none;
+      min-width: 96px;
+      padding: 9px 12px;
+      color: var(--paper);
+      background: var(--forest);
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .upgrade-buy:disabled {
+      color: var(--ink-muted);
+      background: var(--cream);
+      border-color: rgba(212, 175, 55, .5);
+      cursor: default;
+    }
+
+    .market-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .market-reset {
+      padding: 0;
+      color: var(--ink-muted);
+      background: none;
+      border: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .8rem;
+      font-style: italic;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .market-close {
+      padding: 10px 18px;
+      color: var(--forest);
+      background: var(--gold-light);
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .market button:focus-visible {
+      outline: 3px solid var(--gold-light);
+      outline-offset: 3px;
+    }
   </style>
 </head>
 <body>
@@ -118,7 +331,29 @@
 
   <main id="game" aria-label="Prehistoric Carnage game"></main>
 
-  <p class="game-help">WASD or drag to move · click to swing · Shift to dash · R to quake · Esc to pause</p>
+  <p class="game-help">WASD to move · click to swing · Shift to dash · R to quake · B for the Bone Market · Esc to pause</p>
+
+  <div id="market" class="market" hidden>
+    <section class="market-panel" role="dialog" aria-modal="true" aria-labelledby="market-title">
+      <header class="market-header">
+        <div>
+          <p class="market-kicker">Spend your bones</p>
+          <h2 id="market-title" class="market-title">The Bone Market</h2>
+        </div>
+        <p class="market-bones"><span id="market-bones">0</span> bones</p>
+      </header>
+      <div class="market-tabs" role="tablist" aria-label="Upgrade groups">
+        <button class="market-tab is-active" type="button" role="tab" aria-selected="true" data-page="arsenal">Arsenal</button>
+        <button class="market-tab" type="button" role="tab" aria-selected="false" data-page="survival">Survival</button>
+        <button class="market-tab" type="button" role="tab" aria-selected="false" data-page="ascension">Ascension</button>
+      </div>
+      <ul id="market-list" class="market-list"></ul>
+      <footer class="market-footer">
+        <button id="market-reset" class="market-reset" type="button">Reset progress</button>
+        <button id="market-close" class="market-close" type="button">Back to the party</button>
+      </footer>
+    </section>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
   <script src="game.js"></script>

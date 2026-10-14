@@ -41,7 +41,8 @@
     }
 
     a:focus-visible,
-    summary:focus-visible {
+    summary:focus-visible,
+    .menu-section-title:focus-visible {
       outline: 3px solid var(--forest-light);
       outline-offset: 4px;
     }
@@ -101,10 +102,15 @@
     }
 
     .section-links {
+      position: sticky;
+      top: 0;
+      z-index: 2;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 24px;
+      padding: 12px 0;
+      background: var(--paper);
     }
 
     .section-links a {
@@ -122,6 +128,11 @@
     }
 
     .section-links a:hover {
+      border-color: var(--forest-light);
+      background: #e0e8dc;
+    }
+
+    .section-links a[aria-current="location"] {
       border-color: var(--forest);
       background: var(--forest);
       color: var(--paper);
@@ -131,7 +142,7 @@
       display: grid;
       grid-template-columns: 1.05fr 1fr;
       gap: 48px;
-      margin-top: 40px;
+      margin-top: 24px;
       padding-top: 36px;
       border-top: 1px solid var(--line);
     }
@@ -143,7 +154,7 @@
 
     .menu-section {
       min-width: 0;
-      scroll-margin-top: 24px;
+      scroll-margin-top: var(--section-scroll-offset, 104px);
     }
 
     .food-sections .menu-section + .menu-section {
@@ -322,7 +333,7 @@
       .menu-columns {
         grid-template-columns: minmax(0, 1fr);
         gap: 36px;
-        margin-top: 28px;
+        margin-top: 16px;
         padding-top: 28px;
       }
 
@@ -365,17 +376,17 @@
         <p class="menu-kicker">David's birthday · Dinos &amp; drinks</p>
         <h1 class="menu-title">The party menu</h1>
         <p class="menu-intro">Take your pick of bites, sweet treats, and signature drinks.</p>
-        <nav class="section-links" aria-label="Menu sections">
-          <a href="#bites">Bites</a>
-          <a href="#desserts">Desserts</a>
-          <a href="#drinks">Drinks</a>
-        </nav>
       </header>
+      <nav class="section-links" aria-label="Menu sections">
+        <a href="#bites">Bites</a>
+        <a href="#desserts">Desserts</a>
+        <a href="#drinks">Drinks</a>
+      </nav>
 
       <div class="menu-columns">
         <div class="food-sections">
           <section id="bites" class="menu-section" aria-labelledby="bites-title">
-            <h2 id="bites-title" class="menu-section-title">Bites</h2>
+            <h2 id="bites-title" class="menu-section-title" tabindex="-1">Bites</h2>
             <ul class="item-list">
               <li class="menu-item">
                 <h3 class="item-name">Meteor Meatballs</h3>
@@ -408,7 +419,7 @@
           </section>
 
           <section id="desserts" class="menu-section" aria-labelledby="desserts-title">
-            <h2 id="desserts-title" class="menu-section-title">Desserts</h2>
+            <h2 id="desserts-title" class="menu-section-title" tabindex="-1">Desserts</h2>
             <ul class="item-list">
               <li class="menu-item">
                 <h3 class="item-name">Ice Age Sandwiches</h3>
@@ -429,7 +440,7 @@
         </div>
 
         <section id="drinks" class="menu-section drinks-section" aria-labelledby="drinks-title">
-          <h2 id="drinks-title" class="menu-section-title">Drinks</h2>
+          <h2 id="drinks-title" class="menu-section-title" tabindex="-1">Drinks</h2>
           <p class="section-description">Pick a drink. Open its recipe for the full mix.</p>
           <ul class="item-list">
             <li class="menu-item">
@@ -475,7 +486,7 @@
             </li>
 
             <li class="menu-item">
-              <h3 id="dino-title" class="item-name">Dino Fruit Daiquiri</h3>
+              <h3 id="dino-title" class="item-name">Dino Fruit Cooler</h3>
               <p class="item-description">White rum, dragon fruit, lime, pineapple, and simple syrup with a splash of coconut cream.</p>
               <details class="recipe">
                 <summary aria-describedby="dino-title">View recipe <svg class="recipe-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 8h12"/><path class="vertical" d="M8 2v12"/></svg></summary>
@@ -505,5 +516,144 @@
       </footer>
     </main>
   </div>
+  <script>
+    (() => {
+      const menu = document.querySelector('.menu');
+      const navigation = menu.querySelector('.section-links');
+      const entries = [...navigation.querySelectorAll('a')].map(link => ({
+        link,
+        section: document.querySelector(link.hash)
+      }));
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let current = entries[0];
+      let navigating = false;
+      let frame = 0;
+      let settleTimer;
+
+      function setCurrent(entry) {
+        current = entry;
+        for (const item of entries) {
+          if (item === entry) item.link.setAttribute('aria-current', 'location');
+          else item.link.removeAttribute('aria-current');
+        }
+      }
+
+      function scrollOffset() {
+        return navigation.getBoundingClientRect().height + 24;
+      }
+
+      function updateCurrent() {
+        if (document.documentElement.scrollHeight <= window.innerHeight) return;
+        const offset = scrollOffset();
+        const bites = entries[0].section.getBoundingClientRect();
+        const drinks = entries[2].section.getBoundingClientRect();
+        const sideBySide = drinks.left >= bites.right;
+        let readingEntries = entries;
+
+        // On wide screens, follow the selected column while it is in view.
+        if (sideBySide) {
+          readingEntries = current === entries[2] && drinks.bottom > offset
+            ? [entries[2]]
+            : entries.slice(0, 2);
+        }
+
+        let next = readingEntries[0];
+        for (const entry of readingEntries) {
+          if (entry.section.getBoundingClientRect().top <= offset + 1) next = entry;
+        }
+
+        // The last section may be too short to reach the top of the viewport.
+        const atBottom = window.scrollY > 0 &&
+          window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+        if (atBottom) next = readingEntries[readingEntries.length - 1];
+        setCurrent(next);
+      }
+
+      function queueUpdate() {
+        if (frame) return;
+        frame = window.requestAnimationFrame(() => {
+          frame = 0;
+          if (!navigating) updateCurrent();
+        });
+      }
+
+      function finishNavigation() {
+        window.clearTimeout(settleTimer);
+        navigating = false;
+        queueUpdate();
+      }
+
+      function navigate(entry, smooth, focus) {
+        setCurrent(entry);
+        navigating = true;
+        window.clearTimeout(settleTimer);
+        const top = entry.section.getBoundingClientRect().top + window.scrollY - scrollOffset();
+        const limit = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        window.scrollTo({
+          top: Math.max(0, Math.min(top, limit)),
+          behavior: smooth && !reducedMotion.matches ? 'smooth' : 'instant'
+        });
+        if (focus) entry.section.querySelector('h2').focus({ preventScroll: true });
+        settleTimer = window.setTimeout(finishNavigation, 150);
+      }
+
+      for (const entry of entries) {
+        entry.link.addEventListener('click', event => {
+          if (event.defaultPrevented || event.button !== 0 ||
+              event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          if (window.location.hash !== entry.link.hash) {
+            window.history.pushState(null, '', entry.link.hash);
+          }
+          navigate(entry, true, true);
+        });
+      }
+
+      window.addEventListener('scroll', () => {
+        if (navigating) {
+          window.clearTimeout(settleTimer);
+          settleTimer = window.setTimeout(finishNavigation, 150);
+        } else queueUpdate();
+      }, { passive: true });
+
+      window.addEventListener('wheel', finishNavigation, { passive: true });
+      window.addEventListener('touchstart', finishNavigation, { passive: true });
+      window.addEventListener('keydown', event => {
+        if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) {
+          finishNavigation();
+        }
+      });
+
+      function measureNavigation() {
+        menu.style.setProperty('--section-scroll-offset', scrollOffset() + 'px');
+        queueUpdate();
+      }
+
+      window.addEventListener('resize', measureNavigation);
+      if ('ResizeObserver' in window) new ResizeObserver(measureNavigation).observe(navigation);
+      for (const recipe of menu.querySelectorAll('details')) {
+        recipe.addEventListener('toggle', queueUpdate);
+      }
+
+      function restoreLocation() {
+        const entry = entries.find(item => item.link.hash === window.location.hash);
+        window.requestAnimationFrame(() => {
+          if (entry) navigate(entry, false, true);
+          else if (!window.location.hash) {
+            finishNavigation();
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            setCurrent(entries[0]);
+          } else queueUpdate();
+        });
+      }
+
+      window.addEventListener('popstate', restoreLocation);
+      window.addEventListener('hashchange', restoreLocation);
+      measureNavigation();
+      const initial = entries.find(entry => entry.link.hash === window.location.hash);
+      if (initial) window.requestAnimationFrame(() => navigate(initial, false, false));
+      else setCurrent(entries[0]);
+    })();
+  </script>
 </body>
 </html>
