@@ -124,7 +124,8 @@
     }
 
     button:focus-visible,
-    a:focus-visible {
+    a:focus-visible,
+    input:focus-visible {
       outline: 3px solid var(--gold-light);
       outline-offset: 4px;
     }
@@ -158,6 +159,7 @@
       min-height: 570px;
       perspective: 2200px;
       perspective-origin: 50% 46%;
+      zoom: var(--card-zoom, 1);
     }
 
     .card {
@@ -647,6 +649,190 @@
       flex: 0 0 auto;
     }
 
+    .action-rsvp {
+      grid-column: 1 / -1;
+      border-color: var(--gold);
+      background: var(--gold);
+      color: var(--forest);
+    }
+
+    .action-rsvp:hover {
+      background: var(--gold-light);
+    }
+
+    .rsvp-dialog {
+      zoom: var(--card-zoom, 1);
+      width: 420px;
+      padding: 0;
+      color: var(--forest);
+      border: 1px solid var(--forest);
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow:
+        0 0 0 1px var(--paper),
+        0 0 0 5px var(--cream),
+        0 0 0 6px var(--gold),
+        0 28px 72px rgba(15, 61, 46, .28);
+    }
+
+    .rsvp-dialog::backdrop {
+      background: rgba(15, 61, 46, .4);
+    }
+
+    .rsvp-body {
+      position: relative;
+      padding: 36px 30px 28px;
+      text-align: center;
+    }
+
+    .rsvp-body::before {
+      position: absolute;
+      inset: 11px;
+      content: "";
+      pointer-events: none;
+      border: 1px solid rgba(212, 175, 55, .38);
+      border-radius: 10px;
+    }
+
+    .rsvp-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .rsvp-close:hover,
+    .rsvp-remove:hover {
+      background: rgba(212, 175, 55, .15);
+    }
+
+    .rsvp-close svg,
+    .rsvp-remove svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .rsvp-form {
+      position: relative;
+      display: grid;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .rsvp-field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .rsvp-label {
+      padding: 0;
+      color: rgba(15, 61, 46, .7);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .rsvp-label small {
+      font-size: inherit;
+      font-weight: 400;
+      letter-spacing: .06em;
+      text-transform: none;
+    }
+
+    .rsvp-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      border: 1px solid rgba(15, 61, 46, .32);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--forest);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+    }
+
+    .rsvp-input:focus {
+      border-color: var(--forest);
+    }
+
+    .rsvp-guests {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .rsvp-guests legend {
+      margin-bottom: 7px;
+    }
+
+    .rsvp-guest-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rsvp-guest-list:empty,
+    .rsvp-status:empty,
+    .rsvp-add[hidden] {
+      display: none;
+    }
+
+    .rsvp-guest {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px;
+      gap: 8px;
+    }
+
+    .rsvp-remove {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: 1px solid rgba(15, 61, 46, .32);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .rsvp-add {
+      border-style: dashed;
+    }
+
+    .rsvp-status {
+      margin: 0;
+      color: var(--ink-muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .8rem;
+      text-align: center;
+    }
+
+    .rsvp-status.is-error {
+      color: #a33a2a;
+    }
+
+    .rsvp-form .action:disabled {
+      cursor: progress;
+      opacity: .7;
+      transform: none;
+    }
+
     .close-card {
       margin-top: 21px;
       padding: 5px;
@@ -878,6 +1064,13 @@
           <div style="min-height:40px;"> </div>
 
           <div class="actions">
+            <button id="open-rsvp" class="action action-rsvp" type="button" aria-haspopup="dialog">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                <path d="m3 7 9 6 9-6"></path>
+              </svg>
+              <span id="rsvp-button-label">RSVP</span>
+            </button>
             <a
               id="add-calendar"
               class="action action-primary"
@@ -954,6 +1147,77 @@
     </div>
   </main>
 
+  <dialog id="rsvp-dialog" class="rsvp-dialog" aria-labelledby="rsvp-title">
+    <div class="rsvp-body">
+      <button id="rsvp-close" class="rsvp-close" type="button" aria-label="Close RSVP">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+      <p class="eyebrow">Dinos &amp; Drinks</p>
+      <h2 id="rsvp-title" class="inside-title">RSVP</h2>
+      <div class="ornament" aria-hidden="true">◆</div>
+
+      <form id="rsvp-form" class="rsvp-form">
+        <label class="rsvp-field">
+          <span class="rsvp-label">Your name</span>
+          <input class="rsvp-input" name="name" type="text" autocomplete="name" maxlength="80" required autofocus>
+        </label>
+        <label class="rsvp-field">
+          <span class="rsvp-label">Phone number <small>(optional)</small></span>
+          <input class="rsvp-input" name="phone" type="tel" autocomplete="tel" maxlength="30">
+        </label>
+        <fieldset class="rsvp-guests">
+          <legend class="rsvp-label">Bringing anyone? <small>(optional)</small></legend>
+          <ul id="rsvp-guest-list" class="rsvp-guest-list"></ul>
+          <button id="rsvp-add-guest" class="action action-secondary rsvp-add" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+            <span id="rsvp-add-label">Add a plus one</span>
+          </button>
+        </fieldset>
+        <p id="rsvp-status" class="rsvp-status" role="status"></p>
+        <button id="rsvp-submit" class="action action-primary" type="submit">Send RSVP</button>
+      </form>
+    </div>
+  </dialog>
+
+  <template id="rsvp-guest-template">
+    <li class="rsvp-guest">
+      <input class="rsvp-input" type="text" maxlength="80" autocomplete="off" placeholder="Name (optional)">
+      <button class="rsvp-remove" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+    </li>
+  </template>
+
+  <script>
+    // Big screens have room to spare, so the card and its RSVP form zoom in
+    // by up to 75% for as long as the open spread still fits the window.
+    (() => {
+      const root = document.documentElement;
+      const spreadWidth = 932; // Two 460px pages plus the gold border ring.
+      const cardHeight = 690;
+      const margin = 48; // Stage padding on both sides.
+
+      function fitCard() {
+        const zoom = Math.min(
+          1.75,
+          (window.innerWidth - margin) / spreadWidth,
+          (window.innerHeight - margin) / cardHeight
+        );
+        if (zoom > 1) root.style.setProperty("--card-zoom", zoom.toFixed(3));
+        else root.style.removeProperty("--card-zoom");
+      }
+
+      fitCard();
+      window.addEventListener("resize", fitCard, { passive: true });
+    })();
+  </script>
+
   <p id="card-status" class="sr-only" aria-live="polite">The invitation is closed.</p>
 
   <script>window.module = { exports: {} };</script>
@@ -974,6 +1238,19 @@
       const calendarButton = document.getElementById("add-calendar");
       const mapLink = document.getElementById("open-map");
       const status = document.getElementById("card-status");
+      const rsvpButton = document.getElementById("open-rsvp");
+      const rsvpButtonLabel = document.getElementById("rsvp-button-label");
+      const rsvpDialog = document.getElementById("rsvp-dialog");
+      const rsvpForm = document.getElementById("rsvp-form");
+      const rsvpGuestList = document.getElementById("rsvp-guest-list");
+      const rsvpGuestTemplate = document.getElementById("rsvp-guest-template");
+      const rsvpAddGuest = document.getElementById("rsvp-add-guest");
+      const rsvpAddLabel = document.getElementById("rsvp-add-label");
+      const rsvpStatus = document.getElementById("rsvp-status");
+      const rsvpSubmit = document.getElementById("rsvp-submit");
+      // workers/david-webhook relays this to David's Discord channel.
+      const messageRelay = "https://hooks.davidkozdra.com";
+      const maxGuests = 10;
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       let isOpen = false;
 
@@ -1430,8 +1707,107 @@
         celebrate(mapLink, 55);
       });
 
+      function updateGuests() {
+        const rows = [...rsvpGuestList.children];
+        rows.forEach((row, index) => {
+          row.querySelector("input").setAttribute("aria-label", `Guest ${index + 1} name`);
+          row.querySelector("button").setAttribute("aria-label", `Remove guest ${index + 1}`);
+        });
+        rsvpAddLabel.textContent = rows.length ? "Add another guest" : "Add a plus one";
+        rsvpAddGuest.hidden = rows.length >= maxGuests;
+      }
+
+      function resetRsvp() {
+        rsvpForm.reset();
+        rsvpGuestList.replaceChildren();
+        rsvpStatus.textContent = "";
+        updateGuests();
+      }
+
+      async function sendRsvp(name, phone, guests) {
+        const fields = [
+          { name: "Phone", value: phone || "Not given", inline: true },
+          { name: "Party size", value: String(guests.length + 1), inline: true }
+        ];
+        if (guests.length) {
+          fields.push({ name: "Guests", value: guests.map((guest) => guest || "Unnamed guest").join("\n") });
+        }
+
+        const response = await fetch(messageRelay, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ source: "Birthday RSVP", title: `RSVP: ${name}`, fields })
+        });
+        if (!response.ok) throw new Error(`Relay responded with ${response.status}`);
+      }
+
+      rsvpButton.addEventListener("click", () => {
+        rsvpDialog.showModal();
+      });
+
+      document.getElementById("rsvp-close").addEventListener("click", () => {
+        rsvpDialog.close();
+      });
+
+      // Clicks on the dialog itself land on its backdrop.
+      rsvpDialog.addEventListener("click", (event) => {
+        if (event.target === rsvpDialog) rsvpDialog.close();
+      });
+
+      rsvpAddGuest.addEventListener("click", () => {
+        rsvpGuestList.append(rsvpGuestTemplate.content.cloneNode(true));
+        updateGuests();
+        rsvpGuestList.lastElementChild.querySelector("input").focus();
+      });
+
+      rsvpGuestList.addEventListener("click", (event) => {
+        const remove = event.target.closest(".rsvp-remove");
+        if (!remove) return;
+        remove.closest(".rsvp-guest").remove();
+        updateGuests();
+        rsvpAddGuest.focus();
+      });
+
+      rsvpForm.elements.name.addEventListener("input", (event) => {
+        event.target.setCustomValidity("");
+      });
+
+      rsvpForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const nameInput = rsvpForm.elements.name;
+        const name = nameInput.value.trim();
+        if (!name) {
+          nameInput.setCustomValidity("Please enter your name.");
+          nameInput.reportValidity();
+          return;
+        }
+
+        const phone = rsvpForm.elements.phone.value.trim();
+        const guests = [...rsvpGuestList.querySelectorAll("input")].map((input) => input.value.trim());
+        rsvpSubmit.disabled = true;
+        rsvpStatus.classList.remove("is-error");
+        rsvpStatus.textContent = "Sending…";
+
+        try {
+          await sendRsvp(name, phone, guests);
+        } catch {
+          rsvpStatus.classList.add("is-error");
+          rsvpStatus.textContent = "Your RSVP didn't go through. Please try again.";
+          return;
+        } finally {
+          rsvpSubmit.disabled = false;
+        }
+
+        rsvpDialog.close();
+        resetRsvp();
+        rsvpButtonLabel.textContent = "You're on the list!";
+        status.textContent = `Thanks, ${name}! Your RSVP was sent.`;
+        celebrate(rsvpButton, 120);
+      });
+
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && isOpen) {
+        // Escape closes the RSVP form first, not the card behind it.
+        if (event.key === "Escape" && isOpen && !rsvpDialog.open) {
           setCardOpen(false);
           cover.focus({ preventScroll: true });
         }

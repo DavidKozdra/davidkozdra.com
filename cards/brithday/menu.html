@@ -379,6 +379,8 @@
       </header>
       <nav class="section-links" aria-label="Menu sections">
         <a href="#bites">Bites</a>
+        <a href="#herbivore">Herbivores</a>
+        <a href="#carnivore">Carnivores</a>
         <a href="#desserts">Desserts</a>
         <a href="#drinks">Drinks</a>
       </nav>
@@ -415,6 +417,54 @@
                 <h3 class="item-name">Jurassic Wonton Bowl</h3>
                 <p class="item-description">A warm, comforting bowl of wonton soup big enough for a hungry dinosaur.</p>
               </li>
+
+              <li class="menu-item">
+                <h3 class="item-name">Dino Eggs</h3>
+                <p class="item-description">Deviled eggs, fresh from the nest.</p>
+              </li>
+
+            </ul>
+          </section>
+
+          <section id="herbivore" class="menu-section" aria-labelledby="herbivore-title">
+            <h2 id="herbivore-title" class="menu-section-title" tabindex="-1">Herbivore Station</h2>
+            <p class="section-description">For the plant-eaters.</p>
+            <ul class="item-list">
+              <li class="menu-item">
+                <h3 class="item-name">Fruit Tray</h3>
+                <p class="item-description">Fresh-cut fruit, foraged for the herd.</p>
+              </li>
+
+              <li class="menu-item">
+                <h3 class="item-name">Veggie Tray</h3>
+                <p class="item-description">Crisp, fresh-cut veggies for grazing.</p>
+              </li>
+
+              <li class="menu-item">
+                <h3 class="item-name">Chips and Dip</h3>
+                <p class="item-description">Crunchy chips with dip on the side.</p>
+              </li>
+            </ul>
+          </section>
+
+          <section id="carnivore" class="menu-section" aria-labelledby="carnivore-title">
+            <h2 id="carnivore-title" class="menu-section-title" tabindex="-1">Carnivore Station</h2>
+            <p class="section-description">For the meat-eaters.</p>
+            <ul class="item-list">
+              <li class="menu-item">
+                <h3 class="item-name">Pterodactyl Wings</h3>
+                <p class="item-description">A pile of wings for the hungriest predators.</p>
+              </li>
+
+              <li class="menu-item">
+                <h3 class="item-name">Predatory Bites</h3>
+                <p class="item-description">Cheese and crackers with salami, pepperoni, and ham.</p>
+              </li>
+
+              <li class="menu-item">
+                <h3 class="item-name">Safe Option</h3>
+                <p class="item-description">Classic hot dogs for anyone who'd rather play it safe.</p>
+              </li>
             </ul>
           </section>
 
@@ -432,8 +482,8 @@
               </li>
 
               <li class="menu-item">
-                <h3 class="item-name">Volcanic Eruption Cakes</h3>
-                <p class="item-description">Mini chocolate lava cakes with molten chocolate centers and a scoop of ice cream.</p>
+                <h3 class="item-name"> Dino Cake</h3>
+                <p class="item-description">white publix dino cake</p>
               </li>
             </ul>
           </section>
@@ -524,6 +574,8 @@
         link,
         section: document.querySelector(link.hash)
       }));
+      const drinksEntry = entries[entries.length - 1];
+      const foodEntries = entries.slice(0, -1);
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       let current = entries[0];
       let navigating = false;
@@ -546,15 +598,15 @@
         if (document.documentElement.scrollHeight <= window.innerHeight) return;
         const offset = scrollOffset();
         const bites = entries[0].section.getBoundingClientRect();
-        const drinks = entries[2].section.getBoundingClientRect();
+        const drinks = drinksEntry.section.getBoundingClientRect();
         const sideBySide = drinks.left >= bites.right;
         let readingEntries = entries;
 
         // On wide screens, follow the selected column while it is in view.
         if (sideBySide) {
-          readingEntries = current === entries[2] && drinks.bottom > offset
-            ? [entries[2]]
-            : entries.slice(0, 2);
+          readingEntries = current === drinksEntry && drinks.bottom > offset
+            ? [drinksEntry]
+            : foodEntries;
         }
 
         let next = readingEntries[0];

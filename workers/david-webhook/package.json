@@ -1,0 +1,13 @@
+{
+  "name": "david-webhook",
+  "private": true,
+  "type": "module",
+  "description": "Relays form messages from davidkozdra.com to David's Discord channel.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.151.1"
+  }
+}

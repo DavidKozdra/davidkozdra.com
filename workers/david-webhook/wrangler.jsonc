@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "david-webhook",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-18",
+  "routes": [
+    { "pattern": "hooks.davidkozdra.com", "custom_domain": true }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://davidkozdra.com,https://www.davidkozdra.com"
+  }
+  // DISCORD_WEBHOOK_URL is a secret: npx wrangler secret put DISCORD_WEBHOOK_URL
+}
