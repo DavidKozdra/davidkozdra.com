@@ -76,9 +76,16 @@
       --cream: #f6f0e4;
       --paper: #fffdf7;
       --ink-muted: #527064;
+      --viewport-height: 100vh;
       --card-width: min(460px, calc(100vw - 46px));
-      --card-height: min(690px, calc(100dvh - 48px));
+      --card-height: min(690px, calc(var(--viewport-height) - 48px));
       --ease-card: cubic-bezier(.22, .75, .18, 1);
+    }
+
+    @supports (height: 100dvh) {
+      :root {
+        --viewport-height: 100dvh;
+      }
     }
 
     * {
@@ -147,6 +154,7 @@
       position: relative;
       z-index: 1;
       display: grid;
+      min-height: 100vh;
       min-height: 100svh;
       place-items: center;
       padding: 24px;
@@ -250,10 +258,12 @@
         0 0 0 5px var(--cream),
         0 0 0 6px var(--gold),
         0 28px 72px rgba(15, 61, 46, .18);
-      transition: box-shadow .25s ease;
+      transition: box-shadow .25s ease, visibility 0s linear .5s, opacity 0s linear .5s;
     }
 
     .cover-front {
+      visibility: visible;
+      opacity: 1;
       padding: 36px 34px 30px;
       background:
         radial-gradient(circle at 50% 53%, rgba(212, 175, 55, .12), transparent 16rem),
@@ -266,11 +276,25 @@
     }
 
     .cover-back {
+      visibility: hidden;
+      opacity: 0;
       padding: 42px 34px;
       background:
         linear-gradient(260deg, rgba(15, 61, 46, .07), transparent 12%),
         var(--paper);
       transform: rotateY(180deg);
+    }
+
+    /* Explicitly switch faces halfway through the turn: WebKit can paint
+       both sides of a transformed button despite backface-visibility. */
+    .card-scene.is-open .cover-front {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .card-scene.is-open .cover-back {
+      visibility: visible;
+      opacity: 1;
     }
 
     .cover-content,
@@ -282,6 +306,7 @@
     }
 
     .invite-script {
+      display: block;
       margin: 0 0 14px;
       color: var(--gold);
       font-family: "URW Chancery L", "Apple Chancery", "Segoe Script", cursive;
@@ -307,6 +332,7 @@
     }
 
     .cover-title {
+      display: block;
       margin: 12px 0 16px;
       color: var(--forest);
       font-size: clamp(1.6rem, 6vw, 2.4rem);
@@ -466,17 +492,6 @@
       font-size: .72rem;
       letter-spacing: .04em;
       line-height: 1.5;
-    }
-
-    .back-swipe-cue {
-      display: none;
-      margin-top: 22px;
-      color: var(--gold);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: .63rem;
-      font-weight: 700;
-      letter-spacing: .17em;
-      text-transform: uppercase;
     }
 
     .back-close-cue {
@@ -663,6 +678,9 @@
     .rsvp-dialog {
       zoom: var(--card-zoom, 1);
       width: 420px;
+      max-width: calc((100vw - 48px) / var(--card-zoom, 1));
+      max-height: calc((var(--viewport-height) - 48px) / var(--card-zoom, 1));
+      overflow-y: auto;
       padding: 0;
       color: var(--forest);
       border: 1px solid var(--forest);
@@ -834,6 +852,7 @@
     }
 
     .close-card {
+      min-height: 44px;
       margin-top: 21px;
       padding: 5px;
       border: 0;
@@ -846,6 +865,14 @@
       font-weight: 700;
       letter-spacing: .17em;
       text-transform: uppercase;
+    }
+
+    .mobile-party-note {
+      display: none;
+      margin: 18px 0 0;
+      color: var(--ink-muted);
+      font-size: .86rem;
+      line-height: 1.5;
     }
 
     .inside-footer {
@@ -869,70 +896,79 @@
 
     @media (max-width: 980px) {
       :root {
-        --card-height: min(680px, calc(100dvh - 42px));
+        --card-height: min(680px, calc(var(--viewport-height) - 42px));
       }
 
-      /* The open spread is two pages wide, so the stage scrolls sideways
-         and snaps to one page at a time, read left to right. */
+      /* Keep the invitation in one column on phones and tablets. Normal
+         page scrolling also avoids clipping transformed panels in Safari. */
       .stage {
-        display: flex;
-        align-items: center;
         padding: 21px 23px;
-        overflow-x: hidden;
-        scrollbar-width: none;
-      }
-
-      .stage::-webkit-scrollbar {
-        display: none;
-      }
-
-      .stage.is-book-open {
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        overscroll-behavior-x: contain;
       }
 
       .card-scene {
-        flex: none;
-        width: calc(var(--card-width) * 2);
-        margin-inline: auto;
+        width: var(--card-width);
+        height: auto;
+        min-height: 0;
+        perspective: none;
+        zoom: 1;
       }
 
-      .card-scene::before,
-      .card-scene::after {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 50%;
-        content: "";
+      .card,
+      .card-scene.is-open .card {
+        position: relative;
+        left: auto;
+        width: 100%;
+        height: auto;
+        min-height: max(540px, var(--card-height));
+        transform: none;
+        transform-style: flat;
+        transition: none;
+      }
+
+      .inside-panel {
+        position: relative;
+        display: none;
+        min-height: inherit;
+        overflow: visible;
+      }
+
+      .card-scene.is-open .inside-panel {
+        display: block;
+      }
+
+      .cover {
+        transform: none;
+        transform-style: flat;
+        transition: opacity .2s ease, visibility .2s ease;
+      }
+
+      .card-scene.is-open .cover {
+        visibility: hidden;
+        opacity: 0;
         pointer-events: none;
-        scroll-snap-align: center;
+        transform: none;
       }
 
-      .card-scene::before {
-        left: 0;
+      .cover-back {
+        display: none;
       }
 
-      .card-scene::after {
-        right: 0;
+      .cover-face {
+        transition: none;
       }
 
-      .back-swipe-cue {
+      .mobile-party-note {
         display: block;
       }
     }
 
     @media (max-width: 440px), (max-height: 700px) {
       :root {
-        --card-height: calc(100dvh - 30px);
+        --card-height: calc(var(--viewport-height) - 30px);
       }
 
       .stage {
         padding: 15px 23px;
-      }
-
-      .card-scene {
-        min-height: 540px;
       }
 
       .cover-front {
@@ -1028,6 +1064,7 @@
       *::after {
         scroll-behavior: auto !important;
         transition-duration: .01ms !important;
+        transition-delay: 0s !important;
         animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
       }
@@ -1106,6 +1143,8 @@
             </a>
           </div>
 
+          <p class="mobile-party-note">Formal dress optional but appreciated, same as gifts</p>
+          <button id="close-card" class="close-card" type="button">Close the card</button>
         </section>
 
         <button id="card-cover" class="cover" type="button" aria-expanded="false" aria-controls="invitation-details" aria-label="Open David's birthday invitation">
@@ -1138,7 +1177,6 @@
               <img class="back-drinks" src="drinks-sprite-sheet.png" alt="" draggable="false">
               <span class="back-copy">Come raise a glass, make some memories, and help make twenty-six one for the fossil record.</span>
               <span class="back-note">Formal dress optional but appreciated, same as gifts</span>
-              <span class="back-swipe-cue">Swipe for party details →</span>
               <span class="back-close-cue">Tap this page to close</span>
             </span>
           </span>
@@ -1230,7 +1268,6 @@
     (() => {
       "use strict";
 
-      const stage = document.querySelector(".stage");
       const scene = document.getElementById("card-scene");
       const cover = document.getElementById("card-cover");
       const details = document.getElementById("invitation-details");
@@ -1648,23 +1685,10 @@
         confetti.burst(rect.left + rect.width / 2, rect.top + rect.height * .36, count);
       }
 
-      // On narrow screens the open spread is wider than the stage. Opened, it
-      // starts on the left page like a book; closed, the cover sits centered.
-      function alignBook(smooth) {
-        const overflow = stage.scrollWidth - stage.clientWidth;
-        if (overflow <= 0) return;
-        stage.scrollTo({
-          left: isOpen ? 0 : overflow / 2,
-          behavior: smooth && !prefersReducedMotion.matches ? "smooth" : "auto"
-        });
-      }
-
       function setCardOpen(nextOpen) {
         if (isOpen === nextOpen) return;
         isOpen = nextOpen;
         scene.classList.toggle("is-open", isOpen);
-        stage.classList.toggle("is-book-open", isOpen);
-        alignBook(true);
         cover.setAttribute("aria-expanded", String(isOpen));
         cover.setAttribute("aria-label", isOpen ? "Close David's birthday invitation" : "Open David's birthday invitation");
         details.toggleAttribute("inert", !isOpen);
@@ -1684,11 +1708,6 @@
           confetti.startPhotoRain();
         }
       }
-
-      alignBook(false);
-      window.addEventListener("resize", () => {
-        if (!isOpen) alignBook(false);
-      });
 
       cover.addEventListener("click", () => {
         setCardOpen(!isOpen);

@@ -1,0 +1,60 @@
+* { box-sizing: border-box; }
+:root { color-scheme: light; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Trebuchet MS', Arial, sans-serif; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button, a, h1 { outline-offset: 5px; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); }
+button { font: inherit; }
+#confetti { position: fixed; inset: 0; z-index: 10; width: 100%; height: 100%; pointer-events: none; }
+.page-stage { width: min(100%, 720px); margin: auto; padding: 34px 28px 18px; position: relative; min-height: 100svh; }
+.invitation { position: relative; border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent); padding: 45px 40px 24px; text-align: center; min-height: calc(100svh - 52px); }
+.invitation::before { content: ''; position: absolute; inset: 6px; border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent); pointer-events: none; }
+.invitation-header { position: relative; z-index: 1; }
+.eyebrow { font-size: 10px; letter-spacing: 3px; font-weight: 700; margin: 0 0 22px; }
+.hero-sticker { font-size: 76px; line-height: 1.25; margin: 0 auto 20px; width: fit-content; transform: rotate(-9deg); filter: drop-shadow(2px 5px 0 color-mix(in srgb, var(--ink) 8%, transparent)); }
+h1 { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(35px, 7.8vw, 61px); line-height: 1.06; letter-spacing: -2.2px; font-weight: 400; white-space: pre-line; overflow-wrap: anywhere; margin: 0; }
+.font-modern h1, .font-modern .cover-title { font-family: Arial, sans-serif; font-weight: 800; letter-spacing: -2px; }
+.font-playful h1, .font-playful .cover-title { font-family: 'Trebuchet MS', sans-serif; font-weight: 700; letter-spacing: -2px; }
+.little-divider { display: flex; align-items: center; justify-content: center; gap: 13px; color: var(--accent); margin: 24px auto; font-size: 18px; }
+.little-divider span { width: 37px; height: 1px; background: var(--accent); }
+.message-block, .photo-block, .details-block, .action-block { position: relative; margin: 23px auto; max-width: 445px; }
+.message { font-size: 14px; line-height: 1.85; white-space: pre-line; overflow-wrap: anywhere; margin: 0; }
+.signature { font: italic 18px Georgia, serif; margin: 17px 0 0; }
+.photo-block { margin: 28px auto; transform: rotate(-2deg); padding: 9px 9px 16px; background: #fff; color: #47544c; border: 1px solid #00000012; box-shadow: 0 5px 14px #00000009; }
+.photo-block img { width: 100%; max-height: 390px; object-fit: cover; display: block; }
+.photo-block figcaption { font-size: 11px; margin-top: 12px; overflow-wrap: anywhere; }
+.details-block { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; padding: 24px 0 5px; border-top: 1px dashed color-mix(in srgb, var(--ink) 25%, transparent); }
+.detail-label { font-size: 9px; letter-spacing: 2px; color: var(--accent); font-weight: 700; }
+.detail p { margin: 9px 0; font-size: 12px; line-height: 1.7; white-space: pre-line; overflow-wrap: anywhere; }
+.detail small { display: block; font-size: inherit; opacity: .75; }
+.calendar-link { grid-column: 1 / -1; padding: 6px; background: none; border: 0; color: inherit; text-decoration: underline; text-underline-offset: 4px; font-size: 11px; cursor: pointer; }
+.rsvp-button { display: inline-flex; gap: 30px; align-items: center; justify-content: center; padding: 15px 25px; background: var(--ink); color: var(--paper); border-radius: 3px; text-decoration: none; font-size: 13px; max-width: 100%; overflow-wrap: anywhere; transition: transform .2s; }
+.rsvp-button:hover { transform: translateY(-2px); }
+.action-hint { font-size: 10px; opacity: .7; margin: 11px 0 0; }
+.countdown { font-size: 10px; letter-spacing: .5px; padding: 8px 0; opacity: .8; }
+.page-footer { position: relative; display: flex; align-items: center; flex-direction: column; gap: 24px; margin-top: 32px; }
+.page-footer button { background: none; border: 0; color: inherit; font-size: 11px; padding: 10px 14px; cursor: pointer; }
+.page-footer button span { font-size: 20px; color: var(--accent); vertical-align: middle; margin-left: 6px; }
+.page-footer > span { font-size: 10px; opacity: .6; }
+.made-with { color: inherit; opacity: .45; font-size: 8px; letter-spacing: 1.8px; text-decoration: none; padding: 4px; }
+.page-decoration { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.decoration-star { position: absolute; color: var(--accent); font-family: Georgia, serif; }
+.star-one { font-size: 65px; top: 90px; left: 24px; transform: rotate(12deg); }
+.star-two { font-size: 33px; top: 165px; right: 30px; color: var(--soft); }
+.decoration-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--soft); }
+.dot-one { top: 210px; left: 49px; }
+.dot-two { top: 65px; right: 58px; width: 6px; height: 6px; background: var(--accent); }
+.decoration-squiggle { font-size: 41px; position: absolute; top: 55px; right: 37px; transform: rotate(-24deg); color: var(--accent); }
+.card-cover { position: absolute; z-index: 4; top: 34px; left: 28px; width: calc(100% - 56px); min-height: calc(100svh - 52px); height: calc(100% - 52px); padding: 14px; border: 1px solid var(--ink); color: var(--ink); background: var(--paper); cursor: pointer; transition: opacity .6s, transform .6s; transform-origin: left center; }
+.cover-border { border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); height: 100%; min-height: calc(100svh - 84px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 34px 20px; }
+.cover-eyebrow { font-size: 9px; letter-spacing: 2px; line-height: 1.8; }
+.cover-sticker { font-size: 100px; margin: 45px 0 30px; }
+.cover-title { font: 52px/1.05 Georgia, serif; letter-spacing: -2px; }
+.cover-hint { font-size: 12px; margin-top: 45px; border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); padding-top: 22px; }
+.cover-hint span { margin-left: 20px; }
+.card-cover.is-open { opacity: 0; transform: perspective(1400px) rotateY(-100deg); pointer-events: none; }
+.card-cover[hidden] { display: none; }
+@media (min-width: 800px) { .page-stage { padding-top: 45px; padding-bottom: 32px; } .invitation { min-height: calc(100svh - 77px); } .card-cover { top: 45px; height: calc(100% - 77px); min-height: calc(100svh - 77px); } }
+@media (max-width: 430px) { .page-stage { padding: 16px 12px 12px; } .invitation { padding: 35px 25px 22px; min-height: calc(100svh - 28px); } .hero-sticker { font-size: 64px; } .star-one { left: 12px; font-size: 45px; } .star-two { right: 12px; } .card-cover { top: 16px; left: 12px; width: calc(100% - 24px); height: calc(100% - 28px); min-height: calc(100svh - 28px); } .cover-border { min-height: calc(100svh - 60px); } .cover-title { font-size: 42px; } .message { font-size: 13px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+@media print { #confetti, .card-cover, .calendar-link, .page-footer button { display: none !important; } #page-content { visibility: visible; } .page-stage { padding: 0; } .invitation { min-height: 0; } }
