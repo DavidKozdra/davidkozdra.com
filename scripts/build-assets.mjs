@@ -23,6 +23,7 @@ for (const folder of ["assets/css", "assets/js"]) {
       target: extension === ".css" ? ["chrome109", "firefox115", "safari16"] : "es2020",
       legalComments: "inline",
     });
+    if (!code.trim()) continue;
     const outputFile = sourceFile.slice(0, -extension.length) + ".min" + extension;
     await writeFile(outputFile, code);
     sourceBytes += Buffer.byteLength(source);

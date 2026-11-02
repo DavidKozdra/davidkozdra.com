@@ -1,0 +1,5 @@
+Tool: built-in image_gen, edit mode, transparent_background=true
+Source: tuxedo-trex.png
+Output: tuxedo-trex-transparent.png
+
+Edit target: the provided cartoon Tyrannosaurus rex in a tuxedo. Use case: background-extraction. Remove only the white and near-white backdrop and the ground shadow, producing a clean PNG cutout on a genuinely transparent background. Preserve the exact dinosaur, its happy open-mouth expression, pose, olive green and tan coloring, thick black outline, black tuxedo, white shirt, white cuffs, white teeth, pocket square, and all internal illustration details. Keep the whole dinosaur including tail and every toe visible, with approximately the same framing and proportions. Preserve intentional white areas on the dinosaur and clothing. No redraw or restyling, no added elements, no background color, no white halo, no checkerboard baked into the image.

@@ -10,7 +10,7 @@
 
   <link rel="canonical" href="https://davidkozdra.com/cards/brithday/">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="image_src" href="https://davidkozdra.com/cards/brithday/tuxedo-trex.png">
+  <link rel="image_src" href="https://davidkozdra.com/cards/brithday/tuxedo-trex-transparent.png">
 
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
@@ -18,8 +18,8 @@
   <meta property="og:title" content="David's 26th Birthday — Dinos &amp; Drinks">
   <meta property="og:description" content="Drinks, snacks, and prehistoric party vibes in Orlando on November 15, 2026.">
   <meta property="og:url" content="https://davidkozdra.com/cards/brithday/">
-  <meta property="og:image" content="https://davidkozdra.com/cards/brithday/tuxedo-trex.png">
-  <meta property="og:image:secure_url" content="https://davidkozdra.com/cards/brithday/tuxedo-trex.png">
+  <meta property="og:image" content="https://davidkozdra.com/cards/brithday/tuxedo-trex-transparent.png">
+  <meta property="og:image:secure_url" content="https://davidkozdra.com/cards/brithday/tuxedo-trex-transparent.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1315">
   <meta property="og:image:height" content="1197">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="David's 26th Birthday — Dinos &amp; Drinks">
   <meta name="twitter:description" content="Drinks, snacks, and prehistoric party vibes in Orlando on November 15, 2026.">
-  <meta name="twitter:image" content="https://davidkozdra.com/cards/brithday/tuxedo-trex.png">
+  <meta name="twitter:image" content="https://davidkozdra.com/cards/brithday/tuxedo-trex-transparent.png">
   <meta name="twitter:image:alt" content="A cheerful Tyrannosaurus rex dressed in a black tuxedo">
 
   <title>David Kozdra's 26th Birthday | Dinos &amp; Drinks</title>
@@ -41,9 +41,9 @@
       "name": "David Kozdra's 26th Birthday — Dinos and Drinks",
       "description": "Drinks, snacks, and prehistoric party vibes celebrating David Kozdra's 26th birthday.",
       "url": "https://davidkozdra.com/cards/brithday/",
-      "image": "https://davidkozdra.com/cards/brithday/tuxedo-trex.png",
+      "image": "https://davidkozdra.com/cards/brithday/tuxedo-trex-transparent.png",
       "startDate": "2026-11-15T19:00:00-05:00",
-      "endDate": "2026-11-15T22:00:00-05:00",
+      "endDate": "2026-11-15T21:30:00-05:00",
       "eventStatus": "https://schema.org/EventScheduled",
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "isAccessibleForFree": true,
@@ -52,7 +52,7 @@
         "name": "Private residence",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "3000 National Parks Dr, Orlando, FL 32837",
+          "streetAddress": "3000 National Parks Dr",
           "addressLocality": "Orlando",
           "addressRegion": "FL",
           "postalCode": "32837",
@@ -377,7 +377,6 @@
       margin: auto;
       object-fit: contain;
       filter: drop-shadow(0 12px 15px rgba(15, 61, 46, .16));
-      mix-blend-mode: multiply;
       transform: translateZ(1px);
       user-select: none;
     }
@@ -492,19 +491,6 @@
       font-size: .72rem;
       letter-spacing: .04em;
       line-height: 1.5;
-    }
-
-    .back-close-cue {
-      display: inline-block;
-      margin-top: 28px;
-      padding-bottom: 4px;
-      color: var(--forest);
-      border-bottom: 1px solid var(--gold);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: .63rem;
-      font-weight: 700;
-      letter-spacing: .17em;
-      text-transform: uppercase;
     }
 
     .eyebrow {
@@ -622,6 +608,18 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+
+    .calendar-note {
+      margin: 14px 0 0;
+      color: var(--ink-muted);
+      font-size: .78rem;
+      line-height: 1.5;
+    }
+
+    .calendar-note a {
+      color: var(--forest);
+      text-underline-offset: 3px;
     }
 
     .action {
@@ -851,22 +849,6 @@
       transform: none;
     }
 
-    .close-card {
-      min-height: 44px;
-      margin-top: 21px;
-      padding: 5px;
-      border: 0;
-      border-bottom: 1px solid rgba(212, 175, 55, .75);
-      background: transparent;
-      cursor: pointer;
-      color: rgba(15, 61, 46, .63);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: .6rem;
-      font-weight: 700;
-      letter-spacing: .17em;
-      text-transform: uppercase;
-    }
-
     .mobile-party-note {
       display: none;
       margin: 18px 0 0;
@@ -998,10 +980,6 @@
         font-size: .66rem;
       }
 
-      .back-close-cue {
-        margin-top: 14px;
-      }
-
       .dino-art-wrap {
         width: min(100%, 250px);
         margin-block: 5px 8px;
@@ -1035,9 +1013,6 @@
         margin-block: 15px;
       }
 
-      .close-card {
-        margin-top: 16px;
-      }
     }
 
     @media (max-width: 380px) {
@@ -1090,7 +1065,7 @@
             <div class="detail">
               <span class="detail-label">Location</span>
               <span class="detail-value">
-                <a class="location-link" href="https://www.google.com/maps/place/Parks+at+Hunter's+Creek+Apartments/@28.3717238,-81.4266459,17z/data=!4m15!1m8!3m7!1s0x88dd8733b99191c3:0x80addf4455a2432!2s13248+Glacier+National+Dr+%235304,+Orlando,+FL+32837!3b1!8m2!3d28.3717238!4d-81.424071!16s%2Fg%2F11txzj_9bl!3m5!1s0x88dd873396871a83:0x25fa33a505dea1b8!8m2!3d28.3707544!4d-81.4231123!16s%2Fg%2F1thxlwp5?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer">
+                <a class="location-link" href="https://www.google.com/maps/search/?api=1&amp;query=3000+National+Parks+Dr%2C+Orlando%2C+FL+32837" target="_blank" rel="noopener noreferrer">
                   3000 National Parks Dr
                   <small>Orlando, FL 32837 ↗</small>
                 </a>
@@ -1111,7 +1086,7 @@
             <a
               id="add-calendar"
               class="action action-primary"
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=David%20Kozdra%27s%2026th%20Birthday%20%E2%80%94%20Dinos%20and%20Drinks&amp;dates=20261116T000000Z%2F20261116T030000Z&amp;ctz=America%2FNew_York&amp;details=Drinks%2C%20snacks%2C%20and%20prehistoric%20party%20vibes!&amp;location=13248%20Glacier%20National%20Drive%20%235304%2C%20Orlando%2C%20FL%2032837"
+              href="https://calendar.google.com/calendar/r/eventedit?action=TEMPLATE&amp;text=David+Kozdra%27s+26th+Birthday+%E2%80%94+Dinos+and+Drinks&amp;dates=20261116T000000Z%2F20261116T023000Z&amp;ctz=America%2FNew_York&amp;details=Drinks%2C+snacks%2C+and+prehistoric+party+vibes+celebrating+David+Kozdra%27s+26th+birthday.%0AInvitation+and+RSVP%3A+https%3A%2F%2Fdavidkozdra.com%2Fcards%2Fbrithday%2F&amp;location=3000+National+Parks+Dr%2C+Orlando%2C+FL+32837"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -1121,7 +1096,7 @@
               </svg>
               Add to Google
             </a>
-            <a id="open-map" class="action action-secondary" href="https://www.google.com/maps/place/Parks+at+Hunter's+Creek+Apartments/@28.3717238,-81.4266459,17z/data=!4m15!1m8!3m7!1s0x88dd8733b99191c3:0x80addf4455a2432!2s13248+Glacier+National+Dr+%235304,+Orlando,+FL+32837!3b1!8m2!3d28.3717238!4d-81.424071!16s%2Fg%2F11txzj_9bl!3m5!1s0x88dd873396871a83:0x25fa33a505dea1b8!8m2!3d28.3707544!4d-81.4231123!16s%2Fg%2F1thxlwp5?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer">
+            <a id="open-map" class="action action-secondary" href="https://www.google.com/maps/search/?api=1&amp;query=3000+National+Parks+Dr%2C+Orlando%2C+FL+32837" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                 <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"></path>
                 <path d="M9 3v15M15 6v15"></path>
@@ -1143,8 +1118,8 @@
             </a>
           </div>
 
+          <p class="calendar-note">Or <a id="download-calendar" href="david-birthday.ics" download="david-kozdra-birthday.ics">download the calendar file</a> for your calendar app.</p>
           <p class="mobile-party-note">Formal dress optional but appreciated, same as gifts</p>
-          <button id="close-card" class="close-card" type="button">Close the card</button>
         </section>
 
         <button id="card-cover" class="cover" type="button" aria-expanded="false" aria-controls="invitation-details" aria-label="Open David's birthday invitation">
@@ -1155,7 +1130,7 @@
               <span class="cover-title">David Kozdra's<span>26th Birthday</span></span>
 
               <span class="dino-art-wrap">
-                <img class="dino-art" src="tuxedo-trex.png" alt="" draggable="false">
+                <img class="dino-art" src="tuxedo-trex-transparent.png" alt="" draggable="false">
               </span>
 
               <span class="theme-pill">Dinos and drinks</span>
@@ -1177,7 +1152,6 @@
               <img class="back-drinks" src="drinks-sprite-sheet.png" alt="" draggable="false">
               <span class="back-copy">Come raise a glass, make some memories, and help make twenty-six one for the fossil record.</span>
               <span class="back-note">Formal dress optional but appreciated, same as gifts</span>
-              <span class="back-close-cue">Tap this page to close</span>
             </span>
           </span>
         </button>
@@ -1271,7 +1245,6 @@
       const scene = document.getElementById("card-scene");
       const cover = document.getElementById("card-cover");
       const details = document.getElementById("invitation-details");
-      const closeButton = document.getElementById("close-card");
       const calendarButton = document.getElementById("add-calendar");
       const mapLink = document.getElementById("open-map");
       const status = document.getElementById("card-status");
@@ -1711,11 +1684,6 @@
 
       cover.addEventListener("click", () => {
         setCardOpen(!isOpen);
-      });
-
-      closeButton?.addEventListener("click", () => {
-        setCardOpen(false);
-        cover.focus({ preventScroll: true });
       });
 
       calendarButton.addEventListener("click", () => {

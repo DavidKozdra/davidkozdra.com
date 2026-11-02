@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//David Kozdra//Dinos and Drinks//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:david-kozdra-26th-birthday-20261115@davidkozdra.com
+DTSTAMP:20261102T200344Z
+DTSTART:20261116T000000Z
+DTEND:20261116T023000Z
+SUMMARY:David Kozdra's 26th Birthday — Dinos and Drinks
+DESCRIPTION:Drinks\, snacks\, and prehistoric party vibes celebrating David
+  Kozdra's 26th birthday.\nInvitation and RSVP: https://davidkozdra.com/car
+ ds/brithday/
+LOCATION:3000 National Parks Dr\, Orlando\, FL 32837
+URL:https://davidkozdra.com/cards/brithday/
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
