@@ -1,0 +1,11 @@
+# The editor uses native browser modules. Serve them with a JavaScript MIME type
+# on Apache/LiteSpeed hosts, including older MIME databases with nosniff enabled.
+<IfModule mod_mime.c>
+    AddType text/javascript .mjs
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(mjs|js|css)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>

@@ -1,0 +1,2157 @@
+      var fileSystem;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        let fileSystem =
+          localStorage.getItem("fileSystem") == null
+            ? [
+                {
+                  dir: "/",
+                  files: [
+                    {
+                      name: "text.txt",
+                      content:
+                        "this is a test file you can read it directly or in the terminal",
+                      dir: false,
+                    },
+                    { name: "home", dir: true },
+                  ],
+                },
+                { dir: "home", files: [{ name: "text2.txt", content: ":) " }] },
+              ]
+            : JSON.parse(localStorage.getItem("fileSystem"));
+
+        window.addEventListener(
+          "message",
+          (event) => {
+            receiveMessage(event);
+          },
+          false,
+        );
+
+        desktopIconRouter(null, "System");
+
+        desktopIconRouter(null, "empty");
+
+        // render the file system if it has content
+        // it should act as a notes icon with the file name as the name
+        // and the content as the content
+
+        for (let i = 0; i < fileSystem.length; i++) {
+          for (let j = 0; j < fileSystem[i].files.length; j++) {
+            if (fileSystem[i].files[j].dir) {
+              continue;
+            }
+            let file = fileSystem[i].files[j];
+            let icon = document.createElement("div");
+            icon.classList.add("desktop-icon");
+            icon.setAttribute("role", "button");
+            icon.setAttribute("tabindex", "0");
+            icon.setAttribute("aria-label", `Open ${file.name}`);
+            icon.onclick = function () {
+              selectIcon(event);
+            };
+            icon.ondblclick = function () {
+              desktopIconRouter(event, "notes", file.name, {
+                content: file.content,
+                parent: fileSystem[i].dir,
+              });
+            };
+            icon.onkeypress = function (e) {
+              if (e.key === "Enter") {
+                desktopIconRouter(e, "notes", file.name, {
+                  content: file.content,
+                  parent: fileSystem[i].dir,
+                });
+              }
+            };
+            let img = document.createElement("img");
+            img.src = "/assets/images/ui-icons/Notes.webp";
+            img.setAttribute("alt", "");
+            img.setAttribute("role", "presentation");
+            img.setAttribute("width", "64");
+            img.setAttribute("height", "64");
+            let text = document.createElement("div");
+            text.classList.add("icon-text");
+            text.innerHTML = file.name;
+            icon.appendChild(img);
+            icon.appendChild(text);
+
+            //init drag
+            dragElement(icon, icon);
+
+            //add to the grid
+            //document.getElementsByClassName("desktop-grid")[0].appendChild(icon);
+          }
+        }
+      });
+
+      let desktopIcons = document.getElementsByClassName("desktop-icon");
+
+      let windows = document.getElementsByClassName("window");
+      let winLen = 0;
+      let activeWindowCount = 0;
+      let loading = true;
+      const MOBILE_WINDOW_QUERY = window.matchMedia(
+        "(max-width: 820px), (orientation: portrait)",
+      );
+
+      const WALLPAPER_PRESETS = {
+        modern: {
+          fallback: 'url("/assets/images/projects/rainbow-ipad-2.png")',
+          image:
+            'image-set(url("/assets/images/projects/rainbow-ipad-2.webp") type("image/webp") 1x, url("/assets/images/projects/rainbow-ipad-2.png") type("image/png") 1x)',
+        },
+        retro: {
+          fallback: 'url("/assets/images/projects/backgroundOption2.jpg")',
+          image:
+            'image-set(url("/assets/images/projects/backgroundOption2.webp") type("image/webp") 1x, url("/assets/images/projects/backgroundOption2.jpg") type("image/jpeg") 1x)',
+        },
+        daintree: {
+          fallback: 'url("/assets/images/projects/DainTree.png")',
+          image:
+            'image-set(url("/assets/images/projects/DainTree.webp") type("image/webp") 1x, url("/assets/images/projects/DainTree.png") type("image/png") 1x)',
+        },
+        none: {
+          fallback: "none",
+          image: "none",
+        },
+      };
+
+      const DEFAULT_THEME_SETTINGS = {
+        stylesheetId: "modern-theme",
+        accent: "#09639f",
+        accentStrong: "#054f80",
+        desktopColor: "#77cff8",
+        windowSurface: "#ffffff",
+        windowText: "#111827",
+        titleText: "#111827",
+        headerStart: "#d3dee0",
+        headerEnd: "#d0f2ff",
+        menuSurface: "#343434",
+        wallpaper: "modern",
+        wallpaperUrl: "",
+        windowOpacity: 100,
+        windowRadius: 8,
+        iconScale: 100,
+        overlayStrength: 18,
+      };
+
+      const CORE_MENU_APPS = [
+        {
+          id: "files",
+          name: "Files",
+          route: "files",
+          icon: "/assets/images/ui-icons/File_System_icon.webp",
+          tags: ["tool"],
+        },
+        {
+          id: "notes",
+          name: "Notes",
+          route: "notes",
+          icon: "/assets/images/ui-icons/Notes.webp",
+          tags: ["tool"],
+        },
+        {
+          id: "draw",
+          name: "Paint",
+          route: "draw",
+          icon: "/assets/images/ui-icons/Pallet.webp",
+          tags: ["tool"],
+        },
+        {
+          id: "calculator",
+          name: "Calculator",
+          route: "calculator",
+          icon: "/assets/images/ui-icons/Calc.webp",
+          tags: ["tool"],
+        },
+        {
+          id: "term",
+          name: "Terminal",
+          route: "term",
+          icon: "/assets/images/ui-icons/Term.webp",
+          tags: ["tool"],
+        },
+        {
+          id: "appstore",
+          name: "App Store",
+          route: "appstore",
+          icon: "/assets/images/ui-icons/shop.png",
+          tags: ["tool"],
+        },
+        {
+          id: "GOL",
+          name: "Game of Life",
+          route: "GOL",
+          icon: "/assets/images/ui-icons/GOL.webp",
+          tags: ["game"],
+        },
+        {
+          id: "dragon_game",
+          name: "DBZ Fighter",
+          route: "dragon_game",
+          icon: "/assets/images/ui-icons/dragon_fighter.webp",
+          tags: ["game"],
+        },
+      ];
+
+      const STORE_REGISTRY =
+        typeof APP_STORE_REGISTRY !== "undefined" &&
+        Array.isArray(APP_STORE_REGISTRY)
+          ? APP_STORE_REGISTRY
+          : [];
+
+      function normalizeAppTags(tags) {
+        if (!Array.isArray(tags) || tags.length === 0) {
+          return ["tool"];
+        }
+        return tags
+          .map((tag) => String(tag).toLowerCase())
+          .map((tag) => (tag === "tools" ? "tool" : tag))
+          .map((tag) => (tag === "games" ? "game" : tag));
+      }
+
+      function upsertStoreRegistryApp(app) {
+        if (!app || !app.id) return;
+        const normalized = {
+          ...app,
+          tags: normalizeAppTags(app.tags),
+        };
+        const index = STORE_REGISTRY.findIndex(
+          (item) => item.id === normalized.id,
+        );
+        if (index === -1) {
+          STORE_REGISTRY.push(normalized);
+        } else {
+          STORE_REGISTRY[index] = { ...STORE_REGISTRY[index], ...normalized };
+        }
+      }
+
+      function getInstalledAppIds() {
+        try {
+          return JSON.parse(localStorage.getItem("installedApps")) || [];
+        } catch {
+          return [];
+        }
+      }
+
+      function createDropDownAppButton(app) {
+        const button = document.createElement("button");
+        button.setAttribute("aria-label", `Open ${app.name} application`);
+
+        const icon = document.createElement("img");
+        icon.src = app.icon || app.favicon || getFaviconUrl(app.url);
+        icon.alt = "";
+        icon.classList.add("menu-icon");
+        icon.width = 20;
+        icon.height = 20;
+        icon.setAttribute("role", "presentation");
+        icon.setAttribute("aria-hidden", "true");
+        icon.onerror = function () {
+          this.src = "/assets/images/brand/favicon.webp";
+        };
+
+        button.appendChild(icon);
+        button.appendChild(document.createTextNode(" " + app.name));
+
+        button.addEventListener("click", function (evt) {
+          if (app.route === "installed-app") {
+            desktopIconRouter(evt, "installed-app", app.name, app.data);
+            return;
+          }
+          desktopIconRouter(evt, app.route);
+        });
+
+        return button;
+      }
+
+      function renderDropDownContent() {
+        const sectionsRoot = document.getElementById("dropdown-app-sections");
+        if (!sectionsRoot) return;
+
+        sectionsRoot.innerHTML = "";
+
+        const installedIds = getInstalledAppIds();
+        const installedApps = installedIds
+          .map((id) => STORE_REGISTRY.find((app) => app.id === id))
+          .filter(Boolean)
+          .map((app) => ({
+            id: app.id,
+            name: app.name,
+            route: "installed-app",
+            icon: app.favicon || getFaviconUrl(app.url),
+            tags: normalizeAppTags(app.tags),
+            data: app,
+          }));
+
+        const allApps = [...CORE_MENU_APPS, ...installedApps];
+        const uniqueApps = allApps.filter(
+          (app, index, arr) =>
+            arr.findIndex((other) => other.id === app.id) === index,
+        );
+
+        const menuSections = [
+          { tag: "tool", label: "Tools" },
+          { tag: "game", label: "Games" },
+        ];
+
+        menuSections.forEach((section) => {
+          const sectionApps = uniqueApps.filter((app) =>
+            normalizeAppTags(app.tags).includes(section.tag),
+          );
+          if (sectionApps.length === 0) return;
+
+          sectionApps.sort((a, b) => a.name.localeCompare(b.name));
+
+          const category = document.createElement("div");
+          category.classList.add("category");
+
+          const categoryTitle = document.createElement("div");
+          categoryTitle.classList.add("category-label");
+          categoryTitle.textContent = section.label;
+
+          const subCategory = document.createElement("div");
+          subCategory.classList.add("sub-category");
+
+          sectionApps.forEach((app) => {
+            subCategory.appendChild(createDropDownAppButton(app));
+          });
+
+          category.appendChild(categoryTitle);
+          category.appendChild(subCategory);
+          sectionsRoot.appendChild(category);
+        });
+      }
+
+      function clampNumber(value, min, max, fallback) {
+        const numberValue = Number(value);
+        if (!Number.isFinite(numberValue)) {
+          return fallback;
+        }
+        return Math.min(max, Math.max(min, numberValue));
+      }
+
+      function normalizeThemeSettings(settings = {}) {
+        const merged = {
+          ...DEFAULT_THEME_SETTINGS,
+          ...settings,
+        };
+
+        if (!document.getElementById(merged.stylesheetId)) {
+          merged.stylesheetId = DEFAULT_THEME_SETTINGS.stylesheetId;
+        }
+
+        if (
+          !WALLPAPER_PRESETS[merged.wallpaper] &&
+          merged.wallpaper !== "custom" &&
+          merged.wallpaper !== "upload"
+        ) {
+          merged.wallpaper = DEFAULT_THEME_SETTINGS.wallpaper;
+        }
+
+        merged.windowOpacity = clampNumber(
+          merged.windowOpacity,
+          65,
+          100,
+          DEFAULT_THEME_SETTINGS.windowOpacity,
+        );
+        merged.windowRadius = clampNumber(
+          merged.windowRadius,
+          0,
+          24,
+          DEFAULT_THEME_SETTINGS.windowRadius,
+        );
+        merged.iconScale = clampNumber(
+          merged.iconScale,
+          80,
+          125,
+          DEFAULT_THEME_SETTINGS.iconScale,
+        );
+        merged.overlayStrength = clampNumber(
+          merged.overlayStrength,
+          0,
+          45,
+          DEFAULT_THEME_SETTINGS.overlayStrength,
+        );
+        merged._customId = settings._customId || null;
+        merged._unsaved = !!settings._unsaved;
+
+        return merged;
+      }
+
+      function readThemeSettings() {
+        let savedSettings = {};
+        try {
+          savedSettings =
+            JSON.parse(localStorage.getItem("dkThemeSettings")) || {};
+        } catch {
+          savedSettings = {};
+        }
+
+        const legacyStylesheetId =
+          localStorage.getItem("defaultStyleSheet") ||
+          localStorage.getItem("selectedTheme");
+        if (legacyStylesheetId && !savedSettings.stylesheetId) {
+          savedSettings.stylesheetId = legacyStylesheetId;
+        }
+
+        return normalizeThemeSettings(savedSettings);
+      }
+
+      function hexToRgb(hex, fallback = [9, 99, 159]) {
+        const normalized = String(hex || "")
+          .trim()
+          .replace("#", "");
+        const value =
+          normalized.length === 3
+            ? normalized
+                .split("")
+                .map((char) => char + char)
+                .join("")
+            : normalized;
+
+        if (!/^[0-9a-fA-F]{6}$/.test(value)) {
+          return fallback;
+        }
+
+        return [
+          parseInt(value.slice(0, 2), 16),
+          parseInt(value.slice(2, 4), 16),
+          parseInt(value.slice(4, 6), 16),
+        ];
+      }
+
+      function cssUrl(value) {
+        const rawValue = String(value || "").trim();
+        const allowed = /^(https?:\/\/|data:image\/|\/|\.\/|\.\.\/)/i;
+        if (!rawValue || !allowed.test(rawValue)) {
+          return "";
+        }
+
+        return `url("${rawValue.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
+      }
+
+      function getWallpaperTokens(settings) {
+        if (
+          (settings.wallpaper === "custom" ||
+            settings.wallpaper === "upload") &&
+          settings.wallpaperUrl
+        ) {
+          const customUrl = cssUrl(settings.wallpaperUrl);
+          if (customUrl) {
+            return { fallback: customUrl, image: customUrl };
+          }
+        }
+
+        return (
+          WALLPAPER_PRESETS[settings.wallpaper] || WALLPAPER_PRESETS.modern
+        );
+      }
+
+      function setThemeElementEnabled(element, enabled) {
+        element.disabled = !enabled;
+        element.media = enabled ? "all" : "not all";
+        if (element.sheet) {
+          element.sheet.disabled = !enabled;
+        }
+      }
+
+      const BUILTIN_THEMES = ["modern-theme", "retro-theme"];
+      const THEME_OVERRIDEABLE_PROPS = [
+        "--accent-color",
+        "--accent-strong",
+        "--focus-ring",
+        "--desktop-background",
+        "--main-gradient",
+        "--window-header",
+        "--window-header-hover",
+        "--windowBackground",
+        "--windowText",
+        "--window-title-text",
+        "--window-border",
+        "--window-radius",
+        "--system-grey",
+        "--icon-selection",
+        "--desktop-overlay",
+        "--icon-scale",
+        "--background-image-fallback",
+        "--background-image",
+      ];
+
+      function applyThemeSettings(settings = {}, options = {}) {
+        const normalized = normalizeThemeSettings(settings);
+        const root = document.documentElement;
+
+        const isBuiltIn = BUILTIN_THEMES.includes(normalized.stylesheetId);
+        const hasCustomisation =
+          !!normalized._customId || !!normalized._unsaved;
+
+        const wallpaper = getWallpaperTokens(normalized);
+
+        if (isBuiltIn && !hasCustomisation) {
+          // Let the stylesheet's own color/chrome vars win — remove those inline overrides
+          const COLOR_PROPS = THEME_OVERRIDEABLE_PROPS.filter(
+            (p) =>
+              p !== "--background-image-fallback" && p !== "--background-image",
+          );
+          COLOR_PROPS.forEach((prop) => root.style.removeProperty(prop));
+        } else {
+          const accentRgb = hexToRgb(normalized.accent);
+          const accentStrongRgb = hexToRgb(normalized.accentStrong, accentRgb);
+          const windowRgb = hexToRgb(normalized.windowSurface, [255, 255, 255]);
+          const menuRgb = hexToRgb(normalized.menuSurface, [52, 52, 52]);
+          const opacity = normalized.windowOpacity / 100;
+          const overlay = normalized.overlayStrength / 100;
+
+          root.style.setProperty("--accent-color", normalized.accent);
+          root.style.setProperty("--accent-strong", normalized.accentStrong);
+          root.style.setProperty("--focus-ring", normalized.accent);
+          root.style.setProperty(
+            "--desktop-background",
+            normalized.desktopColor,
+          );
+          root.style.setProperty(
+            "--main-gradient",
+            `linear-gradient(135deg, ${normalized.accentStrong}, ${normalized.accent})`,
+          );
+          root.style.setProperty(
+            "--window-header",
+            `linear-gradient(90deg, ${normalized.headerStart}, ${normalized.headerEnd})`,
+          );
+          root.style.setProperty(
+            "--window-header-hover",
+            `linear-gradient(90deg, rgba(${accentStrongRgb.join(",")}, 0.85), rgba(${accentRgb.join(",")}, 0.92))`,
+          );
+          root.style.setProperty(
+            "--windowBackground",
+            `rgba(${windowRgb.join(",")}, ${opacity})`,
+          );
+          root.style.setProperty("--windowText", normalized.windowText);
+          root.style.setProperty("--window-title-text", normalized.titleText);
+          root.style.setProperty(
+            "--window-border",
+            `rgba(${accentStrongRgb.join(",")}, 0.38)`,
+          );
+          root.style.setProperty(
+            "--window-radius",
+            `${normalized.windowRadius}px`,
+          );
+          root.style.setProperty(
+            "--system-grey",
+            `linear-gradient(to bottom, rgba(${menuRgb.join(",")}, 0.98), rgba(${menuRgb.join(",")}, 0.92))`,
+          );
+          root.style.setProperty(
+            "--icon-selection",
+            `rgba(${accentRgb.join(",")}, 0.24)`,
+          );
+          root.style.setProperty(
+            "--desktop-overlay",
+            `linear-gradient(180deg, rgba(0,0,0,${overlay * 0.35}), rgba(0,0,0,${overlay}))`,
+          );
+          root.style.setProperty(
+            "--icon-scale",
+            String(normalized.iconScale / 100),
+          );
+        }
+
+        // Always apply the stored wallpaper — even on built-in themes so the user's
+        // preset/custom choice survives theme switches.
+        root.style.setProperty(
+          "--background-image-fallback",
+          wallpaper.fallback,
+        );
+        root.style.setProperty("--background-image", wallpaper.image);
+
+        const parentStylesheets = document.getElementsByClassName("theme");
+        Array.from(parentStylesheets).forEach((sheet) => {
+          setThemeElementEnabled(sheet, sheet.id === normalized.stylesheetId);
+        });
+
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        if (themeColor) {
+          themeColor.setAttribute("content", normalized.accent);
+        }
+
+        if (options.persist !== false) {
+          localStorage.setItem("dkThemeSettings", JSON.stringify(normalized));
+          localStorage.setItem("defaultStyleSheet", normalized.stylesheetId);
+          localStorage.setItem("selectedTheme", normalized.stylesheetId);
+        }
+
+        if (options.broadcast !== false) {
+          broadcastThemeSettings(normalized);
+        }
+
+        scheduleDesktopIconGridLayout();
+        return normalized;
+      }
+
+      function broadcastThemeSettings(settings = readThemeSettings()) {
+        document.querySelectorAll("iframe").forEach((frame) => {
+          try {
+            frame.contentWindow?.postMessage(
+              { action: "themeSettings", themeSettings: settings },
+              "*",
+            );
+          } catch {}
+        });
+      }
+
+      applyThemeSettings(readThemeSettings(), {
+        persist: false,
+        broadcast: false,
+      });
+
+      const adjustBoundaries = () => {
+        const headerElement = document.getElementsByClassName("task-bar")[0];
+        const appbarElement = document.getElementsByClassName("app-bar")[0];
+
+        // Set your desired boundary left position
+        const boundaryLeft = 10;
+
+        // Get the height of the header and app bar
+        const boundaryTop = headerElement ? headerElement.offsetHeight : 0;
+        const maxBottom = appbarElement
+          ? window.innerHeight - appbarElement.offsetHeight
+          : window.innerHeight;
+
+        return { boundaryTop, maxBottom, boundaryLeft };
+      };
+
+      const applyBoundaries = (array) => {
+        const { boundaryTop, maxBottom, boundaryLeft } = adjustBoundaries();
+
+        for (let i = 0; i < array.length; i++) {
+          const rect = array[i].getBoundingClientRect();
+
+          // check for collison with the appbar
+          if (
+            isColliding(array[i], document.getElementsByClassName("app-bar")[0])
+          ) {
+            //array[i].style.top = maxBottom - array[i].offsetHeight + 'px';
+            if (array[i].classList.contains("desktop-icon")) {
+              array[i].style.top = maxBottom - window.innerHeight / 10 + "px";
+            } else {
+              array[i].style.top = maxBottom - array[i].offsetHeight + "px";
+            }
+          }
+
+          if (rect.top < boundaryTop) {
+            array[i].style.top = boundaryTop + "px";
+          }
+
+          if (rect.left < boundaryLeft) {
+            array[i].style.left = boundaryLeft + "px";
+          }
+        }
+      };
+
+      let activeWindows = document.getElementsByClassName("window");
+
+      let maxZindex = 1;
+      async function update() {
+        if (loading) {
+          applyThemeSettings(readThemeSettings(), {
+            persist: false,
+            broadcast: false,
+          });
+          document.getElementsByClassName("loader-page")[0].style.display =
+            "block";
+          document.getElementById("de").style.display = "none";
+          await delay(500);
+          document.getElementsByClassName("loader-page")[0].style.display =
+            "none";
+          document.getElementById("de").style.display = "flex";
+          scheduleDesktopIconGridLayout();
+          loading = false;
+        } else {
+          //loop for all desktop icons - only check boundaries, not collisions in main loop
+          for (let i = 0; i < desktopIcons.length; i++) {
+            if (desktopIcons[i].offsetWidth > desktop.offsetWidth) {
+              desktopIcons[i].style.width = desktop.offsetWidth + "px";
+            }
+            if (desktopIcons[i].offsetHeight > desktop.offsetHeight) {
+              desktopIcons[i].style.height = desktop.offsetHeight + "px";
+            }
+          }
+
+          activeWindows = document.getElementsByClassName("window");
+          activeWindows = Array.from(activeWindows).filter(
+            (window) => !window.classList.contains("minimized"),
+          );
+
+          activeWindows.map((window) => {
+            // if the window is larger than the desktop area then set the dimentions to the desktop area
+            if (window.offsetWidth > desktop.offsetWidth) {
+              window.style.width = desktop.offsetWidth - 5 + "px";
+            }
+            if (window.offsetHeight > desktop.offsetHeight) {
+              window.style.height = desktop.offsetHeight - 5 + "px";
+            }
+
+            //calculate the max z index
+            if (window.style.zIndex > maxZindex) {
+              maxZindex = window.style.zIndex;
+            }
+
+            window.childNodes[0].style.width = window.offsetWidth + "px";
+          });
+
+          document.getElementById("desktop").style.height = "";
+
+          // applyBoundaries(activeWindows);
+          if (activeWindowCount != activeWindows.length) {
+            ReRenderAppTaskbar();
+            activeWindowCount = activeWindows.length;
+          } else if (windows.length != winLen) {
+            ReRenderAppTaskbar();
+            winLen = windows.length;
+          }
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      function resizeWindowTItle(de_window) {
+        let title = de_window.querySelector(".window-title");
+        title.style.width = de_window.offsetWidth + "px";
+      }
+
+      function positionWindowAtDesktopTopCenter(newWindow) {
+        const desktopGrid = document.querySelector(".desktop-grid");
+        const desktop = desktopGrid || document.getElementById("desktop");
+        if (!desktop || !newWindow) {
+          return;
+        }
+
+        const desktopWidth = desktop.clientWidth || window.innerWidth;
+        const desktopHeight = desktop.clientHeight || window.innerHeight;
+        const sideInset = 10;
+        const topInset = 20;
+        const maxWidth = Math.max(0, desktopWidth - sideInset * 2);
+        const maxHeight = Math.max(0, desktopHeight - topInset - 5);
+        let windowWidth =
+          newWindow.offsetWidth || parseFloat(newWindow.style.width) || 0;
+        let windowHeight =
+          newWindow.offsetHeight || parseFloat(newWindow.style.height) || 0;
+
+        if (windowWidth > maxWidth) {
+          newWindow.style.width = maxWidth + "px";
+          windowWidth = maxWidth;
+        }
+
+        if (windowHeight > maxHeight) {
+          newWindow.style.height = maxHeight + "px";
+          windowHeight = maxHeight;
+        }
+
+        const left = Math.max(
+          sideInset,
+          Math.round((desktopWidth - windowWidth) / 2),
+        );
+
+        newWindow.style.left = left + "px";
+        newWindow.style.top = topInset + "px";
+      }
+
+      function ReRenderAppTaskbar() {
+        let taskbar = document.getElementsByClassName("app-bar");
+        taskbar[0].innerHTML = "Tasks ";
+
+        for (let i = 0; i < windows.length; i++) {
+          if (windows[i].classList.contains("empty_window")) {
+            continue;
+          }
+          let taskbarButton = document.createElement("button");
+          let taskbarButtonIcon = document.createElement("img");
+          taskbarButtonIcon.alt = "";
+          taskbarButtonIcon.setAttribute("role", "presentation");
+          taskbarButtonIcon.classList.add("window-icon");
+          let src = windows[i].childNodes[0].childNodes[0].src;
+          taskbarButtonIcon.src =
+            src === "null" || !src || src.includes("/null")
+              ? "/assets/images/brand/favicon.webp"
+              : src;
+          taskbarButtonIcon.onerror = function () {
+            this.src = "/assets/images/brand/favicon.webp";
+          };
+          taskbarButton.classList.add("app-bar-button");
+          taskbarButton.setAttribute(
+            "aria-label",
+            `Toggle ${windows[i].id} window`,
+          );
+          if (windows[i].classList.contains("minimized")) {
+            taskbarButton.classList.remove("app-bar-button-active");
+          } else {
+            taskbarButton.classList.add("app-bar-button-active");
+          }
+          taskbarButton.onclick = function () {
+            if (windows[i].classList.contains("minimized")) {
+              windows[i].classList.remove("minimized");
+              setFocusedWindow(windows[i]);
+            } else {
+              windows[i].classList.add("minimized");
+            }
+          };
+          taskbarButton.appendChild(taskbarButtonIcon);
+
+          taskbarButton.innerHTML += windows[i].id;
+          taskbar[0].appendChild(taskbarButton);
+        }
+      }
+
+      function drawSelectionRect() {
+        //take the mouse pos and draw a rect from the start to the current pos
+        let rect = document.createElement("div");
+        rect.classList.add("selection-rect");
+        document.getElementById("desktop").appendChild(rect);
+      }
+
+      function CreateDesktopIconGrid() {
+        const desktopGrid = document.getElementsByClassName("desktop-grid")[0];
+        if (!desktopGrid) {
+          return;
+        }
+
+        const iconSize = desktopIcons[0]?.offsetWidth || 100;
+        const margin = 20; // Adjust this based on the desired margin between icons
+        const startX = 20; // Starting X position
+        const startY = 20; // Starting Y position
+
+        // Calculate the number of icons per row dynamically
+        const availableWidth = desktopGrid.clientWidth || window.innerWidth;
+        const iconsPerRow = Math.max(
+          1,
+          Math.floor((availableWidth - startX - margin) / (iconSize + margin)),
+        );
+        let yPosition = startY;
+        let xPosition = startX;
+        let currentRow = 0;
+
+        for (let i = 0; i < desktopIcons.length; i++) {
+          // Move to next row if needed
+          if (i > 0 && i % iconsPerRow === 0) {
+            yPosition += iconSize + margin;
+            xPosition = startX;
+            currentRow++;
+          }
+
+          // Set the position of the icon based on the index
+          desktopIcons[i].style.left = xPosition + "px";
+          desktopIcons[i].style.top = yPosition + "px";
+
+          // Move X position for next icon in row
+          xPosition += iconSize + margin;
+        }
+      }
+
+      function checkCollision(item1, item2) {
+        const rect1 = item1.getBoundingClientRect();
+        const rect2 = item2.getBoundingClientRect();
+
+        return (
+          rect1.left < rect2.right &&
+          rect1.right > rect2.left &&
+          rect1.top < rect2.bottom &&
+          rect1.bottom > rect2.top
+        );
+      }
+
+      function resolveIconCollisions(draggedIcon) {
+        const icons = Array.from(desktopIcons);
+        const COLLISION_OFFSET = 10;
+
+        for (let icon of icons) {
+          if (icon === draggedIcon) continue;
+
+          if (checkCollision(draggedIcon, icon)) {
+            const rect1 = draggedIcon.getBoundingClientRect();
+            const rect2 = icon.getBoundingClientRect();
+
+            // Calculate overlap
+            const overlapX = Math.min(
+              rect1.right - rect2.left,
+              rect2.right - rect1.left,
+            );
+            const overlapY = Math.min(
+              rect1.bottom - rect2.top,
+              rect2.bottom - rect1.top,
+            );
+
+            // Move in the direction with less overlap
+            if (overlapX < overlapY) {
+              // Move horizontally
+              if (rect1.left < rect2.left) {
+                draggedIcon.style.left =
+                  parseFloat(draggedIcon.style.left) -
+                  overlapX -
+                  COLLISION_OFFSET +
+                  "px";
+              } else {
+                draggedIcon.style.left =
+                  parseFloat(draggedIcon.style.left) +
+                  overlapX +
+                  COLLISION_OFFSET +
+                  "px";
+              }
+            } else {
+              // Move vertically
+              if (rect1.top < rect2.top) {
+                draggedIcon.style.top =
+                  parseFloat(draggedIcon.style.top) -
+                  overlapY -
+                  COLLISION_OFFSET +
+                  "px";
+              } else {
+                draggedIcon.style.top =
+                  parseFloat(draggedIcon.style.top) +
+                  overlapY +
+                  COLLISION_OFFSET +
+                  "px";
+              }
+            }
+          }
+        }
+      }
+
+      function isColliding(item1, item2) {
+        const rect1 = item1.getBoundingClientRect();
+        const rect2 = item2.getBoundingClientRect();
+
+        if (
+          rect1.left < rect2.right &&
+          rect1.right > rect2.left &&
+          rect1.top < rect2.bottom &&
+          rect1.bottom > rect2.top
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      function getDesktopIconTileWidth(icons) {
+        let tileWidth = 96;
+
+        for (let i = 0; i < icons.length; i++) {
+          const label = icons[i]?.querySelector(".icon-text");
+          const labelText = (label?.textContent || "").trim();
+          if (!labelText) {
+            continue;
+          }
+
+          const words = labelText.split(/\s+/);
+          const longestWordLength = words.reduce(
+            (max, word) => Math.max(max, word.length),
+            0,
+          );
+          const totalLength = labelText.length;
+
+          if (totalLength > 10 || longestWordLength > 8) {
+            tileWidth = Math.max(tileWidth, 108);
+          }
+          if (totalLength > 16 || longestWordLength > 10) {
+            tileWidth = Math.max(tileWidth, 120);
+          }
+          if (totalLength > 22 || longestWordLength > 13) {
+            tileWidth = Math.max(tileWidth, 132);
+          }
+        }
+
+        return tileWidth;
+      }
+
+      function sizeDesktopIconLabel(icon) {
+        const label = icon?.querySelector(".icon-text");
+        if (!label) {
+          return;
+        }
+
+        const labelText = (label.textContent || "").trim();
+        if (!labelText) {
+          label.style.removeProperty("--icon-label-size");
+          return;
+        }
+
+        const iconWidth = icon.clientWidth || 96;
+        const availableWidth = Math.max(56, iconWidth - 12);
+        const longestWordLength = labelText
+          .split(/\s+/)
+          .reduce((max, word) => Math.max(max, word.length), 0);
+        const totalLength = labelText.length;
+
+        let fontSize = 12;
+        if (totalLength > 16 || longestWordLength > 10) {
+          fontSize = 11;
+        }
+        if (totalLength > 24 || longestWordLength > 13) {
+          fontSize = 10;
+        }
+        if (availableWidth < 96) {
+          fontSize = Math.min(fontSize, 10);
+        }
+        if (availableWidth < 84) {
+          fontSize = Math.min(fontSize, 9);
+        }
+
+        label.style.setProperty("--icon-label-size", fontSize + "px");
+      }
+
+      function sizeDesktopIconLabels() {
+        const icons = document.getElementsByClassName("desktop-icon");
+        const desktopGrid = document.getElementsByClassName("desktop-grid")[0];
+        if (desktopGrid) {
+          desktopGrid.style.setProperty(
+            "--desktop-icon-size",
+            getDesktopIconTileWidth(icons) + "px",
+          );
+        }
+
+        for (let i = 0; i < icons.length; i++) {
+          sizeDesktopIconLabel(icons[i]);
+        }
+      }
+
+      function scheduleDesktopIconGridLayout(attempt = 0) {
+        const desktopGrid = document.getElementsByClassName("desktop-grid")[0];
+        if (!desktopGrid) {
+          return;
+        }
+
+        const hasSize =
+          desktopGrid.clientWidth > 0 && desktopGrid.clientHeight > 0;
+        if (!hasSize && attempt < 10) {
+          requestAnimationFrame(() =>
+            scheduleDesktopIconGridLayout(attempt + 1),
+          );
+          return;
+        }
+
+        sizeDesktopIconLabels();
+        setupMobileIconLaunch();
+        CreateDesktopIconGrid();
+      }
+
+      scheduleDesktopIconGridLayout();
+
+      // has to do it this way no event
+      //desktopIconRouter(document.getElementById("settingsButton").event, "System");
+
+      function DisplayDate() {
+        var date = new Date();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+        var ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
+        if (hours == 0) {
+          hours = 12;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+        var time = hours + ":" + minutes + ":" + seconds + " " + ampm;
+        document.getElementById("clock").innerHTML = time;
+      }
+
+      setInterval(DisplayDate, 500);
+
+      function closeWindow(e, name) {
+        // close the parent window from the event target
+        let closest_window = e.target.closest(".window");
+        closest_window.remove();
+      }
+
+      function minimizeWindow(e, name) {
+        let closest_window = e.target.closest(".window ");
+        closest_window.classList.toggle("minimized");
+      }
+
+      function maximizeWindow(e, name) {
+        let currentWindow = e.target.closest(".window");
+
+        if (currentWindow !== null) {
+          currentWindow.classList.toggle("larger");
+
+          // Check if there's an existing child before removing it
+          if (e.target.childNodes[0] !== undefined) {
+            e.target.childNodes[0].remove();
+          }
+
+          let windowbuttons = currentWindow.querySelector(".window-buttons");
+          windowbuttons.childNodes[1].innerHTML = "";
+          // Create a new icon element
+          let icon = document.createElement("i");
+          icon.classList.add("fas");
+          icon.setAttribute("aria-label", "Minimize window button");
+          // Determine the icon class based on the "larger" class
+          if (currentWindow.classList.contains("larger")) {
+            icon.classList.add("fa-compress");
+          } else {
+            icon.classList.add("fa-expand");
+          }
+
+          // Append the icon to the target element
+          windowbuttons.childNodes[1].appendChild(icon);
+
+          resizeWindowTItle(currentWindow);
+        }
+      }
+
+      //function to check if the window button has both fa-expand and fa-compress
+      function checkWindowButton(e) {
+        if (
+          e.target.classList.contains("fa-expand") &&
+          e.target.classList.contains("fa-compress")
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      function dragElement(title, elmnt) {
+        var pos1 = 0,
+          pos2 = 0,
+          pos3 = 0,
+          pos4 = 0;
+        var isDragging = false;
+        var hasMoved = false;
+        if (title == null) {
+          return;
+        }
+
+        // If present, the header is where you move the DIV from:
+        if (window.PointerEvent) {
+          title.onpointerdown = dragMouseDown;
+        } else {
+          title.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+          e = e || window.event;
+          if (e.button !== undefined && e.button !== 0) return;
+          if (e.target?.closest?.(".window-button")) return;
+          if (MOBILE_WINDOW_QUERY.matches && elmnt.classList.contains("window"))
+            return;
+          e.preventDefault();
+          isDragging = true;
+          hasMoved = false;
+          elmnt.dataset.wasDragged = "false";
+          if (e.pointerId !== undefined && title.setPointerCapture) {
+            try {
+              title.setPointerCapture(e.pointerId);
+            } catch {}
+          }
+
+          // Get the mouse cursor position at startup:
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.onmouseup = handleDragEnd;
+          document.onpointerup = handleDragEnd;
+          document.ontouchend = handleDragEnd;
+          // Call a function whenever the cursor moves:
+          document.onpointermove = elementDrag;
+          document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+          if (!isDragging) return;
+          e = e || window.event;
+          e.preventDefault();
+          // Calculate the new cursor position:
+          pos1 = pos3 - e.clientX;
+          pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+
+          // Calculate new position
+          let newTop = elmnt.offsetTop - pos2;
+          let newLeft = elmnt.offsetLeft - pos1;
+          hasMoved = hasMoved || Math.abs(pos1) > 2 || Math.abs(pos2) > 2;
+
+          if (elmnt.classList.contains("desktop-icon")) {
+            const desktopGrid = elmnt.parentElement;
+            const maxTop = Math.max(
+              0,
+              desktopGrid.clientHeight - elmnt.offsetHeight,
+            );
+            const maxLeft = Math.max(
+              0,
+              desktopGrid.clientWidth - elmnt.offsetWidth,
+            );
+
+            newTop = Math.min(Math.max(0, newTop), maxTop);
+            newLeft = Math.min(Math.max(0, newLeft), maxLeft);
+          } else if (elmnt.classList.contains("window")) {
+            const desktop = document.getElementById("desktop");
+            const minVisibleHeight = Math.min(80, elmnt.offsetHeight);
+            const minVisibleWidth = Math.min(120, elmnt.offsetWidth);
+            const maxTop = Math.max(0, desktop.clientHeight - minVisibleHeight);
+            const maxLeft = Math.max(0, desktop.clientWidth - minVisibleWidth);
+
+            newTop = Math.min(Math.max(0, newTop), maxTop);
+            newLeft = Math.min(Math.max(0, newLeft), maxLeft);
+          }
+
+          // Set the element's new position:
+          elmnt.style.top = newTop + "px";
+          elmnt.style.left = newLeft + "px";
+        }
+
+        function handleDragEnd() {
+          isDragging = false;
+          closeDragElement();
+
+          // Check for icon collisions only when drag ends
+          if (elmnt.classList.contains("desktop-icon")) {
+            resolveIconCollisions(elmnt);
+          }
+          if (hasMoved) {
+            elmnt.dataset.wasDragged = "true";
+            setTimeout(() => {
+              elmnt.dataset.wasDragged = "false";
+            }, 80);
+          }
+        }
+      }
+      function closeDragElement() {
+        // Stop moving when the mouse button is released:
+        document.onmouseup = null;
+        document.onpointerup = null;
+        document.onmousemove = null;
+        document.ontouchend = null;
+
+        // this one fixes the weird bug where the mouse is still in the window and it moves
+        document.onpointermove = null;
+      }
+      function setCursor() {
+        //conditionally set the cursor to wait globally
+        document.body.style.cursor = "wait";
+      }
+
+      function deselectAllIcons() {
+        let desktopIcons = document.getElementsByClassName("desktop-icon");
+        for (let i = 0; i < desktopIcons.length; i++) {
+          desktopIcons[i].classList.remove("active");
+        }
+      }
+
+      function selectIcon(e) {
+        const icon = e?.currentTarget?.classList?.contains("desktop-icon")
+          ? e.currentTarget
+          : e?.target?.closest?.(".desktop-icon");
+
+        if (!icon) {
+          return;
+        }
+
+        deselectAllIcons();
+        icon.classList.add("active");
+      }
+
+      function setupMobileIconLaunch() {
+        const icons = document.getElementsByClassName("desktop-icon");
+        for (let i = 0; i < icons.length; i++) {
+          const icon = icons[i];
+          if (icon.dataset.mobileLaunchBound === "true") {
+            continue;
+          }
+
+          icon.dataset.mobileLaunchBound = "true";
+          icon.addEventListener("click", function (evt) {
+            if (
+              !MOBILE_WINDOW_QUERY.matches ||
+              icon.dataset.wasDragged === "true"
+            ) {
+              return;
+            }
+
+            if (typeof icon.ondblclick === "function") {
+              evt.preventDefault();
+              icon.ondblclick.call(icon, evt);
+            }
+          });
+        }
+      }
+
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function desktopIconRouter(
+        e,
+        newWindowHeaderTitle,
+        newTitle = undefined,
+        data = undefined,
+      ) {
+        // Set the cursor to the waiting state
+        if (e != null) {
+          setCursor(e);
+        }
+
+        // Wait for the specified delay
+        await delay(Math.random() * 400 + 150);
+
+        // Now the delay is complete, proceed to open the window
+        switch (newWindowHeaderTitle) {
+          case "test":
+            createWindow(
+              "Test",
+              "This is a test window",
+              "/assets/images/projects/blocks.webp",
+              false,
+            );
+            break;
+          case "empty":
+            createWindow(
+              "empty",
+              null,
+              "/assets/images/ui-icons/Term.webp",
+              800,
+            );
+            break;
+          case "term":
+            let term = document.createElement("iframe");
+            term.name = "terminal";
+            term.title = "terminal";
+            term.style.marginTop = "50px";
+            term.src = "/apps/cmd/";
+            term.loading = "lazy";
+            term.style.height = "100%";
+            term.style.width = "100%";
+            createWindow(
+              "Terminal",
+              term,
+              "/assets/images/ui-icons/Term.webp",
+              800,
+            );
+            break;
+          case "resume":
+            let resume = document.createElement("iframe");
+            resume.name = "resume";
+            resume.title = "resume";
+            resume.src = "/pages/resume/";
+            resume.loading = "lazy";
+            resume.style.height = "90%";
+            resume.style.marginTop = "50px";
+            resume.style.width = "100%";
+            resume.frameborder = "0";
+
+            createWindow(
+              "Resume",
+              resume,
+              "/assets/images/projects/Resume.webp",
+              800,
+            );
+
+            break;
+
+          case "System":
+            let intro = document.createElement("iframe");
+            intro.name = "Intro Panel";
+            intro.title = "Intro Panel";
+            intro.src = "/pages/intro/";
+            intro.style.height = "100%";
+            intro.style.width = "100%";
+            createWindow(
+              "Welcome",
+              intro,
+              "/assets/images/brand/favicon.webp",
+              1200,
+              true,
+            );
+            break;
+
+          case "calculator":
+            let calculator = document.createElement("iframe");
+            calculator.name = "calculator";
+            calculator.title = "calculator";
+            calculator.src = "/apps/calculator/";
+            calculator.loading = "lazy";
+            calculator.style.height = "100%";
+            calculator.style.width = "100%";
+            createWindow(
+              "Calculator",
+              calculator,
+              "/assets/images/ui-icons/Calc.webp",
+              400,
+              false,
+            );
+            break;
+          case "dragon_game":
+            let game = document.createElement("iframe");
+            game.name = "dragon_game";
+            game.title = "dragon_game";
+            game.src = "https://main.d3722xrzul5kke.amplifyapp.com/";
+            game.loading = "lazy";
+            game.style.height = "100%";
+            game.style.width = "100%";
+            game.style.overflowY = "hidden";
+            createWindow(
+              "dragon fighter conquest",
+              game,
+              "/assets/images/ui-icons/dragon_fighter.webp",
+              800,
+              false,
+            );
+            break;
+
+          case "notes":
+            let notes = document.createElement("div");
+
+            let fileSystem =
+              localStorage.getItem("fileSystem") == null
+                ? [
+                    {
+                      dir: "/",
+                      files: [
+                        {
+                          name: "text.txt",
+                          content:
+                            "this is a test file you can read it directly or in the terminal",
+                          dir: false,
+                        },
+                        {
+                          name: "home",
+                          dir: true,
+                        },
+                      ],
+                    },
+                    {
+                      dir: "/home",
+                      files: [
+                        {
+                          name: "text2.txt",
+                          content: ":) ",
+                          dir: false,
+                        },
+                      ],
+                    },
+                  ]
+                : JSON.parse(localStorage.getItem("fileSystem"));
+
+            notes.classList.add("notes");
+            notes.name = "note pad";
+            notes.title = "note pad";
+
+            let label = document.createElement("label");
+            label.className = "visually-hidden";
+            label.setAttribute("for", "notes-textarea");
+            label.textContent = "Note content";
+
+            let textArea = document.createElement("textarea");
+            textArea.classList.add("notes-textarea");
+            textArea.rows = "25";
+            textArea.cols = "45";
+            textArea.placeholder = "Enter your notes here";
+            textArea.setAttribute("aria-label", "Note content");
+            textArea.id = "notes-textarea";
+
+            let isNew = false;
+            let currentFileDir = null;
+            let currentFileName = null;
+
+            if (data && data.content !== undefined) {
+              textArea.value = data.content;
+              currentFileDir = data.dir;
+              currentFileName = data.name;
+            } else {
+              isNew = true;
+              currentFileDir = "/home";
+              currentFileName = "note_" + Date.now() + ".txt";
+            }
+
+            // Local storage for notes: get and set on change of value
+            textArea.oninput = function () {
+              if (isNew) {
+                // Creating a new file
+                let targetDir = fileSystem.find(
+                  (dir) => dir.dir === currentFileDir,
+                );
+
+                if (targetDir) {
+                  targetDir.files.push({
+                    name: currentFileName,
+                    content: textArea.value,
+                    dir: false,
+                  });
+                } else {
+                  // Create directory if it doesn't exist
+                  fileSystem.push({
+                    dir: currentFileDir,
+                    files: [
+                      {
+                        name: currentFileName,
+                        content: textArea.value,
+                        dir: false,
+                      },
+                    ],
+                  });
+                }
+                isNew = false;
+              } else {
+                // Updating existing file
+                let targetDir = fileSystem.find(
+                  (dir) => dir.dir === currentFileDir,
+                );
+
+                if (targetDir) {
+                  let file = targetDir.files.find(
+                    (f) => f.name === currentFileName && !f.dir,
+                  );
+                  if (file) {
+                    file.content = textArea.value;
+                  }
+                }
+              }
+
+              // Save to localStorage
+              localStorage.setItem("fileSystem", JSON.stringify(fileSystem));
+            };
+
+            notes.appendChild(label);
+            notes.appendChild(textArea);
+
+            createWindow(
+              newTitle ? newTitle : "Notes",
+              notes,
+              "/assets/images/ui-icons/Notes.webp",
+              500,
+            );
+            break;
+
+          case "about":
+            let about = document.createElement("iframe");
+            about.name = "about David Kozdra";
+            about.title = "about David Kozdra";
+            about.src = "/pages/about/";
+            about.loading = "lazy";
+            about.style.height = "100%";
+            about.style.width = "100%";
+            createWindow(
+              "Work",
+              about,
+              "/assets/images/profile/ME.webp",
+              1800,
+              true,
+              true,
+            );
+            break;
+          case "projects":
+            let Projects = document.createElement("iframe");
+            Projects.name = "about David Kozdra";
+            Projects.title = "about David Kozdra";
+            Projects.src = "/pages/projects/";
+            Projects.loading = "lazy";
+            Projects.style.height = "100%";
+            Projects.style.width = "100%";
+            createWindow(
+              "projects",
+              Projects,
+              "/assets/images/profile/ME.webp",
+              1800,
+              true,
+              true,
+            );
+            break;
+          case "files":
+            let files = document.createElement("iframe");
+            files.name = "files";
+            files.title = "files";
+            files.src = "/apps/file-browser/";
+            files.loading = "lazy";
+            files.style.height = "100%";
+            files.style.width = "100%";
+            createWindow(
+              "files",
+              files,
+              "/assets/images/ui-icons/File_System_icon.webp",
+              800,
+            );
+            break;
+
+          case "old":
+            let iframe = document.createElement("iframe");
+            iframe.name = "old website";
+            iframe.title = "old website";
+            iframe.src = "/archive/old-site.html";
+            iframe.loading = "lazy";
+            iframe.style.height = "700px";
+            iframe.style.width = "100%";
+            createWindow(
+              "Old Website",
+              iframe,
+              "/assets/images/brand/favicon.webp",
+              800,
+            );
+            break;
+
+          case "error":
+            createWindow(
+              "Error",
+              "This is a test window",
+              "/assets/images/ui-icons/Pallet.webp",
+              200,
+            );
+
+          case "draw":
+            let draw = document.createElement("iframe");
+            draw.name = "drawing";
+            draw.title = "drawing";
+            draw.src = "/apps/drawing/";
+            draw.loading = "lazy";
+            draw.style.height = "100%";
+            draw.style.width = "100%";
+            draw.style.marginTop = "50px";
+            createWindow(
+              "Drawing",
+              draw,
+              "/assets/images/ui-icons/Pallet.webp",
+              1000,
+              false,
+            );
+            break;
+
+          case "dk-boy":
+            let dkboy = document.createElement("iframe");
+            dkboy.name = "DK-Boy";
+            dkboy.title = "DK-Boy";
+            dkboy.src = "https://dk-boy.davidkozdra.workers.dev/";
+            dkboy.loading = "lazy";
+            dkboy.style.height = "100%";
+            dkboy.style.width = "100%";
+            dkboy.style.marginTop = "50px";
+
+            let appFavicon = data.favicon || getFaviconUrl(data.url);
+            createWindow("DK-Boy", dkboy, appFavicon, 1800, true, true);
+            break;
+
+          case "appstore":
+            let appstore = document.createElement("iframe");
+            appstore.name = "App Store";
+            appstore.title = "App Store";
+            appstore.src = "/apps/app-store/";
+            appstore.loading = "lazy";
+            appstore.style.height = "100%";
+            appstore.style.width = "100%";
+            appstore.style.marginTop = "50px";
+            createWindow(
+              "App Store",
+              appstore,
+              "/assets/images/ui-icons/shop.png",
+              900,
+              true,
+            );
+            break;
+
+          case "installed-app":
+            if (data && data.url) {
+              let installedApp = document.createElement("iframe");
+              installedApp.name = data.name || "App";
+              installedApp.title = data.name || "App";
+              installedApp.src = data.url;
+              installedApp.loading = "lazy";
+              installedApp.style.height = "100%";
+              installedApp.style.width = "100%";
+              installedApp.style.marginTop = "50px";
+              let appWidth = data.width || 1000;
+              let appFullscreen = data.fullscreen || false;
+              let appFavicon = data.favicon || getFaviconUrl(data.url);
+              createWindow(
+                data.name || "App",
+                installedApp,
+                appFavicon,
+                appWidth,
+                true,
+                appFullscreen,
+              );
+            }
+            break;
+
+          case "GOL":
+            let GOLcontainer = document.createElement("iframe");
+            GOLcontainer.name = "Game of Life";
+            GOLcontainer.title = "Game of Life";
+            GOLcontainer.src = "/apps/game-of-life/";
+            GOLcontainer.loading = "lazy";
+            GOLcontainer.style.height = "100%";
+            GOLcontainer.style.width = "100%";
+
+            createWindow(
+              "Game of Life",
+              GOLcontainer,
+              "/assets/images/ui-icons/GOL.webp",
+              500,
+              false,
+            );
+            currentSlide = -1;
+            init();
+            break;
+          default:
+            console.error("Window not found");
+            break;
+        }
+
+        // Reset the cursor to the default state
+        document.body.style.cursor = "default";
+        if (e) {
+          e.target.style.cursor = "default";
+        }
+      }
+
+      function setCursor(e) {
+        if (!e && !e.target) return;
+        if (e.target.style) {
+          // Your cursor-setting logic here
+          document.body.style.cursor = "wait";
+          // set important cursor styles
+
+          e.target.style.cursor = "wait";
+        }
+      }
+      function createWindow(
+        title,
+        content,
+        iconSrc,
+        width,
+        canResize = true,
+        max_size = false,
+      ) {
+        const id = title.toLowerCase().replace(/\s+/g, "-"); // Generate id based on the title
+        const newWindow = document.createElement("div");
+
+        newWindow.classList.add("window");
+        if (max_size) {
+          newWindow.classList.add("Max_window");
+        }
+        newWindow.id = id;
+
+        const headerImage = createWindowHeaderImage(iconSrc);
+        const header = createWindowHeader(title, id);
+        const buttons = createWindowButtons(id, canResize);
+
+        header.appendChild(headerImage);
+        header.innerHTML += title;
+        header.appendChild(buttons);
+        if (MOBILE_WINDOW_QUERY.matches) {
+          newWindow.style.width = "100%";
+          newWindow.style.height = "100%";
+        } else {
+          newWindow.style.width = width + "px";
+        }
+        newWindow.marginTop = "50px";
+        newWindow.appendChild(header);
+
+        // Check if the content is a node
+        if (!(content instanceof Node)) {
+          const windowContent = createWindowContent(content);
+          newWindow.appendChild(windowContent);
+        } else {
+          newWindow.appendChild(content);
+          if (content instanceof HTMLIFrameElement) {
+            content.addEventListener("load", () => {
+              broadcastThemeSettings(readThemeSettings());
+            });
+          }
+        }
+
+        newWindow.onmousedown = function () {
+          setFocusedWindow(newWindow);
+        };
+
+        newWindow.onmouseleave = function () {
+          //!! set the drag element to null
+          closeDragElement();
+          document.onpointermove = null;
+        };
+        newWindow.onmouseup = function () {
+          closeDragElement();
+
+          //!! set the drag element to null should work but doesnt
+          //document.onpointermove = null;
+        };
+
+        if (title == "empty") {
+          newWindow.classList.add("empty_window");
+        }
+        newWindow.style.display = "flex";
+        document.getElementById("windows").appendChild(newWindow);
+
+        // Set the window position
+        positionWindowAtDesktopTopCenter(newWindow);
+
+        resizeWindowTItle(newWindow);
+        // Initialize drag behavior
+        dragElement(header, newWindow);
+        setFocusedWindow(newWindow);
+
+        return newWindow;
+      }
+
+      function setFocusedWindow(newWindow) {
+        if (newWindow.style.zIndex !== maxZindex) {
+          maxZindex += 1;
+          newWindow.style.zIndex = maxZindex;
+        } else {
+          // If the z-index is already the maximum, do nothing
+          console.error("Already at maximum z-index:", newWindow.style.zIndex);
+        }
+      }
+
+      function createWindowHeaderImage(src) {
+        const headerImage = document.createElement("img");
+        headerImage.classList.add("window-icon");
+        headerImage.src = src || "/assets/images/brand/favicon.webp";
+        headerImage.onerror = function () {
+          this.src = "/assets/images/brand/favicon.webp";
+        };
+        return headerImage;
+      }
+
+      function createWindowHeader(title, id) {
+        const header = document.createElement("div");
+        header.classList.add("window-title");
+        return header;
+      }
+
+      function createWindowButtons(id, canResize = true) {
+        const buttons = document.createElement("div");
+        buttons.classList.add("window-buttons");
+        let minIcon = document.createElement("i");
+        minIcon.classList.add("fas");
+        minIcon.classList.add("fa-chevron-down");
+
+        const buttonMin = createWindowButton(
+          minIcon,
+          function () {
+            minimizeWindow(event, id);
+          },
+          "Minimize window",
+        );
+        let buttonMax;
+        if (canResize) {
+          let maxIcon = document.createElement("i");
+          maxIcon.classList.add("fas");
+          maxIcon.classList.add("fa-expand");
+
+          buttonMax = createWindowButton(
+            maxIcon,
+            function () {
+              maximizeWindow(event, id);
+            },
+            "Maximize window",
+          );
+        }
+
+        let closeIcon = document.createElement("i");
+        closeIcon.classList.add("fas");
+        closeIcon.classList.add("fa-times");
+
+        const buttonClose = createWindowButton(
+          closeIcon,
+          function () {
+            closeWindow(event, id);
+          },
+          "Close window",
+        );
+
+        buttonMin.style.color = "black";
+        buttonClose.style.color = "black";
+
+        buttons.appendChild(buttonMin);
+        if (canResize == true) {
+          buttonMax.style.color = "black";
+          buttons.appendChild(buttonMax);
+        }
+        buttons.appendChild(buttonClose);
+
+        return buttons;
+      }
+
+      function createWindowButton(icon, clickHandler, ariaLabel) {
+        const button = document.createElement("button");
+        button.classList.add("window-button");
+        button.setAttribute("aria-label", ariaLabel);
+        button.type = "button";
+
+        icon.setAttribute("aria-hidden", "true");
+        button.appendChild(icon);
+        button.addEventListener("click", clickHandler);
+        return button;
+      }
+
+      function createWindowContent(content) {
+        const contentElement = document.createElement("div");
+        contentElement.classList.add("window-content");
+
+        const contentText = document.createElement("p");
+        contentText.innerHTML = content;
+
+        // Modify this part to add your specific content, e.g., iframe
+        contentElement.appendChild(contentText);
+        return contentElement;
+      }
+
+      // Initialize drag for desktop icons
+      for (let i = 0; i < desktopIcons.length; i++) {
+        dragElement(desktopIcons[i], desktopIcons[i]);
+      }
+
+      function moveElement(event, element) {
+        if (element == null) {
+          return;
+        }
+
+        const draggedElement = element;
+
+        //element.style.cursor = "grabbing";
+
+        // Check if the mouse is pressed
+        if (event.buttons !== 1) return;
+
+        // Calculate the new position of the dragged element
+        const newX = event.clientX - draggedElement.offsetWidth / 2;
+        const newY = event.clientY - draggedElement.offsetHeight / 2;
+
+        // Set the new position
+        draggedElement.style.left = newX + "px";
+        draggedElement.style.top = newY + "px";
+      }
+
+      requestAnimationFrame(update);
+
+      function refresh() {
+        location.reload();
+      }
+
+      window.addEventListener("resize", function () {
+        for (let i = 0; i < activeWindows.length; i++) {
+          resizeWindowTItle(activeWindows[i]);
+          // applyBoundaries(activeWindows);
+        }
+        scheduleDesktopIconGridLayout();
+      });
+
+      window.addEventListener("load", function () {
+        scheduleDesktopIconGridLayout();
+      });
+
+      // Function to handle messages from the intro iframe
+      function receiveMessage(event) {
+        if (!event || event?.data?.message?.text == "Initializing...") {
+          return;
+        }
+
+        // Handle file opening from file browser
+        if (event.data.file && event.data.action === "openFile") {
+          let file = event.data.file;
+
+          let data = {
+            content: file.content,
+            dir: event.data.dir,
+            name: file.name,
+          };
+          // Pass null as first parameter since we don't have an actual event
+          desktopIconRouter(null, "notes", file.name, data);
+          return;
+        }
+
+        // Handle legacy file opening (keeping for backwards compatibility)
+        if (event.data.file) {
+          let file = event.data.file;
+
+          let data = {
+            content: file.content,
+            dir: event.data.dir,
+            name: file.name,
+          };
+          desktopIconRouter(event, "notes", event.data.file.name, data);
+          return;
+        }
+
+        // Handle app install from App Store
+        if (
+          event.data &&
+          event.data.action === "installApp" &&
+          event.data.app
+        ) {
+          upsertStoreRegistryApp(event.data.app);
+          addInstalledAppIcon(event.data.app);
+          renderDropDownContent();
+          return;
+        }
+
+        // Handle app uninstall from App Store
+        if (
+          event.data &&
+          event.data.action === "uninstallApp" &&
+          event.data.appId
+        ) {
+          removeInstalledAppIcon(event.data.appId);
+          renderDropDownContent();
+          return;
+        }
+
+        // handle app launch from App Store
+        if (event.data && event.data.action === "launchApp" && event.data.app) {
+          desktopIconRouter(
+            event,
+            "installed-app",
+            event.data.app.name,
+            event.data.app,
+          );
+          return;
+        }
+
+        if (event.data && event.data.action === "requestThemeSettings") {
+          event.source?.postMessage(
+            { action: "themeSettings", themeSettings: readThemeSettings() },
+            "*",
+          );
+          return;
+        }
+
+        if (
+          event.data &&
+          event.data.action === "applyThemeSettings" &&
+          event.data.themeSettings
+        ) {
+          applyThemeSettings(event.data.themeSettings);
+          return;
+        }
+
+        // Handle theme changes
+        if (event.data && event.data.stylesheetId) {
+          applyThemeSettings({
+            ...readThemeSettings(),
+            stylesheetId: event.data.stylesheetId,
+          });
+        }
+      }
+
+      function getFaviconUrl(url) {
+        try {
+          if (!url) return "/assets/images/brand/favicon.webp";
+          return (
+            "https://www.google.com/s2/favicons?domain=" +
+            new URL(url).hostname +
+            "&sz=128"
+          );
+        } catch {
+          return "/assets/images/brand/favicon.webp";
+        }
+      }
+
+      function addInstalledAppIcon(app) {
+        // Don't add duplicate
+        if (document.getElementById("installed-app-" + app.id)) return;
+        let grid = document.querySelector(".desktop-grid");
+        let icon = document.createElement("div");
+        icon.classList.add("desktop-icon");
+        icon.id = "installed-app-" + app.id;
+        icon.setAttribute("role", "button");
+        icon.setAttribute("tabindex", "0");
+        icon.setAttribute("aria-label", app.name);
+        icon.style.cursor = "pointer";
+        icon.onclick = function (evt) {
+          selectIcon(evt);
+        };
+
+        function launchInstalledAppFromUserGesture(evt) {
+          desktopIconRouter(evt, "installed-app", app.name, app);
+        }
+
+        icon.ondblclick = function (evt) {
+          launchInstalledAppFromUserGesture(evt);
+        };
+        icon.onkeypress = function (e) {
+          if (e.key === "Enter") launchInstalledAppFromUserGesture(e);
+        };
+        let faviconUrl = app.favicon || getFaviconUrl(app.url);
+        let iconEl = document.createElement("img");
+        iconEl.src = faviconUrl;
+        iconEl.alt = "";
+        iconEl.setAttribute("role", "presentation");
+        iconEl.setAttribute("aria-hidden", "true");
+        iconEl.width = 64;
+        iconEl.height = 64;
+        iconEl.onerror = function () {
+          this.src = "/assets/images/brand/favicon.webp";
+        };
+        let text = document.createElement("div");
+        text.classList.add("icon-text");
+        text.innerHTML = "<p>" + app.name + "</p>";
+        icon.appendChild(iconEl);
+        icon.appendChild(text);
+        grid.appendChild(icon);
+        dragElement(icon, icon);
+        scheduleDesktopIconGridLayout();
+      }
+
+      function removeInstalledAppIcon(appId) {
+        let el = document.getElementById("installed-app-" + appId);
+        if (el) el.remove();
+      }
+
+      // Restore installed app icons on load
+      (function restoreInstalledApps() {
+        try {
+          const storedInstalledApps = localStorage.getItem("installedApps");
+          let installed = [];
+          if (storedInstalledApps === null) {
+            installed = ["dkboy"];
+            localStorage.setItem("installedApps", JSON.stringify(installed));
+          } else {
+            installed = JSON.parse(storedInstalledApps) || [];
+          }
+          installed.forEach((id) => {
+            let app = STORE_REGISTRY.find((a) => a.id === id);
+            if (app) addInstalledAppIcon(app);
+          });
+          renderDropDownContent();
+        } catch (e) {}
+      })();
+
+      // ── Dropdown toggle (click-to-open, click-outside-to-close) ──────────────
+      (function () {
+        const btn = document.getElementById("main-menu-btn");
+        const panel = document.getElementById("main-drop-down-content");
+        if (!btn || !panel) return;
+
+        function openMenu() {
+          panel.classList.add("open");
+          btn.setAttribute("aria-expanded", "true");
+        }
+
+        function closeMenu() {
+          panel.classList.remove("open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          panel.classList.contains("open") ? closeMenu() : openMenu();
+        });
+
+        // Close when clicking an item inside the panel
+        panel.addEventListener("click", () => {
+          closeMenu();
+        });
+
+        // Close on outside click
+        document.addEventListener("click", (e) => {
+          if (!panel.contains(e.target) && e.target !== btn) {
+            closeMenu();
+          }
+        });
+
+        // Close on Escape
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeMenu();
+        });
+      })();
+    

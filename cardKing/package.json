@@ -7,9 +7,14 @@
   "scripts": {
     "build": "node scripts/build-engine.mjs",
     "test": "node --test tests/*.test.mjs",
-    "dev": "python3 -m http.server 4186 --bind 127.0.0.1 --directory .."
+    "dev": "python3 -m http.server 4186 --bind 127.0.0.1 --directory ..",
+    "test:browser": "python3 tests/browser-a11y.py",
+    "test:birthday": "python3 tests/browser-birthday.py"
   },
   "dependencies": {
     "koz-engine-lib": "0.1.0"
+  },
+  "devDependencies": {
+    "axe-core": "4.14.0"
   }
 }

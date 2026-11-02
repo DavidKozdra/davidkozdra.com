@@ -1,0 +1,2 @@
+# Cloudflare static hosting: preserve the path and query on the canonical host.
+https://www.davidkozdra.com/* https://davidkozdra.com/:splat 301

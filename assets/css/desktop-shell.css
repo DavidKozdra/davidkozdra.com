@@ -1,0 +1,153 @@
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: #000;
+        color: #fff;
+        padding: 8px;
+        text-decoration: none;
+        z-index: 100000;
+      }
+
+      .skip-link:focus {
+        top: 0;
+      }
+
+      /* Focus visible styles for keyboard navigation */
+      button:focus-visible,
+      a:focus-visible,
+      [role="button"]:focus-visible {
+        outline: 3px solid #4a9eff;
+        outline-offset: 2px;
+      }
+
+      .desktop-icon:focus-visible {
+        outline: 3px solid #4a9eff;
+        outline-offset: 2px;
+        background: rgba(74, 158, 255, 0.2);
+      }
+
+      /* Visually hidden but accessible to screen readers */
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+
+      .empty_window {
+        display: none !important;
+      }
+
+      /* Performance optimization for loader */
+      .loader-page {
+        position: fixed;
+        inset: 0;
+        content-visibility: auto;
+        contain-intrinsic-size: 100vh;
+      }
+
+      .loader-page[style*="display: block"] {
+        min-height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+      }
+
+      /* Performance optimization for windows */
+      .window {
+        content-visibility: auto;
+        contain: layout style paint;
+      }
+
+      .desktop-grid img,
+      .loader-display img {
+        display: block;
+      }
+
+      #clock-items {
+        display: flex;
+        flex-direction: row;
+        gap: 2px;
+      }
+
+      .menu-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        vertical-align: middle;
+        object-fit: contain;
+        color: white !important;
+      }
+
+      /* Window button touch targets */
+      .window-button {
+        min-width: 48px;
+        min-height: 48px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+      }
+
+      .window-button i {
+        pointer-events: none;
+      }
+
+      /* Hide #clock-items on mobile devices */
+      @media (max-width: 768px) {
+        #clock-items {
+          display: none;
+        }
+      }
+    
+/* A compact, readable guide alongside the desktop applications. */
+.portfolio-guide {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1;
+  width: min(28rem, calc(100% - 2rem));
+  max-height: min(70vh, 32rem);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--window-border, #64748b);
+  border-radius: var(--window-radius, 8px);
+  background: var(--windowBackground, #fff);
+  color: var(--windowText, #111827);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 15%);
+  font: 0.9rem/1.6 system-ui, sans-serif;
+}
+
+.portfolio-guide summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.portfolio-guide summary:focus-visible {
+  outline: 3px solid #4a9eff;
+  outline-offset: 3px;
+}
+
+.portfolio-guide h2 {
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.portfolio-guide a {
+  color: #075985;
+  text-decoration: underline;
+}
+

@@ -1,0 +1,46 @@
+import { escapeHtml as e, STICKERS } from './project.mjs';
+export function projectField(p,key,label,{type='text',rows=0,hint=''}={}){
+  const value=p[key]??'';
+  const control=rows?`<textarea data-project-field="${key}" rows="${rows}">${e(value)}</textarea>`:type==='checkbox'?`<input data-project-field="${key}" type="checkbox"${value?' checked':''}>`:`<input data-project-field="${key}" type="${type}" value="${e(value)}">`;
+  return `<label class="${type==='checkbox'?'check-field':'field'}">${label}${control}${hint?`<span class="field-hint">${hint}</span>`:''}</label>`;
+}
+export function rsvpFields(p){
+  return `<label class="field">RSVP delivery<select data-project-field="rsvpMode"><option value="email"${p.rsvpMode==='email'?' selected':''}>Email application</option><option value="relay"${p.rsvpMode==='relay'?' selected':''}>Form submission endpoint</option></select></label>${projectField(p,'rsvpEmail','RSVP email',{type:'email'})}${projectField(p,'rsvpEndpoint','Submission endpoint URL',{type:'url',hint:'Receives the same JSON payload as the birthday card relay. The endpoint must allow your hosted site’s origin. Previews never submit requests.'})}${projectField(p,'maxGuests','Maximum additional guests',{type:'number'})}${projectField(p,'collectPhone','Collect an optional phone number',{type:'checkbox'})}${projectField(p,'rsvpTitle','Form title')}${projectField(p,'rsvpSubmitLabel','Submit button label')}${projectField(p,'rsvpSuccess','Confirmation message')}`;
+}
+export function cardProperties(id,p){
+  if(id==='details'||id==='countdown')return `${projectField(p,'date','Event date',{type:'date'})}${projectField(p,'time','Start time',{type:'time'})}${projectField(p,'timezone','Time zone',{hint:'Use an IANA time zone, such as America/New_York.'})}${projectField(p,'eventDuration','Duration in minutes',{type:'number'})}${projectField(p,'location','Location',{rows:3})}${id==='details'?projectField(p,'detailsWhen','Date label')+projectField(p,'detailsWhere','Location label')+projectField(p,'calendarLabel','Calendar button label'):''}`;
+  if(id==='action')return `${projectField(p,'buttonUrl','Button URL override',{type:'url',hint:'A URL replaces the configured RSVP action.'})}${rsvpFields(p)}`;
+  if(id==='photo')return `<button type="button" class="button button-outline" data-edit-main-photo>Replace photo</button>${projectField(p,'imageAlt','Photo description')}${projectField(p,'imageDecorative','Decorative photo',{type:'checkbox'})}`;
+  if(id==='cover-graphic')return `<button type="button" class="button button-outline" data-upload-asset="coverImage">Upload cover image</button><button type="button" class="text-button" data-clear-asset="coverImage">Remove cover image</button>`;
+  if(id==='footer')return `${projectField(p,'footerUrl','Footer link URL',{type:'url'})}${projectField(p,'celebrateLabel','Celebration button label',{hint:'Leave blank to remove the celebration button.'})}`;
+  return '';
+}
+export function initCardSettings(api){
+  const $=s=>document.querySelector(s);let assetKey='';
+  const p=api.getProject();
+  $('#panel-write').insertAdjacentHTML('beforeend',`<details class="field-group"><summary>Cover</summary>${projectField(p,'opening','Include an opening cover',{type:'checkbox'})}${projectField(p,'coverEyebrow','Cover subtitle')}${projectField(p,'coverHeading','Cover title',{rows:2})}${projectField(p,'coverGraphic','Cover graphic text',{hint:'Leave empty to remove it. Use the upload button for a photo or illustration.'})}<button type="button" class="button button-outline" data-upload-asset="coverImage">Upload cover image</button><button type="button" class="text-button" data-clear-asset="coverImage">Remove cover image</button>${projectField(p,'coverHint','Open button label')}</details><details class="field-group"><summary>Back panel</summary><p class="field-hint">Shown when the fold-out opening style is selected.</p>${projectField(p,'backHeading','Back title')}${projectField(p,'backMessage','Back message',{rows:4})}${projectField(p,'backNote','Back note',{rows:2})}</details><details class="field-group"><summary>Footer</summary>${projectField(p,'footerText','Footer text',{hint:'Leave blank to remove the footer link.'})}${projectField(p,'footerUrl','Footer URL',{type:'url'})}${projectField(p,'celebrateLabel','Celebration button label')}</details>`);
+  $('#panel-style .sticker-list').insertAdjacentHTML('afterend',projectField(p,'graphic','Custom header graphic',{hint:'Enter an emoji or symbol. Select a preset above to restore a preset graphic.'}));
+  $('#panel-play').insertAdjacentHTML('beforeend',`<details class="field-group" open><summary>Card opening</summary><label class="field">Opening style<select data-project-field="openingStyle"><option value="reveal"${p.openingStyle==='reveal'?' selected':''}>Reveal</option><option value="fold"${p.openingStyle==='fold'?' selected':''}>Fold-out card with back panel</option></select></label></details><details class="field-group"><summary>RSVP form</summary>${rsvpFields(p)}</details><details class="field-group"><summary>Event and navigation</summary>${projectField(p,'eventDuration','Event duration in minutes',{type:'number'})}${projectField(p,'mapUrl','Map URL',{type:'url',hint:'If blank, map buttons search for the event location.'})}${projectField(p,'menuUrl','Menu page URL',{type:'url'})}${projectField(p,'gamesUrl','Games page URL',{type:'url'})}</details><details class="field-group"><summary>Photo rain and image confetti</summary>${projectField(p,'photoRain','Show photo rain while the cover is closed',{type:'checkbox'})}<button type="button" class="button button-outline" data-upload-asset="rainImage">Upload rain image</button><button type="button" class="text-button" data-clear-asset="rainImage">Remove rain image</button><button type="button" class="button button-outline" data-upload-asset="confettiImage">Upload confetti image or sprite sheet</button><button type="button" class="text-button" data-clear-asset="confettiImage">Remove confetti image</button>${projectField(p,'particleCount','Particles per celebration',{type:'number'})}<label class="field">Sprite rectangles (JSON)<textarea id="sprite-rectangles" rows="4" spellcheck="false">${e(JSON.stringify(p.confettiSprites))}</textarea><span class="field-hint">Optional list of {x,y,width,height} rectangles in the uploaded sheet. An empty list uses the entire image.</span></label><p id="sprite-error" class="field-error" role="status"></p></details>`);
+  document.body.insertAdjacentHTML('beforeend','<input id="card-asset-upload" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>');
+  document.addEventListener('input',event=>{
+    const input=event.target;if(!input.dataset.projectField)return;
+    const key=input.dataset.projectField;let value=input.type==='checkbox'?input.checked:input.type==='number'?input.valueAsNumber:input.value;
+    if(typeof value==='number'&&!Number.isFinite(value))return;
+    api.update({...api.getProject(),[key]:value},`card-${key}`);api.fillControls();
+    if(key.startsWith('cover')&&api.getSurface()!=='cover')api.setSurface('cover');
+    else if(key.startsWith('back')&&api.getSurface()!=='back')api.setSurface('back');
+  });
+  document.addEventListener('click',event=>{
+    const b=event.target.closest('button');if(!b)return;
+    if(b.dataset.editMainPhoto!==undefined)$('#photo-upload').click();
+    if(b.dataset.uploadAsset){assetKey=b.dataset.uploadAsset;$('#card-asset-upload').click();}
+    if(b.dataset.clearAsset)api.update({...api.getProject(),[b.dataset.clearAsset]:''});
+  });
+  $('#sprite-rectangles').addEventListener('change',event=>{try{const list=JSON.parse(event.target.value);if(!Array.isArray(list)||list.some(r=>!r||!['x','y','width','height'].every(k=>typeof r[k]==='number'&&Number.isFinite(r[k])&&r[k]>=(k==='x'||k==='y'?0:1))))throw Error();$('#sprite-error').textContent='';api.update({...api.getProject(),confettiSprites:list});}catch{$('#sprite-error').textContent='Enter a JSON array of rectangles with numeric x, y, width, and height values.';}});
+  $('#card-asset-upload').addEventListener('change',async event=>{
+    const file=event.target.files[0],key=assetKey;event.target.value='';if(!file)return;
+    if(!['image/png','image/jpeg','image/webp','image/gif'].includes(file.type)||file.size>4*1024*1024)return api.toast('Choose a PNG, JPG, WebP, or GIF smaller than 4 MB.',true);
+    try{const image=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});await new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=reject;img.src=image;});api.update({...api.getProject(),[key]:image});if(key==='coverImage')api.setSurface('cover');api.toast('Image added.');}catch{api.toast('This image could not be opened.',true);}
+  });
+  return {refresh(){const p=api.getProject();document.querySelectorAll('[data-project-field]').forEach(input=>{if(input===document.activeElement)return;const value=p[input.dataset.projectField];if(input.type==='checkbox')input.checked=!!value;else input.value=value??'';});if(document.activeElement!==$('#sprite-rectangles'))$('#sprite-rectangles').value=JSON.stringify(p.confettiSprites);}};
+}

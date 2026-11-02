@@ -13,4 +13,8 @@ Allow: /
 Disallow: /Koz_Engine_Lib/
 Disallow: /archive/
 
+# Cloudflare injects links to its infrastructure endpoints into HTML.
+# These endpoints are not site content and can return 4XX to SEO crawlers.
+Disallow: /cdn-cgi/
+
 Sitemap: https://davidkozdra.com/sitemap.xml

@@ -1,14 +1,16 @@
-const CACHE_NAME = "pwa-cache-v8";
+const CACHE_NAME = "pwa-cache-v9";
 const PRECACHE_URLS = [
+  "/assets/css/desktop-shell.min.css",
+  "/assets/js/desktop.min.js",
   "/",
   "/index.html",
   "/manifest.json",
-  "/assets/css/DE_styles.css?v=1.5",
-  "/assets/css/modern.css?v=1.18",
-  "/assets/css/retro.css?v=1.6",
-  "/assets/js/Games.js?v=1.1",
-  "/assets/js/index.js?v=1.1",
-  "/assets/js/apps.js",
+  "/assets/css/DE_styles.min.css?v=1.5",
+  "/assets/css/modern.min.css?v=1.18",
+  "/assets/css/retro.min.css?v=1.6",
+  "/assets/js/Games.min.js?v=1.1",
+  "/assets/js/index.min.js?v=1.1",
+  "/assets/js/apps.min.js",
   "/assets/images/brand/favicon.ico",
   "/assets/images/brand/icon-192.png",
   "/assets/images/brand/icon-512.png",

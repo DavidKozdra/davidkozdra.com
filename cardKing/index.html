@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f2">
+  <meta name="description" content="Create and edit interactive cards, invitations, and event pages. Export a complete HTML file.">
+  <title>Card King — Card editor</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23264c40'/%3E%3Ctext x='10' y='48' font-size='47' fill='%23e9efad'%3E♛%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="editor.css">
+  <script src="vendor/koz-engine.js" defer></script>
+  <script src="app.mjs" type="module"></script>
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-desktop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></symbol>
+    <symbol id="i-mobile" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="m8 4-5 5 5 5M3 9h10a7 7 0 0 1 0 14" transform="translate(0 -2)"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 3h7v7m0-7L10 14M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3ZM20 2v4m-2-2h4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="2"/><path d="m21 16-6-6L3 21"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H5a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8Zm0 0v6h6M8 13h8m-8 4h5"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 8.5a2.5 2.5 0 1 1 4 2c-1.5 1-1.5 1.5-1.5 3M12 17h.01"/></symbol>
+  </svg>
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="Card King home"><span class="brand-mark" aria-hidden="true">♛</span><span>card<span class="brand-serif">king</span><span class="brand-period">.</span></span></a>
+    <span class="brand-caption">Card and invitation editor</span>
+    <div class="header-actions">
+      <span class="save-status" id="save-status" aria-live="off"><span></span> Starting up…</span>
+      <button class="button button-quiet" id="open-help" type="button"><svg><use href="#i-help"/></svg><span>How it works</span></button>
+      <button class="button button-primary" id="download-html" type="button" disabled><svg><use href="#i-download"/></svg><span>Download HTML</span></button>
+    </div>
+  </header>
+
+  <div class="project-bar">
+    <div class="project-identity"><span class="project-icon" aria-hidden="true"><svg><use href="#i-file"/></svg></span><div><label class="sr-only" for="project-name">Project name</label><input id="project-name" data-field="name" maxlength="500" value="My birthday invitation"><span class="project-type">Project name</span></div></div>
+    <div class="project-actions"><button class="icon-button" id="undo" title="Undo (Ctrl/⌘ Z)" aria-label="Undo" disabled><svg><use href="#i-undo"/></svg></button><button class="icon-button redo" id="redo" title="Redo (Ctrl/⌘ Shift Z)" aria-label="Redo" disabled><svg><use href="#i-undo"/></svg></button><span class="toolbar-divider"></span><button class="button button-quiet" id="import-project" type="button">Open project</button><button class="button button-quiet" id="save-project" type="button">Save project <span aria-hidden="true">↧</span></button></div>
+  </div>
+
+  <main class="workspace">
+    <aside class="editor-panel" aria-label="Page editor">
+      <div class="panel-intro"><span class="eyebrow-label">CARD KING</span><h1>Card content</h1><p>Edit the content, cover, layout, and interactions.</p></div>
+      <details class="template-picker"><summary>Choose a template</summary><section class="template-section" aria-labelledby="template-heading"><div class="section-heading"><h2 id="template-heading">Templates</h2><span>5 templates</span></div><div class="template-grid" id="templates"></div></section></details>
+      <div class="editor-tabs" role="tablist" aria-label="Editor sections"><button id="tab-write" role="tab" aria-selected="true" aria-controls="panel-write" tabindex="0" data-tab="write">Aa <span>Content</span></button><button id="tab-style" role="tab" aria-selected="false" aria-controls="panel-style" tabindex="-1" data-tab="style">◐ <span>Design</span></button><button id="tab-play" role="tab" aria-selected="false" aria-controls="panel-play" tabindex="-1" data-tab="play">✧ <span>Interactions</span></button></div>
+      <form id="editor-form" autocomplete="off">
+        <section class="tab-panel" id="panel-write" role="tabpanel" aria-labelledby="tab-write">
+          <label class="field">Subtitle<input data-field="eyebrow" maxlength="500" placeholder="YOU’RE INVITED"></label>
+          <label class="field">Title<textarea data-field="heading" rows="2" maxlength="500" placeholder="Something worth celebrating."></textarea><span class="field-hint">Line breaks are preserved.</span></label>
+          <label class="field">Message<textarea data-field="message" rows="4" maxlength="6000" placeholder="Enter a message"></textarea></label>
+          <label class="field">Signature<input data-field="sender" maxlength="500" placeholder="Signature or sender"></label>
+          <details class="field-group" open><summary><span>☷</span> Event details</summary><div class="field-pair"><label class="field">Date<input type="date" data-field="date"></label><label class="field">Time<input type="time" data-field="time"></label></div><label class="field">Event time zone<select data-field="timezone"><option value="America/New_York">Eastern · New York</option><option value="America/Chicago">Central · Chicago</option><option value="America/Denver">Mountain · Denver</option><option value="America/Los_Angeles">Pacific · Los Angeles</option><option value="Europe/London">London</option><option value="Europe/Paris">Paris</option><option value="Asia/Kolkata">India · Kolkata</option><option value="Asia/Tokyo">Tokyo</option><option value="Australia/Sydney">Sydney</option><option value="UTC">UTC</option></select></label><label class="field">Location<textarea data-field="location" rows="2" maxlength="500" placeholder="Venue and address"></textarea></label></details>
+          <details class="field-group"><summary><span>↗</span> Primary button and RSVP</summary><label class="field">Button label<input data-field="buttonLabel" maxlength="500" placeholder="Count me in"></label><label class="field">RSVP email<input type="email" data-field="rsvpEmail" maxlength="254" placeholder="hello@example.com"><span class="field-hint">Guests reply through their own mail app.</span></label><label class="field">Or link to a form / website<input type="url" data-field="buttonUrl" maxlength="2000" placeholder="https://…"><span class="field-hint">A link takes priority over the email address. The button appears when either is set.</span></label></details>
+          <details class="field-group"><summary><svg><use href="#i-image"/></svg> Add a photo</summary><label class="upload-zone" for="photo-upload"><svg><use href="#i-image"/></svg><span id="photo-label">Choose a photo</span><small>JPG, PNG, WebP or GIF · up to 4 MB</small></label><input type="file" id="photo-upload" accept="image/png,image/jpeg,image/webp,image/gif"><label class="field">Photo description<input data-field="imageAlt" maxlength="500" placeholder="Describe what this photo shows"></label><button class="text-button" id="remove-photo" type="button" hidden>Remove photo</button></details>
+        </section>
+        <section class="tab-panel" id="panel-style" role="tabpanel" aria-labelledby="tab-style" hidden>
+          <div class="field"><span>Color palette</span><div class="palette-list" id="palettes"></div></div>
+          <label class="field">Accent color<span class="color-input"><input type="color" data-field="accent" id="accent-color"><span id="accent-label">#e56b52</span><span class="field-hint">Accent color</span></span></label>
+          <div class="field"><span>Typography</span><div class="font-list"><button class="font-choice font-editorial" data-font="editorial" type="button" aria-pressed="true"><span>Aa</span> Serif</button><button class="font-choice font-modern" data-font="modern" type="button" aria-pressed="false"><span>Aa</span> Sans serif</button><button class="font-choice font-playful" data-font="playful" type="button" aria-pressed="false"><span>Aa</span> Rounded</button></div></div>
+          <div class="field"><span>Header graphic</span><div class="sticker-list" id="stickers"></div></div>
+          <p class="panel-note">Palette and typography apply to the card. Select an element for individual formatting.</p>
+        </section>
+        <section class="tab-panel" id="panel-play" role="tabpanel" aria-labelledby="tab-play" hidden>
+          <div class="play-heading"><span aria-hidden="true">✷</span><h2>Effects and interactions</h2><p>Configure the opening cover, buttons, forms, and visual effects.</p></div>
+          <label class="field">Particle effect<select data-field="effect"><option value="confetti">Confetti</option><option value="sparkles">Sparkles</option><option value="none">None</option></select></label>
+          <label class="toggle-field"><span><strong>Enable opening cover</strong><small>Show the cover before the card content.</small></span><input type="checkbox" data-field="opening" role="switch"></label>
+          <label class="toggle-field"><span><strong>Show countdown</strong><small>Display days, hours, minutes, and seconds.</small></span><input type="checkbox" data-field="countdown" role="switch"></label>
+          <button class="button button-outline full-width" id="test-confetti" type="button"><svg><use href="#i-sparkle"/></svg>Test particle effect</button>
+          <p class="panel-note">Powered by Koz Engine. Effects follow your guests’ reduced motion preference.</p>
+        </section>
+      </form>
+      <div class="engine-credit"><span>✳</span> Powered by <strong>Koz Engine</strong></div>
+    </aside>
+
+    <section class="canvas-panel" aria-label="Live page preview">
+      <div class="canvas-toolbar"><span class="live-label"><span></span> LIVE PREVIEW</span><div class="device-switch" role="group" aria-label="Preview width"><button data-device="desktop" aria-label="Desktop preview" aria-pressed="true" title="Desktop preview"><svg><use href="#i-desktop"/></svg></button><button data-device="mobile" aria-label="Mobile preview" aria-pressed="false" title="Mobile preview"><svg><use href="#i-mobile"/></svg></button></div><button class="button button-quiet preview-button" id="open-preview" type="button"><span>Preview</span><svg><use href="#i-external"/></svg></button></div>
+      <div class="canvas-scroll" id="canvas-scroll" tabindex="0" role="region" aria-label="Scrollable canvas"><div class="canvas-intro"><span class="handwritten">Select an element to edit it. Drag to reposition.</span><span aria-hidden="true">↴</span></div><div class="preview-shell" id="preview-shell"><div class="browser-bar"><span class="browser-dots"><i></i><i></i><i></i></span><span id="preview-address">your-next-good-thing.html</span><span aria-hidden="true">↗</span></div><iframe id="preview" title="Your live card preview" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe><div class="loading-preview" id="loading-preview"><span>♛</span> Loading editor…</div></div><p class="canvas-caption">HTML preview <span>✦</span></p></div>
+    </section>
+
+    <aside class="outline-panel" aria-label="Page sections and export tools"><section><div class="section-heading"><h2>Content sections</h2><span class="outline-count" id="outline-count">3 blocks</span></div><p class="outline-description">Keep what you love.<br>Make room for what you need.</p><div class="outline-header"><span>H</span><div>The big hello<small>Every page starts here</small></div><span class="outline-lock" aria-label="Always visible">●</span></div><div id="block-list" class="block-list"></div><p class="outline-tip">Use the arrows to rearrange.<br>Switch a block off to hide it.</p></section></aside>
+  </main>
+  <input type="file" id="project-upload" accept=".json,.html,.htm,application/json,text/html" hidden>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="help-dialog"><button class="dialog-close icon-button" data-close="help-dialog" aria-label="Close help">×</button><span class="dialog-emblem" aria-hidden="true">♛</span><span class="eyebrow-label">EDITOR HELP</span><h2>Using the card editor</h2><ol class="help-steps"><li><strong>Design directly on the page.</strong><p>Click any element to select it. Drag to move, pull a corner to resize, or use the round handle to rotate. Double-click text to write. Use the Element studio for exact positions, colors, typography, animation, and more.</p></li><li><strong>Go beyond a template.</strong><p>Add text, photos, stickers, shapes, buttons, countdowns, and HTML from the canvas toolbar. Use Layers to select, hide, lock, duplicate, or stack elements. Hold Alt to skip snapping, Shift to constrain a drag, or use arrow keys to nudge.</p></li><li><strong>Make it interactive.</strong><p>Switch to <b>Interact</b> to test card opening, surprise messages, links, and celebrations. <b>Code</b> opens page CSS or the HTML and CSS of a selected HTML block. HTML blocks support native HTML interactions; scripts stay disabled.</p></li><li><strong>Keep it. Share it.</strong><p>Your draft saves in this browser. <b>Save project</b> makes a backup; <b>Open project</b> also reopens exported HTML. Download HTML, name it <code>index.html</code>, upload it to <code>cards/your-party/</code>, and share the URL.</p></li></ol><div class="help-note"><strong>One file really means one file.</strong><p>Photos, layouts, custom styles, and Koz Engine effects travel with your download. Guests need no account. RSVP buttons open your form or their email app; collecting responses needs an external form or email address.</p></div><button class="button button-primary full-width" data-close="help-dialog">Return to editor <svg><use href="#i-arrow"/></svg></button></dialog>
+  <dialog id="template-dialog"><button class="dialog-close icon-button" data-close="template-dialog" aria-label="Cancel template change">×</button><span class="eyebrow-label">CHANGE TEMPLATE</span><h2>Replace this template?</h2><p id="template-confirm-description">This will replace your current design. You can undo this change or save a project copy first.</p><div class="dialog-actions"><button class="button button-outline" data-close="template-dialog">Keep editing</button><button class="button button-primary" id="confirm-template">Use this template <svg><use href="#i-arrow"/></svg></button></div></dialog>
+  <noscript><div class="noscript-note">Card King needs JavaScript enabled to edit and download pages.</div></noscript>
+</body>
+</html>

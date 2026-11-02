@@ -99,6 +99,10 @@ ExpiresByType font/woff2 A31557
 RewriteEngine On
 RewriteBase /
 
+# Canonical host redirect, before real files and directories are served.
+RewriteCond %{HTTP_HOST} ^www\.davidkozdra\.com$ [NC]
+RewriteRule ^ https://davidkozdra.com%{REQUEST_URI} [R=301,L,NE]
+
 # Serve real files and directories untouched.
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

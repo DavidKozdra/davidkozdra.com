@@ -1,0 +1,21 @@
+# David Kozdra
+
+> Software engineer building APIs, cloud systems, web applications, and LLM evaluation tooling. This website contains a professional portfolio, resume, project case studies, and interactive browser experiments.
+
+The home page is DK OS, an interactive desktop-style portfolio. The following static HTML pages provide the professional content without requiring JavaScript.
+
+## Professional background
+
+- [Resume](https://davidkozdra.com/resume/): Experience, skills, education, certifications, and contact information.
+- [Work and case studies](https://davidkozdra.com/work/): Selected software projects, engineering contributions, and outcomes.
+- [AI and LLM evaluation](https://davidkozdra.com/ai-evals/): MCP testing infrastructure, automated QA, prompt systems, scoring, and retrieval-augmented generation.
+- [About](https://davidkozdra.com/pages/about/): Work experience, open-source contributions, and certifications.
+- [Project explorer](https://davidkozdra.com/pages/projects/): Project guide and interactive filters for web apps, developer tools, and games.
+
+## Selected case studies
+
+- [RedChat](https://davidkozdra.com/work/redchat/): An AI SEC-filing summarizer using document preparation and retrieval.
+- [Stock portal](https://davidkozdra.com/work/stock-portal/): Python data aggregation, market information, and structured SEC-filing views.
+- [Promo](https://davidkozdra.com/work/promo-app/): Backend APIs and mobile features for an event-based social app.
+- [GitPulse](https://davidkozdra.com/work/gitpulse/): A Chrome extension for assessing GitHub repository activity.
+- [GitPulse privacy policy](https://davidkozdra.com/gitPulsePrivacyPolicy.html): Data handling and privacy information for the extension.
